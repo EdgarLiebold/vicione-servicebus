@@ -20,7 +20,14 @@
   44/44, format exit 0. Three deliberate faults detected by 2/3/12 cases.
   Read-only review's aggregate text assertion gap corrected. No product changes.
   [Evidence and limits](coverage-a-plus-20260921/t39-dynamodb-validation.md).
-  Exact-commit full measurement and push pending; A+ remains open.
+  Commit49dbda6d9: all33profiles/fourfixtures pass,12894executions.
+  Lines85402/93762, conservative branches30813/36841,0CRAP>30.
+  Gaps4453=2778zero+1675partial;1508branch-only,union5961.
+  Validate now14/14lines14/14branchesCRAP14. Four linegaps close, one appears
+  in SagaInstance; non-target changes are not attributed to this packet.
+  [Full measurement](coverage-a-plus-20260921/product-wide-profile-49dbda6d9.md).
+  Independent receipt/physical audit confirms487hashes/66bindings,+10/-4lines.
+  Documentation commit and push follow; A+ remains open.
 
 - T38 focused subscription processor verification passes44/44, format0.
   Four isolated mutations detected3/3/3/1cases with controls passing, restored;

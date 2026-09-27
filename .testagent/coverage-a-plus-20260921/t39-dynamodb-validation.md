@@ -40,5 +40,7 @@ No claim of cloud persistence, context disposal or DynamoDB service availability
 - Final independent read-only review confirms the corrected assertions,
   dependency lock, mutation results and byte equality; no remaining blocker.
 
-Exact-commit product-wide coverage/CRAP measurement, final accounting audit and
-remote push remain pending. Global A+ is not established.
+Exact-commit measurement at 49dbda6d9 passes all 33 profiles, four fixture groups
+and 12,894 executions. Validate reaches 14/14 lines, 14/14 branches and CRAP 14.
+See [full measurement](product-wide-profile-49dbda6d9.md) for remaining gaps and
+non-target observations. Global A+ is not established; remote push follows docs.

@@ -15,7 +15,11 @@ entry below records what the current work changed for anyone reading the source.
   rejection before registration/context creation, valid TTL boundaries, immutable
   registered options and lazy context creation through actual DI. Three deliberate
   faults are detected; restored isolated controls pass 44/44 without skips.
-  No product code change or cloud persistence claim. Full measurement pending.
+  No product code change or cloud persistence claim. Complete measurement at
+  49dbda6d9 passes 33 profiles and 12,894 executions; Validate reaches 14/14
+  lines and branches, CRAP 14. Product totals: 85,402/93,762 lines and conservative
+  30,813/36,841 branches. Non-target observation changes remain documented;
+  global A+ is not established.
 
 - Fixed an ActiveMQ Quartz integration-test race: trigger finalization precedes
   job-store removal. The test now observes removal within a bounded deadline while
