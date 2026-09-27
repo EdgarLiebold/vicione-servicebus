@@ -13,8 +13,10 @@ entry below records what the current work changed for anyone reading the source.
 
 - Corrected raw JSON forwarding through a consumed interface losing the original
   concrete message contract URNs. The preserving serializer now receives the
-  original declared contract set, so a concrete downstream consumer can still
-  be selected. The combined JSON-boundary packet adds value-conversion failures,
+  nonempty original declared contract set, so a concrete downstream consumer can still
+  be selected. When raw header contracts are absent, separately restored send
+  contracts are retained, including Quartz scheduled delivery. The combined
+  JSON-boundary packet adds value-conversion failures,
   configured envelope admission and independent forwarding targets. Its raw
   regression fails against the original implementation while three forwarding
   controls pass. All three isolated counterprobes are detected and restored;

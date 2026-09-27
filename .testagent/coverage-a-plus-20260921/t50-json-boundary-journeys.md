@@ -118,3 +118,28 @@ specific stages, sizes or fault ownership. None is assertion-free, trivial-only
 or self-comparing. Integration cases exercise actual dispatch; local overlay cases
 are explicitly scoped to serializer behavior. Claims exclude exhaustive RawOptions
 combinations and global A+ closure. Exact measurements remain the T49 baseline.
+
+## First full-profile failure and correction
+
+The full33 attempt at `352ee8a7da6c09d24bac1b36b084a9839af10024`
+terminated with exit 1 after twelve verified profiles. Quartz passed 281/284;
+the three failures were the raw variants of serialized-payload delivery, chained
+scheduling and registered-container delivery. Original logs and receipts remain
+under `artifacts/t50-profile-12` and `artifacts/t50-profile-progress.json`.
+
+Quartz persists contract URNs separately from application headers. Its replay
+pipe restores those URNs to SendContext after deserialization. The unconditional
+T50 forwarding change later overwrote them with an empty source contract array.
+Read-only review confirmed this path and acknowledged that the earlier review
+missed it. The parameterless raw serializer factory now passes null for an empty
+original contract array; nonempty forwarding contracts are still preserved.
+The explicit replacement-contract overload is unchanged.
+
+The three existing raw regression cases and their envelope controls pass 6/6
+after correction, with zero failures/skips and a zero-warning/error build.
+Evidence: `/private/tmp/t50-quartz-correction-build.log` and
+`/private/tmp/t50-quartz-correction-tests.log`. Combined Core controls also pass
+56/56 with zero failures/skips and a zero-warning/error build; evidence is in
+`/private/tmp/t50-correction-core-build.log` and
+`/private/tmp/t50-correction-core-tests.log`. A fresh exact-commit full33 remains
+pending. This failed attempt does not replace T49 metrics.

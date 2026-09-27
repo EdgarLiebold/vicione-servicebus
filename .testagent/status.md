@@ -12,7 +12,15 @@ implementation fails the exact regression with three companion controls passing.
 Three one-cause counterprobes are detected and SHA-restored. Final restored
 controls pass 56/56; verify-only formatting passes. All 5,880 MAIN/GATE source/test
 files match. Implementation freeze, full33/audit and publication remain.
-No new measurement has run; the verified global metrics below remain T49.
+The first exact-commit measurement at `352ee8a7d` stopped after twelve verified
+profiles: Quartz passed 281/284, with three raw scheduling delivery failures.
+Review confirmed that an empty deserialized contract list overwrote separately
+persisted Quartz send contracts. The parameterless raw serializer factory now
+preserves existing send contracts when original header contracts are absent.
+All six targeted Quartz raw/envelope cases and all 56 combined Core controls pass
+after correction, with zero failures/skips and zero build warnings/errors.
+A fresh exact-commit full33 remains pending. Failed-run evidence
+is retained unchanged. The verified global metrics below remain T49.
 Global A+ remains open.
 
 ## Current T49 — combined Courier journeys

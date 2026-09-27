@@ -32,7 +32,7 @@ internal sealed class SystemTextJsonRawSerializerContext :
     /// <returns>A serializer that preserves the current raw JSON body.</returns>
     public override IMessageSerializer GetMessageSerializer()
     {
-        return new SystemTextJsonForwardingSerializer(Message, ContentType, Options, _rawOptions, SupportedMessageTypes);
+        return new SystemTextJsonForwardingSerializer(Message, ContentType, Options, _rawOptions, SupportedMessageTypes.Length > 0 ? SupportedMessageTypes : null);
     }
 
     /// <summary>Determines whether a message contract is declared or unrestricted by policy.</summary>

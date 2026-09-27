@@ -7,7 +7,10 @@ decimal/dictionary contracts, configured envelope admission, forwarding isolatio
 and lazy payload failures. Build and run focused tests after the combined edit;
 resolve concrete failures without repeating global profiles. Combined adversarial
 review, three detected/restored counterprobes and 56/56 final controls are complete.
-One exact-commit full33 and its audit/publication follow the implementation freeze.
+The first exact-commit full33 exposed three Quartz raw replay regressions after
+twelve verified profiles. Correct the empty-original-contract fallback, verify
+the existing Quartz and Core controls, then freeze a corrected commit for a fresh
+full33 and its audit/publication. Preserve the failed run as historical evidence.
 T49 is complete/pushed at `fd3c32976`; older current labels are historical.
 
 ## Current T49 — Courier outbox, retry and timeout
