@@ -11,6 +11,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Consumer-outbox recovery work in progress: reject a loaded message without a
+  DestinationAddress before treating the delivery pass as complete, and pass the
+  linked delivery timeout/cancellation token into endpoint resolution. Three
+  focused cases reproduce the original failures and pass after correction;
+  requirement projection also passes. Thirty-three PostgreSQL cases now verify
+  retained corrupt intents, committed delivery windows, allowed at-least-once
+  replay, Save/Commit/Cleanup failure recovery and exact neighbor preservation;
+  pending-send deadlines and late pipeline failures retain recoverable intent;
+  the combined local control passes34/34 including requirement projection. A test
+  observer mismatch on typed consume faults was corrected without changing product
+  error semantics. Two isolated counterprobes detect neighbor deletion and a missing
+  final-batch delivery watermark; product files were byte-restored. Final packet
+  acceptance remains open.
+
 - Corrected a race in the SQS Quartz integration test discovered by the T54 full
   measurement: consumer delivery can precede Quartz trigger removal. The test now
   observes matching finalization and actual bounded store removal, retains the

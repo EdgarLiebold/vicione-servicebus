@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10917 |
+| Added | 10920 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -241,6 +241,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t52-scheduling-admission-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t53-saga-persistence-integrity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t55-consumer-outbox-recovery.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -14995,6 +14996,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/GlobalUsings.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalStoreTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Outbox/ConsumerOutboxRecoveryTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Requirements/EntityFrameworkLocalIntegrationRequirements.json` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaLockTests.cs` | Added |  |
@@ -16214,6 +16216,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/OutboxSendEndpointBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxConsumerIdentityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs` | Added |  |

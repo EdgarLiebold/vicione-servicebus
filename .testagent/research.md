@@ -1,5 +1,16 @@
 # A+ remediation research
 
+## Current T55 — consumer-outbox retention and recovery
+
+T54 is complete and remotely verified at `5acd82701`. The
+[T55 research and acceptance map](coverage-a-plus-20260921/t55-consumer-outbox-recovery.md)
+records the connected recovery families, existing proof limits and source-level
+missing-destination risk. One bounded Microsoft Roslyn pairing is complete:
+118 byte-identical inputs,78 sources,35 tests,37 paired/41 unpaired. Static pairing
+is not runtime coverage. Read-only adversarial selection review is complete;
+no product correction or new test is claimed yet. The map records additional
+resolver-token and committed-window recovery oracles before implementation.
+
 ## Current T54 — transport ownership and isolation
 
 T53 is complete and remotely verified at `f492b3ed6`. The [combined T54 map](coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md)

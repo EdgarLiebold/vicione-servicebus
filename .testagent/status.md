@@ -1,5 +1,30 @@
 # A+ remediation test status
 
+## Current T55 — combined recovery implementation in progress
+
+T54 is complete/pushed at `5acd82701`, remote hash verified. The larger
+[T55 consumer-outbox packet](coverage-a-plus-20260921/t55-consumer-outbox-recovery.md)
+has one bounded Roslyn pairing and a concrete persisted-state behavior matrix.
+Three focused pipe-boundary cases reproduce missing-destination success and
+missing resolver cancellation on unchanged source (3/3 expected failures).
+Two manual product corrections pass4/4 focused controls including requirement
+projection. Real PostgreSQL recovery now passes33 behavior cases plus requirement
+projection (34/34): corrupted stored rows, delivery windows, send/save/commit/cleanup
+failures and neighbor isolation. Builds have zero warnings/errors. Five initial
+fixture timeouts were repaired by observing typed consume faults and waiting for
+PostReceive; read-only review accepts that bounded observation contract. Six pending
+send cases now prove delivery-deadline cancellation and late pipeline failure with
+retained rows and recovery. Deadline uses ReceiveFault after the rollback attempt;
+fresh database reads and final bus stop prove persistence and joined work. Initial
+deadline observer timeouts are retained as failed evidence. Two manual counterprobes
+detect neighbor loss (3/3 assertions fail) and omitted final short-batch delivery
+acknowledgment (2/3 fail on exact watermark, full-batch control passes). Both source
+files are byte-restored. Restored control passes34/34 without skips; complete packet
+acceptance, final format/evidence checks and full-product measurement remain.
+Adversarial selection review confirms the scope and adds a separate missing-token
+endpoint-resolution oracle, committed-window replay boundaries and pre-commit
+failure injection. The larger combined implementation continues; global A+ remains open.
+
 ## Current T54 — complete measurement and independent audit
 
 Corrected implementation `0fa2c85bb` passes13,182 tests in33 fresh profiles and

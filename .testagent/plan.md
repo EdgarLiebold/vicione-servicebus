@@ -1,5 +1,16 @@
 # A+ remediation test plan
 
+## Current T55 — one combined consumer-outbox recovery package
+
+Implement the [T55 behavior matrix](coverage-a-plus-20260921/t55-consumer-outbox-recovery.md)
+after selection review: corrupt persisted rows and repair, delivery windows and
+partial failure, pending-delivery cancellation, persistence failure recovery, and
+neighbor isolation across these operations. Preserve at-least-once transport
+semantics and existing concurrency proof. Use focused validation while building;
+one exact full-product measurement follows the entire reviewed/restored packet.
+T54 publication is complete at `5acd82701`; its older publication instructions
+below are historical.
+
 ## Current T54 — measurement and audits complete; publish combined packet
 
 The corrected exact run at `0fa2c85bb` passes13,182 tests across33 profiles and

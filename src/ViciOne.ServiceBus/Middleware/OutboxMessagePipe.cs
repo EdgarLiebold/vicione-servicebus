@@ -106,8 +106,8 @@ public class OutboxMessagePipe<TMessage> :
             }
             else if (message.DestinationAddress == null)
             {
-                LogContext.Warning?.Log("Outbox message DestinationAddress not present: {SequenceNumber} {MessageId}", message.SequenceNumber,
-                    message.MessageId);
+                throw new InvalidOperationException(
+                    $"Outbox message DestinationAddress not present: {message.SequenceNumber} {message.MessageId}");
             }
             else
             {
@@ -116,7 +116,8 @@ public class OutboxMessagePipe<TMessage> :
 
                 var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
 
-                var endpoint = await context.CapturedContext.GetSendEndpointAsync(message.DestinationAddress).ConfigureAwait(false);
+                var endpoint = await context.CapturedContext.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: token.Token)
+                    .ConfigureAwait(false);
 
                 StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);
                 MetricOperation? instrument = LogContext.Current?.TryStartOutboxDeliveryMetrics();
