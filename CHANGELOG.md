@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added seventeen combined MultiBus host and scheduler scenarios. Real Generic
+  Host lifecycle tests distinguish each bus's health options, failure floor and
+  continued delivery when the other bus stops; invalid options identify their
+  owner without contaminating the companion. Scoped endpoint, publish and native
+  delayed schedulers deliver through the correct bus with their own scope and
+  clock. Received recurring/control commands retain exact identities. These tests
+  prove command routing, not execution by an external scheduler. Product sources
+  are unchanged. Both injected ownership faults are detected, and 50/50 restored
+  new/existing controls pass; the packet's final measurement remains pending.
+
 - Added ten Saga journey cases across Core and Quartz. Real transport verifies
   owner/event-dependent callback metadata, pending factories and sends, primary
   dispatch failures and failed compensation. Reusing a Saga for a second request

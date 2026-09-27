@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## Current T48 — combined MultiBus ownership journeys
+
+The acceptance map in
+[T48](coverage-a-plus-20260921/t48-multibus-host-ownership.md) is implemented:
+health/host lifecycle and scoped scheduler transport/control ownership, combined
+review, two detected counterprobes, source restoration and 50/50 controls pass.
+Next: one final full33 exact-commit measurement and independent audit, then
+document and push the whole packet. T47 is completed and pushed at `50bd0a527`.
+
 ## Current T47 — one combined implementation and measurement packet
 
 Use [t47-saga-journeys.md](coverage-a-plus-20260921/t47-saga-journeys.md) for the

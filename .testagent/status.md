@@ -14,6 +14,24 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
+## Current packet — T48
+
+- T47 is completed and pushed at `50bd0a527`. The historical pending-publication
+  instruction in its section below is superseded.
+- [MultiBus host ownership](coverage-a-plus-20260921/t48-multibus-host-ownership.md)
+  combines host lifecycle, health validation/isolation and scoped scheduler
+  command delivery. Seventeen cases in two new files are implemented, not yet
+  accepted. One bounded Roslyn pairing pass and read-only adversarial review are
+  complete; no false-green blocker identified in the current oracles.
+- Corrected baseline passes 18/18; isolated wrong-health-owner and
+  wrong-publish-owner counterprobes fail 12/14 and 1/3 as intended. Both source
+  files are SHA-restored. Combined restored controls pass 50/50, zero build
+  warnings/errors. All 5,875 source/test paths match the isolated checkout.
+- Final read-only review and verify-only formatting pass. Test-only Hosting
+  restore succeeds; initial compile/exception-wrapper errors and restricted
+  connection-loop attempts are retained as nonacceptance evidence. Final full33
+  measurement and publication remain open. No new product-wide metric claimed.
+
 ## Latest verified packet — T47
 
 - One combined Saga callback/request-generation packet; see

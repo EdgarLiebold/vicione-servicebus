@@ -1,5 +1,14 @@
 # A+ remediation research
 
+## Current T48 — MultiBus host ownership
+
+[T48 research and acceptance map](coverage-a-plus-20260921/t48-multibus-host-ownership.md)
+owns current work. T47 is completed and pushed at `50bd0a527`; its pending
+publication wording below is historical. One bounded Roslyn pairing pass is
+complete. Test planning follows the mandatory Microsoft code-testing-agent and
+test-gap-analysis skills. No new global inventory or full measurement is needed
+before implementing the combined health, hosting and scheduler journeys.
+
 ## Current T47 — combined Saga journeys
 
 The current packet research, single Roslyn pairing result, existing behavior
