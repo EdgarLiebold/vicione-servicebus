@@ -15,7 +15,10 @@ entry below records what the current work changed for anyone reading the source.
   limits, certificate/provider/static-credential priority and actual cluster
   resolver selection with port/TLS projection. Four deliberate faults are detected;
   restored isolated controls pass 482/482. No broker-authentication or negotiated-
-  limit claim. Product-wide exact-commit measurement remains pending.
+  limit claim. Full measurement at d286a336a confirms 33 profiles and 12,902
+  executions; SQL fixture startup failed before tests and was separately retried.
+  Factory reaches 46/46 lines, 25/28 branches and CRAP 28. Product totals:
+  85,407/93,762 lines and conservative 30,814/36,841 branches. A+ remains open.
 
 - Added 16 DynamoDB registration validation cases covering complete diagnostics,
   rejection before registration/context creation, valid TTL boundaries, immutable

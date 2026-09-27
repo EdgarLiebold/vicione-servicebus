@@ -44,5 +44,9 @@ limits, broker-side message rejection or network connectivity.
   the probe's Name getter; its displayed Calls=1 is not evidence of eager product
   credential access. The passing tests explicitly check zero accesses.
 
-Exact-commit full coverage/CRAP measurement, final audit and authorized push remain
-pending. Global A+ remains unproven.
+Exact-commit measurement at d286a336a covers 33 profiles and 12,902 executions.
+SQL Server required a separately recorded fixture restart before any SQL tests
+had run. The subsequent missing profile and cleanup passed; original failure
+remains recorded. Factory now 46/46 lines, 25/28 branches, CRAP 28.
+See [full measurement and limits](product-wide-profile-d286a336a.md).
+Global A+ remains unproven; authorized push follows the documentation commit.

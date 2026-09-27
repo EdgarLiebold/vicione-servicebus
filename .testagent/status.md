@@ -20,7 +20,15 @@
   restored isolated full482/482, format0. Four mutations detected3/2/1/1cases.
   Independent read-only final review: no blocker. Product source unchanged.
   [Evidence and limits](coverage-a-plus-20260921/t40-rabbitmq-factory-options.md).
-  Exact-commit full measurement and push pending; A+ remains open.
+  Commitd286a336a:33profiles/12902executions confirmed. Three original fixture
+  groups passed; SQL startup failed before tests (errno11), missing profile then
+  passed with fresh fixture. Original failure and retry remain separate.
+  Lines85407/93762, conservative branches30814/36841,0CRAP>30.
+  Gaps4446=2771zero+1675partial;1511branch-only,union5957.
+  Factory46/46lines25/28branchesCRAP28. Nine gaps closed,two non-target gaps new.
+  [Full measurement](coverage-a-plus-20260921/product-wide-profile-d286a336a.md).
+  Independent audit confirms487hashes/66bindings and physical+10/-5lines.
+  Documentation commit and push follow; A+ remains open.
 
 - T39 DynamoDB validation: 16 new cases, MAIN and restored isolated control
   44/44, format exit 0. Three deliberate faults detected by 2/3/12 cases.
