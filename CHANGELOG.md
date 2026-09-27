@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added 44 Azure Service Bus subscription processor cases for message/session
+  callbacks, exact arguments/tokens, awaited completion, configuration guards,
+  start/stop/close/dispose and documented warning behavior. Four deliberate faults
+  are detected; restored controls pass44/44 without skips. No real broker or full
+  SDK-processor disposal claim; complete product-wide measurement is pending.
+
 - Added Event Hubs processor lifecycle tests proving cancellation forwarding,
   isolation of equal offsets in distinct partitions, shutdown waiting for an
   in-flight checkpoint, and subsequent client re-leasing. Both deliberate faults

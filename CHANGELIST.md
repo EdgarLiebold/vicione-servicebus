@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10855 |
+| Added | 10857 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -207,6 +207,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t35-recurring-completion.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t36-eventhubs-checkpoint.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t37-eventhubs-processor-lifecycle.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t38-asb-subscription.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15325,6 +15326,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTimeProviderTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyLoggingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/SubscriptionProcessorBehaviorTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/packages.lock.json` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs` | Added |  |

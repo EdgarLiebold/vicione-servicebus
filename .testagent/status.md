@@ -16,6 +16,13 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T38 focused subscription processor verification passes44/44, format0.
+  Four isolated mutations detected3/3/3/1cases with controls passing, restored;
+  final isolated control44/44. Initial SDK setup failure is documented separately.
+  Read-only review has no remaining blocker.
+  [Evidence and limits](coverage-a-plus-20260921/t38-asb-subscription.md).
+  Commit, complete measurement and push remain pending; T37 stays authoritative.
+
 - T37 focused processor lifecycle verification passes 2/2, format0. Two isolated
   mutations are detected (missing cancellation forwarding; premature shutdown),
   both restored; isolated final control2/2. Independent read-only review has no
