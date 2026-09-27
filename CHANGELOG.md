@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added eighteen EF reliable-store regression cases for composite inbox
+  pagination, stale or removed leases, failure atomicity, initialization recovery,
+  capacity boundaries and explicit schedule due times. Real SQLite checks preserve
+  retained records, neighboring stores and capacity ledgers across failures.
+  All five isolated deliberate faults are detected; main and restored isolated
+  EF suites pass 340/340. No product defect was reproduced. The product-wide
+  measurement remains pending in the T44 evidence packet.
+
 - Added six EF Core inbox regression cases for stale and removed consumer
   attempts across completion, retry and quarantine. Real SQLite assertions prove
   current-owner fencing, exact persisted state, no resurrection and unchanged

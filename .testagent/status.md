@@ -14,6 +14,17 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
+## Current packet — T44
+
+- Coherent EF reliable-store packet: eighteen additional cases across pagination,
+  lease fencing, failure atomicity, capacity boundaries and explicit scheduling.
+  MAIN focused39/39, full340/340; restored isolated full340/340; format exit0.
+  Five counterprobes detected5/1/4/1/1cases. Final bounded read-only review finds
+  no blocker. Product source unchanged. Full33 measurement and push pending.
+  [Evidence and limits](coverage-a-plus-20260921/t44-ef-store-contracts.md).
+  In response to the user's efficiency feedback, one complete measurement is
+  performed after this coherent packet, not after each small test addition.
+
 ## Current checkpoint — 2026-09-26
 
 - T40 RabbitMQ factory options: eight new cases; MAIN focused8/8 and full482/482,

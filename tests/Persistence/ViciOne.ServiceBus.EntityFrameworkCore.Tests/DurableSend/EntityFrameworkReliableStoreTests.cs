@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Providers.Persistence;
@@ -10,6 +11,463 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.DurableSend;
 public sealed class EntityFrameworkReliableStoreTests
 {
     private static readonly DateTimeOffset Epoch = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-STORE", "schedule-overrides-due-without-changing-caller-and-preserves-restarted-delivery")]
+    public async Task Schedule_OverridesDueWithoutChangingCallerAndDeliversAtExactBoundaryAfterRestartAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("schedule-boundary", new RecordingValidator());
+        SerializedDurableSend original = Message(207, [1, 2, 3], [4, 5]) with
+        {
+            DueAt = Epoch.AddMinutes(1),
+            MessageId = GuidFrom(307),
+            CorrelationId = GuidFrom(407)
+        };
+        DateTimeOffset dueAt = Epoch.AddMinutes(10).ToOffset(TimeSpan.FromHours(5));
+        DurableSendAdmissionResult admitted = await ((IScheduleStore<ITestBus>)store).ScheduleAsync(
+            original, new DurableSendStoreLimits(10, 100), Epoch, dueAt, token);
+
+        Assert.Equal(DurableSendAdmissionDisposition.Accepted, admitted.Disposition);
+        Assert.Equal(Epoch.AddMinutes(1), original.DueAt);
+        Assert.Equal(new byte[] { 1, 2, 3 }, original.Body.ToArray());
+        Assert.Equal(new byte[] { 4, 5 }, original.Metadata.ToArray());
+        IOutboxStore<ITestBus> restarted = database.CreateStore<ITestBus>("schedule-boundary", new RecordingValidator());
+        Assert.Empty(await restarted.ClaimDueAsync(dueAt.AddTicks(-1), 10, TimeSpan.FromMinutes(1), token));
+        DurableSendDelivery delivery = Assert.Single(await restarted.ClaimDueAsync(dueAt, 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(original.Id, delivery.Message.Id);
+        Assert.Equal(original.ContractIdentity, delivery.Message.ContractIdentity);
+        Assert.Equal(original.DestinationAddress.AbsoluteUri, delivery.Message.DestinationAddress.AbsoluteUri);
+        Assert.Equal(original.ContentType, delivery.Message.ContentType);
+        Assert.Equal(original.MessageId, delivery.Message.MessageId);
+        Assert.Equal(original.CorrelationId, delivery.Message.CorrelationId);
+        Assert.Equal(dueAt.ToUniversalTime(), delivery.Message.DueAt);
+        Assert.Equal(5L, delivery.Message.StorageSize);
+        Assert.Equal(original.Body.ToArray(), delivery.Message.Body.ToArray());
+        Assert.Equal(original.Metadata.ToArray(), delivery.Message.Metadata.ToArray());
+        Assert.Equal(0, delivery.DeliveryAttempts);
+        Assert.Empty(await restarted.ClaimDueAsync(dueAt, 10, TimeSpan.FromMinutes(1), token));
+        Assert.True(await restarted.MarkDeliveredAsync(original.Id, delivery.Lease, dueAt, token));
+        DurableSendStoreSnapshot empty = await restarted.GetSnapshotAsync(token);
+        Assert.Equal((0, 0L), (empty.StoredCount, empty.StoredBytes));
+        Assert.Empty(await ReadRecordsAsync(database, token));
+    }
+
+    [Theory]
+    [InlineData("delivered", false)]
+    [InlineData("retry", false)]
+    [InlineData("quarantine", false)]
+    [InlineData("delivered", true)]
+    [InlineData("retry", true)]
+    [InlineData("quarantine", true)]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-STORE", "stale-or-removed-transition-preserves-neighbors-capacity-and-current-owner")]
+    public async Task DurableTransition_WithStaleOrRemovedLeasePreservesRetainedStateAsync(string operation, bool removed)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("transition-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("transition-other", new RecordingValidator());
+        SerializedDurableSend target = Message(208, [1, 2], [3]);
+        SerializedDurableSend neighbor = Message(209, [4, 5, 6], [7, 8]) with { DueAt = Epoch.AddHours(1) };
+        var limits = new DurableSendStoreLimits(10, 100);
+        await store.AdmitAsync(target, limits, Epoch, token);
+        await store.AdmitAsync(neighbor, limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+        DurableSendDelivery old = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(target.Id, old.Message.Id);
+        DurableSendDelivery? current = null;
+        if (removed)
+            Assert.True(await store.CompleteConsumerDeliveryAsync(target.Id, old.GenerationToken, Epoch.AddSeconds(1), token));
+        else
+        {
+            current = Assert.Single(await store.ClaimDueAsync(Epoch.AddMinutes(2), 10, TimeSpan.FromMinutes(1), token));
+            Assert.Equal(target.Id, current.Message.Id);
+            Assert.NotEqual(old.Lease.Token, current.Lease.Token);
+        }
+
+        DurableSendRecord[] before = await ReadRecordsAsync(database, token);
+        DurableSendStoreSnapshot capacity = await store.GetSnapshotAsync(token);
+        DurableSendStoreSnapshot separate = await other.GetSnapshotAsync(token);
+        Assert.Equal(removed ? (1, 5L) : (2, 8L), (capacity.StoredCount, capacity.StoredBytes));
+        if (removed)
+            Assert.False(await TransitionAsync());
+        else
+        {
+            InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(TransitionAsync);
+            Assert.Equal($"Durable send '{target.Id}' is not owned by lease '{old.Lease.Token}'.", failure.Message);
+        }
+
+        AssertRecordsUnchanged(before, await ReadRecordsAsync(database, token));
+        Assert.Equal(capacity, await store.GetSnapshotAsync(token));
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        if (current is not null)
+        {
+            Assert.True(await store.MarkDeliveredAsync(target.Id, current.Lease, Epoch.AddMinutes(2), token));
+            AssertRecordsUnchanged(before.Where(row => row.StoreKey != "transition-owner" || row.Id != target.Id.Value).ToArray(),
+                await ReadRecordsAsync(database, token));
+            DurableSendStoreSnapshot completed = await store.GetSnapshotAsync(token);
+            Assert.Equal((1, 5L), (completed.StoredCount, completed.StoredBytes));
+            Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        }
+
+        Task<bool> TransitionAsync() => operation switch
+        {
+            "delivered" => store.MarkDeliveredAsync(target.Id, old.Lease, Epoch.AddMinutes(2), token),
+            "retry" => store.ScheduleRetryAsync(target.Id, old.Lease, 17, Epoch.AddMinutes(9),
+                DurableSendFailureKind.Transient, "Tests.StaleRetry", Epoch.AddMinutes(2), token),
+            "quarantine" => store.QuarantineAsync(target.Id, old.Lease, 17,
+                DurableSendFailureKind.NonRetryable, "Tests.StaleQuarantine", Epoch.AddMinutes(2), token),
+            _ => throw new ArgumentOutOfRangeException(nameof(operation))
+        };
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "oversized-admission-preserves-storage-and-accepts-exact-byte-boundary")]
+    public async Task Admission_OversizedIntentPreservesStorageAndExactBoundaryRemainsUsableAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("size-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("size-other", new RecordingValidator());
+        SerializedDurableSend retained = Message(210, [1, 2], [3]);
+        await store.AdmitAsync(retained, new DurableSendStoreLimits(10, 100), Epoch, token);
+        await other.AdmitAsync(retained, new DurableSendStoreLimits(10, 100), Epoch, token);
+        DurableSendRecord[] before = await ReadRecordsAsync(database, token);
+        DurableSendStoreSnapshot capacity = await store.GetSnapshotAsync(token);
+        DurableSendStoreSnapshot separate = await other.GetSnapshotAsync(token);
+        SerializedDurableSend oversized = Message(211, [4, 5, 6], [7, 8, 9]);
+
+        await Assert.ThrowsAsync<DurableSendCapacityExceededException>(() =>
+            store.AdmitAsync(oversized, new DurableSendStoreLimits(10, 5), Epoch, token));
+
+        AssertRecordsUnchanged(before, await ReadRecordsAsync(database, token));
+        Assert.Equal(capacity, await store.GetSnapshotAsync(token));
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        DurableSendDelivery existing = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(1), token));
+        Assert.True(await store.MarkDeliveredAsync(retained.Id, existing.Lease, Epoch, token));
+        SerializedDurableSend boundary = oversized with { Metadata = new byte[] { 7, 8 } };
+        DurableSendAdmissionResult accepted = await store.AdmitAsync(boundary, new DurableSendStoreLimits(10, 5), Epoch, token);
+        Assert.Equal(DurableSendAdmissionDisposition.Accepted, accepted.Disposition);
+        Assert.Equal((1, 5L), (accepted.StoredCount, accepted.StoredBytes));
+        DurableSendDelivery actual = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(1), token));
+        Assert.Equal(boundary.Id, actual.Message.Id);
+        Assert.Equal(new byte[] { 4, 5, 6 }, actual.Message.Body.ToArray());
+        Assert.Equal(new byte[] { 7, 8 }, actual.Message.Metadata.ToArray());
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        AssertRecordsUnchanged(before.Where(row => row.StoreKey == "size-other").ToArray(),
+            (await ReadRecordsAsync(database, token)).Where(row => row.StoreKey == "size-other").ToArray());
+    }
+
+    [Theory]
+    [InlineData(0, 8L)]
+    [InlineData(2, 2L)]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "inconsistent-ledger-rejects-release-without-deletion-and-allows-repair")]
+    public async Task Delivery_InconsistentLedgerPreservesRecordsAndAllowsRepairAsync(int invalidCount, long invalidBytes)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("inconsistent-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("inconsistent-other", new RecordingValidator());
+        SerializedDurableSend target = Message(212, [1, 2], [3]);
+        SerializedDurableSend neighbor = Message(213, [4, 5, 6], [7, 8]) with { DueAt = Epoch.AddDays(1) };
+        var limits = new DurableSendStoreLimits(10, 100);
+        await store.AdmitAsync(target, limits, Epoch, token);
+        await store.AdmitAsync(neighbor, limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+        DurableSendDelivery delivery = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(5), token));
+        Assert.Equal(target.Id, delivery.Message.Id);
+        DurableSendRecord[] before = await ReadRecordsAsync(database, token);
+        DurableSendStoreSnapshot separate = await other.GetSnapshotAsync(token);
+        await SetLedgerAsync(invalidCount, invalidBytes);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            store.MarkDeliveredAsync(target.Id, delivery.Lease, Epoch.AddSeconds(1), token));
+
+        Assert.Equal("Durable sender capacity state is inconsistent with the retained record.", failure.Message);
+        AssertRecordsUnchanged(before, await ReadRecordsAsync(database, token));
+        await using (DurableDbContext verification = database.Factory.CreateDbContext())
+        {
+            DurableSendCapacityState invalid = await verification.Set<DurableSendCapacityState>().AsNoTracking()
+                .SingleAsync(row => row.StoreKey == "inconsistent-owner", token);
+            Assert.Equal((invalidCount, invalidBytes), (invalid.StoredCount, invalid.StoredBytes));
+        }
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+        await SetLedgerAsync(2, 8);
+        Assert.True(await store.MarkDeliveredAsync(target.Id, delivery.Lease, Epoch.AddSeconds(2), token));
+        DurableSendStoreSnapshot repaired = await store.GetSnapshotAsync(token);
+        Assert.Equal((1, 5L), (repaired.StoredCount, repaired.StoredBytes));
+        AssertRecordsUnchanged(before.Where(row => row.StoreKey != "inconsistent-owner" || row.Id != target.Id.Value).ToArray(),
+            await ReadRecordsAsync(database, token));
+        Assert.Equal(separate, await other.GetSnapshotAsync(token));
+
+        async Task SetLedgerAsync(int count, long bytes)
+        {
+            await using DurableDbContext context = database.Factory.CreateDbContext();
+            DurableSendCapacityState ledger = await context.Set<DurableSendCapacityState>()
+                .SingleAsync(row => row.StoreKey == "inconsistent-owner", token);
+            ledger.StoredCount = count;
+            ledger.StoredBytes = bytes;
+            await context.SaveChangesAsync(token);
+        }
+    }
+
+    [Fact(Timeout = 30000)]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-RECOVERY", "failed-initialization-releases-gate-and-retries-on-same-instance")]
+    public async Task InitializationFailure_PreservesOtherStoreAndAllowsSameInstanceRecoveryAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var failure = new DbUpdateException("initialization-save-failure");
+        var interceptor = new OneShotSaveFailureInterceptor(typeof(DurableSendCapacityState), EntityState.Added, failure);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token, interceptor);
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("initialization-other", new RecordingValidator());
+        await other.AdmitAsync(Message(201, [1, 2], [3]), new DurableSendStoreLimits(10, 100), Epoch, token);
+        DurableSendRecord[] records = await ReadRecordsAsync(database, token);
+        DurableSendStoreSnapshot otherSnapshot = await other.GetSnapshotAsync(token);
+        var validator = new RecordingValidator();
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("initialization-owner", validator);
+        interceptor.Armed = true;
+
+        Assert.Same(failure, await Assert.ThrowsAsync<DbUpdateException>(() => store.GetSnapshotAsync(token)));
+
+        Assert.Equal(1, interceptor.HitCount);
+        Assert.Equal(1, validator.CallCount);
+        await using (DurableDbContext context = database.Factory.CreateDbContext())
+        {
+            DurableSendCapacityState retained = Assert.Single(await context.Set<DurableSendCapacityState>().AsNoTracking().ToArrayAsync(token));
+            Assert.Equal("initialization-other", retained.StoreKey);
+            Assert.Equal((1, 3L), (retained.StoredCount, retained.StoredBytes));
+        }
+        AssertRecordsUnchanged(records, await ReadRecordsAsync(database, token));
+
+        DurableSendStoreSnapshot recovered = await store.GetSnapshotAsync(token);
+
+        Assert.Equal((0, 0L), (recovered.StoredCount, recovered.StoredBytes));
+        Assert.Equal(2, validator.CallCount);
+        Assert.Equal(otherSnapshot, await other.GetSnapshotAsync(token));
+        DurableSendAdmissionResult accepted = await store.AdmitAsync(Message(202, [4], [5, 6]),
+            new DurableSendStoreLimits(10, 100), Epoch, token);
+        Assert.Equal(DurableSendAdmissionDisposition.Accepted, accepted.Disposition);
+        Assert.Equal((1, 3L), (accepted.StoredCount, accepted.StoredBytes));
+        Assert.Equal(2, validator.CallCount);
+        Assert.Equal(1, interceptor.HitCount);
+        Assert.Equal(otherSnapshot, await other.GetSnapshotAsync(token));
+    }
+
+    [Fact(Timeout = 30000)]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "record-save-failure-rolls-back-admission-ledger-and-allows-retry")]
+    public async Task AdmissionSaveFailure_RollsBackCapacityAndRetriesExactIntentAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var failure = new DbUpdateException("admission-save-failure");
+        var interceptor = new OneShotSaveFailureInterceptor(typeof(DurableSendRecord), EntityState.Added, failure);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token, interceptor);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("admission-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("admission-other", new RecordingValidator());
+        var limits = new DurableSendStoreLimits(10, 100);
+        SerializedDurableSend target = Message(203, [1, 2], [3]);
+        await store.AdmitAsync(Message(204, [4, 5, 6], [7, 8]), limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+        DurableSendRecord[] records = await ReadRecordsAsync(database, token);
+        DurableSendStoreSnapshot before = await store.GetSnapshotAsync(token);
+        DurableSendStoreSnapshot otherBefore = await other.GetSnapshotAsync(token);
+        interceptor.BeforeFailure = async (context, cancellation) =>
+        {
+            DurableSendCapacityState staged = await context.Set<DurableSendCapacityState>().AsNoTracking()
+                .SingleAsync(row => row.StoreKey == "admission-owner", cancellation);
+            Assert.Equal((2, 8L), (staged.StoredCount, staged.StoredBytes));
+        };
+        interceptor.Armed = true;
+
+        Assert.Same(failure, await Assert.ThrowsAsync<DbUpdateException>(() => store.AdmitAsync(target, limits, Epoch, token)));
+
+        Assert.Equal(1, interceptor.HitCount);
+        AssertRecordsUnchanged(records, await ReadRecordsAsync(database, token));
+        Assert.Equal(before, await store.GetSnapshotAsync(token));
+        Assert.Equal(otherBefore, await other.GetSnapshotAsync(token));
+
+        DurableSendAdmissionResult accepted = await store.AdmitAsync(target, limits, Epoch, token);
+
+        Assert.Equal(DurableSendAdmissionDisposition.Accepted, accepted.Disposition);
+        Assert.Equal((2, 8L), (accepted.StoredCount, accepted.StoredBytes));
+        DurableSendRecord[] after = await ReadRecordsAsync(database, token);
+        DurableSendRecord inserted = Assert.Single(after, row => row.StoreKey == "admission-owner" && row.Id == target.Id.Value);
+        Assert.Equal(target.Body.ToArray(), inserted.Body);
+        Assert.Equal(target.Metadata.ToArray(), inserted.Metadata);
+        Assert.Equal(target.ContractIdentity.ToString(), inserted.ContractIdentity);
+        Assert.Equal(target.DestinationAddress.AbsoluteUri, inserted.DestinationAddress);
+        AssertRecordsUnchanged(records, after.Where(row => row != inserted).ToArray());
+        Assert.Equal(otherBefore, await other.GetSnapshotAsync(token));
+        Assert.Equal(1, interceptor.HitCount);
+    }
+
+    [Fact(Timeout = 30000)]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "delivery-save-failure-rolls-back-capacity-release-and-retained-record")]
+    public async Task DeliverySaveFailure_RollsBackCapacityAndPreservesLeaseForRetryAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var failure = new DbUpdateException("delivery-save-failure");
+        var interceptor = new OneShotSaveFailureInterceptor(typeof(DurableSendRecord), EntityState.Deleted, failure);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token, interceptor);
+        IOutboxStore<ITestBus> store = database.CreateStore<ITestBus>("release-owner", new RecordingValidator());
+        IOutboxStore<ITestBus> other = database.CreateStore<ITestBus>("release-other", new RecordingValidator());
+        var limits = new DurableSendStoreLimits(10, 100);
+        SerializedDurableSend target = Message(205, [1, 2], [3]);
+        await store.AdmitAsync(target, limits, Epoch, token);
+        await store.AdmitAsync(Message(206, [4, 5, 6], [7, 8]) with { DueAt = Epoch.AddDays(1) }, limits, Epoch, token);
+        await other.AdmitAsync(target, limits, Epoch, token);
+        DurableSendDelivery delivery = Assert.Single(await store.ClaimDueAsync(Epoch, 10, TimeSpan.FromMinutes(5), token));
+        Assert.Equal(target.Id, delivery.Message.Id);
+        DurableSendRecord[] records = await ReadRecordsAsync(database, token);
+        DurableSendStoreSnapshot before = await store.GetSnapshotAsync(token);
+        DurableSendStoreSnapshot otherBefore = await other.GetSnapshotAsync(token);
+        interceptor.BeforeFailure = async (context, cancellation) =>
+        {
+            DurableSendCapacityState staged = await context.Set<DurableSendCapacityState>().AsNoTracking()
+                .SingleAsync(row => row.StoreKey == "release-owner", cancellation);
+            Assert.Equal((1, 5L), (staged.StoredCount, staged.StoredBytes));
+        };
+        interceptor.Armed = true;
+
+        Assert.Same(failure, await Assert.ThrowsAsync<DbUpdateException>(() =>
+            store.MarkDeliveredAsync(target.Id, delivery.Lease, Epoch.AddSeconds(1), token)));
+
+        Assert.Equal(1, interceptor.HitCount);
+        AssertRecordsUnchanged(records, await ReadRecordsAsync(database, token));
+        Assert.Equal(before, await store.GetSnapshotAsync(token));
+        Assert.Equal(otherBefore, await other.GetSnapshotAsync(token));
+
+        Assert.True(await store.MarkDeliveredAsync(target.Id, delivery.Lease, Epoch.AddSeconds(2), token));
+
+        DurableSendStoreSnapshot released = await store.GetSnapshotAsync(token);
+        Assert.Equal((1, 5L), (released.StoredCount, released.StoredBytes));
+        AssertRecordsUnchanged(records.Where(row => row.StoreKey != "release-owner" || row.Id != target.Id.Value).ToArray(),
+            await ReadRecordsAsync(database, token));
+        Assert.Equal(otherBefore, await other.GetSnapshotAsync(token));
+        Assert.Equal(1, interceptor.HitCount);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(4)]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "composite-pagination-preserves-exact-order-and-cursor-across-restarts")]
+    public async Task InboxPagination_TraversesTimestampMessageAndConsumerTiesAcrossRestartsAsync(int pageSize)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IInboxStore<ITestBus> store = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("paged-inbox", new RecordingValidator());
+        IInboxStore<ITestBus> other = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("other-paged-inbox", new RecordingValidator());
+        ReliableInboxQuarantineEntry[] expected = InboxPaginationEntries();
+        foreach (ReliableInboxQuarantineEntry entry in expected.Reverse())
+            await AddInboxQuarantineAsync(store, entry, token);
+        await AddInboxQuarantineAsync(other, expected[0], token);
+        var active = new ReliableInboxKey(PageGuid(1), PageGuid(1));
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired,
+            (await store.AcquireAsync(active, Epoch, TimeSpan.FromMinutes(10), token)).Disposition);
+        ReliableInboxQuarantineEntry abandoned = InboxEntry(1, 2, 4);
+        await AddInboxQuarantineAsync(store, abandoned, token);
+        Assert.Equal(ReliableMessagingOperationDisposition.Applied,
+            (await store.AbandonAsync(abandoned.Key, Epoch.AddMinutes(5), token)).Disposition);
+
+        var query = ReliableInboxQuarantineQuery.FirstPage(pageSize);
+        var actual = new List<ReliableInboxQuarantineEntry>();
+        for (int offset = 0; offset < expected.Length; offset += pageSize)
+        {
+            IInboxStore<ITestBus> restarted = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("paged-inbox", new RecordingValidator());
+            ReliableInboxQuarantinePage page = await restarted.GetQuarantineAsync(query, token);
+            ReliableInboxQuarantineEntry[] expectedPage = expected.Skip(offset).Take(pageSize).ToArray();
+            Assert.Equal(expectedPage, page.Entries);
+            actual.AddRange(page.Entries);
+            bool more = offset + pageSize < expected.Length;
+            Assert.Equal(more, page.HasMore);
+            if (more)
+            {
+                ReliableInboxQuarantineEntry last = expectedPage[^1];
+                Assert.Equal(new ReliableInboxQuarantineQuery
+                {
+                    PageSize = pageSize,
+                    AfterQuarantinedAt = last.QuarantinedAt,
+                    AfterMessageId = last.Key.MessageId,
+                    AfterConsumerId = last.Key.ConsumerId,
+                }, page.Next);
+                query = page.Next! with { AfterQuarantinedAt = last.QuarantinedAt.ToOffset(TimeSpan.FromHours(5)) };
+            }
+            else
+                Assert.Null(page.Next);
+        }
+
+        Assert.Equal(expected, actual);
+        Assert.Equal(expected.Length, actual.Select(entry => entry.Key).Distinct().Count());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX", "saved-cursor-survives-removal-and-excludes-newer-insertion")]
+    public async Task InboxPagination_SavedCursorSurvivesRemovalAndNewerInsertionAsync(bool requeue)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(token);
+        IInboxStore<ITestBus> store = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("changed-page", new RecordingValidator());
+        ReliableInboxQuarantineEntry[] expected = InboxPaginationEntries();
+        foreach (ReliableInboxQuarantineEntry entry in expected.Reverse())
+            await AddInboxQuarantineAsync(store, entry, token);
+        ReliableInboxQuarantinePage first = await store.GetQuarantineAsync(ReliableInboxQuarantineQuery.FirstPage(2), token);
+        Assert.Equal(expected.Take(2), first.Entries);
+        ReliableInboxQuarantineQuery saved = Assert.IsType<ReliableInboxQuarantineQuery>(first.Next);
+        ReliableInboxKey cursorKey = expected[1].Key;
+
+        ReliableMessagingOperationResult removed = requeue
+            ? await store.RequeueAsync(cursorKey, Epoch.AddMinutes(10), token)
+            : await store.DiscardAsync(cursorKey, token);
+        Assert.Equal(new ReliableMessagingOperationResult(ReliableMessageReference.Inbox(cursorKey),
+            ReliableMessagingOperationDisposition.Applied, "Quarantined", requeue ? "RetryScheduled" : "Discarded"), removed);
+        ReliableInboxQuarantineEntry newer = InboxEntry(30, 1, 5);
+        await AddInboxQuarantineAsync(store, newer, token);
+        var remaining = new List<ReliableInboxQuarantineEntry>();
+        for (int offset = 2; offset < expected.Length; offset += 2)
+        {
+            IInboxStore<ITestBus> restarted = (IInboxStore<ITestBus>)database.CreateStore<ITestBus>("changed-page", new RecordingValidator());
+            ReliableInboxQuarantinePage page = await restarted.GetQuarantineAsync(saved, token);
+            Assert.Equal(expected.Skip(offset).Take(2), page.Entries);
+            remaining.AddRange(page.Entries);
+            if (offset + 2 < expected.Length)
+                saved = Assert.IsType<ReliableInboxQuarantineQuery>(page.Next);
+            else
+            {
+                Assert.False(page.HasMore);
+                Assert.Null(page.Next);
+            }
+        }
+
+        Assert.Equal(expected.Skip(2), remaining);
+        ReliableInboxQuarantinePage refreshed = await store.GetQuarantineAsync(ReliableInboxQuarantineQuery.FirstPage(1), token);
+        Assert.Equal(newer, Assert.Single(refreshed.Entries));
+        Assert.DoesNotContain(remaining, entry => entry.Key == cursorKey || entry.Key == newer.Key);
+    }
+
+    private static ReliableInboxQuarantineEntry[] InboxPaginationEntries() =>
+    [
+        InboxEntry(20, 2, 3),
+        InboxEntry(10, 2, 2),
+        InboxEntry(10, 4, 2),
+        InboxEntry(12, 1, 2),
+        InboxEntry(2, 5, 1),
+        InboxEntry(8, 2, 1),
+    ];
+
+    private static ReliableInboxQuarantineEntry InboxEntry(int message, int consumer, int minute) => new(
+        new ReliableInboxKey(PageGuid(message), PageGuid(consumer)), ReliableInboxStatus.Quarantined,
+        1, Epoch, Epoch.AddMinutes(minute), $"Tests.Failure.{message}.{consumer}");
+
+    private static async Task AddInboxQuarantineAsync(IInboxStore<ITestBus> store, ReliableInboxQuarantineEntry entry, CancellationToken token)
+    {
+        ReliableInboxAcquireResult acquired = await store.AcquireAsync(entry.Key, entry.ReceivedAt, TimeSpan.FromMinutes(10), token);
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired, acquired.Disposition);
+        Assert.True(await store.QuarantineAsync(entry.Key, Assert.IsType<ReliableInboxLease>(acquired.Lease),
+            entry.FailureType, entry.QuarantinedAt, token));
+    }
 
     [Theory]
     [InlineData("complete")]
@@ -1099,13 +1557,14 @@ public sealed class EntityFrameworkReliableStoreTests
 
         public DurableDbContextFactory Factory { get; }
 
-        public static async Task<DurableDatabase> CreateAsync(CancellationToken cancellationToken)
+        public static async Task<DurableDatabase> CreateAsync(CancellationToken cancellationToken, IInterceptor? interceptor = null)
         {
             string path = Path.Combine(Path.GetTempPath(), $"vicione-durable-store-{Guid.NewGuid():N}.db");
-            var options = new DbContextOptionsBuilder<DurableDbContext>()
-                .UseSqlite($"Data Source={path};Default Timeout=30;Pooling=False")
-                .Options;
-            var factory = new DurableDbContextFactory(options);
+            var builder = new DbContextOptionsBuilder<DurableDbContext>()
+                .UseSqlite($"Data Source={path};Default Timeout=30;Pooling=False");
+            if (interceptor is not null)
+                builder.AddInterceptors(interceptor);
+            var factory = new DurableDbContextFactory(builder.Options);
             await using DurableDbContext context = factory.CreateDbContext();
             await context.Database.EnsureCreatedAsync(cancellationToken);
             return new DurableDatabase(path, factory);
@@ -1126,6 +1585,27 @@ public sealed class EntityFrameworkReliableStoreTests
             File.Delete(_path + "-wal");
             File.Delete(_path + "-shm");
             return ValueTask.CompletedTask;
+        }
+    }
+
+    private sealed class OneShotSaveFailureInterceptor(Type entityType, EntityState state, Exception failure) : SaveChangesInterceptor
+    {
+        public bool Armed { get; set; }
+        public int HitCount { get; private set; }
+        public Func<DbContext, CancellationToken, Task>? BeforeFailure { get; set; }
+
+        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        {
+            if (Armed && eventData.Context!.ChangeTracker.Entries().Any(entry => entry.Entity.GetType() == entityType && entry.State == state))
+            {
+                Armed = false;
+                HitCount++;
+                if (BeforeFailure is not null)
+                    await BeforeFailure(eventData.Context, cancellationToken);
+                throw failure;
+            }
+            return result;
         }
     }
 
