@@ -11,6 +11,19 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added six InMemory reliable-inbox behavior cases for ownership changes during
+  consumer failure, delayed consumer commits and admission rejection followed by
+  explicit operator recovery. Assertions prove discarded buffered messages,
+  preserved current ownership, exact due-time eligibility and corrected content
+  under the same outgoing identity. Main Core tests pass 6,737/6,737 and four
+  correctly targeted deliberate faults are detected. A misdirected preliminary
+  probe is documented separately. The isolated full control exposed a race in
+  the new test's global quarantine expectation: nested recovery does not clear
+  a failed send registered with the enclosing consumer. Assertions now check
+  both consumer states at their completion boundaries. Corrected isolated
+  verification passes 15/15 with no review blocker; full measurement remains
+  pending. No product defect is claimed.
+
 - Added eighteen EF reliable-store regression cases for composite inbox
   pagination, stale or removed leases, failure atomicity, initialization recovery,
   capacity boundaries and explicit schedule due times. Real SQLite checks preserve

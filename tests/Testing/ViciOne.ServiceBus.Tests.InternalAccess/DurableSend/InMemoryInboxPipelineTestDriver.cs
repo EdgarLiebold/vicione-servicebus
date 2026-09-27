@@ -12,7 +12,8 @@ public static class InMemoryInboxPipelineTestDriver
         ConsumeContext<T> context,
         Guid consumerId,
         Func<ConsumeContext<T>, Task> consume,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool completeConsumer = false)
         where T : class
     {
         var factory = provider.GetRequiredService<IOutboxContextFactory<InMemoryReliableInboxScope<IBus>>>();
@@ -24,6 +25,11 @@ public static class InMemoryInboxPipelineTestDriver
             MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
         };
         return factory.SendAsync(context, options,
-            Pipe.ExecuteAwaited<OutboxConsumeContext<T>>(outbox => consume(outbox)), cancellationToken);
+            Pipe.ExecuteAwaited<OutboxConsumeContext<T>>(async outbox =>
+            {
+                await consume(outbox);
+                if (completeConsumer)
+                    await outbox.SetConsumedAsync(cancellationToken);
+            }), cancellationToken);
     }
 }

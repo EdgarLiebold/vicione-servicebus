@@ -14,7 +14,21 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Current packet — T44
+## Current packet — T45
+
+- Six InMemory inbox behavior cases cover ownership changes, delayed commits
+  and admission recovery. Four valid counterprobes are detected and restored.
+  MAIN initial Core run passes6,737; isolated full restoration finds one test
+  synchronization defect (6,736pass/1fail), traced to the enclosing consumer's
+  retained failed send. Corrected assertions preserve inner recovery and check
+  outer quarantine after shutdown. Focused corrected verification passes15/15;
+  bounded read-only correction review finds no blocker. Full33 is pending.
+  No product code change. [Evidence](coverage-a-plus-20260921/t45-inmemory-inbox-pipeline.md).
+- Efficiency rule: focused tests while implementing, bounded review and
+  counterprobes, then one exact-commit full33 measurement per coherent packet.
+  An additional full restored suite needs a specific remaining risk.
+
+## Previous packet — T44
 
 - Coherent EF reliable-store packet: eighteen additional cases across pagination,
   lease fencing, failure atomicity, capacity boundaries and explicit scheduling.

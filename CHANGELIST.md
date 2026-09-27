@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10874 |
+| Added | 10875 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -221,6 +221,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t42-functions-receiver-isolation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t43-inbox-ownership-transitions.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t44-ef-store-contracts.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t45-inmemory-inbox-pipeline.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
