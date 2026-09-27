@@ -16,8 +16,10 @@ entry below records what the current work changed for anyone reading the source.
   capacity boundaries and explicit schedule due times. Real SQLite checks preserve
   retained records, neighboring stores and capacity ledgers across failures.
   All five isolated deliberate faults are detected; main and restored isolated
-  EF suites pass 340/340. No product defect was reproduced. The product-wide
-  measurement remains pending in the T44 evidence packet.
+  EF suites pass 340/340. No product defect was reproduced. Commit a30933c1c
+  passes all 33 profiles and 12,947 executions without retries. Product totals
+  are 85,532/93,749 lines and conservative 30,858/36,843 branches; target store
+  gains 37 covered lines. Global A+ remains open.
 
 - Added six EF Core inbox regression cases for stale and removed consumer
   attempts across completion, retry and quarantine. Real SQLite assertions prove

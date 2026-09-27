@@ -20,8 +20,14 @@
   lease fencing, failure atomicity, capacity boundaries and explicit scheduling.
   MAIN focused39/39, full340/340; restored isolated full340/340; format exit0.
   Five counterprobes detected5/1/4/1/1cases. Final bounded read-only review finds
-  no blocker. Product source unchanged. Full33 measurement and push pending.
+  no blocker. Product source unchanged. Commit a30933c1c passes all33 profiles,
+  12,947 executions and four fixture groups without retries. Lines85,532/93,749,
+  conservative branches30,858/36,843;0CRAP>30. Gaps4,423=2,755zero+1,668partial,
+  branch-only1,510,union5,933. Independent audit confirms487hashes/66bindings,
+  all66old/newXML and exact gap/physical deltas. No accounting blocker remains.
+  Packet documentation is complete; authorized remote synchronization follows.
   [Evidence and limits](coverage-a-plus-20260921/t44-ef-store-contracts.md).
+  [Full measurement](coverage-a-plus-20260921/product-wide-profile-a30933c1c.md).
   In response to the user's efficiency feedback, one complete measurement is
   performed after this coherent packet, not after each small test addition.
 

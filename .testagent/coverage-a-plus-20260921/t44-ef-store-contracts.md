@@ -1,9 +1,9 @@
-# T44: EF reliable-store contracts — in progress
+# T44: EF reliable-store contracts
 
 Base: `0b1abbf775e1a2946deda0ec7699266e47d936f2`.
-This packet remains open. No new product-wide coverage result or A+ completion
-is claimed. Following user feedback, all five areas below form one coherent
-iteration; run one full 33-profile measurement after the complete packet.
+Implementation measured at `a30933c1c5c42ac5c3f37cba0c3a2b3d31c07843`.
+Following user feedback, all five areas below form one coherent iteration with
+one full 33-profile measurement after the complete packet. A+ remains open.
 
 Microsoft code-testing-agent focused workflow, run-tests and the existing bounded
 research/pairing are used. Implementation is manual. The new cases use actual
@@ -50,9 +50,14 @@ entries in `EntityFrameworkRequirements.json`.
   MAIN `artifacts/t44-format-corrected.log`, exit 0.
 - Final bounded read-only evidence review confirms the five failure oracles,
   restored byte identity and all nine manifest bindings; no concrete blocker.
-- Still open: canonical CHANGELIST,
-  implementation commit, one exact-commit full measurement and independent
-  evidence audit, final documentation and authorized push.
+- Canonical CHANGELIST verified at 16,524 entries before implementation commit.
+- All 33 exact-commit profiles pass, 12,947 executions and four fixture groups
+  exit 0, no replacement retries. [Full measurement](product-wide-profile-a30933c1c.md)
+  records 85,532/93,749 lines, conservative 30,858/36,843 branches, no CRAP>30,
+  remaining gaps and target improvements.
+- Independent measurement audit confirms all 487 hashes, 66 bindings and 66
+  old/new XML reports, exact totals and gap accounting; no concrete blocker.
+  Final documentation records the completed packet for the authorized push.
 
 ## Isolated counterprobes
 
