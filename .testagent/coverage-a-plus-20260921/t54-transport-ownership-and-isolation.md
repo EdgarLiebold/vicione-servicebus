@@ -1,5 +1,35 @@
 # T54 — transport ownership and message isolation
 
+## Current correction after the first complete-measurement attempt
+
+The full33 process at `f97172b65` exits1 after26 verified profiles. SQS profile27
+passes59/60; AmazonSqsQuartzSchedulingTests queries trigger absence immediately
+after consumer delivery, before Quartz finishes store cleanup. The failed
+measurement remains under `artifacts/t54-*`; no complete aggregate is claimed.
+
+The existing test is corrected without changing product code: register a scheduler
+listener before sending, match finalization to the scheduled token, observe actual
+trigger removal under a linked OperationTimeout, retain GetTriggerKeys/absence,
+and assert exactly one delivery after bus stop. Bounded polling observes an external
+asynchronous state; expiration fails the test. It does not delete the trigger or
+stop Quartz to manufacture absence. Existing ActiveMQ tests and the T38 evidence
+already establish that TriggerFinalized alone precedes store removal.
+
+Targeted control passes1/1. An isolated test gate then blocks the finalization
+callback after signaling: the removal check fails after its30-second deadline;
+finally releases the gate before bus/lease cleanup. MAIN
+`artifacts/t54-sqs-gate-mutation.log` records1/1failed and fixture cleanup. Immediate
+manual restoration matches MAIN/GATE SHA-256
+`2bc52311224a8598f89e9605ea3a33f73fd3742e0335934fc437c59b14a5241b`.
+Restored controls pass2/2 including requirement projection (`t54-sqs-restored.log`),
+build zero warnings/errors, verify-only format exits0 (author tool session43803).
+The read-only reviewer confirms no concrete blocker. A mutation exit alone does
+not establish a complete worker-join guarantee. Corrected hashes are retained in
+`artifacts/t54b-main-gate-inputs.json`; the initial manifest is preserved.
+
+Next: corrected freeze and complete exact measurement, then independent audit and
+publication. Earlier pending/running statements below retain the initial chronology.
+
 Status: research and implementation in progress; no completion or new coverage
 claim. Baseline publication `f492b3ed6`, measured implementation `f41b145f6`.
 

@@ -2,6 +2,16 @@
 
 ## Current T54 — implementation in progress
 
+The initial exact full33 at `f97172b65` stopped after26 verified profiles: SQS
+local integration passed59/60, failing the existing Quartz trigger-removal check.
+Consumer delivery had completed before Quartz removed its trigger. The test now
+observes matching TriggerFinalized and bounded actual removal, retaining the
+absence assertion and checking delivery count after bus stop. No product source
+change. Read-only review agrees; a blocked-finalization probe fails as required
+and is manually restored with original hash verified. Restored SQS controls pass
+2/2, no skips; build and verify-only formatting are clean. A corrected freeze and
+complete exact measurement are required; the initial partial run is not acceptance.
+
 T53 is complete/pushed at `f492b3ed6`. Six families are planned in the
 [T54 map](coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md).
 One bounded pairing and ActiveMQ read-only selection review are complete.
@@ -17,7 +27,8 @@ hash verified. Native grouping counterprobe fails all three protocol cases while
 three existing controls pass; original hash is restored. Combined restored controls
 pass27/27 (ActiveMQ7,EventHubs20), no skips; both builds have zero warnings/errors.
 All5,891 src/tests paths match MAIN/GATE. One exact full33, independent audit and
-publication remain open; no new coverage measurement yet.
+publication remain open. The statements above distinguish the later failed full
+measurement and correction from the initial focused evidence below.
 
 ## Current T53 — complete measurement and audit
 

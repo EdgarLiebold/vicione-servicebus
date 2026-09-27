@@ -13,6 +13,11 @@ All six families, combined review, two detected/restored counterprobes and27/27
 restored controls are complete. Both verify-only format checks exit0. Freeze the
 implementation, then perform the one full33 and independent audit before publication.
 
+The first full33 at `f97172b65` exposed an existing SQS Quartz test race and stopped.
+The corrected test, read-only review, gate counterprobe and restored2/2 controls
+are complete. Freeze the correction and measure the exact corrected commit with
+fresh artifacts; preserve the failed attempt and do not mix it into acceptance.
+
 ## Current T53 — one combined persistence package
 
 All four [T53 families](coverage-a-plus-20260921/t53-saga-persistence-integrity.md)

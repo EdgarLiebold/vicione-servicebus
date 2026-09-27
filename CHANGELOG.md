@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected a race in the SQS Quartz integration test discovered by the T54 full
+  measurement: consumer delivery can precede Quartz trigger removal. The test now
+  observes matching finalization and actual bounded store removal, retains the
+  absence assertion, and checks delivery count after bus stop. A blocked-finalization
+  counterprobe fails as required; restored controls pass2/2. This corrects test
+  synchronization and does not claim a product delivery defect.
 - Added a combined transport verification packet for Event Hubs configuration
   ownership and repair, endpoint identity, deferred producer resolution/delivery,
   and native ActiveMQ group isolation across OpenWire, AMQP and Artemis. The
