@@ -40,7 +40,9 @@ No reflection, product test hooks or coverage exclusions were added.
   requirements manifest compare byte-identically between MAIN and GATE.
 - Read-only adversarial plan, implementation and evidence review found no concrete
   blocker. Restored GATE `artifacts/t41-restored.log`: 6731/6731, exit 0,
-  no skips. Exact-commit product-wide measurement remains pending.
+  no skips. Exact-commit product-wide measurement at 118cc5ded passes all 33
+  profiles, 12,908 executions and all four fixture groups. See the
+  [full report and reconciled source comparison](product-wide-profile-118cc5ded.md).
 
 ## Measurement requirements
 

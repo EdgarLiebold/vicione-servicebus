@@ -2,6 +2,17 @@
 
 ## Latest product-wide profile
 
+The latest complete profile is `118cc5ded`: 33 profiles, 32 assemblies,
+12,908 passing executions, 85,401/93,751 lines (91.09343%) and conservative
+branches 30,808/36,823 (83.66510%). All four fixture groups exit 0. Remaining:
+4,445 line-gap identities (2,769 zero and 1,676 partial) plus 1,510 branch-only
+candidates. None exceeds CRAP 30. Cron targets reach full line coverage and
+CRAP 20/18; four target branches remain. Source removals and changed reachability
+are reconciled separately from coverage observations. A+ remains open.
+See [T41 full report](product-wide-profile-118cc5ded.md).
+
+## Previous T40 profile
+
 The latest complete profile is `d286a336a`: 33 profiles, 32 assemblies,
 12,902 passing executions, 85,407/93,762 lines and conservative branches
 30,814/36,841. Remaining: 4,446 line-gap identities (2,771 zero and 1,675
@@ -10,8 +21,8 @@ startup failed before tests and was separately retried with evidence preserved.
 See [T40 report](product-wide-profile-d286a336a.md). A+ remains open.
 
 T41 Cron focused verification, adversarial review and three counterprobes are
-complete; restored isolated Core tests pass 6731/6731. Exact-commit full
-measurement remains pending. See [T41 evidence](t41-cron-boundaries.md).
+complete; restored isolated Core tests pass 6731/6731. Its completed measurement
+is linked above. See [T41 evidence](t41-cron-boundaries.md).
 
 ## Previous T33 profile
 

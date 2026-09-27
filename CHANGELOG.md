@@ -15,8 +15,11 @@ entry below records what the current work changed for anyone reading the source.
   calendar-union ordering across month boundaries, coincident dates and year
   exhaustion. Removed unreachable private parser guards and simplified calendar
   selection with preserved semantics. Three deliberate faults are detected;
-  restored isolated Core tests pass 6731/6731 without skips. Product-wide
-  measurement is pending; no A+ claim. See the T41 evidence packet.
+  restored isolated Core tests pass 6731/6731 without skips. Full measurement at
+  118cc5ded passes 33 profiles and 12,908 executions. Targets reach full line
+  coverage and CRAP 20/18; four target branches remain. Product totals are
+  85,401/93,751 lines and conservative 30,808/36,823 branches. Removed code and
+  changed reachability are separately reconciled; global A+ remains open.
 
 - Added eight RabbitMQ factory-option cases proving independent message/frame
   limits, certificate/provider/static-credential priority and actual cluster
