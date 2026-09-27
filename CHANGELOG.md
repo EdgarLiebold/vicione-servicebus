@@ -19,8 +19,10 @@ entry below records what the current work changed for anyone reading the source.
   sagas continue through the same repository. Independent review strengthens
   the JSON error-category oracle; two isolated counterprobes are detected and
   restored. Final focused controls pass19/19 with zero build warnings/errors.
-  No product defect is claimed from this test-only packet. Its complete coverage
-  measurement and global A+ acceptance remain open.
+  No product defect is claimed from this test-only packet. One complete run passes
+  13,160 tests across33 profiles and four clean fixture groups:91.55120% lines,
+  84.11811% conservative branches and zero CRAP>30. Independent integrity and
+  numerical audit agrees. Global A+ remains open with5,837 gap identities.
 - Added a connected scheduling verification packet: 32 cases cover publish
   admission before initializer or endpoint effects, control-command resolution
   and delivery ownership, invalid Quartz replacements and provider failures.

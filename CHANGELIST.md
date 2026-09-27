@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10912 |
+| Added | 10913 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -184,6 +184,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-e51c446f2.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-e8976fc62.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-ef-inbox-20260925.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-f41b145f6.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-f6d2ec3ec.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-f7d924f94.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-job-attempt-20260925.md` | Added |  |

@@ -6,7 +6,11 @@ All four [T53 families](coverage-a-plus-20260921/t53-saga-persistence-integrity.
 are implemented together. Real Azure Table storage, outgoing SDK writes, exact
 row/ETag and neighbor assertions prove rejection and recovery. Adversarial review,
 two detected/restored counterprobes and19/19 restored controls are complete.
-Freeze for one complete measurement, independent audit and authorized push.
+One full33 measurement and independent audit are complete:13,160 passes,
+91.55120% lines,84.11811% conservative branches, zero CRAP>30. Finish publication
+before new implementation. For the next packet, combine several connected code
+areas before one full-product run; use existing evidence for selection and focused
+tests while building. Do not repeat global measurements for small subpackets.
 T52 publication is complete; its older publication instructions are historical.
 
 ## Current T52 — one connected scheduling boundary package

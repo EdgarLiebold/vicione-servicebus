@@ -11,7 +11,9 @@ families cover corrupted native values, schema evolution, exact storage limits
 and corrupted serialized values through real persistence and consume paths.
 See [T53 acceptance map](coverage-a-plus-20260921/t53-saga-persistence-integrity.md).
 Implementation, independent review, two detected/restored counterprobes and19/19
-final focused controls are complete. Full-product measurement remains pending.
+final focused controls are complete. The single full33 measurement passes13,160
+tests; independent integrity/numerical audit agrees. The current measured worklist
+contains5,837 gap identities. See the [final report](coverage-a-plus-20260921/product-wide-profile-f41b145f6.md).
 
 ## Current T52 — scheduling admission and failure ownership
 

@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T53 — ready for frozen measurement
+## Current T53 — complete measurement and audit
 
 Authoritative starting HEAD is `322dcc16d`; tracked worktree was clean before
 T53. Protected `TestResults/` and `review/` remain untouched. Single bounded
@@ -13,9 +13,14 @@ fresh entity, with actual repaired type/value and load asserted. Combined restor
 controls pass19/19, no skips; build has zero warnings/errors. Both isolated probes
 are detected (native error swallowing3/6, string boundary2/5) and original source
 hashes restored. All5,889 src/tests paths match MAIN/GATE; final verify-only format
-exits0. No product source change exists. Freeze for one full33 measurement and
-independent audit before publication. T52 remains the latest complete coverage
-measurement; global A+ is open. Details: [T53](coverage-a-plus-20260921/t53-saga-persistence-integrity.md).
+exits0. No product source change exists. Frozen implementation `f41b145f6`
+passes13,160 tests in33 profiles and four clean fixture groups. Lines85,832/93,753
+(91.55120%); conservative branches30,995/36,847 (84.11811%); zero CRAP>30.
+Independent integrity and numerical audit agrees. Remaining union5,837 includes
+4,314 line gaps and1,523 branch-only gaps; global A+ remains open.
+The [complete T53 report](coverage-a-plus-20260921/product-wide-profile-f41b145f6.md)
+supersedes T52. Documentation/CHANGELIST and authorized publication close this
+packet before the next, larger implementation packet.
 
 ## Current T52 — complete measurement and audit
 

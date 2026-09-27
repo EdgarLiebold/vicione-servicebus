@@ -113,4 +113,13 @@ All5,889 source/test inputs match MAIN/GATE byte-for-byte, retained in MAIN's
 The reviewer confirms the JSON-category correction and fresh entity repair do
 not weaken corruption or recovery checks; no other concrete static blocker.
 Both material injected faults are empirically detected, not a complete mutation
-score for the package. Full33, independent aggregate audit and publication follow.
+score for the package.
+
+## Final measurement and review
+
+Frozen implementation `f41b145f6` passes13,160 tests across33 profiles and four
+clean fixture groups. Independent integrity and numerical audit finds no
+discrepancy. Lines85,832/93,753; conservative branches30,995/36,847; zero CRAP>30.
+Remaining gap union5,837 does not establish global A+. The [final report](product-wide-profile-f41b145f6.md)
+records exact inputs, deltas, audit scope and artifact hashes. Earlier pending
+gate statements above retain the chronological state at that time.
