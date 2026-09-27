@@ -1,5 +1,24 @@
 # A+ remediation test status
 
+## Current T54 — implementation in progress
+
+T53 is complete/pushed at `f492b3ed6`. Six families are planned in the
+[T54 map](coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md).
+One bounded pairing and ActiveMQ read-only selection review are complete.
+All six families now implement22 new cases in three files with six requirement
+bindings. Both targeted builds pass with zero warnings/errors. Read-only review's
+cleanup and overload-oracle findings are corrected; authoring build errors remain
+documented. The first broker fixture failed before tests due to a temporary-path
+Docker mount; replacement uses MAIN fixture ownership with isolated GATE binaries.
+Focused controls pass ActiveMQ7/7 and EventHubs16/16, no skips. Four additional
+delayed provider-failure cases then pass in DeferredProducer16/16. The isolated
+singleton missing-await probe fails1/16 and is restored with its original source
+hash verified. Native grouping counterprobe fails all three protocol cases while
+three existing controls pass; original hash is restored. Combined restored controls
+pass27/27 (ActiveMQ7,EventHubs20), no skips; both builds have zero warnings/errors.
+All5,891 src/tests paths match MAIN/GATE. One exact full33, independent audit and
+publication remain open; no new coverage measurement yet.
+
 ## Current T53 — complete measurement and audit
 
 Authoritative starting HEAD is `322dcc16d`; tracked worktree was clean before

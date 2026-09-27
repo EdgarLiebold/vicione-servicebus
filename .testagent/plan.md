@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## Current T54 — six families before the next full measurement
+
+Implement the [combined contract map](coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md)
+across Event Hubs configuration, deferred consume-context production and ActiveMQ
+native message isolation. Each family has exact named behavioral oracles. Build
+and run affected projects during implementation; combine review and counterprobes
+before one frozen full33. T53 publication is complete. Do not close a small
+subpacket with another global run.
+
+All six families, combined review, two detected/restored counterprobes and27/27
+restored controls are complete. Both verify-only format checks exit0. Freeze the
+implementation, then perform the one full33 and independent audit before publication.
+
 ## Current T53 — one combined persistence package
 
 All four [T53 families](coverage-a-plus-20260921/t53-saga-persistence-integrity.md)

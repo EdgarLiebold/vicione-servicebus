@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10913 |
+| Added | 10916 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -239,6 +239,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t51-receive-settlement-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t52-scheduling-admission-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t53-saga-persistence-integrity.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15376,6 +15377,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/BatchCheckpointBehaviorTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubBatchAndReliabilityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubCheckpointStorageTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubConfigurationOwnershipTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubDeferredProducerTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubEndpointAndBusBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubHeaderProviderTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubInteropAndContextTests.cs` | Added |  |

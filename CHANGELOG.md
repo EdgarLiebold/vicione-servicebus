@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a combined transport verification packet for Event Hubs configuration
+  ownership and repair, endpoint identity, deferred producer resolution/delivery,
+  and native ActiveMQ group isolation across OpenWire, AMQP and Artemis. The
+  22 new cases distinguish rejected configuration from successful continuation,
+  exact inherited/overridden metadata, provider failure/cancellation and missing
+  awaits. Read-only review strengthened cleanup and overload discrimination.
+  Both isolated counterprobes are detected and restored; combined controls pass
+  27/27 without skips. Complete coverage measurement and packet acceptance remain
+  pending; no product defect or global A+ completion is claimed.
 - Added a connected Azure Table saga-persistence verification packet: 13 cases
   cover corrupted native and serialized rows through public loads and real
   consumption, schema evolution with absent versus explicit empty values, and

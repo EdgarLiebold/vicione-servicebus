@@ -1,5 +1,14 @@
 # A+ remediation research
 
+## Current T54 — transport ownership and isolation
+
+T53 is complete and remotely verified at `f492b3ed6`. The [combined T54 map](coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md)
+plans six connected contract families across Event Hubs and ActiveMQ. One bounded
+Roslyn pass is complete:244 sources,78 tests,five projects;93 paired/151 unpaired.
+Static pairing is not runtime absence. Existing measured T53 worklists remain the
+selection baseline; no new measurement was run. ActiveMQ read-only selection
+review identifies native message grouping and isolation as a missing product proof.
+
 ## Current T53 — persisted saga integrity
 
 T52 is complete and pushed at `322dcc16d`. Reuse its measured worklist; no new
