@@ -20,8 +20,11 @@ entry below records what the current work changed for anyone reading the source.
   configured envelope admission and independent forwarding targets. Its raw
   regression fails against the original implementation while three forwarding
   controls pass. All three isolated counterprobes are detected and restored;
-  56/56 combined corrected controls pass with zero build warnings/errors. Final
-  product-wide measurement and global A+ acceptance remain open.
+  56/56 combined corrected controls and 6/6 scheduling controls pass with zero
+  build warnings/errors. The corrected product-wide measurement passes 13,076
+  executions in all 33 profiles, including 284/284 Quartz cases. It records
+  91.51067% line coverage, 84.07197% conservative branch coverage and zero methods
+  with CRAP > 30. Global A+ acceptance remains open.
 
 - Added twelve combined Courier journeys for execute retry with route replacement
   or termination, successful and exhausted compensation retries, and activity

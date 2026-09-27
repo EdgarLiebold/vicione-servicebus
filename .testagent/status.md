@@ -1,6 +1,17 @@
 # A+ remediation test status
 
-## Current T50 — implementation in progress
+## Current T50 — complete measurement and audit
+
+Corrected implementation `a74627818` passes all 33 profiles: 13,076 executions,
+zero failures/skips, four fixture groups exit 0. Lines 85,794/93,753
+(91.51067%); conservative branches 30,978/36,847 (84.07197%); zero CRAP > 30.
+Remaining: 4,326 line-gap plus 1,525 branch-only identities, union 5,851.
+See [current complete measurement](coverage-a-plus-20260921/product-wide-profile-a74627818.md).
+Independent final audit passes without discrepancies; authorized publication
+follows this documentation commit. Historical preparation
+and failed-first-run notes below do not supersede this corrected measurement.
+
+## T50 preparation and first failed measurement
 
 T49 is complete/pushed at `fd3c32976`. T50 combines JSON conversion, configured
 envelope admission, forwarding and lazy payload error boundaries in one larger

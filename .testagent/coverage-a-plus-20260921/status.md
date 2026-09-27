@@ -1,6 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current T49 packet and latest complete profile
+## Current T50 packet and latest complete profile
+
+The combined JSON packet is measured at `a7462781823373ff9a9cdbaa9a9e9dfcd7390442`:
+13,076 successful executions, all 33 profiles, 32 assemblies and four fixture
+groups. Lines 85,794/93,753 (91.51067%); conservative branches 30,978/36,847
+(84.07197%); zero CRAP > 30. Remaining union: 5,851 identities (4,326 line gaps
+plus 1,525 branch-only). The corrected run retains the earlier Quartz failure
+as evidence; no failed receipt is overwritten. Independent final audit passes
+without discrepancies; publication follows the documentation commit.
+See [T50 report](product-wide-profile-a74627818.md).
+Global A+ remains open.
+
+## Completed T49 packet
 
 The Courier outbox/retry/timeout packet is verified at
 `ad3ddbd4050f04d8096c1054d9b509cd015ab883`. Twelve new cases pass one complete

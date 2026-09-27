@@ -2,6 +2,11 @@
 
 ## Current T50 — one larger serialization package
 
+Corrected commit `a74627818` now passes all 33 profiles and four fixture groups.
+Aggregate, comparison and independent audit are complete without discrepancies.
+Finish documentation/CHANGELIST and authorized push before the next larger package.
+The preparation notes below record the earlier failed run and correction.
+
 Follow [T50 acceptance map](coverage-a-plus-20260921/t50-json-boundary-journeys.md):
 decimal/dictionary contracts, configured envelope admission, forwarding isolation
 and lazy payload failures. Build and run focused tests after the combined edit;

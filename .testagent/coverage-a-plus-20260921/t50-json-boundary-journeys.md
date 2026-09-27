@@ -142,4 +142,14 @@ Evidence: `/private/tmp/t50-quartz-correction-build.log` and
 56/56 with zero failures/skips and a zero-warning/error build; evidence is in
 `/private/tmp/t50-correction-core-build.log` and
 `/private/tmp/t50-correction-core-tests.log`. A fresh exact-commit full33 remains
-pending. This failed attempt does not replace T49 metrics.
+pending at that checkpoint. This failed attempt does not replace T49 metrics.
+
+## Corrected complete measurement
+
+Commit `a7462781823373ff9a9cdbaa9a9e9dfcd7390442` passes all 33 profiles:
+13,076 executions, no failures/skips, four clean fixture groups. Quartz passes
+284/284, Core 6,817/6,817. Corrected receipts and reports use `t50b-*` paths;
+the failed `t50-*` measurement is preserved. Aggregate and comparison are
+complete; see [final measurement](product-wide-profile-a74627818.md).
+Independent final audit passes without discrepancies; publication follows the
+documentation commit. Global A+ remains open.

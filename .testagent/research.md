@@ -2,6 +2,15 @@
 
 ## Current T50 — JSON boundaries across conversion, admission and forwarding
 
+The corrected full33 measurement at `a74627818` is complete: 13,076 passing
+executions, 91.51067% lines, 84.07197% conservative branches, zero CRAP > 30,
+5,851 remaining gap identities. The first full33 exposed a Quartz raw replay
+regression; corrected targeted controls pass 6/6 plus 56/56 and full Quartz
+passes 284/284. Independent final audit passes without discrepancies; publication
+follows the documentation commit. See
+[measured evidence](coverage-a-plus-20260921/product-wide-profile-a74627818.md).
+The following preparation notes are historical.
+
 T49 is complete and pushed at `fd3c32976`. The larger connected scope, one
 bounded Roslyn pairing (60 sources/50 tests), existing evidence and acceptance
 map are in [T50](coverage-a-plus-20260921/t50-json-boundary-journeys.md).
