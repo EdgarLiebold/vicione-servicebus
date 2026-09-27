@@ -1,6 +1,22 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current T46 packet and latest complete profile
+## Current T47 packet and latest complete profile
+
+The combined Saga callback and request-generation packet is verified at
+`7d0e3d332b935cdb4e5ddbcd883c9bd15a73b26e`. Ten new cases pass one complete
+33-profile measurement:13,003 executions,32 assemblies,four clean fixture groups,
+no retries. Lines85,587/93,753 (91.28988%) remain unchanged; conservative
+branches30,906/36,845 (83.88112%). No method exceeds CRAP30.
+Remaining4403line-gap entries and1507additional branch-only entries,union5910.
+
+Two isolated faults are detected; restored Core20/20 and Quartz22/22 pass.
+Independent behavioral, integrity and numerical audits find no packet blocker.
+Six target physical-line gains are separated from other observed changes;
+the complete profile has10gains/10losses. Global A+ remains open.
+See [T47 evidence](t47-saga-journeys.md) and
+[complete T47 report](product-wide-profile-7d0e3d332.md).
+
+## Completed T46 packet
 
 The combined ActiveMQ, RabbitMQ and SNS/SQS header packet is verified at
 `01617f4eca3d3b79e6cd9a348f37eca7d8905b4a`. Forty added cases and a real

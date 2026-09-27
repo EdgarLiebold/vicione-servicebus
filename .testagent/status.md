@@ -14,7 +14,7 @@
 > below are historical. First reading is complete; defect remediation and A+
 > verification are not.
 
-## Current packet — T47 (in progress)
+## Latest verified packet — T47
 
 - One combined Saga callback/request-generation packet; see
   [research and acceptance map](coverage-a-plus-20260921/t47-saga-journeys.md).
@@ -33,10 +33,19 @@
   timeout ownership fails1/3 with both other replay controls green. Sources are
   SHA-restored; combined Core20/20 and Quartz22/22 pass, zero build warnings/errors.
   Verify-only formatting passes with both test projects loaded; canonical
-  CHANGELIST verifies16,535 entries. The single full33 measurement remains pending.
-- Product sources are unchanged; implementation is ready for exact-commit
-  measurement. No new product-wide result or T47 push is claimed yet.
-  The accepted T46 metrics below remain the current measured baseline.
+  CHANGELIST implementation checkpoint verifies16,535 entries.
+- Commit7d0e3d332 passes the single complete33-profile measurement with13,003
+  executions, zero failures/skips and four fixture groups exiting0, no retries.
+  Product sources remain unchanged. Lines85,587/93,753 (91.28988%); conservative
+  branches30,906/36,845 (83.88112%);26,071 method identities, zeroCRAP>30.
+  Remaining4403line gaps(2749zero/1654partial),1507branch-only,union5910.
+- Independent audit confirms487 hashes,66 runner/settings bindings,nine broker
+  log hashes and all66 T46/T47 XML inventories. No packet blocker remains.
+  Physical+10/-10 explains unchanged line coverage; only six gains are direct
+  target lines. Requestcallback1383 migrates to branch-only and remains open.
+  [Complete report](coverage-a-plus-20260921/product-wide-profile-7d0e3d332.md).
+- Global A+ remains open. Publish completion documentation, then continue with
+  larger coherent behavior packages. First source reading is not reopened.
 
 ## Completed packet — T46
 

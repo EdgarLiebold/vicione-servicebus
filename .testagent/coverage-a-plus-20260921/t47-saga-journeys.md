@@ -1,6 +1,7 @@
 # T47 — Saga request and callback journeys
 
-Status: implementation in progress. Baseline: `1011ef1dd3fe3115c28e6ca0d05ca25b8d515dc8`.
+Status: verified. Baseline: `1011ef1dd3fe3115c28e6ca0d05ca25b8d515dc8`.
+Measured implementation: `7d0e3d332b935cdb4e5ddbcd883c9bd15a73b26e`.
 This is one combined packet, with one final full 33-profile measurement after
 implementation, adversarial review and restored counterprobes. No A+ closure is claimed.
 
@@ -51,11 +52,13 @@ normal SendActivity factory is not itself a token-cancellation guarantee.
 | Request responses, missing IDs and timeout cleanup retain correct ownership | Existing request and Quartz journey suites in the combined narrow verification, then full provider measurement; extend only if review identifies a concrete missing behavior |
 | Larger coherent packet, strong tests and independent adversarial review | Review all new cases together, isolated single-cause counterprobes, restore and verify before one final full33 |
 
-Pending: final exact-commit measurement and numerical
-audit, changelog/CHANGELIST, commit and authorized push. Implementation, bindings,
-read-only review, selected counterprobes and restored focused checks are complete.
+Implementation, bindings, read-only review, selected counterprobes, restored
+focused checks, exact-commit measurement and independent numerical audit are
+complete. Publish the completion documentation with the authorized push.
 
 ## Implementation checkpoint
+
+The following is the pre-measurement history. Final results follow below.
 
 - Seven callback cases and requirement projection pass 8/8 in GATE, Release build
   zero warnings/errors (`artifacts/t47-callback-recovery-corrected*.log`).
@@ -118,3 +121,23 @@ read-only review, selected counterprobes and restored focused checks are complet
 - Corrected verify-only formatting exits 0 with both target test projects loaded
   and no formatting changes required (`t47-format-tests.log`). `git diff --check`
   passes. Canonical CHANGELIST generation and verification pass, 16,535 entries.
+
+## Final measurement and audit
+
+The sole full33 measurement exits0,13,003 successful executions,32 assemblies,
+four fixture groups exit0 and no retry. All provider finding lists are empty.
+Physical lines85,587/93,753 remain unchanged; conservative branches30,906/36,845
+increase by3. Methods26,071 unchanged,zeroCRAP>30. Remaining line gaps4403
+(2749zero/1654partial),branch-only1507,union5910. No global A+ claim.
+
+Independent read-only audit confirms487 receipt/binary/log/report hashes,
+66runner/settings bindings,nine brokerlog hashes and reconstructs all66 old/new
+XML reports. Exact method rows and physical deltas agree:10line gains/10losses,
+8line-gap closures/2new entries. Six target lines gain coverage. The additional
+request callback at1383 moves from line-gap to branch-only (1/2branches), so it
+is not fully closed. Non-target observation changes are not attributed to these
+new tests. No blocking audit finding remains.
+
+See [the complete profile](product-wide-profile-7d0e3d332.md) for reconciliation,
+artifact hashes and remaining risks. The highest line-gap risks remain Outbox
+delivery, EventHubs batch send and InMemory inbox send; none exceeds CRAP30.

@@ -18,8 +18,11 @@ entry below records what the current work changed for anyone reading the source.
   cannot change the second request or cancel its real Quartz trigger. Both trigger
   existence and removal are observed. Selected callback-pipe and timeout-owner
   counterchanges are detected; restored combined checks pass20/20 Core and22/22
-  Quartz, with no product source change. The combined packet's product-wide
-  measurement remains pending; these focused results do not establish global A+.
+  Quartz, with no product source change. Commit7d0e3d332 passes one complete
+  33-profile measurement and13,003 executions. Line coverage remains85,587/93,753;
+  conservative branches rise to30,906/36,845. Independent integrity and numerical
+  audits find no packet blocker. Observation gains/losses and remaining method
+  gaps are explicitly reconciled; global A+ remains open.
 
 - Fixed ActiveMQ receive timestamps being shifted by the local UTC offset when
   the OpenWire SDK returns a local DateTime. The provider now converts the

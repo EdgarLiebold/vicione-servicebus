@@ -11,11 +11,13 @@ Request-generation isolation and real Quartz cleanup map to
 Existing request/timeout suites provide complementary multi-response, missing-ID
 and real expiration coverage; do not recreate their overload matrices.
 
-Finish implementation and the combined read-only review, verify focused controls
-and single-cause counterprobes, restore, then perform one full33 exact-commit
-measurement and independent numerical audit. Update changelog and canonical
-CHANGELIST, commit and use the already-authorized push. T47 remains open until all
-these gates finish; the continuation and iteration records below are historical.
+Implementation, combined read-only review, focused controls, restored counterprobes,
+one full33 exact-commit measurement and independent numerical audit are complete.
+See [final evidence](coverage-a-plus-20260921/product-wide-profile-7d0e3d332.md).
+Publish the completion documentation and canonical CHANGELIST with the authorized
+push, then select a larger coherent behavior package. Use focused tests during
+implementation and one final full measurement after review corrections per packet.
+Global A+ remains open; the continuation and iteration records below are historical.
 
 ## Current continuation, 2026-09-26
 

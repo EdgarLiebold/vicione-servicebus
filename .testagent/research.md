@@ -6,7 +6,10 @@ The current packet research, single Roslyn pairing result, existing behavior
 evidence and acceptance map are in
 [t47-saga-journeys.md](coverage-a-plus-20260921/t47-saga-journeys.md).
 The first source reading remains complete; the iteration histories below do not
-reopen it. T46 is completed and pushed at `1011ef1dd`; T47 is not yet accepted.
+reopen it. T46 is completed and pushed at `1011ef1dd`. T47 implementation
+`7d0e3d332` passes the complete measurement and independent audit; see
+[final evidence](coverage-a-plus-20260921/product-wide-profile-7d0e3d332.md).
+Global A+ remains open. Publish the completion record before the next larger packet.
 
 The bounded source scope is request declaration/correlation, request activities,
 timeout cancellation, SendCallbackExtensions, SendActivity/FaultedSendActivity and
