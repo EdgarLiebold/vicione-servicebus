@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Durable admission atomicity verification: the EF reliable inbox now has
+  SQLite and real PostgreSQL regression cases that save a first business record
+  and outgoing intent inside a transaction, reject a later oversized message,
+  verify rollback and persisted retry, then commit only a distinct replacement
+  with its exact serialized body. Direct EF scoped-outbox cases cover the
+  caller's explicit Abort and Commit choices after a later rejection. Both
+  requirement projections pass; an isolated cleanup counterchange and a
+  commit-instead-of-rollback counterchange are detected by the tests. The
+  PostgreSQL case exercises the registered EF provider and scoped factory;
+  it does not claim broker dispatch. Complete product coverage measurement is
+  pending.
+
 - Consumer-outbox recovery work in progress: reject a loaded message without a
   DestinationAddress before treating the delivery pass as complete, and pass the
   linked delivery timeout/cancellation token into endpoint resolution. Three

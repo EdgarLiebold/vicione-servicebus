@@ -1,6 +1,21 @@
 # ServiceBus A+ coverage campaign — status
 
-## Current T50 packet and latest complete profile
+## Current T56 packet — focused controls complete
+
+The connected EF durable-admission packet covers a saved partial inbox attempt,
+rollback and recovery on SQLite and real PostgreSQL, plus explicit Abort/Commit
+ownership for a direct scoped-outbox caller. Four new executions and both
+requirement projections pass; both projects build without warnings/errors.
+Read-only review found and corrected payload-content and retry-signal oracle
+gaps. Two isolated counterchanges are detected and product source restored.
+The first rollback counterchange survived until the test explicitly saved the
+first effects inside the transaction; its corrected form detects a leaked row.
+See [T56 evidence](t56-durable-admission-atomicity.md). One frozen full33 profile,
+independent audit and publication remain. Global A+ remains open. The last
+complete numerical baseline is T55: 13,218 passes, 91.62169% lines,
+84.23124% conservative branches, zero CRAP>30 and5,819 union method gaps.
+
+## Historical T50 packet
 
 The combined JSON packet is measured at `a7462781823373ff9a9cdbaa9a9e9dfcd7390442`:
 13,076 successful executions, all 33 profiles, 32 assemblies and four fixture

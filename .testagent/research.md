@@ -1,5 +1,46 @@
 # A+ remediation research
 
+## T56 — durable admission across reliable inbox and scoped outbox
+
+Baseline is pushed T55 `45e250bf0`, with33 valid profiles and5,819 remaining
+method-gap identities. This larger packet studies one connected contract: if
+durable payload admission rejects a later send, previously buffered effects must
+follow their owning transaction/session semantics. In-memory reliable inbox
+already proves rejection after one staged send, quarantine, no durable effect and
+operator recovery (`ConsumerAdmission_RejectionDiscardsBufferedSendsAndOperatorRetryCommitsAsync`).
+Use that as a control; do not duplicate it. Existing EF reliable-inbox pipeline
+covers generic consumer exceptions, rollback, retry, terminal winner and
+cancellation, but no later payload-admission rejection after valid staged intent.
+Direct EF scoped-outbox tests cover commit/abort/dispose and capacity accounting,
+but no failure of a later AddSend followed by explicit owner action.
+
+One bounded Microsoft Roslyn pairing run uses26 byte-identical inputs:
+`artifacts/t56-pairing-inputs.json`, `t56-pairing.json`, `t56-pairing.log`.
+It reports18 source files, four tests, three paired and15 unpaired. The heuristic
+misses internal types reached through public integration tests; it does not
+replace runtime coverage or imply no test.
+
+`EntityFrameworkReliableInboxContext.AddSendAsync` delegates to scoped outbox.
+`EntityFrameworkReliableInboxContextFactory.SendWithLeaseAsync` rolls back,
+aborts staged outbox and persists retry/quarantine after non-cancellation errors.
+`EntityFrameworkScopedBusContext.AddSendAsync` rejects payloads before capacity
+reservation. A direct caller catching a later rejection owns the Abort/Commit
+decision; there is no implicit batch-rollback promise for that API. The existing
+in-memory implementation commits only after all sends are accepted.
+
+Selection review confirmed the three paths. SQLite and PostgreSQL now save the
+first business record and outgoing intent inside the open transaction before
+the second send fails admission. This detail was forced by an adversarial
+counterchange: committing instead of rolling back survived when the first
+intent existed only in the EF tracker. With the saved partial attempt, the same
+fault fails on a persisted leaked business row. The final tests also inspect
+the exact replacement payload and outer retry signal, after read-only review
+found those initial oracle gaps. PostgreSQL uses the public EF provider
+registration and the scoped factory against a real database. The delivery
+host is intentionally not started: concurrent polling caused a PostgreSQL
+serializable write conflict during the deliberate partial SaveChanges. This
+test proves persistence, not broker dispatch.
+
 ## Current T55 — consumer-outbox retention and recovery
 
 T54 is complete and remotely verified at `5acd82701`. The

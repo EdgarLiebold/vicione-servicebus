@@ -18,6 +18,67 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
     private static readonly DateTimeOffset Now =
         new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "rejected-later-admission-leaves-earlier-intent-under-explicit-session-ownership")]
+    public async Task RejectedLaterAdmission_ExplicitAbortOrCommitOwnsEarlierIntentAsync(bool commitEarlier)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync(maximumEnvelopeBytes: 16384);
+        Guid firstId = Guid.NewGuid();
+        Guid rejectedId = Guid.NewGuid();
+        Guid replacementId = Guid.NewGuid();
+        using (EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext())
+        {
+            await context.AddSendAsync(CreateSendContext(firstId, 1), token);
+            MessageSendContext<OutboxProbe> rejected = CreateSendContext(rejectedId, 2);
+            rejected.Headers.Set("oversized", new string('x', 65536));
+
+            PayloadAdmissionException failure = await Assert.ThrowsAsync<PayloadAdmissionException>(() =>
+                context.AddSendAsync(rejected, token));
+
+            Assert.Equal(16384, failure.ConfiguredLimitBytes);
+            Assert.True(failure.ActualBytes > failure.ConfiguredLimitBytes);
+            Assert.Equal(firstId, Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>()).Entity.Id);
+            Assert.Equal(1, Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>()).Entity.StoredCount);
+            if (commitEarlier)
+                await context.CommitAsync(token);
+            else
+            {
+                await context.AbortAsync(token);
+                await fixture.DbContext.SaveChangesAsync(token);
+            }
+        }
+
+        await using (OutboxDbContext afterDecision = fixture.CreateFreshContext())
+        {
+            DurableSendRecord[] retained = await afterDecision.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token);
+            Guid[] expectedRetained = commitEarlier ? [firstId] : [];
+            Assert.Equal(expectedRetained, retained.Select(x => x.Id));
+            Assert.DoesNotContain(retained, x => x.Id == rejectedId);
+            DurableSendCapacityState capacity = await afterDecision.Set<DurableSendCapacityState>()
+                .AsNoTracking().SingleAsync(token);
+            Assert.Equal(retained.Length, capacity.StoredCount);
+            Assert.Equal(retained.Sum(x => x.StorageSize), capacity.StoredBytes);
+        }
+
+        using (EntityFrameworkScopedBusContext<IBus, OutboxDbContext> next = fixture.CreateBusContext())
+        {
+            await next.AddSendAsync(CreateSendContext(replacementId, 3), token);
+            await next.CommitAsync(token);
+        }
+
+        await using OutboxDbContext final = fixture.CreateFreshContext();
+        DurableSendRecord[] messages = await final.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token);
+        Guid[] expectedFinal = commitEarlier ? [firstId, replacementId] : [replacementId];
+        Assert.Equal(expectedFinal.Order(), messages.Select(x => x.Id).Order());
+        Assert.DoesNotContain(messages, x => x.Id == rejectedId);
+        DurableSendCapacityState finalCapacity = await final.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(messages.Length, finalCapacity.StoredCount);
+        Assert.Equal(messages.Sum(x => x.StorageSize), finalCapacity.StoredBytes);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-WRITE-COORDINATOR", "required-actions-fail-at-boundary")]
     public async Task Coordinator_RejectsMissingActionsAsync()
@@ -281,7 +342,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         public RecordingNotification Notification { get; }
 
-        public static async Task<OutboxFixture> CreateAsync()
+        public static async Task<OutboxFixture> CreateAsync(int maximumEnvelopeBytes = 2 * 1024 * 1024)
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -296,8 +357,8 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
                 catalog.Register<OutboxProbe>("vicione.tests.transactional-outbox"));
             serviceCollection.AddViciOnePayloadAdmission<IBus>(options =>
             {
-                options.MaximumSerializedBodyBytes = 1024 * 1024;
-                options.MaximumTransportEnvelopeBytes = 2 * 1024 * 1024;
+                options.MaximumSerializedBodyBytes = Math.Min(1024 * 1024, maximumEnvelopeBytes);
+                options.MaximumTransportEnvelopeBytes = maximumEnvelopeBytes;
             });
             serviceCollection.AddViciOneReliableMessaging<IBus>(options =>
             {
@@ -318,6 +379,9 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
             _services,
             new FakeTimeProvider(Now),
             BusPersistenceIdentity<IBus>.Create("default"));
+
+        public OutboxDbContext CreateFreshContext() => new(
+            new DbContextOptionsBuilder<OutboxDbContext>().UseSqlite(_connection).Options);
 
         public async ValueTask DisposeAsync()
         {

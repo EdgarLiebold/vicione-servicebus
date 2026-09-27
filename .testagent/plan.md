@@ -1,5 +1,29 @@
 # A+ remediation test plan
 
+## T56 — durable admission transaction packet (focused controls complete)
+
+1. Confirm the EF reliable-inbox SQLite harness can admit one outgoing envelope
+   and reject a second oversized envelope through the real serializer. Cover retry
+   and quarantine attempt boundaries; check exact failure, rows, capacity,
+   consumed state and later recovery.
+2. Verify the same rollback and neighbor invariant against real PostgreSQL before
+   claiming provider-wide transactional behavior. Use the public route.
+3. Direct scoped EF session: a rejected later AddSend leaves earlier accepted
+   intent under caller ownership. Explicit Abort must drop it and release capacity;
+   deliberate Commit may preserve it. Test both choices and exact records.
+4. Keep the existing in-memory rejection/requeue test as a parity control. Review
+   new assertions with test-gap-analysis and assertion-quality, run narrow controls,
+   then read-only adversarial review and material isolated counterprobes. One
+   frozen full33 measurement follows the completed connected packet.
+
+The SQLite reliable inbox, direct scoped EF abort/commit, and real PostgreSQL
+reliable inbox cases pass focused controls. Both requirement projections pass.
+Read-only review found and fixed two assertion gaps. Isolated tracker-cleanup
+and committed-rollback counterchanges are detected and restored byte-for-byte.
+The second counterchange initially survived, so both inbox tests now save the
+first attempt inside the transaction before the rejection. Complete packet
+documentation, final combined gates and one full33 profile remain.
+
 ## Current T55 — one combined consumer-outbox recovery package
 
 Implement the [T55 behavior matrix](coverage-a-plus-20260921/t55-consumer-outbox-recovery.md)

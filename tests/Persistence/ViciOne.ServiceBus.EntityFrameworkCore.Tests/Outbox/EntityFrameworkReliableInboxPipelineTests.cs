@@ -15,6 +15,124 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
 
 public sealed class EntityFrameworkReliableInboxPipelineTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "admission-rejection-rolls-back-earlier-intent-and-healthy-retry-commits-only-replacement")]
+    public async Task AdmissionRejectedAfterFirstIntent_RollsBackAndRetryCommitsOnlyReplacementAsync()
+    {
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync(messageLimits: new MessageLimits
+        {
+            MaxBodyBytes = 256,
+            MaxEnvelopeBytes = 8192,
+            MaxJsonDepth = 32,
+        });
+        CancellationToken token = fixture.CancellationToken;
+        Guid messageId = Guid.NewGuid();
+        Guid firstId = Guid.NewGuid();
+        Guid rejectedId = Guid.NewGuid();
+        Guid replacementId = Guid.NewGuid();
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        var invocations = 0;
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            IPublishEndpoint publisher = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(command, token, messageId: messageId);
+
+            Exception? retry = await Record.ExceptionAsync(() =>
+                factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(async context =>
+                {
+                    invocations++;
+                    db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "rejected" });
+                    await publisher.PublishAsync(new AdmissionRecoveryEvent(command.CorrelationId, "first"), send =>
+                    {
+                        send.MessageId = firstId;
+                        send.Delay = TimeSpan.FromDays(1);
+                    }, token);
+                    Assert.Equal(firstId, Assert.Single(db.ChangeTracker.Entries<DurableSendRecord>()).Entity.Id);
+                    await db.SaveChangesAsync(token);
+                    await publisher.PublishAsync(new AdmissionRecoveryEvent(command.CorrelationId, new string('x', 4096)),
+                        send => send.MessageId = rejectedId, token);
+                    await context.SetConsumedAsync(token);
+                }), token));
+
+            Assert.NotNull(retry);
+            Assert.Equal("ViciOne.ServiceBus.Providers.Persistence.ReliableInboxRetryRequiredException",
+                retry.GetType().FullName);
+            PayloadAdmissionException rejected = Assert.IsType<PayloadAdmissionException>(retry.InnerException);
+            Assert.Equal(PayloadAdmissionStage.SerializedBody, rejected.Stage);
+            Assert.Equal(256, rejected.ConfiguredLimitBytes);
+            Assert.True(rejected.ActualBytes > rejected.ConfiguredLimitBytes);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+
+        Assert.Equal(1, invocations);
+        ReliableInboxRecord scheduled = await fixture.WaitForInboxAsync(messageId, ReliableInboxStatus.RetryScheduled, token);
+        Assert.Equal(options.ConsumerId, scheduled.ConsumerId);
+        Assert.Equal(1, scheduled.Attempts);
+        Assert.NotNull(scheduled.DueAt);
+        Assert.NotNull(scheduled.FailedAt);
+        Assert.Equal(typeof(PayloadAdmissionException).FullName, scheduled.FailureType);
+        await using (ReliableInboxDbContext verification = fixture.CreateContext())
+        {
+            Assert.Empty(await verification.BusinessRecords.AsNoTracking().ToArrayAsync(token));
+            Assert.Empty(await verification.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+            DurableSendCapacityState failedCapacity = await verification.Set<DurableSendCapacityState>()
+                .AsNoTracking().SingleAsync(token);
+            Assert.Equal((0, 0L), (failedCapacity.StoredCount, failedCapacity.StoredBytes));
+        }
+
+        await using (AsyncServiceScope retryScope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = retryScope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            IPublishEndpoint publisher = retryScope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            var factory = retryScope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(command, token, messageId: messageId);
+            await factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(async context =>
+            {
+                invocations++;
+                db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "recovered" });
+                await publisher.PublishAsync(new AdmissionRecoveryEvent(command.CorrelationId, "replacement"), send =>
+                {
+                    send.MessageId = replacementId;
+                    send.Delay = TimeSpan.FromDays(1);
+                }, token);
+                await context.SetConsumedAsync(token);
+            }), token);
+        }
+
+        Assert.Equal(2, invocations);
+        await using ReliableInboxDbContext final = fixture.CreateContext();
+        Assert.Equal("recovered", (await final.BusinessRecords.AsNoTracking().SingleAsync(token)).Value);
+        ReliableInboxRecord consumed = await final.Set<ReliableInboxRecord>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(ReliableInboxStatus.Consumed, consumed.Status);
+        Assert.Equal(2, consumed.Attempts);
+        Assert.Null(consumed.FailureType);
+        DurableSendRecord retained = await final.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(replacementId, retained.Id);
+        Assert.Equal(command.CorrelationId, retained.CorrelationId);
+        Assert.Equal(DurableSendStatus.Pending, retained.Status);
+        using (System.Text.Json.JsonDocument envelope = System.Text.Json.JsonDocument.Parse(retained.Body))
+        {
+            System.Text.Json.JsonElement message = envelope.RootElement.GetProperty("message");
+            Assert.Equal("replacement", message.GetProperty("text").GetString());
+            Assert.Equal(command.CorrelationId, message.GetProperty("correlationId").GetGuid());
+        }
+        Assert.DoesNotContain(firstId, (await final.Set<DurableSendRecord>().AsNoTracking().Select(x => x.Id).ToArrayAsync(token)));
+        Assert.DoesNotContain(rejectedId, (await final.Set<DurableSendRecord>().AsNoTracking().Select(x => x.Id).ToArrayAsync(token)));
+        DurableSendCapacityState capacity = await final.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal((1, retained.StorageSize), (capacity.StoredCount, capacity.StoredBytes));
+    }
+
     [Theory]
     [InlineData(ReliableInboxStatus.Consumed)]
     [InlineData(ReliableInboxStatus.Quarantined)]
@@ -408,6 +526,8 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
 
     public sealed record ReliableInboxEvent(Guid CorrelationId);
 
+    public sealed record AdmissionRecoveryEvent(Guid CorrelationId, string Text);
+
     public sealed class ReliableInboxCommandConsumer(
         ReliableInboxDbContext dbContext,
         ConsumerAttemptProbe attempts) : IConsumer<ReliableInboxCommand>
@@ -534,7 +654,8 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
 
         public static async Task<ReliableInboxFixture> CreateAsync(
             IInterceptor? interceptor = null,
-            ILogger<EntityFrameworkReliableInboxContextFactory<IBus, ReliableInboxDbContext>>? failureLogger = null)
+            ILogger<EntityFrameworkReliableInboxContextFactory<IBus, ReliableInboxDbContext>>? failureLogger = null,
+            MessageLimits? messageLimits = null)
         {
             CancellationToken cancellationToken = TestContext.Current.CancellationToken;
             TimeSpan timeout = TimeSpan.FromSeconds(15);
@@ -558,7 +679,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
-                configuration.Limits(MessageLimits.Conservative);
+                configuration.Limits(messageLimits ?? MessageLimits.Conservative);
                 configuration.AddConsumer<ReliableInboxCommandConsumer>();
                 configuration.AddConsumer<ReliableInboxEventConsumer>();
                 configuration.UseReliableMessaging(reliable =>
@@ -580,6 +701,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
                     reliable.Retention(TimeSpan.FromDays(7));
                     reliable.AddMessageContract<ReliableInboxCommand>("reliable-inbox-command");
                     reliable.AddMessageContract<ReliableInboxEvent>("reliable-inbox-event");
+                    reliable.AddMessageContract<AdmissionRecoveryEvent>("admission-recovery-event");
                 });
             });
 
