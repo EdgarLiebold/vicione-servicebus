@@ -1,5 +1,13 @@
 # T54 — transport ownership and message isolation
 
+## Corrected complete measurement
+
+The fresh full33 run at `0fa2c85bb` passes13,182 tests and four fixture groups.
+All33 receipts and the numerical reconstruction are independently audited with
+no discrepancy. Publication closes the packet. The [complete report](product-wide-profile-0fa2c85bb.md) records
+91.59814% lines,84.21581% conservative branches, zero CRAP>30 and5,826 remaining
+gap identities. Global A+ remains open. Pending instructions below are historical.
+
 ## Current correction after the first complete-measurement attempt
 
 The full33 process at `f97172b65` exits1 after26 verified profiles. SQS profile27

@@ -24,8 +24,11 @@ entry below records what the current work changed for anyone reading the source.
   exact inherited/overridden metadata, provider failure/cancellation and missing
   awaits. Read-only review strengthened cleanup and overload discrimination.
   Both isolated counterprobes are detected and restored; combined controls pass
-  27/27 without skips. Complete coverage measurement and packet acceptance remain
-  pending; no product defect or global A+ completion is claimed.
+  27/27 without skips. After the documented SQS test correction, the fresh complete
+  measurement passes13,182 tests across33 profiles and four clean fixture groups:
+  91.59814% lines,84.21581% conservative branches and zero CRAP>30. Independent
+  integrity and numerical audits agree. Global A+ is open with5,826 gap identities;
+  no product defect is claimed from this test-only packet.
 - Added a connected Azure Table saga-persistence verification packet: 13 cases
   cover corrupted native and serialized rows through public loads and real
   consumption, schema evolution with absent versus explicit empty values, and

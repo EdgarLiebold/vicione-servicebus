@@ -1,6 +1,13 @@
 # A+ remediation test plan
 
-## Current T54 — six families before the next full measurement
+## Current T54 — measurement and audits complete; publish combined packet
+
+The corrected exact run at `0fa2c85bb` passes13,182 tests across33 profiles and
+four clean fixture groups. Independent integrity and numerical audits agree.
+Finish final documentation and authorized push before the next larger
+implementation package. Earlier measurement instructions below are historical.
+Use the new5,826-identity worklist for a connected multi-family package, compare
+existing tests first, and perform one full measurement after combined completion.
 
 Implement the [combined contract map](coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md)
 across Event Hubs configuration, deferred consume-context production and ActiveMQ
