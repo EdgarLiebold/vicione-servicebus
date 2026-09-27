@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10861 |
+| Added | 10863 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -211,6 +211,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t37-eventhubs-processor-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t38-asb-subscription.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t39-dynamodb-validation.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t40-rabbitmq-factory-options.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15405,6 +15406,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Operations/RabbitMqFaultRedriveTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqCleanupTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConnectionFactoryOptionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConsumerFilterTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqDurableSendDispatcherBoundaryTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqHeaderProviderTests.cs` | Added |  |

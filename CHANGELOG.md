@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added eight RabbitMQ factory-option cases proving independent message/frame
+  limits, certificate/provider/static-credential priority and actual cluster
+  resolver selection with port/TLS projection. Four deliberate faults are detected;
+  restored isolated controls pass 482/482. No broker-authentication or negotiated-
+  limit claim. Product-wide exact-commit measurement remains pending.
+
 - Added 16 DynamoDB registration validation cases covering complete diagnostics,
   rejection before registration/context creation, valid TTL boundaries, immutable
   registered options and lazy context creation through actual DI. Three deliberate

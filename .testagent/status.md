@@ -16,6 +16,12 @@
 
 ## Current checkpoint — 2026-09-26
 
+- T40 RabbitMQ factory options: eight new cases; MAIN focused8/8 and full482/482,
+  restored isolated full482/482, format0. Four mutations detected3/2/1/1cases.
+  Independent read-only final review: no blocker. Product source unchanged.
+  [Evidence and limits](coverage-a-plus-20260921/t40-rabbitmq-factory-options.md).
+  Exact-commit full measurement and push pending; A+ remains open.
+
 - T39 DynamoDB validation: 16 new cases, MAIN and restored isolated control
   44/44, format exit 0. Three deliberate faults detected by 2/3/12 cases.
   Read-only review's aggregate text assertion gap corrected. No product changes.
