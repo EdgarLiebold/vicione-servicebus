@@ -1,5 +1,24 @@
 # A+ remediation test plan
 
+## T78 Azure Table saga native-property restoration
+
+1. Feed `AzureTableEntityConverter` a real `TableEntity` whose DateTime
+   properties arrive as non-UTC `DateTimeOffset` values. Verify both required
+   and nullable `DateTime` values become the exact UTC instant, and required
+   and nullable offset properties keep their full values.
+2. Supply wrong native persisted types for required and nullable numeric
+   counts, Guid, bool, DateTime, offset, duration, binary, URI, version and
+   text properties.
+   Require named, typed failure rather than default or coercion, with an
+   unrelated valid field present.
+3. Round-trip a sparse probe: absent nullable fields remain absent while
+   explicit false, zero, empty string and empty bytes remain persisted and
+   distinct after restoration.
+4. Run only the affected Azure Table entity-converter class, review mutation
+   resistance and assertions, obtain independent read-only Red Team review,
+   then group full provider/Core and 33-profile measurement with the next
+   multi-packet checkpoint unless broad behavior changes require earlier run.
+
 ## T77 reliable scheduler timing and cancellation ownership
 
 1. Add one connected in-memory durable scheduling test for negative and

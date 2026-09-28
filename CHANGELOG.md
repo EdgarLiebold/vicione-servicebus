@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added Azure Table saga persistence tests for SDK-provided offset timestamps,
+  strict failure on wrong required and nullable native storage types, and
+  sparse nullable properties versus explicitly stored false, zero and empty
+  values. The affected entity-converter class passes 29/29; no product
+  implementation changed in this packet. Independent Red Team re-review
+  found no remaining concrete P1/P2 issue.
+
 - Added public reliable-scheduler tests with an injected clock and real
   in-memory durable store. They verify exact relative send and publish due
   times, separate routing, payload and token identity, rejected admissions,

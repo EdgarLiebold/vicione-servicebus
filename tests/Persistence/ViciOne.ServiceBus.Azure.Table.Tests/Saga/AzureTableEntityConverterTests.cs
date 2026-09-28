@@ -90,6 +90,110 @@ public sealed class AzureTableEntityConverterTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-ENTITY-CONVERSION", "t78-sdk-offset-values-restore-utc-date-times-and-preserve-offsets")]
+    public void EntityConverter_RestoresSdkOffsetValuesAsExactUtcDateTimesAndPreservesOffsetProperties()
+    {
+        DateTimeOffset requiredDate = new(2030, 3, 4, 5, 6, 7, TimeSpan.FromHours(5.5));
+        DateTimeOffset optionalDate = new(2030, 3, 5, 6, 7, 8, TimeSpan.FromHours(-4));
+        DateTimeOffset requiredOffset = new(2030, 4, 6, 7, 8, 9, TimeSpan.FromHours(3));
+        DateTimeOffset optionalOffset = new(2030, 4, 7, 8, 9, 10, TimeSpan.FromHours(-7));
+        var table = new TableEntity(new Dictionary<string, object>
+        {
+            [Stored(nameof(ConversionProbe.OccurredAt))] = requiredDate,
+            [Stored(nameof(ConversionProbe.OptionalOccurredAt))] = optionalDate,
+            [Stored(nameof(ConversionProbe.Offset))] = requiredOffset,
+            [Stored(nameof(ConversionProbe.OptionalOffset))] = optionalOffset,
+        });
+        IAzureTableEntityConverter<ConversionProbe> converter = AzureTableEntityConverterFactory.CreateConverter<ConversionProbe>();
+
+        ConversionProbe restored = converter.GetObject(table);
+
+        Assert.Equal(requiredDate.UtcDateTime, restored.OccurredAt);
+        Assert.Equal(DateTimeKind.Utc, restored.OccurredAt.Kind);
+        Assert.Equal(optionalDate.UtcDateTime, restored.OptionalOccurredAt);
+        Assert.Equal(DateTimeKind.Utc, restored.OptionalOccurredAt!.Value.Kind);
+        Assert.Equal(requiredOffset, restored.Offset);
+        Assert.Equal(requiredOffset.Offset, restored.Offset.Offset);
+        Assert.Equal(optionalOffset, restored.OptionalOffset);
+        Assert.Equal(optionalOffset.Offset, restored.OptionalOffset!.Value.Offset);
+    }
+
+    [Theory]
+    [InlineData(nameof(ConversionProbe.Enabled), "true")]
+    [InlineData(nameof(ConversionProbe.OptionalEnabled), "false")]
+    [InlineData(nameof(ConversionProbe.Count), 42L)]
+    [InlineData(nameof(ConversionProbe.OptionalCount), 42L)]
+    [InlineData(nameof(ConversionProbe.Sequence), 42)]
+    [InlineData(nameof(ConversionProbe.OptionalSequence), 42)]
+    [InlineData(nameof(ConversionProbe.Ratio), 42)]
+    [InlineData(nameof(ConversionProbe.OptionalRatio), 42)]
+    [InlineData(nameof(ConversionProbe.NativeId), "018cc251-f400-7000-8000-000000000102")]
+    [InlineData(nameof(ConversionProbe.OptionalNativeId), "018cc251-f400-7000-8000-000000000103")]
+    [InlineData(nameof(ConversionProbe.OccurredAt), "2030-01-02T03:04:05Z")]
+    [InlineData(nameof(ConversionProbe.OptionalOccurredAt), "2030-01-02T03:04:05Z")]
+    [InlineData(nameof(ConversionProbe.Duration), 42)]
+    [InlineData(nameof(ConversionProbe.OptionalDuration), 42)]
+    [InlineData(nameof(ConversionProbe.Offset), "2030-01-02T03:04:05+02:00")]
+    [InlineData(nameof(ConversionProbe.OptionalOffset), "2030-01-02T03:04:05+02:00")]
+    [InlineData(nameof(ConversionProbe.Payload), "AQID")]
+    [InlineData(nameof(ConversionProbe.Location), 42)]
+    [InlineData(nameof(ConversionProbe.Version), 42)]
+    [InlineData(nameof(ConversionProbe.Text), 42)]
+    [InlineData(nameof(ConversionProbe.OptionalText), 42)]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-ENTITY-CONVERSION", "t78-corrupt-native-fields-fail-closed-with-field-and-type")]
+    public void EntityConverter_RejectsWrongNativeStorageTypesWithoutCoercingOrDefaulting(string propertyName, object wrongValue)
+    {
+        IAzureTableEntityConverter<ConversionProbe> converter = AzureTableEntityConverterFactory.CreateConverter<ConversionProbe>();
+        var table = new TableEntity(new Dictionary<string, object>
+        {
+            [Stored(nameof(ConversionProbe.CorrelationId))] = Guid.Parse("018cc251-f400-7000-8000-000000000104"),
+            [Stored(propertyName)] = wrongValue,
+        });
+
+        InvalidOperationException failure = Assert.Throws<InvalidOperationException>(() => converter.GetObject(table));
+
+        Assert.Contains(Stored(propertyName), failure.Message, StringComparison.Ordinal);
+        Assert.Contains(typeof(ConversionProbe).GetProperty(propertyName)!.PropertyType.ToString(),
+            failure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-ENTITY-CONVERSION", "t78-sparse-null-versus-explicit-false-zero-and-empty")]
+    public void EntityConverter_DistinguishesAbsentNullableValuesFromPersistedFalseZeroAndEmptyValues()
+    {
+        IAzureTableEntityConverter<SparseNativeProbe> converter = AzureTableEntityConverterFactory.CreateConverter<SparseNativeProbe>();
+        Assert.Empty(converter.GetDictionary(new SparseNativeProbe()));
+        var expected = new SparseNativeProbe
+        {
+            Enabled = false,
+            Count = 0,
+            Duration = TimeSpan.Zero,
+            Payload = [],
+            Text = string.Empty,
+        };
+
+        IDictionary<string, object> persisted = converter.GetDictionary(expected);
+        var table = new TableEntity(persisted);
+        SparseNativeProbe restored = converter.GetObject(table);
+
+        Assert.Equal(5, persisted.Count);
+        Assert.Equal(false, persisted[Stored(nameof(SparseNativeProbe.Enabled))]);
+        Assert.Equal(0, persisted[Stored(nameof(SparseNativeProbe.Count))]);
+        Assert.IsType<string>(persisted[Stored(nameof(SparseNativeProbe.Duration))]);
+        Assert.Empty(Assert.IsType<byte[]>(persisted[Stored(nameof(SparseNativeProbe.Payload))]));
+        Assert.Equal(string.Empty, persisted[Stored(nameof(SparseNativeProbe.Text))]);
+        Assert.DoesNotContain(Stored(nameof(SparseNativeProbe.OptionalId)), persisted.Keys);
+        Assert.DoesNotContain(Stored(nameof(SparseNativeProbe.OptionalDate)), persisted.Keys);
+        Assert.Equal(false, restored.Enabled);
+        Assert.Equal(0, restored.Count);
+        Assert.Equal(TimeSpan.Zero, restored.Duration);
+        Assert.Empty(Assert.IsType<byte[]>(restored.Payload));
+        Assert.Equal(string.Empty, restored.Text);
+        Assert.Null(restored.OptionalId);
+        Assert.Null(restored.OptionalDate);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-ENTITY-CONVERSION", "saga-properties-cannot-collide-with-table-system-properties")]
     public void EntityConverter_IsolatesSagaPropertiesFromAzureTableSystemProperties()
     {
@@ -311,6 +415,17 @@ public sealed class AzureTableEntityConverterTests
     {
         public string Name { get; set; } = "";
         public int Value { get; set; }
+    }
+
+    public sealed class SparseNativeProbe
+    {
+        public bool? Enabled { get; set; }
+        public int? Count { get; set; }
+        public TimeSpan? Duration { get; set; }
+        public byte[]? Payload { get; set; }
+        public string? Text { get; set; }
+        public Guid? OptionalId { get; set; }
+        public DateTime? OptionalDate { get; set; }
     }
 
     public sealed class ReservedNameProbe

@@ -1,5 +1,23 @@
 # A+ remediation test status
 
+## Current T78 — Azure Table saga native-property restoration
+
+Three tests cover the Azure Tables SDK's non-UTC `DateTimeOffset` values
+restored as exact UTC `DateTime` values, strict rejection of twenty-one malformed
+native fields, and sparse nullable property projection with explicit
+false/zero/empty values. The affected entity-converter class passes 29/29
+after two Red Team counterprobes.
+Assertion review found distinct value, type, exception, collection-presence
+and absence oracles; no assertion-free or trivial-only new test. Static
+pseudo-mutation review found that offset normalization, coercion of wrong
+native types, omission of explicit defaults and silent materialization of
+missing nullable values are killed by these assertions. Red Team found that
+the first malformed-value matrix omitted nullable native converter paths and
+the required duration wrong-type path; these are now included. Final
+read-only Red Team re-review is PASS with no concrete P1/P2 finding. See the
+[T78 packet](coverage-a-plus-20260921/t78-azure-table-saga-native-restoration.md).
+T74 remains the latest complete product-wide coverage/CRAP profile.
+
 ## Current T77 — reliable scheduler timing and lease ownership
 
 Two public scheduler and in-memory store tests cover exact relative send and

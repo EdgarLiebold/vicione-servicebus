@@ -1,5 +1,25 @@
 # A+ remediation research
 
+## T78 Azure Table saga native-property restoration
+
+The frozen T74 profile leaves 55/196 lines in
+`AzureTablePropertyTypeConverter` uncovered. Existing entity-converter tests
+prove one fully populated round trip, reserved-name isolation, malformed
+serialized values and storage limits. They do not prove the Azure Tables SDK
+projection from a non-UTC `DateTimeOffset` into CLR `DateTime`, reject wrong
+native types in both required and nullable fields that could silently coerce
+a persisted identity or count, or
+distinguish absent optional properties from explicitly persisted false/zero
+and empty values. This is a connected saga persistence boundary. The T75
+Roslyn pairing artifact and frozen T74 profile were reused for selection;
+neither is a current coverage measurement.
+
+Acceptance: materialization of SDK table values normalizes `DateTime` to the
+exact UTC instant while keeping `DateTimeOffset` instants and offsets;
+corrupted native fields fail with the named property and target type;
+omitted nullable properties remain absent while explicit false, zero and
+empty values survive the table projection and restoration.
+
 ## T77 reliable scheduler timing and cancellation ownership
 
 The frozen T74 profile leaves 28/71 physical lines in

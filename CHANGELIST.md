@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10952 |
+| Added | 10953 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -259,6 +259,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t75-saga-composite-request.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t76-saga-request-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t77-reliable-scheduler-ownership.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t78-azure-table-saga-native-restoration.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
