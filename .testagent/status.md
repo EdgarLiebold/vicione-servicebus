@@ -1,5 +1,24 @@
 # A+ remediation test status
 
+## Current T64 — assembly discovery
+
+The Microsoft code-testing-agent research/plan pipeline used the existing
+Roslyn pairing output and inspected the scanner, finder, cache and neighboring
+tests. A new public-API regression demonstrated `Count = 3` for one assembly
+registered by four entry points against unchanged source. The runtime
+`AssemblyContainingType` overload now calls the existing deduplicating
+`Assembly(Assembly)` path. Path discovery uses real copied assemblies with
+distinct manifest identities to prove case-insensitive include/exclude
+behavior; namespace inclusion and explicit type exclusion are checked through
+the returned type set. Focused scanner/finder/cache tests pass 18/18 after
+the correction; the requirement projection passes 1/1. Read-only adversarial
+review found two surviving test mutants, both closed by independent entry-point
+cases and a third assembly with a distinct filename and manifest identity.
+Full 33-profile measurement
+remains scheduled after six to eight connected packets; no global A+ claim
+is inferred from this focused run.
+
+
 ## Current T63 — Event Hubs partial-batch outcome accepted
 
 The [T63 acceptance record](coverage-a-plus-20260921/t63-eventhub-partial-batch-outcome.md)

@@ -3382,3 +3382,17 @@ and redelivery state machines; the official Microsoft configuration establishes 
 must be explicitly disabled. The handwritten src-scoped coverage profile includes auto-properties
 and all source attributes while excluding test assemblies. The accepted-source expanded-profile
 repeat will determine the new denominator; historical percentages are not directly comparable.
+## T64 assembly discovery packet
+
+Scope: `AssemblyScanner`, `AssemblyFinder`, `AssemblyTypeCache`, and their existing
+Core tests. The finder already tests recursive discovery, manifest identity,
+invalid images, missing files and executable opt-in. The scanner tests only
+caller discovery; static source pairing misses indirect use. A fresh Roslyn
+pairing inventory was consumed once for this packet. Requirements: repeated
+registration must yield one assembly and one type, and each of four entry
+points must independently discover the type; namespace inclusion and
+explicit type exclusion must compose; filename inclusion and exclusion must
+apply case-insensitively in a path scan. Tests use the public scanner API and
+three real copied assemblies with distinct manifest identities, with exact
+type/count assertions. No reflection-only
+or coverage-only overload tests are planned.

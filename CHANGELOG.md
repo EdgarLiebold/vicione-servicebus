@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected assembly scanning when the same assembly is registered through
+  direct, named and type-based entry points. Repeated registration previously
+  duplicated discovered types; a red-first public API test observed three
+  entries for one assembly. The scanner now shares its existing deduplication
+  path. Scanner, finder and cache tests pass 18/18, and the requirement
+  projection passes 1/1; the full coverage profile
+  is reserved for the next grouped measurement.
+
 - Fixed Event Hubs partial-batch progress: after one provider batch succeeds
   and a later one fails, a retry sends only pending messages. Confirmed
   contexts receive `PostSend`; unresolved contexts receive `SendFault` with

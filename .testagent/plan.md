@@ -1,5 +1,21 @@
 # A+ remediation test plan
 
+## Current T64 — assembly discovery behavior
+
+1. Reproduce duplicate assembly/type results when `Assembly`, generic
+   `AssemblyContainingType`, and runtime `AssemblyContainingType` target the
+   same test assembly. Change the runtime overload to reuse the existing
+   deduplicating registration path after the red test fails. Independently
+   exercise all four entry points so a no-op overload cannot pass the combined
+   deduplication test.
+2. Verify namespace inclusion plus explicit type exclusion through
+   `ScanForTypes`, and filename inclusion/exclusion with three real copied
+   assemblies of distinct identities.
+3. Run the targeted scanner/finder/cache tests once on final source and review
+   all assertions. Keep the complete 33-profile measurement for the agreed
+   six to eight connected packets unless a cross-assembly contract or critical
+   CRAP signal demands it earlier.
+
 ## Current T63 — confirmed Event Hubs partial batches
 
 1. Red-first sender test: the first provider sub-batch confirms, a later one

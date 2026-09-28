@@ -48,7 +48,7 @@ public class AssemblyScanner :
     /// <param name="type">The runtime type to inspect or use.</param>
     public void AssemblyContainingType(Type type)
     {
-        _assemblies.Add(type.Assembly);
+        Assembly(type.Assembly);
     }
 
     /// <summary>Excludes the selected value.</summary>
