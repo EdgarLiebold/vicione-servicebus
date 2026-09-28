@@ -35,6 +35,9 @@ public class RequestStartedActivity<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         await context.PublishAsync<IRequestStarted>(new
         {
             context.Saga.CorrelationId,
