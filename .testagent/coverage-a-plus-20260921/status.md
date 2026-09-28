@@ -10,10 +10,13 @@ Read-only review found and corrected payload-content and retry-signal oracle
 gaps. Two isolated counterchanges are detected and product source restored.
 The first rollback counterchange survived until the test explicitly saved the
 first effects inside the transaction; its corrected form detects a leaked row.
-See [T56 evidence](t56-durable-admission-atomicity.md). One frozen full33 profile,
-independent audit and publication remain. Global A+ remains open. The last
-complete numerical baseline is T55: 13,218 passes, 91.62169% lines,
-84.23124% conservative branches, zero CRAP>30 and5,819 union method gaps.
+The corrected frozen full33 at `94b2bbde4` passes13,222 tests; physical lines
+85,889/93,754 (91.61102%), conservative branches31,036/36,845 (84.23395%),
+zero CRAP>30. Independent numerical and hash audit passes; publication remains. Global A+
+remains open. See [T56 evidence](t56-durable-admission-atomicity.md). The previous
+complete T55 baseline was13,218 passes,91.62169% lines,84.23124% branches
+and5,819 union method gaps. Ten observed lines outside the T56 path are lost
+despite byte-identical product source; the new gap comparison is pending.
 
 ## Historical T50 packet
 

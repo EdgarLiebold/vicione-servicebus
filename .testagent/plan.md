@@ -21,8 +21,9 @@ reliable inbox cases pass focused controls. Both requirement projections pass.
 Read-only review found and fixed two assertion gaps. Isolated tracker-cleanup
 and committed-rollback counterchanges are detected and restored byte-for-byte.
 The second counterchange initially survived, so both inbox tests now save the
-first attempt inside the transaction before the rejection. Complete packet
-documentation, final combined gates and one full33 profile remain.
+first attempt inside the transaction before the rejection. The corrected
+frozen full33 and independent receipt/XML audit pass. Finish publication, then
+select the next connected A+ behavior packet from the remaining risk map.
 
 ## Current T55 — one combined consumer-outbox recovery package
 

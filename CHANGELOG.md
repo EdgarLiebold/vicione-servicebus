@@ -20,8 +20,12 @@ entry below records what the current work changed for anyone reading the source.
   requirement projections pass; an isolated cleanup counterchange and a
   commit-instead-of-rollback counterchange are detected by the tests. The
   PostgreSQL case exercises the registered EF provider and scoped factory;
-  it does not claim broker dispatch. Complete product coverage measurement is
-  pending.
+  it does not claim broker dispatch. The corrected complete 33-profile run
+  passes 13,222 tests with 85,889/93,754 lines (91.61102%),
+  31,036/36,845 conservative branches (84.23395%) and zero CRAP>30. This
+  packet adds four behavioral cases; the unchanged product source has ten
+  fewer observed lines and one more observed branch than T55. Global A+
+  remains open.
 
 - Consumer-outbox recovery work in progress: reject a loaded message without a
   DestinationAddress before treating the delivery pass as complete, and pass the
