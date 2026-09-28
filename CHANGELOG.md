@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added resource-cache tests for usage-event faults during eviction and
+  partial subscription compensation. They prove once-only disposal, index
+  removal, successor admission under capacity pressure, and two warning
+  records with their exact distinct exceptions. Bounded capacity waits keep
+  a regression test finite. Both controlled counterchanges failed. The
+  focused class passes 15/15 and Core passes 6,965/6,965 on the exact test
+  commit; adversarial re-review is PASS. Product code did not change.
+
 - Added durable-delivery tests for caller cancellation during dispatch and
   after transport acceptance. Both preserve the intent for lease replay with
   the same attempt number. A consumer completion that races timeout quarantine

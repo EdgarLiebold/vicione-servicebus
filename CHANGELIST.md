@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10973 |
+| Added | 10974 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -274,6 +274,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t90-message-scope-handler-lifetime.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t91-assembly-scanner-discovery.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t92-durable-delivery-cancellation-race.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t93-cache-usage-fault-capacity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |

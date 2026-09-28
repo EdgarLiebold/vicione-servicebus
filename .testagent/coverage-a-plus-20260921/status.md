@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T93 resource-cache usage fault packet
+
+Two new tests prove that a usage-event detachment failure or a failed
+subscription with failed compensation cannot strand cache capacity, resource
+ownership, or index state. The second test also checks two distinct warning
+exceptions. The focused class passes 15/15; complete Core passes 6,965/6,965
+on exact test commit `9a947a4c8`. Both isolated counterprobes failed the
+expected tests, product source was restored, and read-only Red Team re-review
+is PASS after bounded-wait and diagnostic-oracle corrections. See
+[T93 evidence](t93-cache-usage-fault-capacity.md). T85 remains the latest
+complete product-wide checkpoint; global A+ remains open.
+
 ## Current T92 durable delivery cancellation and race packet
 
 Three new tests prove caller-token propagation and lease replay for dispatch
