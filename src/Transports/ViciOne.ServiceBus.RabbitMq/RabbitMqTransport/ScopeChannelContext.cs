@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
+using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.RabbitMq;
@@ -15,7 +16,10 @@ public class ScopeChannelContext :
 {
     readonly CancellationToken _cancellationToken;
     readonly ChannelContext _context;
+    readonly object _publishLock = new();
     CancellationTokenSource? _tokenSource;
+    int _pendingPublishes;
+    bool _disposeRequested;
 
     /// <summary>Creates a scoped view whose cancellation combines parent and caller tokens.</summary>
     /// <param name="context">The shared RabbitMQ channel context.</param>
@@ -47,12 +51,67 @@ public class ScopeChannelContext :
     /// <param name="awaitAck">Whether the caller awaits the client publish outcome.</param>
     /// <param name="cancellationToken">Additional cancellation for this operation.</param>
     /// <returns>A task that follows the underlying publish according to <paramref name="awaitAck" />.</returns>
-    public async Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck,
+    public Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck,
         CancellationToken cancellationToken)
     {
-        using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        CancellationToken scopeToken;
+        lock (_publishLock)
+        {
+            ObjectDisposedException.ThrowIf(_disposeRequested, this);
+            _pendingPublishes++;
+            scopeToken = _tokenSource!.Token;
+        }
 
-        await _context.BasicPublishAsync(exchange, routingKey, mandatory, basicProperties, body, awaitAck, tokenSource.Token).ConfigureAwait(false);
+        CancellationTokenSource? tokenSource = null;
+        Task publish;
+        try
+        {
+            tokenSource = CancellationTokenSource.CreateLinkedTokenSource(scopeToken, cancellationToken);
+            // Retain both cancellation links until the underlying SDK publish actually completes.
+            publish = _context.BasicPublishAsync(exchange, routingKey, mandatory, basicProperties, body, true, tokenSource.Token);
+        }
+        catch
+        {
+            tokenSource?.Dispose();
+            EndPublish();
+            throw;
+        }
+
+        async Task CompleteAndReleaseAsync()
+        {
+            try
+            {
+                await publish.ConfigureAwait(false);
+            }
+            finally
+            {
+                tokenSource.Dispose();
+                EndPublish();
+            }
+        }
+
+        Task tracked = CompleteAndReleaseAsync();
+        if (awaitAck)
+            return tracked;
+
+        tracked.IgnoreUnobservedExceptions();
+        return Task.CompletedTask;
+    }
+
+    void EndPublish()
+    {
+        CancellationTokenSource? source = null;
+        lock (_publishLock)
+        {
+            _pendingPublishes--;
+            if (_disposeRequested && _pendingPublishes == 0)
+            {
+                source = _tokenSource;
+                _tokenSource = null;
+            }
+        }
+
+        source?.Dispose();
     }
 
     /// <summary>Creates an exchange-to-exchange binding through the shared channel.</summary>
@@ -226,7 +285,17 @@ public class ScopeChannelContext :
     /// <summary>Releases the resources owned by this instance.</summary>
     public void Dispose()
     {
-        _tokenSource?.Dispose();
-        _tokenSource = null;
+        CancellationTokenSource? source = null;
+        lock (_publishLock)
+        {
+            _disposeRequested = true;
+            if (_pendingPublishes == 0)
+            {
+                source = _tokenSource;
+                _tokenSource = null;
+            }
+        }
+
+        source?.Dispose();
     }
 }

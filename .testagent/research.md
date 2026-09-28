@@ -1,5 +1,22 @@
 # A+ remediation research
 
+## T68 RabbitMQ no-ack publish cancellation lifetime
+
+The last complete T63 coverage has 63/95 lines in `RabbitMqChannelContext`,
+44/52 in `ScopeChannelContext`, and 25/48 in `SharedChannelContext`; the
+`awaitAck=false` owner path is not exercised. `RabbitMqChannelContext` starts
+the SDK publish under a `TransportLifetime` lease but returns completed before
+the SDK task may settle. Both wrappers await that completed public task and
+dispose their per-call linked cancellation source immediately. A later caller,
+shared owner or scope owner cancellation can no longer reach the token already
+given to the SDK. `ScopeChannelContext.Dispose` can also dispose its parent
+link while the hidden publish is pending. Read-only Red Team triage confirmed
+the path and the missing tests. Acceptance: no-ack return remains prompt,
+actual in-flight publish retains caller/owner cancellation until completion,
+scope disposal defers token-link cleanup, and awaited publish retains its
+existing error propagation. Controlled pending operations will serve as the
+observable oracle; the source/test pairing inventory is reused.
+
 ## T67 RabbitMQ duration argument projection
 
 Inventory: `RabbitMqQueueConfigurator.SetQueueArgument(TimeSpan)` and

@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## T68 RabbitMQ no-ack publish cancellation lifetime
+
+1. Red-first Shared and Scope tests with a controlled pending underlying
+   publish. After public no-ack return, cancel the caller, shared owner, scope
+   owner and parent after scope disposal in independent cases. The exact token
+   handed to the underlying operation must transition to canceled.
+2. Keep wrapper-owned linked cancellation sources alive until the underlying
+   publish task settles, while preserving immediate public no-ack completion.
+   Defer disposal of the scope's parent link while any publish remains pending.
+3. Test awaited error behavior and no-ack cleanup; run affected RabbitMQ
+   suites, pseudo-mutation/assertion-quality review, read-only adversarial
+   review and bounded counterprobes. Defer global profile to grouped milestone.
+
 ## T67 RabbitMQ duration argument projection
 
 1. Red-first public endpoint tests for queue TTL and exchange duration argument:

@@ -1,5 +1,27 @@
 # A+ remediation test status
 
+## Current T68 — RabbitMQ no-ack publish cancellation lifetime
+
+The two channel wrappers disposed their linked cancellation sources when the
+owner returned immediately for a no-ack publish, even though its SDK task and
+channel lease were still active. Five red-first cancellation cases reproduced
+the lost caller, owner, parent and scope cancellation (5/6 failed on the
+original product). Both wrappers now follow the underlying publish task
+internally while preserving immediate no-ack return. Scope disposal defers its
+parent-link cleanup until every pending publish completes. Nine new cases
+check cancellation sources, two simultaneous publishes, successful and faulted
+cleanup, and exact awaited error identity. The full RabbitMQ unit project
+passes 505/505. Independent read-only Red Team review first found concurrency
+and cleanup test gaps; the new counterprobes closed both findings and its final
+review is PASS. This is the fifth packet since the frozen T63 aggregate; no
+new product-wide Line/Branch/CRAP claim is inferred.
+
+Next packets group connected code areas into larger reviewable changes. Each
+packet receives red-first behavioral tests when fixing a defect, affected
+project tests, assertion/mutation review and independent Red Team. The full
+33-profile Line/Branch/CRAP run is reserved for a grouped milestone after
+roughly 10–12 packets or an earlier broad contract/risk signal.
+
 ## Current T67 — RabbitMQ duration argument projection
 
 Red-first public endpoint checks failed 3/6 on the unchanged production code:

@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed RabbitMQ no-ack publishing through shared and scoped channel views:
+  linked caller, owner and parent cancellation now remains active until the
+  actual client publish finishes, even though the public no-ack call returns
+  immediately. Scope disposal waits for all in-flight publishes before
+  releasing the parent link. Five red-first cases exposed the original loss;
+  expanded tests cover two concurrent publishes, successful cleanup and exact
+  awaited failure. The full RabbitMQ unit project passes 505/505 and the
+  independent Red Team re-review is PASS. The complete Line/Branch/CRAP audit
+  remains scheduled for the larger packet milestone.
+
 - Corrected RabbitMQ duration argument conversion for queue and exchange
   declarations. Whole-millisecond values retain the broker's 32-bit argument
   type where possible and use an exact 64-bit value beyond that range;

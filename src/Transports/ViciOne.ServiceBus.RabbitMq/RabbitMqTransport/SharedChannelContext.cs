@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
+using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.RabbitMq;
@@ -41,13 +42,41 @@ public class SharedChannelContext :
     /// <param name="body">The serialized message body.</param>
     /// <param name="awaitAck">Whether to await the client publish task, including publisher confirmation when enabled.</param>
     /// <param name="cancellationToken">The token that cancels this publish in addition to the shared-channel token.</param>
-    /// <returns>A task that completes when the delegated publish operation completes.</returns>
-    public async Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck,
+    /// <returns>A task that completes with the delegated publish when <paramref name="awaitAck"/> is true, or immediately after starting it otherwise.</returns>
+    public Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck,
         CancellationToken cancellationToken)
     {
-        using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+        Task publish;
+        try
+        {
+            // Observe the actual SDK operation so its cancellation link remains active even for no-ack callers.
+            publish = _context.BasicPublishAsync(exchange, routingKey, mandatory, basicProperties, body, true, tokenSource.Token);
+        }
+        catch
+        {
+            tokenSource.Dispose();
+            throw;
+        }
 
-        await _context.BasicPublishAsync(exchange, routingKey, mandatory, basicProperties, body, awaitAck, tokenSource.Token).ConfigureAwait(false);
+        async Task CompleteAndReleaseAsync()
+        {
+            try
+            {
+                await publish.ConfigureAwait(false);
+            }
+            finally
+            {
+                tokenSource.Dispose();
+            }
+        }
+
+        Task tracked = CompleteAndReleaseAsync();
+        if (awaitAck)
+            return tracked;
+
+        tracked.IgnoreUnobservedExceptions();
+        return Task.CompletedTask;
     }
 
     /// <summary>Binds a source exchange to a destination exchange.</summary>

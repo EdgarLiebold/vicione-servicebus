@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10942 |
+| Added | 10943 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -15467,6 +15467,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/MoveTransportHeadersTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Operations/RabbitMqFaultRedriveTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqChannelPublishCancellationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqCleanupTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConnectionFactoryOptionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/RabbitMqConsumerFilterTests.cs` | Added |  |
