@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added durable-delivery tests for caller cancellation during dispatch and
+  after transport acceptance. Both preserve the intent for lease replay with
+  the same attempt number. A consumer completion that races timeout quarantine
+  now proves successful retirement, no quarantine record, and the exact
+  awaiting-to-delivered telemetry sequence. Two controlled counterchanges
+  failed the tests. The focused class passes 20/20 and Core passes
+  6,963/6,963 on the exact test commit; adversarial re-review is PASS.
+  Product code did not change in this packet.
+
 - Added assembly scanner integration tests using real assembly files. They
   distinguish DLL-only from `.exe`-extension discovery, prove scanning
   continues after an invalid DLL, and verify that the assembly predicate

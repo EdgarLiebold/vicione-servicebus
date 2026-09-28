@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T92 durable delivery cancellation and race packet
+
+Three new tests prove caller-token propagation and lease replay for dispatch
+and state-transition cancellation, plus a consumer completion that wins during
+timeout quarantine without false store evidence or telemetry. Focused
+delivery tests pass 20/20; complete Core passes 6,963/6,963 on exact test
+commit `1c1daf17d`. Two isolated counterprobes failed the expected tests and
+the product source was restored. Read-only Red Team found and then verified
+the closure of three P2 assertion gaps; final re-review is PASS. See
+[T92 evidence](t92-durable-delivery-cancellation-race.md). T85 remains the
+latest complete product-wide checkpoint; global A+ remains open.
+
 ## Current T91 assembly scanner packet
 
 Path-based discovery now proves DLL-only versus DLL-plus-EXE-extension
