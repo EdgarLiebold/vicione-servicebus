@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10968 |
+| Added | 10969 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -270,6 +270,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t86-saga-signal-send.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t87-fault-recovery-request.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t88-courier-successor-outbox.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t89-cron-weekday-forward-progress.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |

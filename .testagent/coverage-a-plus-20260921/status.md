@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T89 cron nearest-weekday packet
+
+`GetTimeAfter` could repeat an already fired backward-adjusted `W` date;
+its first partial correction then skipped the adjusted date in the next
+month. The final fix enters an exhausted month at day 1 and never selects
+before the current cursor. Five fixed-month edge cases and four recurring
+three-occurrence journeys pass. The focused suite passes 36/36 and complete
+Core passes 6,956/6,956 on exact commit `b918ab74e`. Read-only Red Team
+re-review is PASS with no P1/P2. See [T89 evidence](t89-cron-weekday-forward-progress.md).
+T85 remains the latest complete product-wide checkpoint; global A+ is open.
+
 ## Current T88 Courier successor outbox packet
 
 The revised-route successor now proves a send stays buffered before its

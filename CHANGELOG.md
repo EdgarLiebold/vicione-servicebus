@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed nearest-weekday cron progression: a backward-adjusted date could
+  repeat after firing, while a partial correction skipped an adjusted date
+  in the next month. An exhausted month now restarts at day 1, and the day
+  selector never returns a date before its cursor. Five boundary calendars
+  and four three-occurrence journeys cover repeat, skip, short-month and leap
+  cases. The focused suite passes 36/36 and complete Core passes 6,956/6,956
+  on the exact fix commit; independent adversarial re-review is PASS.
+
 - Strengthened the integrated Courier retry and outbox journey. The revised
   route's successor now proves its outgoing effect is buffered until release,
   then admitted and delivered once. Both object and enumerable completion
