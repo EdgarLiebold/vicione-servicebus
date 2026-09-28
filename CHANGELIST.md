@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10933 |
+| Added | 10936 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -251,6 +251,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t59-saga-request-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t61-activemq-producer-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15197,6 +15198,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqMessageFlowTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqMessagePackRoundTripTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqOutboxRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqProducerIsolationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqPublishTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqQuartzSchedulingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/ActiveMqRecoveryTests.cs` | Added |  |
@@ -15229,6 +15231,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendContextContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSessionProducerCancellationTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/Configuration/ActiveMqHostSettingsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionCreationFailureTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionListenerFailureTests.cs` | Added |  |
