@@ -12,8 +12,10 @@ missing transport/limits, orphan and duplicate features, and missing durable
 owners. The remaining contract gap is ambiguous *multiple* transport and
 limits registrations for one bus alongside a healthy neighbor, plus multiple
 owners for every durable component. A host must reject all contradictions
-before constructing any configured bus or store and must not misattribute the
-fault to a different bus.
+before constructing the invalid bus or store and must not misattribute the
+fault to a different bus. Red Team found that counting only conflicting store
+factories did not prove the bus itself was left unconstructed. Separate
+throwing bus descriptors now make that preflight boundary observable.
 
 Acceptance: real DI registrations trigger a combined diagnostic for duplicate
 transport and limits only on their owning bus; a second configured bus starts

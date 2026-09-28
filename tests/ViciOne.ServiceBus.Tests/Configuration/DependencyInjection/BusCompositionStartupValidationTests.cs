@@ -81,6 +81,12 @@ public sealed class BusCompositionStartupValidationTests
         });
         BusCompositionRegistrations.AddTransport<IBus>(services, typeof(object));
         services.AddSingleton<IMessageLimitsRegistration>(new MessageLimitsRegistration<IBus>(MessageLimits.Conservative));
+        var defaultBusMaterializations = 0;
+        services.AddSingleton<IBus>(_ =>
+        {
+            defaultBusMaterializations++;
+            throw new InvalidOperationException("An invalid bus must not be materialized.");
+        });
         await using ServiceProvider provider = services.BuildServiceProvider();
 
         ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
@@ -93,7 +99,9 @@ public sealed class BusCompositionStartupValidationTests
         Assert.Contains(failures, static failure => failure.StartsWith(
             "Message limits for bus 'default': Limits has multiple owners", StringComparison.Ordinal));
         Assert.DoesNotContain(typeof(IOrdersBus).FullName!, exception.Message, StringComparison.Ordinal);
+        Assert.Equal(0, defaultBusMaterializations);
         await CompositionValidator<IOrdersBus>(provider).StartAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(0, defaultBusMaterializations);
     }
 
     [Fact]
@@ -222,11 +230,17 @@ public sealed class BusCompositionStartupValidationTests
             });
         });
         var materializations = 0;
+        var busMaterializations = 0;
         AddConflictingOwners(typeof(IMessageContractCatalog));
         AddConflictingOwners(typeof(IOutboxStore<IBus>));
         AddConflictingOwners(typeof(IInboxStore<IBus>));
         AddConflictingOwners(typeof(IScheduleStore<IBus>));
         AddConflictingOwners(typeof(IDurableSendDispatcher<IBus>));
+        services.AddSingleton<IBus>(_ =>
+        {
+            busMaterializations++;
+            throw new InvalidOperationException("An invalid bus must not be materialized.");
+        });
         await using ServiceProvider provider = services.BuildServiceProvider();
 
         ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
@@ -241,6 +255,7 @@ public sealed class BusCompositionStartupValidationTests
         Assert.Contains(failures, static failure => failure.Contains("multiple schedule store owners", StringComparison.Ordinal));
         Assert.Contains(failures, static failure => failure.Contains("multiple transport dispatcher owners", StringComparison.Ordinal));
         Assert.Equal(0, materializations);
+        Assert.Equal(0, busMaterializations);
 
         void AddConflictingOwners(Type serviceType)
         {

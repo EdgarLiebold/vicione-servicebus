@@ -4,10 +4,12 @@
 
 1. Extend the existing host composition suite with one default-bus duplicate
    transport/limits case and a healthy secondary bus. Assert the exact two
-   ownership causes, bus identity, and neighbor acceptance.
+   ownership causes, bus identity, neighbor acceptance, and zero invalid-bus
+   materializations.
 2. Register one real reliable-messaging contract declaration and two
    nonmaterializing descriptors for each required owner. Assert the five
-   distinct ambiguous-owner causes and that no dummy factory ran.
+   distinct ambiguous-owner causes and that neither a dummy owner factory nor
+   the invalid bus factory ran.
 3. Run only this class while editing; perform a controlled cardinality
    counterprobe; obtain independent read-only adversarial review. On the exact
    test commit run the complete Core project, then update evidence, changelog,
