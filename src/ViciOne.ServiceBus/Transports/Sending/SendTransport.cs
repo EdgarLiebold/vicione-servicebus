@@ -143,13 +143,39 @@ public sealed class SendTransport<TContext> :
             MetricOperation? instrument = LogContext.Current?.TryStartSendMetrics(_sendTransportContext, sendContext);
             try
             {
-                await DispatchAsync(context, sendContext, activity).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                await HandleSendFailureAsync(sendContext, exception, activity, instrument).ConfigureAwait(false);
+                try
+                {
+                    await DispatchAsync(context, sendContext).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    await HandleSendFailureAsync(sendContext, exception, activity, instrument).ConfigureAwait(false);
+                    throw;
+                }
 
-                throw;
+                // A provider-confirmed send cannot become a retryable failure because
+                // diagnostics or post-send observers failed.
+                try
+                {
+                    activity?.Update(sendContext);
+                    sendContext.LogSent();
+                }
+                catch (Exception diagnosticFailure)
+                {
+                    TryLogSecondaryFailure(diagnosticFailure, sendContext.DestinationAddress);
+                }
+
+                if (_sendTransportContext.SendObservers.Count > 0)
+                {
+                    try
+                    {
+                        await _sendTransportContext.SendObservers.PostSendAsync(sendContext).ConfigureAwait(false);
+                    }
+                    catch (Exception observerFailure)
+                    {
+                        TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
+                    }
+                }
             }
             finally
             {
@@ -158,7 +184,7 @@ public sealed class SendTransport<TContext> :
             }
         }
 
-        async Task DispatchAsync(TContext context, SendContext<T> sendContext, StartedActivity? activity)
+        async Task DispatchAsync(TContext context, SendContext<T> sendContext)
         {
             if (_sendTransportContext is BaseSendTransportContext transportContext)
                 transportContext.ApplyPayloadAdmission(sendContext);
@@ -172,12 +198,6 @@ public sealed class SendTransport<TContext> :
             Task sendTask = _sendTransportContext.SendAsync(context, sendContext)
                 ?? throw new InvalidOperationException("The send transport context returned no send task.");
             await sendTask.ConfigureAwait(false);
-
-            activity?.Update(sendContext);
-            sendContext.LogSent();
-
-            if (_sendTransportContext.SendObservers.Count > 0)
-                await _sendTransportContext.SendObservers.PostSendAsync(sendContext).ConfigureAwait(false);
         }
 
         async Task HandleSendFailureAsync(
@@ -186,7 +206,14 @@ public sealed class SendTransport<TContext> :
             StartedActivity? activity,
             MetricOperation? instrument)
         {
-            sendContext.LogFaulted(sendFailure);
+            try
+            {
+                sendContext.LogFaulted(sendFailure);
+            }
+            catch (Exception diagnosticFailure)
+            {
+                TryLogSecondaryFailure(diagnosticFailure, sendContext.DestinationAddress);
+            }
 
             if (_sendTransportContext.SendObservers.Count > 0)
             {
@@ -196,14 +223,25 @@ public sealed class SendTransport<TContext> :
                 }
                 catch (Exception observerFailure)
                 {
-                    LogContext.Error?.Log(observerFailure,
-                        "A send-fault observer failed after the send operation faulted: {DestinationAddress}",
-                        sendContext.DestinationAddress);
+                    TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
                 }
             }
 
             activity?.AddExceptionEvent(sendFailure);
             instrument?.RecordException(sendFailure);
+        }
+
+        static void TryLogSecondaryFailure(Exception failure, Uri? destinationAddress)
+        {
+            try
+            {
+                LogContext.Error?.Log(failure,
+                    "A send diagnostic or observer failed: {DestinationAddress}", destinationAddress);
+            }
+            catch (Exception)
+            {
+                // Logging must not change the confirmed provider outcome.
+            }
         }
 
         public void Probe(ProbeContext context)

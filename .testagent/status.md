@@ -1,6 +1,24 @@
 # A+ remediation test status
 
-## Current T61 — ActiveMQ producer ownership packet accepted by affected projects
+## Current T62 — send observer outcome packet in affected-project validation
+
+The [T62 acceptance record](coverage-a-plus-20260921/t62-send-observer-outcome.md)
+groups Core and Event Hubs single/batch producer outcomes, fault-observer
+failure, and hostile logging. Red-first Core and Event Hubs tests failed on
+the original product behavior and pass after the fix. Focused tests pass 6/6
+Core and 8/8 Event Hubs; complete Core passes 6,897/6,897, no skips. The
+first Event Hubs broker attempt omitted `--broker azurite`, so its Blob port
+was not projected; that diagnostic run is excluded. A corrected run exposed
+an emulator startup race, fixed by waiting for the emulator's own entity-ready
+log marker. The subsequent full Event Hubs run passed 96/97; one existing
+checkpoint test timed out waiting for its consumer and passed 1/1 in a fresh
+fixture. Both accepted fixture reports have empty findings. Read-only
+adversarial re-review accepted the send fix and test oracles. Progress-aware
+handling of a confirmed earlier partial Event Hubs batch followed by later batch failure
+remains open. T59 is the latest complete product-wide coverage/CRAP baseline;
+global Line/Branch A+ remains open.
+
+## T61 — ActiveMQ producer ownership packet published
 
 The [T61 acceptance record](coverage-a-plus-20260921/t61-activemq-producer-ownership.md)
 groups cache creation, session executor cancellation and native broker send
@@ -12,12 +30,12 @@ LocalIntegration passes 106/106 with no skips, zero build warnings/errors and
 empty Classic/Artemis fixture findings. Read-only re-review reports no concrete
 blocker. The initial full broker run used no outage-control fixture option and
 failed only those two setup-dependent tests; its failed log is retained. The
-clean accepted run uses `--allow-broker-outage activemq`. T59 is still the last
-global 33-profile coverage/CRAP result. T61 changelog is drafted; generated
-change list and remote publication remain pending. Global Line/Branch A+
+clean accepted run uses `--allow-broker-outage activemq`. T61 and its generated
+change list were published and remote-verified at `d82e0af78`. T59 is still
+the last global 33-profile coverage/CRAP result. Global Line/Branch A+
 remains open.
 
-## Current T60 — persistent JobService packet accepted by affected-provider checks
+## T60 — persistent JobService packet published
 
 T59 is published and remote-verified. Six new hard integration cases cover
 two simultaneous jobs with separated success/fault persistence and the
@@ -39,10 +57,10 @@ suites, neighboring contract/regression tests, adversarial review and a
 meaningful counterprobe for each larger packet. Repeat all 33 exact profiles
 after roughly four such packets, or sooner for cross-assembly contract/build
 changes or a milestone requiring a fresh global claim. Independent XML/fixture
-audit accompanies each full run. Changelog, generated change list and remote
-publication are pending. Global Line/Branch A+ remains open.
+audit accompanies each full run. T60 and its generated change list were
+published at `29b32272f`. Global Line/Branch A+ remains open.
 
-## Current T59 — larger Saga packet in progress
+## T59 — larger Saga packet published and measured
 
 T58 is complete, audited and pushed. T59 uses one connected Saga request
 lifecycle packet before the next full33 measurement. Read-only Red Team
@@ -61,8 +79,8 @@ conservative branches (84.36423%) and zero CRAP>30. Independent audit checks
 487 hashes, 66 runner/settings bindings, exact XML counts and four clean
 accepted fixture groups. The first Azure Table local attempt failed one
 existing JobService observation amid ETag 412 conflicts; a new isolated
-fixture passed 40/40, with both attempts retained. Changelog is updated;
-generate CHANGELIST and publish. Global Line/Branch A+ remains open.
+fixture passed 40/40, with both attempts retained. T59 and its generated
+change list were published at `509a7c22a`. Global Line/Branch A+ remains open.
 
 ## Current T58 — complete and remote-verified
 

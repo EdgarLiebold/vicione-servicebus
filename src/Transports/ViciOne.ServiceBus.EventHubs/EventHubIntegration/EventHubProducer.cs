@@ -184,30 +184,49 @@ public class EventHubProducer :
 
             try
             {
+                try
+                {
+                    if (_context.SendObservers.Count > 0)
+                        await _context.SendObservers.PreSendAsync(sendContext).ConfigureAwait(false);
+
+                    if (transportContext is not null)
+                        transportContext.ApplyPayloadAdmission(sendContext);
+                    await _context.SendAsync(context, sendContext).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    TryLogFault(sendContext, exception);
+
+                    if (_context.SendObservers.Count > 0)
+                    {
+                        try
+                        {
+                            await _context.SendObservers.SendFaultAsync(sendContext, exception).ConfigureAwait(false);
+                        }
+                        catch (Exception observerFailure)
+                        {
+                            TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
+                        }
+                    }
+
+                    activity?.AddExceptionEvent(exception);
+                    instrument?.RecordException(exception);
+                    throw;
+                }
+
+                TryLogSent(sendContext, activity);
+
                 if (_context.SendObservers.Count > 0)
-                    await _context.SendObservers.PreSendAsync(sendContext).ConfigureAwait(false);
-
-                if (transportContext is not null)
-                    transportContext.ApplyPayloadAdmission(sendContext);
-                await _context.SendAsync(context, sendContext).ConfigureAwait(false);
-
-                activity?.Update(sendContext);
-                sendContext.LogSent();
-
-                if (_context.SendObservers.Count > 0)
-                    await _context.SendObservers.PostSendAsync(sendContext).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                sendContext.LogFaulted(exception);
-
-                if (_context.SendObservers.Count > 0)
-                    await _context.SendObservers.SendFaultAsync(sendContext, exception).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(exception);
-                instrument?.RecordException(exception);
-
-                throw;
+                {
+                    try
+                    {
+                        await _context.SendObservers.PostSendAsync(sendContext).ConfigureAwait(false);
+                    }
+                    catch (Exception observerFailure)
+                    {
+                        TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
+                    }
+                }
             }
             finally
             {
@@ -270,33 +289,52 @@ public class EventHubProducer :
             StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);
             try
             {
-                if (_context.SendObservers.Count > 0)
-                    await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSendAsync(c))).ConfigureAwait(false);
-
-                if (transportContext is not null)
+                try
                 {
-                    foreach (EventHubSendContext<T> candidate in contexts)
-                        transportContext.ApplyPayloadAdmission(candidate);
+                    if (_context.SendObservers.Count > 0)
+                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSendAsync(c))).ConfigureAwait(false);
+
+                    if (transportContext is not null)
+                    {
+                        foreach (EventHubSendContext<T> candidate in contexts)
+                            transportContext.ApplyPayloadAdmission(candidate);
+                    }
+
+                    await _context.SendAsync(context, contexts).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    TryLogFault(sendContext, exception);
+
+                    if (_context.SendObservers.Count > 0)
+                    {
+                        try
+                        {
+                            await Task.WhenAll(contexts.Select(c => _context.SendObservers.SendFaultAsync(c, exception))).ConfigureAwait(false);
+                        }
+                        catch (Exception observerFailure)
+                        {
+                            TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
+                        }
+                    }
+
+                    activity?.AddExceptionEvent(exception);
+                    throw;
                 }
 
-                await _context.SendAsync(context, contexts).ConfigureAwait(false);
-
-                activity?.Update(sendContext);
-                sendContext.LogSent();
+                TryLogSent(sendContext, activity);
 
                 if (_context.SendObservers.Count > 0)
-                    await Task.WhenAll(contexts.Select(c => _context.SendObservers.PostSendAsync(c))).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                sendContext.LogFaulted(exception);
-
-                if (_context.SendObservers.Count > 0)
-                    await Task.WhenAll(contexts.Select(c => _context.SendObservers.SendFaultAsync(c, exception))).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(exception);
-
-                throw;
+                {
+                    try
+                    {
+                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.PostSendAsync(c))).ConfigureAwait(false);
+                    }
+                    catch (Exception observerFailure)
+                    {
+                        TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
+                    }
+                }
             }
             finally
             {
@@ -306,6 +344,44 @@ public class EventHubProducer :
 
         public void Probe(ProbeContext context)
         {
+        }
+    }
+
+    static void TryLogSent<T>(EventHubSendContext<T> sendContext, StartedActivity? activity) where T : class
+    {
+        try
+        {
+            activity?.Update(sendContext);
+            sendContext.LogSent();
+        }
+        catch (Exception diagnosticFailure)
+        {
+            TryLogSecondaryFailure(diagnosticFailure, sendContext.DestinationAddress);
+        }
+    }
+
+    static void TryLogFault<T>(EventHubSendContext<T> sendContext, Exception sendFailure) where T : class
+    {
+        try
+        {
+            sendContext.LogFaulted(sendFailure);
+        }
+        catch (Exception diagnosticFailure)
+        {
+            TryLogSecondaryFailure(diagnosticFailure, sendContext.DestinationAddress);
+        }
+    }
+
+    static void TryLogSecondaryFailure(Exception failure, Uri? destinationAddress)
+    {
+        try
+        {
+            LogContext.Error?.Log(failure,
+                "A send diagnostic or observer failed: {DestinationAddress}", destinationAddress);
+        }
+        catch (Exception)
+        {
+            // Logging must not change the provider-confirmed send outcome.
         }
     }
 }

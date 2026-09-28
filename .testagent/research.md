@@ -1,5 +1,44 @@
 # A+ remediation research
 
+## Current T62 — send observer outcome ownership
+
+The next connected packet follows one message from provider submission through
+the common `SendTransport` and the Event Hubs single and batch producer paths.
+The `ISendObserver` contract calls `PostSend` after confirmed submission and
+`SendFault` for a failed send. Before T62, all three paths included `PostSend` inside
+the catch that classifies a send failure. Event Hubs also awaits `SendFault`
+without shielding the original send exception. A post observer failure can
+therefore report a false send fault after delivery, and a fault observer can
+replace the real provider failure. Existing Core tests prove the latter only
+for the common transport. Event Hubs admission tests prove presend rejection,
+not these outcome boundaries. Fresh Microsoft Roslyn pairing identifies
+three static test references for the Core source and none for the Event Hubs
+producer; this is a search heuristic, not runtime coverage evidence.
+
+Read-only Red Team additionally identified throwing send loggers as a way to
+misclassify confirmed sends or replace provider failures. Event Hubs batches
+can also partially succeed before a later provider batch fails; the current
+single catch then sends `SendFault` for every context. These are part of this
+packet's outcome ownership review. The Core post-observer test failed on old
+product bytes with the exact observer exception after provider submission.
+
+The corrected source passed focused 6/6 Core and 8/8 Event Hubs tests; full
+Core passed 6,897/6,897. A separate Event Hubs broker startup race was found
+while validating the existing suite. The runner now waits for the emulator's
+entity-ready log marker. The ready full run passed 96/97; its sole existing
+checkpoint observation timeout passed 1/1 in a fresh fixture. Both fixture
+reports have empty findings. The partial provider-batch outcome remains the
+next behavior packet. No global A+ measurement is inferred from these runs.
+
+Acceptance: after confirmed provider submission, a failing post observer
+cannot turn success into a retryable failure or emit `SendFault`; a true send
+failure remains the thrown exception if its fault observer also fails. Check
+single and batch paths and assert provider submission, message identity and
+observer events. Use narrow red-first tests, the complete affected suites,
+and an adversarial read-only review. The red-first failures are the causal
+counterprobes for the product correction. T59 remains the
+last complete global coverage/CRAP baseline under the agreed cadence.
+
 ## Current T61 — ActiveMQ cached producer and native send ownership
 
 The connected owner is the ActiveMQ producer cache through the native session

@@ -11,6 +11,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected send outcome ownership across the common transport and Event Hubs
+  single/batch producers. A failed post-send observer or logger after provider
+  confirmation can no longer report a false send fault or make the confirmed
+  send retryable. Fault-observer and logger failures no longer replace the
+  original provider exception. Red-first tests reproduced both errors before
+  the correction; focused Core and Event Hubs outcome tests pass, and the
+  complete Core project passes 6,897/6,897. Event Hubs outcome tests use a
+  controlled transport context. The existing broker suite passed 96/97 in one
+  fresh fixture; the sole checkpoint observation timeout passed 1/1 in
+  another. The fixture runner now waits for the Event Hubs emulator's own
+  entity-ready signal. A later failed Event Hubs partial batch can still misclassify
+  earlier confirmed messages and is tracked as the next batch-progress case.
+  T59 remains the latest complete global coverage/CRAP measurement.
+
 - Corrected ActiveMQ producer creation shared by concurrent sends: cancellation
   of the first sender no longer cancels another sender's pending producer.
   The session executor now receives the cache-owned creation token through an

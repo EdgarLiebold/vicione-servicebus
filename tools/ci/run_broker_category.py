@@ -202,6 +202,8 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
 
     if "servicebus" in brokers:
         compose_fixture.wait_for_servicebus_health(environment)
+    if "eventhubs" in brokers:
+        compose_fixture.wait_for_eventhubs_ready(environment)
 
     if proxy:
         print(f"{args.allow_broker_outage} is reached through {proxy}, so its address survives a restart")

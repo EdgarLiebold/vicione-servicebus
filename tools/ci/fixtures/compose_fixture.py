@@ -70,7 +70,8 @@ class TeardownError(RuntimeError):
     """Raised when the fixture could not be removed. Never replaces the failure that came first."""
 
 
-def compose(*args: str, capture: bool = False, environment: dict[str, str] | None = None) -> subprocess.CompletedProcess:
+def compose(*args: str, capture: bool = False, environment: dict[str, str] | None = None,
+            timeout: float | None = None) -> subprocess.CompletedProcess:
     """Every call names the compose project of this run.
 
     Without it two runs share one project: the second one's 'down -v' removes the first one's
@@ -82,7 +83,8 @@ def compose(*args: str, capture: bool = False, environment: dict[str, str] | Non
     identity = ["-p", project] if project else []
 
     command = ["docker", "compose", "-f", str(COMPOSE_FILE), *identity, *args]
-    return subprocess.run(command, text=True, capture_output=capture, check=False, env=environment)
+    return subprocess.run(command, text=True, capture_output=capture, check=False, env=environment,
+                          timeout=timeout)
 
 
 def start(brokers: list[str], environment: dict[str, str]) -> None:
@@ -153,6 +155,34 @@ def wait_for_servicebus_health(environment: dict[str, str], budget_seconds: floa
         time.sleep(0.25)
 
     raise RunnerError(f"the Service Bus fixture did not become healthy at {endpoint}: {last_failure}")
+
+
+def wait_for_eventhubs_ready(environment: dict[str, str], budget_seconds: float = 120) -> None:
+    """Wait until the emulator reports that its configured entities are available.
+
+    Its container has no Compose health check. A running container accepts AMQP
+    connections while it is still creating entities, so Compose --wait alone
+    can start tests early enough to receive a false EntityNotFound error.
+    """
+    deadline = time.monotonic() + budget_seconds
+    last_failure = "startup marker absent"
+    while time.monotonic() < deadline:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        try:
+            result = compose("logs", "--no-color", "eventhubs", capture=True,
+                             environment=environment, timeout=remaining)
+        except subprocess.TimeoutExpired:
+            last_failure = "timed out reading emulator logs"
+            break
+        if result.returncode != 0:
+            last_failure = result.stderr.strip() or "could not read emulator logs"
+        elif "Emulator Service is Successfully Up!" in result.stdout:
+            return
+        time.sleep(0.25)
+
+    raise RunnerError(f"the Event Hubs emulator did not finish creating its entities: {last_failure}")
 
 
 # The fixture boundary a test asks for an outage through. The test writes a request file and waits for

@@ -1,5 +1,28 @@
 # A+ remediation test plan
 
+## Current T62 — send observer outcome ownership
+
+1. Add a failing `PostSend` to the Core transport harness and prove exact
+   provider submission plus successful caller result with no false `SendFault`.
+2. Exercise Event Hubs single and batch producer orchestration with a
+   controlled transport context; prove that a confirmed provider task is
+   called exactly once and `PostSend` exceptions cannot make it retryable.
+   Run the existing complete broker suite as an adjacent delivery control.
+3. Inject true send failures and fault observer failures into Event Hubs
+   single/batch paths, asserting the original failure and exact observer
+   contexts. Challenge throwing diagnostic loggers. Preserve the existing
+   admission controls. The partial provider-batch outcome remains a separate
+   open risk for the next connected packet; the current transport fake does
+   not claim to reproduce SDK split batches.
+4. Complete: the red-first Core case and four Event Hubs variants failed on
+   original product bytes. The bounded product correction passes focused
+   checks and the complete Core project (6,897/6,897). The complete Event
+   Hubs project ran 97 cases in a ready fixture: 96 passed; its one 30-second
+   checkpoint observation timeout passed 1/1 in a fresh fixture. Red Team
+   accepted the send fix and test oracles. The runner now waits for the
+   emulator's own entity-ready log marker. Defer full33 until the agreed
+   packet cadence; the partial provider-batch outcome is the next packet.
+
 ## Current T61 — ActiveMQ producer ownership and native delivery
 
 Use the [T61 research](research.md) checklist. Phase 1 adds cache lifecycle

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Logging;
@@ -58,6 +59,64 @@ public sealed class SendTransportTests
         Assert.Same(sendFailure, actual);
         Assert.Equal(["create", "pre", "send", "fault"], trace);
         await transport.DisposeAsync();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SEND-TRANSPORT-PIPELINE", "post-observer-failure-after-provider-send-is-not-a-send-fault")]
+    public async Task PostObserverFailure_AfterProviderSubmission_DoesNotMakeDeliveredSendRetryableAsync()
+    {
+        var trace = new List<string>();
+        var context = new RecordingSendTransportContext(trace);
+        var transport = new SendTransport<TestTransportContext>(context);
+        using ConnectHandle observerHandle = transport.ConnectSendObserver(
+            new RecordingSendObserver(trace, postFailure: new ExpectedObserverException()));
+
+        await transport.SendAsync(
+            new SampleMessage(),
+            Pipe.Empty<SendContext<SampleMessage>>(),
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(["create", "pre", "send", "post"], trace);
+        Assert.NotNull(context.ObservedSendContext);
+        await transport.DisposeAsync();
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SEND-TRANSPORT-FAULT", "throwing-logger-cannot-change-provider-send-outcome")]
+    public async Task ThrowingLogger_DoesNotChangeConfirmedSendOrMaskProviderFailureAsync(bool failProvider)
+    {
+        var trace = new List<string>();
+        var providerFailure = new ExpectedSendException();
+        var context = new RecordingSendTransportContext(trace, failProvider ? providerFailure : null);
+        var transport = new SendTransport<TestTransportContext>(context);
+        using ConnectHandle handle = transport.ConnectSendObserver(new RecordingSendObserver(trace));
+        ILogContext? previous = LogContext.Current;
+
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(new ThrowingLogger());
+            if (failProvider)
+            {
+                ExpectedSendException actual = await Assert.ThrowsAsync<ExpectedSendException>(() =>
+                    transport.SendAsync(new SampleMessage(), Pipe.Empty<SendContext<SampleMessage>>(),
+                        TestContext.Current.CancellationToken));
+                Assert.Same(providerFailure, actual);
+                Assert.Equal(["create", "pre", "send", "fault"], trace);
+            }
+            else
+            {
+                await transport.SendAsync(new SampleMessage(), Pipe.Empty<SendContext<SampleMessage>>(),
+                    TestContext.Current.CancellationToken);
+                Assert.Equal(["create", "pre", "send", "post"], trace);
+            }
+        }
+        finally
+        {
+            LogContext.Current = previous!;
+            await transport.DisposeAsync();
+        }
     }
 
     [Fact]
@@ -172,7 +231,7 @@ public sealed class SendTransportTests
         }
     }
 
-    private sealed class RecordingSendObserver(List<string> trace, Exception? faultFailure = null) : ISendObserver
+    private sealed class RecordingSendObserver(List<string> trace, Exception? faultFailure = null, Exception? postFailure = null) : ISendObserver
     {
         public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
@@ -185,7 +244,7 @@ public sealed class SendTransportTests
             where T : class
         {
             trace.Add("post");
-            return Task.CompletedTask;
+            return postFailure is null ? Task.CompletedTask : Task.FromException(postFailure);
         }
 
         public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
@@ -215,4 +274,12 @@ public sealed class SendTransportTests
     private sealed class SampleMessage;
     private sealed class ExpectedSendException : Exception;
     private sealed class ExpectedObserverException : Exception;
+
+    private sealed class ThrowingLogger : ILogger
+    {
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter) => throw new ExpectedObserverException();
+    }
 }
