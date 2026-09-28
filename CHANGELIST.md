@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10941 |
+| Added | 10942 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -10462,6 +10462,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqBusConfiguration.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqBusFactoryConfigurator.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqClusterConfigurator.cs` | Added |  |
+| `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqDurationArgument.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqEndpointConfiguration.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqExchangeBindingConfigurator.cs` | Added |  |
 | `src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqExchangeConfigurator.cs` | Added |  |

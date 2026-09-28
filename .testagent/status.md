@@ -1,5 +1,29 @@
 # A+ remediation test status
 
+## Current T67 — RabbitMQ duration argument projection
+
+Red-first public endpoint checks failed 3/6 on the unchanged production code:
+wide `TimeSpan` queue/exchange arguments stayed 32-bit, fractional durations
+were silently truncated, and a positive sub-ms queue expiration was accepted.
+The first corrected run exposed a test setup error: building a receive context
+inside `Bus.Factory.CreateUsingRabbitMq` made the factory build the same receive
+pipe twice. The topology case now uses a standalone host configuration and
+creates its context exactly once. The final focused boundary, stream and
+requirement-projection suite passes 9/9. Inline pseudo-mutation review checked
+the 32/64-bit boundary, exact conversion, mutation before throw, null-key
+precedence, expiration removal and actual queue declaration. The first Red Team
+review found an `int` to `long` regression in the built `x-expires` argument and
+negative durations accepted by the typed queue/exchange overloads. Expanded
+tests reproduced both findings before correction. The builder now retains an
+already declared argument's type, generic typed durations reject negative
+values, and `x-expires` requires a positive value. Full RabbitMQ unit tests pass
+496/496 after all review fixes. Assertion-quality
+review found no assertion-free or trivial-only new tests: all three new tests
+check concrete broker argument types/values or state after failure. Independent
+read-only Red Team re-review is PASS after concrete API documentation and exact
+error-parameter assertions were checked. Complete 33-profile measurement remains
+deferred to the grouped milestone.
+
 ## Current T66 — RabbitMQ queue configuration boundaries
 
 Red-first public receive-endpoint tests failed 2/2 on the original code:

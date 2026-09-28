@@ -1,5 +1,21 @@
 # A+ remediation test plan
 
+## T67 RabbitMQ duration argument projection
+
+1. Red-first public endpoint tests for queue TTL and exchange duration argument:
+   exact `int` values remain `int`, >`int.MaxValue` values become exact `long`,
+   and fractional or negative durations fail without replacing distinct prior
+   values. Inspect the built queue and exchange topology as well as settings.
+2. Red-first expiration tests: positive sub-ms input fails without replacing
+   `x-expires`; whole-ms values round-trip via `QueueExpiration` and appear
+   unchanged in `BrokerTopology`; generic `x-expires` duration setter preserves
+   its integer type and rejects zero/negative values, while null removal agrees
+   with the property and topology.
+3. Correct common conversion and the queue-expiration getter, setter, and
+   builder path. Run focused boundary/stream/requirement suites; apply
+   pseudo-mutation and assertion-quality review, independent read-only Red Team,
+   then commit and push. Full 33-profile measurement remains at group milestone.
+
 ## T66 RabbitMQ queue configuration boundaries
 
 1. Red-first public receive-endpoint tests: invalid quorum factor preserves a

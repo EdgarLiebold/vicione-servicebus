@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected RabbitMQ duration argument conversion for queue and exchange
+  declarations. Whole-millisecond values retain the broker's 32-bit argument
+  type where possible and use an exact 64-bit value beyond that range;
+  fractional and negative values fail before changing existing arguments.
+  Generic `x-expires` durations require a positive value. Queue expiration
+  now rejects positive sub-millisecond values, round-trips through its getter,
+  and reaches the broker topology without floating-point precision loss or a
+  change from 32-bit to 64-bit argument type. Red-first tests reproduced the
+  defects; the full RabbitMQ unit project passes 496/496. The complete
+  coverage/CRAP measurement remains scheduled for the grouped milestone.
+
 - Fixed RabbitMQ queue configuration boundaries: rejecting an invalid quorum
   replication factor now preserves the earlier classic queue, exclusivity and
   priority settings; fractional-millisecond acknowledgement timeouts no longer

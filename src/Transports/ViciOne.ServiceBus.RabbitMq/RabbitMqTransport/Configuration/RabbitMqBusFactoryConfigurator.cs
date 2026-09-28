@@ -97,7 +97,7 @@ public class RabbitMqBusFactoryConfigurator :
         set => _settings.Lazy = value;
     }
 
-    /// <summary>Sets the unused-queue expiration for the bus endpoint.</summary>
+    /// <summary>Sets the unused-queue expiration for the bus endpoint in whole milliseconds.</summary>
     public TimeSpan? QueueExpiration
     {
         set => _settings.QueueExpiration = value;
@@ -117,7 +117,7 @@ public class RabbitMqBusFactoryConfigurator :
         _settings.SetQueueArgument(key, value);
     }
 
-    /// <summary>Sets a bus endpoint queue argument from a duration converted to milliseconds.</summary>
+    /// <summary>Sets a bus endpoint queue argument from a nonnegative duration converted to whole milliseconds; <c>x-expires</c> must be positive.</summary>
     /// <param name="key">The RabbitMQ queue-argument key.</param>
     /// <param name="value">The duration to convert.</param>
     public void SetQueueArgument(string key, TimeSpan value)
@@ -133,7 +133,7 @@ public class RabbitMqBusFactoryConfigurator :
         _settings.SetExchangeArgument(key, value);
     }
 
-    /// <summary>Sets a bus endpoint exchange argument from a duration converted to milliseconds.</summary>
+    /// <summary>Sets a bus endpoint exchange argument from a nonnegative duration converted to whole milliseconds.</summary>
     /// <param name="key">The RabbitMQ exchange-argument key.</param>
     /// <param name="value">The duration to convert.</param>
     public void SetExchangeArgument(string key, TimeSpan value)

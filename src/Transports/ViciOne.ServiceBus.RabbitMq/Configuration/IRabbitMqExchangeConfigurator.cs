@@ -20,8 +20,8 @@ public interface IRabbitMqExchangeConfigurator
     /// <param name="value">The argument value.</param>
     void SetExchangeArgument(string key, object? value);
 
-    /// <summary>Sets an exchange argument from a duration converted to whole milliseconds.</summary>
+    /// <summary>Sets an exchange argument from a nonnegative duration converted to whole milliseconds.</summary>
     /// <param name="key">The RabbitMQ exchange-argument key.</param>
-    /// <param name="value">The duration to convert to milliseconds.</param>
+    /// <param name="value">The duration to convert to whole milliseconds.</param>
     void SetExchangeArgument(string key, TimeSpan value);
 }

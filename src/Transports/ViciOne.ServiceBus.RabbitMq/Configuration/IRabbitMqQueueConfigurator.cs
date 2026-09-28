@@ -15,7 +15,7 @@ public interface IRabbitMqQueueConfigurator :
     /// <summary>Sets the queue to be lazy (using less memory).</summary>
     bool Lazy { set; }
 
-    /// <summary>Sets the unused-queue expiration applied through <c>x-expires</c>.</summary>
+    /// <summary>Sets the unused-queue expiration applied through <c>x-expires</c>; positive values must use whole milliseconds.</summary>
     TimeSpan? QueueExpiration { set; }
 
     /// <summary>
@@ -29,9 +29,9 @@ public interface IRabbitMqQueueConfigurator :
     /// <param name="value">The argument value.</param>
     void SetQueueArgument(string key, object? value);
 
-    /// <summary>Sets a queue argument from a duration converted to whole milliseconds.</summary>
+    /// <summary>Sets a queue argument from a nonnegative duration converted to whole milliseconds; <c>x-expires</c> must be positive.</summary>
     /// <param name="key">The RabbitMQ queue-argument key.</param>
-    /// <param name="value">The duration to convert to milliseconds.</param>
+    /// <param name="value">The duration to convert to whole milliseconds.</param>
     void SetQueueArgument(string key, TimeSpan value);
 
     /// <summary>Enables priority delivery and sets the queue's maximum message priority.</summary>

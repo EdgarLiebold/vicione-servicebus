@@ -85,8 +85,8 @@ public class RabbitMqReceiveEndpointBuilder :
 
         var queueArguments = new Dictionary<string, object?>(settings.QueueArguments);
 
-        if (settings.QueueExpiration.HasValue)
-            queueArguments[RabbitMQ.Client.Headers.XExpires] = (long)settings.QueueExpiration.Value.TotalMilliseconds;
+        if (settings.QueueExpiration.HasValue && !queueArguments.ContainsKey(RabbitMQ.Client.Headers.XExpires))
+            queueArguments[RabbitMQ.Client.Headers.XExpires] = settings.QueueExpiration.Value.Ticks / TimeSpan.TicksPerMillisecond;
 
         topologyBuilder.Exchange = topologyBuilder.ExchangeDeclare(settings.ExchangeName ?? settings.QueueName, settings.ExchangeType, settings.Durable,
             settings.AutoDelete, settings.ExchangeArguments);

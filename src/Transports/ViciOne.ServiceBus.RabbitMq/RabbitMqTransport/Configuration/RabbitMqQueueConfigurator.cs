@@ -68,14 +68,17 @@ public class RabbitMqQueueConfigurator :
             QueueArguments[key] = value;
     }
 
-    /// <summary>Sets a queue argument from a duration converted to whole milliseconds.</summary>
+    /// <summary>Sets a queue argument from a nonnegative duration converted to whole milliseconds; <c>x-expires</c> must be positive.</summary>
     /// <param name="key">The RabbitMQ queue-argument key.</param>
     /// <param name="value">The duration to convert.</param>
     public void SetQueueArgument(string key, TimeSpan value)
     {
-        var milliseconds = (int)value.TotalMilliseconds;
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
+        if (key == RabbitMQ.Client.Headers.XExpires && value <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(value), "RabbitMQ queue expiration must be positive.");
 
-        SetQueueArgument(key, milliseconds);
+        SetQueueArgument(key, RabbitMqDurationArgument.ToMilliseconds(value));
     }
 
     /// <summary>Sets RabbitMQ queue mode to <c>lazy</c> or <c>default</c>.</summary>
@@ -94,20 +97,30 @@ public class RabbitMqQueueConfigurator :
     /// <summary>Gets or sets whether the queue is exclusive to its declaring connection.</summary>
     public bool Exclusive { get; set; }
 
-    /// <summary>Gets or sets how long an unused queue may remain before RabbitMQ deletes it.</summary>
+    /// <summary>Gets or sets how long an unused queue may remain before RabbitMQ deletes it; positive values must use whole milliseconds.</summary>
     public TimeSpan? QueueExpiration
     {
         get
         {
-            if (QueueArguments.TryGetValue(RabbitMQ.Client.Headers.XExpires, out var value) && value is long milliseconds)
-                return TimeSpan.FromMilliseconds(milliseconds);
+            if (QueueArguments.TryGetValue(RabbitMQ.Client.Headers.XExpires, out var value))
+            {
+                if (value is long milliseconds)
+                    return TimeSpan.FromTicks(checked(milliseconds * TimeSpan.TicksPerMillisecond));
+                if (value is int shortMilliseconds)
+                    return TimeSpan.FromTicks((long)shortMilliseconds * TimeSpan.TicksPerMillisecond);
+            }
 
             return null;
         }
         set
         {
             if (value.HasValue && value.Value > TimeSpan.Zero)
-                QueueArguments[RabbitMQ.Client.Headers.XExpires] = (long)value.Value.TotalMilliseconds;
+            {
+                if (value.Value.Ticks % TimeSpan.TicksPerMillisecond != 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), "RabbitMQ queue expiration must use whole milliseconds.");
+
+                QueueArguments[RabbitMQ.Client.Headers.XExpires] = value.Value.Ticks / TimeSpan.TicksPerMillisecond;
+            }
             else
                 QueueArguments.Remove(RabbitMQ.Client.Headers.XExpires);
         }

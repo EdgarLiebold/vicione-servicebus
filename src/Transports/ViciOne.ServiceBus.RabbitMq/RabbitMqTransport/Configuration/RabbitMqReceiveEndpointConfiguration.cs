@@ -247,7 +247,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         set => _settings.BindQueue = value;
     }
 
-    /// <summary>Sets how long an unused endpoint queue may remain before RabbitMQ deletes it.</summary>
+    /// <summary>Sets how long an unused endpoint queue may remain before RabbitMQ deletes it; positive values must use whole milliseconds.</summary>
     public TimeSpan? QueueExpiration
     {
         set => _settings.QueueExpiration = value;
@@ -273,7 +273,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         _settings.SetQueueArgument(key, value);
     }
 
-    /// <summary>Sets a queue declaration argument from a duration converted to milliseconds.</summary>
+    /// <summary>Sets a queue declaration argument from a nonnegative duration converted to whole milliseconds; <c>x-expires</c> must be positive.</summary>
     /// <param name="key">The RabbitMQ queue-argument key.</param>
     /// <param name="value">The duration to convert.</param>
     public void SetQueueArgument(string key, TimeSpan value)
@@ -289,7 +289,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         _settings.SetExchangeArgument(key, value);
     }
 
-    /// <summary>Sets an exchange declaration argument from a duration converted to milliseconds.</summary>
+    /// <summary>Sets an exchange declaration argument from a nonnegative duration converted to whole milliseconds.</summary>
     /// <param name="key">The RabbitMQ exchange-argument key.</param>
     /// <param name="value">The duration to convert.</param>
     public void SetExchangeArgument(string key, TimeSpan value)

@@ -59,14 +59,15 @@ public class RabbitMqExchangeConfigurator :
             ExchangeArguments.Remove(key);
     }
 
-    /// <summary>Sets an exchange argument from a duration converted to whole milliseconds.</summary>
+    /// <summary>Sets an exchange argument from a nonnegative duration converted to whole milliseconds.</summary>
     /// <param name="key">The RabbitMQ exchange-argument key.</param>
     /// <param name="value">The duration to convert.</param>
     public void SetExchangeArgument(string key, TimeSpan value)
     {
-        var milliseconds = (int)value.TotalMilliseconds;
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
 
-        SetExchangeArgument(key, milliseconds);
+        SetExchangeArgument(key, RabbitMqDurationArgument.ToMilliseconds(value));
     }
 
     /// <summary>Creates an endpoint address from the exchange declaration.</summary>

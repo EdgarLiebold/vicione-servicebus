@@ -1,5 +1,25 @@
 # A+ remediation research
 
+## T67 RabbitMQ duration argument projection
+
+Inventory: `RabbitMqQueueConfigurator.SetQueueArgument(TimeSpan)` and
+`RabbitMqExchangeConfigurator.SetExchangeArgument(TimeSpan)` cast through
+`TotalMilliseconds` to `int`; positive values beyond 24.85 days wrap/truncate,
+and fractional milliseconds silently shorten. The public endpoint and bus
+configurators forward into these two implementations. `QueueExpiration` writes
+`x-expires` as `long` but can write zero for a positive sub-ms value. Its getter
+only recognizes `long`, while the generic duration overload writes `int` for
+ordinary `x-expires` values. `RabbitMqReceiveEndpointBuilder` copies the
+setting into the actual queue topology using floating-point conversion again.
+RabbitMQ documents a nonnegative integer millisecond TTL, permits AMQP
+long-long-int, and requires positive integer milliseconds for `x-expires`:
+https://www.rabbitmq.com/docs/ttl . Existing endpoint configuration tests
+inspect settings before provider start; topology tests inspect `BrokerTopology`
+without broker I/O. Acceptance: exact supported integer types and values,
+fractional and negative value rejection without mutation, expiration
+getter/argument/topology consistency including broker argument types, and
+removal behavior. Existing source/test pairing inventory reused.
+
 ## T66 RabbitMQ queue configuration boundaries
 
 The public receive-endpoint API forwards quorum selection and acknowledgement
