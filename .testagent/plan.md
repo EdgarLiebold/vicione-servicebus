@@ -19,8 +19,16 @@
 The T63 red-first replay and false-span tests failed as expected. Final
 focused sender and producer suites pass 15/15 and 12/12, and real broker
 delivery passes 3/3. Read-only Red Team review accepted the correction.
-The remaining step is the once-per-four-packets 33-profile measurement and
-independent audit.
+The once-per-four-packets 33-profile measurement is complete on frozen
+`e1cf685fe`: 13,318 tests and one CRAP>30 regression in the new batch pipe.
+That method was split by responsibility; fresh focused coverage measures its
+new method/helper scores at 6.04/14.27, with all seven batch-pipe methods
+below 30. Independent audit of the frozen full measurement is pending.
+For future work, group six to eight connected packets between full profiles,
+with an earlier full run only for cross-assembly contracts, a critical CRAP
+signal or a milestone requiring a global claim. Within each packet test
+affected methods and neighboring contracts/integration paths, not just the
+changed methods.
 
 ## Current T62 — send observer outcome ownership
 

@@ -8,9 +8,16 @@ observer/failure ownership, cleanup errors and telemetry. The final affected
 build has zero warnings/errors; sender and producer focused suites pass 15/15
 and 12/12. Existing real broker delivery passed 3/3 in a fresh fixture with
 empty findings. The read-only Red Team review found no remaining concrete
-blocker. T59 remains the last complete global measurement. The full 33-profile
-audit is due after the connected T60–T63 packet group; global Line/Branch A+
-remains open.
+blocker. The subsequent [33-profile measurement](coverage-a-plus-20260921/product-wide-profile-e1cf685fe.md)
+passed 13,318 tests and found one new CRAP>30 hotspot in the T63 batch pipe.
+It has been extracted into smaller methods; fresh focused coverage gives
+CRAP 6.04 for the send method and 14.27 for its largest new helper, with
+12/12 Outcome and 15/15 sender tests green. The frozen global Line/Branch
+rates were 91.74426%/84.37983%; these are diagnostic values for the commit
+before the extraction. The next global run is planned after six to eight
+connected packets, or earlier for a wider contract change or new critical
+signal. Global Line/Branch A+ remains open. Independent audit of the 33
+frozen receipts is in progress.
 
 ## Current T62 — send observer outcome packet in affected-project validation
 

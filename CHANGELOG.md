@@ -18,8 +18,11 @@ entry below records what the current work changed for anyone reading the source.
   confirmed message. A confirmed message's telemetry span no longer records
   a later message's failure. Red-first tests caught the replay and false span;
   focused sender/producer suites pass 15/15 and 12/12, with a separate 3/3
-  real broker delivery control. T59 remains the latest global coverage/CRAP
-  measurement; the agreed full audit follows T60–T63.
+  real broker delivery control. The subsequent complete 33-profile audit
+  passed 13,318 tests but exposed one CRAP>30 hotspot in the new
+  batch send method. The method was then split into focused steps. Fresh
+  focused coverage reports CRAP 6.04 for the send method and 14.27 for its
+  largest helper; the complete frozen measurement predates this extraction.
 
 - Corrected send outcome ownership across the common transport and Event Hubs
   single/batch producers. A failed post-send observer or logger after provider

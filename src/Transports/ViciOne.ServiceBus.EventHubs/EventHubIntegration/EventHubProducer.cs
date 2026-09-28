@@ -270,81 +270,28 @@ public class EventHubProducer :
             int[] pendingIndices = Enumerable.Range(0, _messages.Length)
                 .Where(index => !_confirmedMessages[index])
                 .ToArray();
-            var contexts = new EventHubSendContext<T>[pendingIndices.Length];
-            if (contexts.Length == 0)
+            if (pendingIndices.Length == 0)
                 return;
 
-            for (var i = 0; i < contexts.Length; i++)
-            {
-                int originalIndex = pendingIndices[i];
-                contexts[i] = await _context.CreateContextAsync(_messages[originalIndex], _pipe,
-                    _initializerPipes.Length > originalIndex ? _initializerPipes[originalIndex] : null,
-                    _cancellationToken).ConfigureAwait(false);
-            }
-
-            BaseSendTransportContext? transportContext = _context as BaseSendTransportContext;
-            if (transportContext is not null)
-            {
-                foreach (EventHubSendContext<T> candidate in contexts)
-                    transportContext.ApplyPayloadAdmission(candidate);
-            }
-
+            EventHubSendContext<T>[] contexts = await CreatePendingContextsAsync(pendingIndices).ConfigureAwait(false);
+            ApplyPayloadAdmission(contexts);
             EventHubSendContext<T> sendContext = contexts[0];
-
             sendContext.CancellationToken.ThrowIfCancellationRequested();
-
             StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);
             try
             {
                 try
                 {
-                    if (_context.SendObservers.Count > 0)
-                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSendAsync(c))).ConfigureAwait(false);
-
-                    if (transportContext is not null)
-                    {
-                        foreach (EventHubSendContext<T> candidate in contexts)
-                            transportContext.ApplyPayloadAdmission(candidate);
-                    }
-
-                    await _context.SendAsync(context, contexts).ConfigureAwait(false);
+                    await SendPendingAsync(context, contexts).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
-                    var confirmed = new List<EventHubSendContext<T>>();
-                    var unresolved = new List<EventHubSendContext<T>>();
-                    for (var index = 0; index < contexts.Length; index++)
-                    {
-                        if (contexts[index] is EventHubMessageSendContext<T> { IsProviderConfirmed: true })
-                        {
-                            _confirmedMessages[pendingIndices[index]] = true;
-                            confirmed.Add(contexts[index]);
-                        }
-                        else
-                            unresolved.Add(contexts[index]);
-                    }
-
-                    if (confirmed.Count > 0)
-                    {
-                        TryLogSent(confirmed[0], activity);
-                        await ObservePostAsync(confirmed).ConfigureAwait(false);
-                    }
-
-                    if (unresolved.Count == 0)
-                    {
-                        TryLogSecondaryFailure(exception, sendContext.DestinationAddress);
+                    if (await HandlePartialFailureAsync(exception, contexts, pendingIndices, activity).ConfigureAwait(false))
                         return;
-                    }
-
-                    TryLogFault(unresolved[0], exception);
-                    await ObserveFaultAsync(unresolved, exception).ConfigureAwait(false);
-                    if (confirmed.Count == 0)
-                        activity?.AddExceptionEvent(exception);
                     throw;
                 }
 
-                for (var index = 0; index < pendingIndices.Length; index++)
-                    _confirmedMessages[pendingIndices[index]] = true;
+                MarkConfirmed(pendingIndices);
                 TryLogSent(sendContext, activity);
                 await ObservePostAsync(contexts).ConfigureAwait(false);
             }
@@ -352,6 +299,79 @@ public class EventHubProducer :
             {
                 activity?.Stop();
             }
+        }
+
+        async Task<EventHubSendContext<T>[]> CreatePendingContextsAsync(int[] pendingIndices)
+        {
+            var contexts = new EventHubSendContext<T>[pendingIndices.Length];
+            for (var index = 0; index < pendingIndices.Length; index++)
+            {
+                int originalIndex = pendingIndices[index];
+                contexts[index] = await _context.CreateContextAsync(_messages[originalIndex], _pipe,
+                    _initializerPipes.Length > originalIndex ? _initializerPipes[originalIndex] : null,
+                    _cancellationToken).ConfigureAwait(false);
+            }
+
+            return contexts;
+        }
+
+        void ApplyPayloadAdmission(EventHubSendContext<T>[] contexts)
+        {
+            if (_context is not BaseSendTransportContext transportContext)
+                return;
+
+            foreach (EventHubSendContext<T> candidate in contexts)
+                transportContext.ApplyPayloadAdmission(candidate);
+        }
+
+        async Task SendPendingAsync(ProducerContext producerContext, EventHubSendContext<T>[] contexts)
+        {
+            if (_context.SendObservers.Count > 0)
+                await Task.WhenAll(contexts.Select(candidate => _context.SendObservers.PreSendAsync(candidate))).ConfigureAwait(false);
+
+            ApplyPayloadAdmission(contexts);
+            await _context.SendAsync(producerContext, contexts).ConfigureAwait(false);
+        }
+
+        async Task<bool> HandlePartialFailureAsync(Exception exception, EventHubSendContext<T>[] contexts,
+            int[] pendingIndices, StartedActivity? activity)
+        {
+            var confirmed = new List<EventHubSendContext<T>>();
+            var unresolved = new List<EventHubSendContext<T>>();
+            for (var index = 0; index < contexts.Length; index++)
+            {
+                if (contexts[index] is EventHubMessageSendContext<T> { IsProviderConfirmed: true })
+                {
+                    _confirmedMessages[pendingIndices[index]] = true;
+                    confirmed.Add(contexts[index]);
+                }
+                else
+                    unresolved.Add(contexts[index]);
+            }
+
+            if (confirmed.Count > 0)
+            {
+                TryLogSent(confirmed[0], activity);
+                await ObservePostAsync(confirmed).ConfigureAwait(false);
+            }
+
+            if (unresolved.Count == 0)
+            {
+                TryLogSecondaryFailure(exception, contexts[0].DestinationAddress);
+                return true;
+            }
+
+            TryLogFault(unresolved[0], exception);
+            await ObserveFaultAsync(unresolved, exception).ConfigureAwait(false);
+            if (confirmed.Count == 0)
+                activity?.AddExceptionEvent(exception);
+            return false;
+        }
+
+        void MarkConfirmed(int[] pendingIndices)
+        {
+            foreach (int index in pendingIndices)
+                _confirmedMessages[index] = true;
         }
 
         async Task ObservePostAsync(IReadOnlyList<EventHubSendContext<T>> contexts)
