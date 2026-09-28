@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
@@ -137,6 +138,122 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
         Assert.Contains(ExpectedJobFailure.FailureMessage, persisted.Reason, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-JOB-SERVICE-LIFECYCLE", "concurrent-terminal-outcomes-remain-isolated")]
+    public async Task ConcurrentJobs_PersistOnlyTheirOwnCompletionOrFailureAsync()
+    {
+        var consumer = new MixedOutcomeJobConsumer();
+        await using JobServiceFixture<MixedOutcomeJobConsumer> fixture =
+            await JobServiceFixture<MixedOutcomeJobConsumer>.StartAsync(
+                "job-mixed-outcomes", consumer, configureJob: options => options.ConcurrentJobLimit = 2);
+        Guid completedJobId = NewId.NextGuid();
+        Guid faultedJobId = NewId.NextGuid();
+
+        Guid[] accepted;
+        try
+        {
+            accepted = await Task.WhenAll(
+                fixture.SubmitAsync(completedJobId, new PersistentJob("complete")),
+                fixture.SubmitAsync(faultedJobId, new PersistentJob("fault")));
+            await consumer.BothStarted.WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+            JobExecutionSnapshot[] simultaneous = consumer.Attempts.ToArray();
+            Assert.Equal(2, simultaneous.Length);
+            Assert.Equal("complete", Assert.Single(simultaneous, attempt => attempt.JobId == completedJobId).Label);
+            Assert.Equal("fault", Assert.Single(simultaneous, attempt => attempt.JobId == faultedJobId).Label);
+        }
+        finally
+        {
+            consumer.Release();
+        }
+
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(completedJobId, message => message.JobId);
+        IJobFaulted faulted = await fixture.PublishedAsync<IJobFaulted>(faultedJobId, message => message.JobId);
+        JobSaga completedState = await fixture.ReadJobAsync(completedJobId);
+        JobSaga faultedState = await fixture.ReadJobAsync(faultedJobId);
+        await fixture.Harness.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+
+        Assert.Equal([completedJobId, faultedJobId], accepted);
+        Assert.Equal(2, consumer.Attempts.Count);
+        Assert.Equal(completedJobId, completed.JobId);
+        Assert.Equal(faultedJobId, faulted.JobId);
+        Assert.Contains(nameof(ExpectedJobFailure), faulted.Exceptions.ExceptionType, StringComparison.Ordinal);
+        Assert.Contains(ExpectedJobFailure.FailureMessage, faulted.Exceptions.Message, StringComparison.Ordinal);
+        Assert.Equal(completedJobId, completedState.CorrelationId);
+        Assert.NotNull(completedState.Completed);
+        Assert.Null(completedState.Faulted);
+        Assert.Null(completedState.Reason);
+        Assert.Equal(faultedJobId, faultedState.CorrelationId);
+        Assert.Null(faultedState.Completed);
+        Assert.NotNull(faultedState.Faulted);
+        Assert.Contains(ExpectedJobFailure.FailureMessage, faultedState.Reason, StringComparison.Ordinal);
+        Assert.Single(fixture.Harness.Published.Snapshot<IJobCompleted>(),
+            publication => publication.Context.Message.JobId == completedJobId);
+        Assert.Single(fixture.Harness.Published.Snapshot<IJobFaulted>(),
+            publication => publication.Context.Message.JobId == faultedJobId);
+        Assert.DoesNotContain(fixture.Harness.Published.Snapshot<IJobFaulted>(),
+            publication => publication.Context.Message.JobId == completedJobId);
+        Assert.DoesNotContain(fixture.Harness.Published.Snapshot<IJobCompleted>(),
+            publication => publication.Context.Message.JobId == faultedJobId);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-JOB-SERVICE-LIFECYCLE", "faulted-running-job-releases-slot-for-waiting-job")]
+    public async Task FaultedRunningJob_ReleasesTheSlotForAWaitingJobAsync()
+    {
+        var consumer = new GatedFaultJobConsumer();
+        await using JobServiceFixture<GatedFaultJobConsumer> fixture =
+            await JobServiceFixture<GatedFaultJobConsumer>.StartAsync(
+                "job-slot-after-fault", consumer, configureSaga: options => options.SlotWaitTime = TimeSpan.FromSeconds(1));
+        Guid faultedJobId = NewId.NextGuid();
+        Guid waitingJobId = NewId.NextGuid();
+
+        try
+        {
+            Assert.Equal(faultedJobId, await fixture.SubmitAsync(faultedJobId, new PersistentJob("fault")));
+            await consumer.FaultStarted.WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+            Assert.Equal(waitingJobId, await fixture.SubmitAsync(waitingJobId, new PersistentJob("waiting")));
+            ISentMessage<IJobSlotUnavailable> unavailable = await fixture.Harness.Sent
+                .SelectAsync<IJobSlotUnavailable>(message => message.Context.Message.JobId == waitingJobId,
+                    fixture.CancellationToken)
+                .FirstObservedAsync(fixture.CancellationToken);
+
+            Assert.Equal(waitingJobId, unavailable.Context.Message.JobId);
+            JobExecutionSnapshot firstAttempt = Assert.Single(consumer.Attempts);
+            Assert.Equal(faultedJobId, firstAttempt.JobId);
+            Assert.Equal("fault", firstAttempt.Label);
+        }
+        finally
+        {
+            consumer.ReleaseFault();
+        }
+
+        IJobFaulted faulted = await fixture.PublishedAsync<IJobFaulted>(faultedJobId, message => message.JobId);
+        IJobCompleted completed = await fixture.PublishedAsync<IJobCompleted>(waitingJobId, message => message.JobId);
+        JobSaga faultedState = await fixture.ReadJobAsync(faultedJobId);
+        JobSaga waitingState = await fixture.ReadJobAsync(waitingJobId);
+        await fixture.Harness.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+
+        Assert.Equal(faultedJobId, faulted.JobId);
+        Assert.Contains(ExpectedJobFailure.FailureMessage, faulted.Exceptions.Message, StringComparison.Ordinal);
+        Assert.Equal(waitingJobId, completed.JobId);
+        JobExecutionSnapshot[] attempts = consumer.Attempts.ToArray();
+        Assert.Equal(2, attempts.Length);
+        Assert.Equal("waiting", Assert.Single(attempts, attempt => attempt.JobId == waitingJobId).Label);
+        Assert.False(consumer.WaitingStartedBeforeRelease);
+        Assert.Null(faultedState.Completed);
+        Assert.NotNull(faultedState.Faulted);
+        Assert.Null(waitingState.Faulted);
+        Assert.NotNull(waitingState.Completed);
+        Assert.Single(fixture.Harness.Published.Snapshot<IJobFaulted>(),
+            publication => publication.Context.Message.JobId == faultedJobId);
+        Assert.Single(fixture.Harness.Published.Snapshot<IJobCompleted>(),
+            publication => publication.Context.Message.JobId == waitingJobId);
+        Assert.DoesNotContain(fixture.Harness.Published.Snapshot<IJobCompleted>(),
+            publication => publication.Context.Message.JobId == faultedJobId);
+        Assert.DoesNotContain(fixture.Harness.Published.Snapshot<IJobFaulted>(),
+            publication => publication.Context.Message.JobId == waitingJobId);
+    }
+
     public sealed record PersistentJob(string Label);
 
     private sealed class CompletingJobConsumer : IJobConsumer<PersistentJob>
@@ -201,6 +318,57 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
         }
     }
 
+    private sealed class MixedOutcomeJobConsumer : IJobConsumer<PersistentJob>
+    {
+        private readonly TaskCompletionSource _bothStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _entryCount;
+
+        public ConcurrentQueue<JobExecutionSnapshot> Attempts { get; } = new();
+        public Task BothStarted => _bothStarted.Task;
+
+        public async Task RunAsync(IJobContext<PersistentJob> context)
+        {
+            Attempts.Enqueue(Snapshot(context));
+            if (Interlocked.Increment(ref _entryCount) == 2)
+                _bothStarted.TrySetResult();
+
+            await _release.Task.WaitAsync(context.CancellationToken);
+            if (context.Job.Label == "fault")
+                throw new ExpectedJobFailure();
+        }
+
+        public void Release() => _release.TrySetResult();
+    }
+
+    private sealed class GatedFaultJobConsumer : IJobConsumer<PersistentJob>
+    {
+        private readonly TaskCompletionSource _faultStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _releaseFault = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _waitingStartedBeforeRelease;
+
+        public ConcurrentQueue<JobExecutionSnapshot> Attempts { get; } = new();
+        public Task FaultStarted => _faultStarted.Task;
+        public bool WaitingStartedBeforeRelease => Volatile.Read(ref _waitingStartedBeforeRelease) != 0;
+
+        public async Task RunAsync(IJobContext<PersistentJob> context)
+        {
+            Attempts.Enqueue(Snapshot(context));
+            if (context.Job.Label != "fault")
+            {
+                if (!_releaseFault.Task.IsCompleted)
+                    Interlocked.Exchange(ref _waitingStartedBeforeRelease, 1);
+                return;
+            }
+
+            _faultStarted.TrySetResult();
+            await _releaseFault.Task.WaitAsync(context.CancellationToken);
+            throw new ExpectedJobFailure();
+        }
+
+        public void ReleaseFault() => _releaseFault.TrySetResult();
+    }
+
     private sealed class ExpectedJobFailure : Exception
     {
         public const string FailureMessage = "The persistent job failed as requested.";
@@ -238,7 +406,9 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
         public static async Task<JobServiceFixture<TConsumer>> StartAsync(
             string purpose,
             TConsumer consumer,
-            TimeProvider? timeProvider = null)
+            TimeProvider? timeProvider = null,
+            Action<JobOptions<PersistentJob>>? configureJob = null,
+            Action<JobSagaOptions>? configureSaga = null)
         {
             CancellationToken cancellationToken = TestContext.Current.CancellationToken;
             PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(purpose, cancellationToken);
@@ -252,11 +422,20 @@ public sealed class EntityFrameworkJobServiceIntegrationTests
                 services.AddDbContext<JobServiceSagaDbContext>(options => options.UseNpgsql(database.ConnectionString));
                 services.AddViciOneServiceBusTestHarness(configuration =>
                 {
+                    configuration.SetTestTimeouts(database.OperationTimeout, database.OperationTimeout);
                     configuration.SetKebabCaseEndpointNameFormatter();
-                    configuration.AddConsumer<TConsumer>()
+                    configuration.AddConsumer<TConsumer>(registration =>
+                    {
+                        if (configureJob is not null)
+                            registration.Options<JobOptions<PersistentJob>>(configureJob);
+                    })
                         .Endpoint(endpoint => endpoint.Name = $"persistent-job-{NewId.NextGuid():N}");
                     configuration.AddJobService(options => options.HeartbeatInterval = TimeSpan.FromSeconds(10));
-                    configuration.AddJobSagaStateMachines(options => options.FinalizeCompleted = false)
+                    configuration.AddJobSagaStateMachines(options =>
+                        {
+                            options.FinalizeCompleted = false;
+                            configureSaga?.Invoke(options);
+                        })
                         .EntityFrameworkRepository(repository =>
                         {
                             repository.UseExistingDbContext<JobServiceSagaDbContext>();
