@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10938 |
+| Added | 10940 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -186,6 +186,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-d415d2cbf.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-db74e2489.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-de93663d4.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-e1cf685fe.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-e51c446f2.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-e8976fc62.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-ef-inbox-20260925.md` | Added |  |
@@ -253,6 +254,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t61-activemq-producer-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t62-send-observer-outcome.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t63-eventhub-partial-batch-outcome.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
