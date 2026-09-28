@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10932 |
+| Added | 10933 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -250,6 +250,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t57-ingress-middleware-plan.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t59-saga-request-lifecycle.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
