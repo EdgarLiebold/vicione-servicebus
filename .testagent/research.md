@@ -1,5 +1,29 @@
 # A+ remediation research
 
+## T102 classic EF outbox cursor and cleanup integrity
+
+The delivery source pages messages with `SequenceNumber > LastSequenceNumber`.
+When a persisted cursor is beyond a still-present message, the selected page
+is empty and `TryCompleteOutbox` marks the state Delivered; a later source pass
+deletes all messages without sending. A state already marked Delivered is
+removed with every remaining message by `RemoveOutboxAsync`, even if those
+messages were never delivered. These are real data-loss paths for persisted
+inconsistent state, including legacy rows or caller-owned EF mutations. The
+normal empty final window is valid only when no messages remain for that
+OutboxId. Existing tests cover that valid case but not the contradictory rows.
+
+Acceptance: both corrupted cursor and premature Delivered state must fail
+closed with zero progress and retain the exact state/message rows in SQLite.
+Healthy paged delivery and cleanup must still pass. Avoid an operational retry
+storm for a permanent invariant breach; the worker can retry after repair.
+Read-only Red Team review found that an end-of-page check is too late when a
+stored cursor lies between two remaining messages: the later message is sent
+outside the transaction before the earlier one is detected, and rollback can
+cause repeated external sends. A real bus send observer now proves zero send
+attempts across two delivery passes while both message identities remain.
+The cursor must be checked before loading the first page, with the completion
+check retained as a late race guard.
+
 ## T101 classic EF transactional outbox state provenance
 
 `EntityFrameworkTransactionalScopedBusContext` infers persistence solely from

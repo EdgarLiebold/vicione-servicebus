@@ -1,5 +1,26 @@
 # A+ remediation test plan
 
+## T102 classic EF outbox cursor and cleanup integrity
+
+1. Add red-first real SQLite tests for a Pending row with a cursor beyond its
+   still-present message and a Delivered row with a still-present message.
+   Call the public source batch path, assert no progress, unchanged state and
+   message rows, and no deletion on a repeated attempt.
+2. Before marking an empty page Delivered and before removing a Delivered row,
+   verify that no messages remain for its OutboxId. Fail closed on mismatch
+   without the operational retry loop; retain healthy empty-final-window and
+   multi-page behavior.
+3. Run the focused class while editing, apply a controlled counterprobe,
+   obtain adversarial read-only Red Team review, then the complete EF project
+   on an exact commit. Update requirements, report, changelog and change list;
+   push. The global 33-profile run remains on the multi-packet cadence.
+
+The Red Team extension requires a mixed page with one persisted message on
+each side of the cursor, observed through a bus send observer. It must prove
+zero external sends before and after repeated delivery attempts, plus exact
+retention of both rows and State. Place the cursor invariant check before
+the first transport send, not only at completion.
+
 ## T101 classic EF transactional outbox state provenance
 
 1. Add red-first SQLite cases for manually accepted/detached `OutboxState`,

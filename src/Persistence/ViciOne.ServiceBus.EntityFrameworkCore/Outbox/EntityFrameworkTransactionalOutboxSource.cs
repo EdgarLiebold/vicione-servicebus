@@ -86,7 +86,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
                 .AsNoTracking());
 
         _operationalRetryPolicy = Retry
-            .Except<DbUpdateConcurrencyException, OutboxOwnershipException>()
+            .Except<DbUpdateConcurrencyException, OutboxOwnershipException, OutboxInvariantException>()
             .Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
     }
 
@@ -202,7 +202,10 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        dbContext.RemoveRange(messages);
+        if (messages.Count != 0)
+            throw new OutboxInvariantException(
+                $"Delivered outbox '{outboxState.OutboxId}' still contains {messages.Count} unsent messages.");
+
         dbContext.Remove(outboxState);
         await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -214,6 +217,14 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         int messageLimit = Math.Max(1, _options.MessageDeliveryLimit);
         bool hasLastSequenceNumber = outboxState.LastSequenceNumber.HasValue;
         long lastSequenceNumber = outboxState.LastSequenceNumber ?? 0;
+
+        if (hasLastSequenceNumber
+            && await dbContext.Set<OutboxMessage>().AsNoTracking()
+                .AnyAsync(message => message.OutboxId == outboxState.OutboxId
+                    && message.SequenceNumber <= lastSequenceNumber, cancellationToken)
+                .ConfigureAwait(false))
+            throw new OutboxInvariantException(
+                $"Outbox '{outboxState.OutboxId}' contains unsent messages at or below its delivery cursor.");
 
         IList<OutboxMessage> messages = await _outboxMessagesQuery(dbContext, outboxState.OutboxId, lastSequenceNumber, messageLimit)
             .ToListAsync(cancellationToken)
@@ -254,7 +265,8 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
             saveChanges = true;
         }
 
-        if (TryCompleteOutbox(dbContext, outboxState, messages, messageIndex, messageLimit, hasLastSequenceNumber))
+        if (await TryCompleteOutboxAsync(dbContext, outboxState, messages, messageIndex, messageLimit,
+                hasLastSequenceNumber ? lastSequenceNumber : null, cancellationToken).ConfigureAwait(false))
         {
             saveChanges = true;
             completedOutbox = true;
@@ -348,13 +360,14 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         }
     }
 
-    bool TryCompleteOutbox(
+    async Task<bool> TryCompleteOutboxAsync(
         TDbContext dbContext,
         OutboxState outboxState,
         IList<OutboxMessage> messages,
         int messageIndex,
         int messageLimit,
-        bool hasLastSequenceNumber)
+        long? previousSequenceNumber,
+        CancellationToken cancellationToken)
     {
         if (outboxState.Status is OutboxDeliveryStatus.Quarantined or OutboxDeliveryStatus.RetryScheduled
             || messageIndex != messages.Count
@@ -363,11 +376,19 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
             return false;
         }
 
+        if (previousSequenceNumber.HasValue
+            && await dbContext.Set<OutboxMessage>().AsNoTracking()
+                .AnyAsync(message => message.OutboxId == outboxState.OutboxId
+                    && message.SequenceNumber <= previousSequenceNumber.Value, cancellationToken)
+                .ConfigureAwait(false))
+            throw new OutboxInvariantException(
+                $"Outbox '{outboxState.OutboxId}' contains unsent messages at or below its delivery cursor.");
+
         outboxState.Status = OutboxDeliveryStatus.Delivered;
         outboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
         ResetFailure(outboxState);
 
-        if (hasLastSequenceNumber)
+        if (previousSequenceNumber.HasValue)
             dbContext.Update(outboxState);
         else
         {
@@ -533,6 +554,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
     static string GetExceptionType(Exception exception) => exception.GetType().FullName ?? exception.GetType().Name;
 
     private sealed class OutboxOwnershipException(string message) : InvalidOperationException(message);
+    private sealed class OutboxInvariantException(string message) : InvalidOperationException(message);
 
     static async Task RollbackTransactionAsync(IDbContextTransaction transaction)
     {

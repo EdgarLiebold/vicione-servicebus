@@ -158,6 +158,68 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
         Assert.False(madeProgress);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "t102-inconsistent-cursor-or-delivered-state-retains-unsent-message")]
+    public async Task InconsistentCompletionState_RetainsUnsentMessageWithoutClaimingProgressAsync(bool alreadyDelivered)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using SourceEnvironment environment = await SourceEnvironment.CreateAsync();
+        await environment.SeedPendingOutboxAsync(1,
+            status: alreadyDelivered ? OutboxDeliveryStatus.Delivered : OutboxDeliveryStatus.Pending,
+            lastSequenceNumber: alreadyDelivered ? null : long.MaxValue);
+        SourceSnapshot before = await environment.ReadSnapshotAsync();
+        EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext> source = environment.CreateSource();
+
+        bool first = await source.DeliverDueBatchAsync(token);
+        SourceSnapshot afterFirst = await environment.ReadSnapshotAsync();
+        bool second = await source.DeliverDueBatchAsync(token);
+        SourceSnapshot afterSecond = await environment.ReadSnapshotAsync();
+
+        Assert.False(first);
+        Assert.False(second);
+        Assert.Equal(before.State?.OutboxId, afterFirst.State?.OutboxId);
+        Assert.Equal(before.State?.OutboxId, afterSecond.State?.OutboxId);
+        Assert.Equal(before.State?.Status, afterFirst.State?.Status);
+        Assert.Equal(before.State?.Status, afterSecond.State?.Status);
+        Assert.Equal(before.State?.LockId, afterFirst.State?.LockId);
+        Assert.Equal(before.State?.LockId, afterSecond.State?.LockId);
+        Assert.Equal(before.State?.LastSequenceNumber, afterFirst.State?.LastSequenceNumber);
+        Assert.Equal(before.State?.LastSequenceNumber, afterSecond.State?.LastSequenceNumber);
+        Assert.Equal(1, afterFirst.MessageCount);
+        Assert.Equal(1, afterSecond.MessageCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "t102-mixed-cursor-window-rejects-before-external-send")]
+    public async Task MixedCursorWindow_RejectsBeforeSendingAnyLaterMessageAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using SourceEnvironment environment = await SourceEnvironment.CreateAsync();
+        await environment.SeedPendingOutboxAsync(2);
+        await environment.SetCursorToFirstMessageAsync();
+        SourceSnapshot before = await environment.ReadSnapshotAsync();
+        OutboxMessage[] original = await environment.ReadMessagesAsync();
+        var observer = new CountingSendObserver();
+        using var observation = environment.Bus.ConnectSendObserver(observer);
+        EntityFrameworkTransactionalOutboxSource<IBus, SourceDbContext> source = environment.CreateSource();
+
+        Assert.False(await source.DeliverDueBatchAsync(token));
+        Assert.False(await source.DeliverDueBatchAsync(token));
+
+        SourceSnapshot after = await environment.ReadSnapshotAsync();
+        OutboxMessage[] retained = await environment.ReadMessagesAsync();
+        Assert.Equal(0, observer.PreSendCount);
+        Assert.Equal(0, observer.PostSendCount);
+        Assert.Equal(before.State?.OutboxId, after.State?.OutboxId);
+        Assert.Equal(OutboxDeliveryStatus.Pending, after.State?.Status);
+        Assert.Equal(before.State?.LockId, after.State?.LockId);
+        Assert.Equal(before.State?.LastSequenceNumber, after.State?.LastSequenceNumber);
+        Assert.Equal(original.Select(message => (message.SequenceNumber, message.MessageId)),
+            retained.Select(message => (message.SequenceNumber, message.MessageId)));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "concurrent-claim-loss-is-normal-no-progress")]
     public async Task DueBatch_ConcurrencyLossReturnsNoProgressAndPreservesTheOutboxAsync()
@@ -276,6 +338,25 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
 
     private sealed record DeliveryProbe(int Sequence);
     private sealed record SourceSnapshot(OutboxState? State, int MessageCount);
+    private sealed class CountingSendObserver : ISendObserver
+    {
+        public int PreSendCount { get; private set; }
+        public int PostSendCount { get; private set; }
+
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class
+        {
+            PreSendCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class
+        {
+            PostSendCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class => Task.CompletedTask;
+    }
     private interface ISecondaryBus : IBus;
     private sealed class SecondaryBus(IBusControl busControl) : ViciOne.ServiceBus.Advanced.BusInstance<ISecondaryBus>(busControl), ISecondaryBus;
 
@@ -398,7 +479,28 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
                 deliveryOptions: options,
                 persistenceOptions: persistenceOptions);
 
-        public async Task SeedPendingOutboxAsync(int messageCount, string busKey = "source")
+        public IBusControl Bus => _bus;
+
+        public async Task SetCursorToFirstMessageAsync()
+        {
+            await using var dbContext = new SourceDbContext(_dbContextOptions);
+            OutboxState state = await dbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
+            long firstSequence = await dbContext.Set<OutboxMessage>()
+                .Where(message => message.OutboxId == state.OutboxId)
+                .MinAsync(message => message.SequenceNumber, TestContext.Current.CancellationToken);
+            state.LastSequenceNumber = firstSequence;
+            await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        }
+
+        public async Task<OutboxMessage[]> ReadMessagesAsync()
+        {
+            await using var dbContext = new SourceDbContext(_dbContextOptions);
+            return await dbContext.Set<OutboxMessage>().AsNoTracking()
+                .OrderBy(message => message.SequenceNumber).ToArrayAsync(TestContext.Current.CancellationToken);
+        }
+
+        public async Task SeedPendingOutboxAsync(int messageCount, string busKey = "source",
+            OutboxDeliveryStatus status = OutboxDeliveryStatus.Pending, long? lastSequenceNumber = null)
         {
             await using var dbContext = new SourceDbContext(_dbContextOptions);
             var state = new OutboxState
@@ -406,7 +508,8 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
                 OutboxId = Guid.NewGuid(),
                 BusKey = busKey,
                 Created = Now.UtcDateTime,
-                Status = OutboxDeliveryStatus.Pending,
+                Status = status,
+                LastSequenceNumber = lastSequenceNumber,
             };
             dbContext.Add(state);
             for (var sequence = 0; sequence < messageCount; sequence++)
