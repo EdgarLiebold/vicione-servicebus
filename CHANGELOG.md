@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added SQL scheduled-message cancellation tests for the active consume client
+  and the host connection supervisor. They verify exact schedule and caller
+  tokens, failed database deletion, one immediate retry with a fresh client,
+  cancellation before and after entering the supervisor, stopping-host
+  rejection, and the no-op result when a schedule is already absent. The
+  adversarial review identified three missing counterexamples; all were
+  added and the re-review found no concrete P1/P2 gap. The SQL unit project
+  passes 242/242 on the exact test commit. Product code was unchanged.
+
 - Corrected SQL scheduler registration to reject a missing default or typed
   bus configurator at the public boundary. New DI tests verify that a prior
   scheduler keeps precedence, a non-SQL host is rejected, and both default
