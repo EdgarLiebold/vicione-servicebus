@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added request-handler consumer tests for pending handler and response
+  operations across all eight message/context and zero-to-three dependency
+  signatures. All four consumer arities now prove that null responses are
+  not sent and that handler and response faults retain the exact cause and
+  number of send attempts. Removing a response await or sending a null
+  response failed controlled counterprobes. The focused class passes 20/20
+  and complete Core passes 6,991/6,991 on exact test commit `0d6e59d4a`;
+  adversarial review is PASS. Product code did not change.
+
 - Fixed saga request-start and request-fault activities that could publish a
   lifecycle event before discovering a missing pipeline continuation. Both
   now validate context and continuation before publication. New tests verify

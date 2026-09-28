@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T96 request handler outcome packet
+
+All eight request-handler delegate signatures now prove pending handler and
+response delivery boundaries with exact arguments and dependencies. Null
+responses, handler failures, and response failures are checked for each of
+the four consumer arities. The focused class passes 20/20 and complete Core
+passes 6,991/6,991 on exact test commit `0d6e59d4a`. Two controlled
+counterprobes failed, product source was restored, and read-only Red Team
+review is PASS. See [T96 evidence](t96-request-handler-outcomes.md). T85
+remains the latest complete product-wide checkpoint; global A+ remains open.
+
 ## Current T95 saga request lifecycle publication packet
 
 Both request-start and request-fault activities now reject missing context or

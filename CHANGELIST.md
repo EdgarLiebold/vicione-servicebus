@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10978 |
+| Added | 10980 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -277,6 +277,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t93-cache-usage-fault-capacity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t94-active-mq-cached-producer.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t95-request-lifecycle-publication.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t96-request-handler-outcomes.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16041,6 +16042,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusSchedulerOwnershipIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ReceiveEndpointDependencyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/RequestHandlerConsumerOutcomeTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/SagaRegistrationConfiguratorDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/SagaRegistrationRuntimeDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedBusContextProviderTests.cs` | Added |  |
