@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected shared EF Core saga registration to finish configuration and
+  validation before admitting the saga map. A red-first regression test
+  reproduced a retained map after a callback exception; the final test also
+  verifies validation failure and a successful retry with the intended table
+  and lock strategy. The affected EF Core test project passes 344/344, and
+  the read-only adversarial review found no P1/P2 issue in this bounded fix.
+
 - Added consume-scope send tests for all eight callback overloads in the
   Abstractions assembly. They verify the exact endpoint overload, message or
   initializer value, callback context mutation, single invocation and caller

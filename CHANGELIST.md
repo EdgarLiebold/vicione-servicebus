@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10960 |
+| Added | 10961 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -264,6 +264,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t80-sql-scheduler-registration.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t81-sql-schedule-cancellation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t82-consume-send-callback-execution.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t83-ef-shared-saga-configuration.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
