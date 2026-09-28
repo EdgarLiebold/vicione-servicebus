@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T58 — complete measurement and audit; publication open
+## Current T58 — complete and remote-verified
 
 T57 was published and remote-verified at `25ef0c773`. T58 groups four related
 registration, scope and failure families in one larger packet. The bounded
@@ -17,8 +17,9 @@ groups have empty findings. Independent audit checks 487/487 hashes, 66/66
 runner/settings bindings, nine broker logs and exact XML-derived counts. The
 [T58 measurement](coverage-a-plus-20260921/product-wide-profile-5e9509367.md)
 and [acceptance map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md)
-record the evidence. Documentation, CHANGELIST and final remote publication
-remain; global Line/Branch A+ is open.
+record the evidence. CHANGELOG and the generated CHANGELIST are published;
+local and remote branch HEAD match at `a6a3bd340`. Global Line/Branch A+
+remains open, so the next connected behavior packet starts from this baseline.
 
 ## Current T57 — ingress middleware packet measured
 

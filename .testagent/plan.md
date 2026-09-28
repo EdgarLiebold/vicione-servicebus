@@ -11,8 +11,9 @@ Red Team review strengthened the journal-owner and scope-dispose oracles; both
 are green. A real owner-filter inversion was killed by both journal variants
 and restored byte-for-byte. Frozen `5e9509367` passes 33 fresh profiles and
 the independent audit: 13,257 tests, 91.68462% lines, 84.29095% conservative
-branches and zero CRAP>30. Finish documentation/CHANGELIST publication and
-select the next connected packet. See the [full report](coverage-a-plus-20260921/product-wide-profile-5e9509367.md).
+branches and zero CRAP>30. Documentation and generated CHANGELIST are
+published and remote-verified at `a6a3bd340`. Select the next connected
+packet. See the [full report](coverage-a-plus-20260921/product-wide-profile-5e9509367.md).
 
 ## Current T57 — connected ingress middleware packet
 
