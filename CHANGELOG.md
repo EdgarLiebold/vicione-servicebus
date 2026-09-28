@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added consume-scope send tests for all eight callback overloads in the
+  Abstractions assembly. They verify the exact endpoint overload, message or
+  initializer value, callback context mutation, single invocation and caller
+  token. Each asynchronous form must remain pending until its callback
+  completes; synchronous and asynchronous callback faults prevent transport
+  acceptance. The independent Red Team found two surviving wrong-route and
+  fire-and-forget mutations, which the final tests now distinguish. The
+  Abstractions project passes 954/954 on the exact test commit; no product
+  implementation changed in this packet.
+
 - Added SQL scheduled-message cancellation tests for the active consume client
   and the host connection supervisor. They verify exact schedule and caller
   tokens, failed database deletion, one immediate retry with a fresh client,
