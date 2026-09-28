@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T103 bus composition ownership packet
+
+Real DI startup tests now prove that duplicate transport and limits owners
+fail on their own bus while an unrelated bus validates, and all five durable
+owner ambiguities fail before invalid bus or owner-factory materialization.
+Two controlled counterprobes failed the new tests. Focused composition tests
+pass 14/14; complete Core passes 7,038/7,038 on `a34fe1f07`. Independent
+read-only Red Team re-review is PASS after its bus-materialization oracle gap
+was closed. Product source was not changed. See
+[T103 evidence](t103-bus-composition-ownership.md). T97 remains the latest
+global checkpoint; Line and Branch A+ remain open.
+
 ## Current T102 EF outbox delivery integrity packet
 
 Contradictory persisted cursor/status values no longer let the worker claim

@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added startup tests for two simultaneous transport/limits owners on one bus
+  beside a healthy neighbor and for duplicate catalog, outbox, inbox,
+  scheduler, and dispatcher ownership. They require exact diagnostics before
+  the invalid bus or owner factories are constructed. Two controlled
+  counterchanges failed; focused tests pass 14/14 and complete Core passes
+  7,038/7,038 on `a34fe1f07`. Adversarial review is PASS after its
+  bus-materialization test gap was closed. Product code did not change; global
+  Line and Branch A+ remain open.
+
 - Fixed EF outbox delivery and cleanup when persisted state contradicts
   unsent messages. The worker now rejects invalid cursor state before external
   sends, guards completion against races, and retains messages if cleanup

@@ -1,5 +1,20 @@
 # A+ remediation test status
 
+## T103 — startup ownership for multiple bus and durable registrations
+
+Two real-DI tests establish rejection of duplicate transport/limits owners
+without faulting another bus and combined rejection of five ambiguous
+reliable-messaging owners before invalid bus or store construction. Their
+assertions span exact exception type, two or five distinct diagnostic causes,
+bus identity, positive neighbor validation, and zero forbidden factory calls.
+No assertion-free, trivial-only, or coverage-only case was added. An executed
+cardinality-guard mutation and an executed eager-bus-resolution
+counterprobe both failed the new tests; neither mutation remains. Red Team
+found and then passed the corrected bus-materialization oracle. The focused
+class passes 14/14 and complete Core passes 7,038/7,038 on `a34fe1f07`.
+See [T103 evidence](coverage-a-plus-20260921/t103-bus-composition-ownership.md).
+T97 remains the global profile; Line and Branch A+ are still open.
+
 ## T102 — EF outbox persisted cursor and cleanup integrity
 
 Two new requirement variants exercise inconsistent Pending and Delivered

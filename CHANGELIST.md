@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10989 |
+| Added | 10990 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -227,6 +227,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t100-ef-outbox-tracker-loss.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t101-classic-ef-outbox-session.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t102-ef-outbox-delivery-cursor.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t103-bus-composition-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
