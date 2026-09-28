@@ -1,5 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T85 product-wide checkpoint
+
+The tenth-packet checkpoint on `fa4a1a910` passes a strict 33-receipt,
+32-assembly, 13,500-test aggregate. The two portability profiles and every
+required local provider are present. Six isolated fixture runs have empty
+findings, and all ten collected broker-log hashes match. Physical lines are
+86,545/93,965 (92.10344%); conservatively covered branches are
+31,287/36,933 (84.71286%); no method exceeds CRAP 30. The full
+[T85 report](product-wide-profile-fa4a1a910.md) records the exact hashes, comparison with
+T74, and evidence limits. Global Line and Branch A+ remain open. The next
+focused packet should inspect the connected saga request/callback area before
+using its uncovered lines as test targets.
+
 ## Current T56 packet — focused controls complete
 
 The connected EF durable-admission packet covers a saved partial inbox attempt,

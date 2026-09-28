@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed a fresh 33-receipt product-wide Line/Branch/CRAP measurement on
+  commit `fa4a1a910`: 13,500/13,500 test executions passed, all 32 product
+  assemblies and required provider/portability profiles were present. Line
+  coverage rose to 92.10344%, conservative branch coverage to 84.71286%,
+  and no method exceeded CRAP 30. Line and branch A+ remain open.
+
 - Added public typed receive-dispatcher lifecycle tests with real consumers.
   They verify two simultaneous serialized deliveries, separate completion,
   cumulative and peak metrics, awaited zero-activity notification, caller cancellation and
