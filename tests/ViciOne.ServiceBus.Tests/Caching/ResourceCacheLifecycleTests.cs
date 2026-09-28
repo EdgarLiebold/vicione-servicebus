@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
+using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Caching;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -202,6 +204,77 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "faulting-usage-detach-does-not-strand-capacity")]
+    public async Task UsageDetachFailure_DuringCapacityEvictionReleasesTheResourceAndAdmitsItsSuccessorAsync()
+    {
+        await using var cache = new ResourceCache<FaultingUsageResource>(new ResourceCacheOptions(capacity: 1));
+        IResourceCacheIndex<string, FaultingUsageResource> index = cache.AddIndex("id", value => value.Id);
+        var first = new FaultingUsageResource("first", throwOnRemove: true);
+        var successor = new FaultingUsageResource("successor");
+        await cache.AddAsync(first, TestContext.Current.CancellationToken);
+        Assert.Equal(1, first.SubscriberCount);
+
+        using var admission = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        admission.CancelAfter(OperationTimeout);
+        await cache.AddAsync(successor, admission.Token).AsTask()
+            .WaitAsync(OperationTimeout + TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, first.RemoveCount);
+        Assert.Equal(0, first.SubscriberCount);
+        Assert.Equal(1, first.DisposeCount);
+        Assert.Same(successor, await index.GetAsync("successor", TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+            await index.GetAsync("first", TestContext.Current.CancellationToken));
+        Assert.Equal(1, cache.Statistics.Count);
+        Assert.Equal(0, successor.DisposeCount);
+
+        await cache.DisposeAsync();
+        Assert.Equal(1, successor.DisposeCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "faulting-usage-subscription-compensation-keeps-cache-operational")]
+    public async Task UsageSubscriptionAndCompensationFailures_DoNotLeakSubscriptionOrStrandCapacityAsync()
+    {
+        await using var cache = new ResourceCache<FaultingUsageResource>(new ResourceCacheOptions(capacity: 1));
+        IResourceCacheIndex<string, FaultingUsageResource> index = cache.AddIndex("id", value => value.Id);
+        var first = new FaultingUsageResource("first", throwOnAdd: true, throwOnRemove: true);
+        var successor = new FaultingUsageResource("successor");
+        var logger = new RecordingLogger();
+        using var logging = new LogContextScope(logger);
+
+        await cache.AddAsync(first, TestContext.Current.CancellationToken);
+        Assert.Equal(1, first.RemoveCount);
+        Assert.Equal(0, first.SubscriberCount);
+        Assert.Same(first, await index.GetAsync("first", TestContext.Current.CancellationToken));
+        Assert.Collection(logger.Entries,
+            entry =>
+            {
+                Assert.Equal(LogLevel.Warning, entry.Level);
+                Assert.Same(first.AddFailure, entry.Exception);
+                Assert.Contains("could not subscribe", entry.Message, StringComparison.Ordinal);
+            },
+            entry =>
+            {
+                Assert.Equal(LogLevel.Warning, entry.Level);
+                Assert.Same(first.RemoveFailure, entry.Exception);
+                Assert.Contains("could not compensate", entry.Message, StringComparison.Ordinal);
+            });
+
+        using var admission = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        admission.CancelAfter(OperationTimeout);
+        await cache.AddAsync(successor, admission.Token).AsTask()
+            .WaitAsync(OperationTimeout + TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
+        Assert.Equal(1, first.RemoveCount);
+        Assert.Equal(1, first.DisposeCount);
+        Assert.Equal(1, cache.Statistics.Count);
+        Assert.Same(successor, await index.GetAsync("successor", TestContext.Current.CancellationToken));
+
+        await cache.DisposeAsync();
+        Assert.Equal(1, successor.DisposeCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "synchronous-resource-release")]
     public async Task SynchronousDisposableResource_IsReleasedExactlyOnceAsync()
     {
@@ -348,6 +421,47 @@ public sealed class ResourceCacheLifecycleTests
         }
     }
 
+    private sealed class FaultingUsageResource(string id, bool throwOnAdd = false, bool throwOnRemove = false)
+        : IResourceUsageSource, IAsyncDisposable
+    {
+        private Action? _used;
+        private int _disposeCount;
+        private int _removeCount;
+        private int _subscriberCount;
+
+        public string Id { get; } = id;
+        public Exception? AddFailure { get; } = throwOnAdd ? new SubscriptionException("add") : null;
+        public Exception? RemoveFailure { get; } = throwOnRemove ? new SubscriptionException("remove") : null;
+        public int DisposeCount => Volatile.Read(ref _disposeCount);
+        public int RemoveCount => Volatile.Read(ref _removeCount);
+        public int SubscriberCount => Volatile.Read(ref _subscriberCount);
+
+        public event Action? Used
+        {
+            add
+            {
+                _used += value;
+                Interlocked.Increment(ref _subscriberCount);
+                if (AddFailure is { } failure)
+                    throw failure;
+            }
+            remove
+            {
+                _used -= value;
+                Interlocked.Decrement(ref _subscriberCount);
+                Interlocked.Increment(ref _removeCount);
+                if (RemoveFailure is { } failure)
+                    throw failure;
+            }
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Interlocked.Increment(ref _disposeCount);
+            return default;
+        }
+    }
+
     private sealed class SynchronousDisposableResource : IDisposable
     {
         private int _disposeCount;
@@ -357,5 +471,27 @@ public sealed class ResourceCacheLifecycleTests
         public void Dispose() => Interlocked.Increment(ref _disposeCount);
     }
 
-    private sealed class SubscriptionException : Exception;
+    private sealed class LogContextScope : IDisposable
+    {
+        private readonly ViciOne.ServiceBus.Logging.ILogContext? _previous = LogContext.Current;
+
+        public LogContextScope(ILogger logger) => LogContext.ConfigureCurrentLogContext(logger);
+
+        public void Dispose() => LogContext.Current = _previous;
+    }
+
+    private sealed class RecordingLogger : ILogger
+    {
+        public List<(LogLevel Level, string Message, Exception? Exception)> Entries { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter) =>
+            Entries.Add((logLevel, formatter(state, exception), exception));
+    }
+
+    private sealed class SubscriptionException(string message = "subscription failure") : Exception(message);
 }
