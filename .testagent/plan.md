@@ -1,5 +1,26 @@
 # A+ remediation test plan
 
+## T75 saga declaration atomicity and response routing
+
+1. Add red-first composite configuration cases for property and named
+   declarations with null, empty, oversized and uninitialized constituent
+   arrays. Assert the exact exception, retained property-event identity or
+   absence of a named ghost from the public event catalog, and successful
+   valid redeclaration with one runtime raise.
+2. Move constituent validation before event creation in both declaration
+   paths while preserving validation for attachment to an existing event.
+   Run the narrow composite suite and the affected Core suite once after the
+   complete packet, with an independent read-only Red Team review.
+3. Investigate saga-ID two-response request routing using the existing
+   in-memory harness. Add only tests that distinguish response identity,
+   fault or timeout handling and correlation from plausible product mutations.
+   Correct source behavior if a red-first counterexample proves a defect.
+4. Review each added assertion through the Microsoft test-gap-analysis and
+   assertion-quality guidance, document the product fix in the changelog, then
+   commit and run exact-commit affected tests. Defer the 33-profile measurement
+   to the agreed grouped interval unless a broad contract regression requires
+   it sooner.
+
 ## T73 asynchronous task outcome ownership
 
 1. Add focused xUnit cases in the existing `TaskExtensionsTests` and

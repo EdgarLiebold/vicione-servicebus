@@ -1,5 +1,32 @@
 # A+ remediation research
 
+## T75 saga declaration atomicity and response routing
+
+The T74 exact-commit profile observed 109 uncovered physical lines in
+`ViciOneServiceBusStateMachine`, including the complete two-response request
+declaration using saga-ID correlation and multiple composite declaration
+validation branches. The required Microsoft Roslyn static pairing run at
+`artifacts/t75-source-test-pairing.json` classifies the machine as paired;
+request and callback extension classes are unpaired by their declaring class
+names, a known limitation for extension-method calls. This pairing is not
+coverage evidence. The Core integration suite already proves a three-response
+request with explicit request-ID storage, and several composite runtime
+behaviors. It does not currently prove atomicity after an invalid composite
+declaration or the two-response saga-ID routing path.
+
+Source review found that property and named composite overloads call
+`CreateEvent()` before the shared constituent validation. Null, empty,
+oversized or uninitialized constituent arrays therefore mutate the machine
+even though declaration throws. Implicit registration means a property event
+already exists: the failed call replaces its identity. A named declaration
+instead leaves a new ghost event in `Events` and `IStateMachine.GetEvent`.
+The first bounded acceptance slice requires invalid property declarations to
+retain their original event identity and named declarations to leave no new
+event, then a valid declaration with the same identity to work and dispatch
+exactly once. The next slice will inspect the two-response
+request path for real response/fault correlation and cleanup oracles; it will
+not add tests solely for the overload count.
+
 ## T73 asynchronous task outcome ownership
 
 The frozen T63 union leaves 36/126 physical lines in `TaskExtensions`

@@ -1,5 +1,24 @@
 # A+ remediation test status
 
+## Current T75 — saga composite declaration and dual-response request
+
+Eight red-first cases exposed invalid composite declaration mutating the
+public event catalog or replacing an implicit event identity before input
+validation. The product now validates first. Red Team found and closed an
+existing-event overload proof gap; all 12 boundary cases now pass and prove
+valid runtime reuse. A two-saga dual-response integration test uses decoy
+payload correlation IDs to prove routing by the request header, exact accepted
+types, outcomes and isolation. It passes 1/1. The complete Core suite passes
+6,929/6,929 before an additional fault-neighbor case; both new request
+journeys now pass 2/2. The fault case uses a separate decoy payload ID to
+prove routing by the saga request header, closing a Red Team finding.
+Independent read-only Red Team re-review of the complete packet is PASS with
+no remaining concrete P1/P2 finding.
+See the [T75 packet](coverage-a-plus-20260921/t75-saga-composite-request.md).
+Exact-commit full Core receipt and publication remain. The T74 global coverage figures
+are stale for this changed source/test tree; the next 33-profile measurement
+is grouped under the agreed interval.
+
 ## Current T74 — grouped product-wide measurement
 
 Ten connected packets after the frozen T63 baseline are measured together on

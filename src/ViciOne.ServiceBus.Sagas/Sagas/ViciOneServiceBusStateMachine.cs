@@ -684,6 +684,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     IEvent CompositeEvent(Expression<Func<IEvent>> propertyExpression, ICompositeEventStatusAccessor<TInstance> accessor,
         CompositeEventOptions options, IEvent[] events)
     {
+        ValidateCompositeEvents(events);
+
         IEvent CreateEvent()
         {
             var eventProperty = propertyExpression.GetPropertyInfo();
@@ -702,6 +704,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     IEvent CompositeEvent(string name, ICompositeEventStatusAccessor<TInstance> accessor, CompositeEventOptions options, IEvent[] events)
     {
+        ValidateCompositeEvents(events);
+
         IEvent CreateEvent()
         {
             var @event = new TriggerEvent(name);
@@ -716,14 +720,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     IEvent CompositeEvent(IEvent @event, ICompositeEventStatusAccessor<TInstance> accessor, CompositeEventOptions options, IEvent[] events)
     {
-        if (events == null)
-            throw new ArgumentNullException(nameof(events));
-        if (events.Length > 31)
-            throw new ArgumentException("No more than 31 events can be combined into a single event");
-        if (events.Length == 0)
-            throw new ArgumentException("At least one event must be specified for a composite event");
-        if (events.Any(x => x == null))
-            throw new ArgumentException("One or more events specified has not yet been initialized");
+        ValidateCompositeEvents(events);
 
         var complete = new CompositeEventStatus(Enumerable.Range(0, events.Length).Aggregate(0, (current, x) => current | (1 << x)));
 
@@ -757,6 +754,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
 
         return @event;
+    }
+
+    static void ValidateCompositeEvents(IEvent[] events)
+    {
+        if (events == null)
+            throw new ArgumentNullException(nameof(events));
+        if (events.Length > 31)
+            throw new ArgumentException("No more than 31 events can be combined into a single event");
+        if (events.Length == 0)
+            throw new ArgumentException("At least one event must be specified for a composite event");
+        if (events.Any(x => x == null))
+            throw new ArgumentException("One or more events specified has not yet been initialized");
     }
 
     /// <summary>Declares a state named after the selected property and initializes that property.</summary>

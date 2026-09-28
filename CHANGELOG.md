@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected saga composite declaration so invalid constituents fail before a
+  property event is replaced or a named event is registered. Tests reproduce
+  both former defects and verify null, empty, oversized and uninitialized
+  inputs across property, named and existing-event APIs, followed by a valid
+  declaration that raises once. A two-saga request journey also verifies that
+  either accepted response follows the request-header ID even when its payload
+  names a different saga. A faulting request affects only its own saga while a
+  healthy neighbor succeeds; the fault keeps the exact request ID and cause.
+  The complete Core suite passed before this last case was added; final
+  exact-commit verification remains.
+
 - Added four task-lifecycle tests for pending success and failure paths,
   exact outcome transfer, and virtual-clock timeout boundaries. The
   Abstractions suite passes 940/940; no product implementation changed.
