@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected the ActiveMQ cached producer so a missing destination or native
+  producer fails at construction. A null producer returned by a factory can
+  no longer poison the destination cache key; a healthy retry can send and is
+  released exactly once on shutdown. Tests also prove exact explicit send
+  settings, one usage signal per attempt and propagation of both a faulted
+  native send task and a synchronous native async-call failure. Two red-first
+  failures reproduced the defect. The affected class passes 9/9; independent
+  Red Team re-review found no remaining concrete P1/P2 issue.
+
 - Added Azure Table saga persistence tests for SDK-provided offset timestamps,
   strict failure on wrong required and nullable native storage types, and
   sparse nullable properties versus explicitly stored false, zero and empty

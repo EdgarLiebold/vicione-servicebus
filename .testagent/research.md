@@ -1,5 +1,24 @@
 # A+ remediation research
 
+## T79 ActiveMQ cached producer admission and send ownership
+
+The frozen T74 profile leaves 63/79 lines in `CachedMessageProducer`
+uncovered, but most are direct interface forwarding. Existing cache tests
+already prove single-flight creation, independent destinations, canceled
+waiter isolation, retry after a faulted factory, and a basic cached producer
+usage signal. The product constructor currently accepts a null destination
+or producer. A factory that completes with a null producer therefore creates
+and caches a wrapper that fails later on first use, poisoning its destination
+key. This is a concrete product failure, not an uncovered overload count.
+
+Acceptance: missing constructor dependencies fail with exact parameter names;
+a null-producing factory cannot install a cached resource and a healthy
+subsequent factory can recover the same key and release only its own producer;
+explicit destination/delivery settings are forwarded unchanged by both sync
+and async sends, with one usage signal per attempted operation, including a
+failed async send. The frozen profile is only a locator, not a current
+coverage measurement. The T75 Roslyn pairing artifact is reused.
+
 ## T78 Azure Table saga native-property restoration
 
 The frozen T74 profile leaves 55/196 lines in

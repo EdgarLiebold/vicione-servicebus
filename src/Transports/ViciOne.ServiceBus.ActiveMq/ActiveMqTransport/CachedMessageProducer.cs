@@ -17,6 +17,9 @@ public class CachedMessageProducer :
     /// <param name="producer">The native producer to wrap.</param>
     public CachedMessageProducer(IDestination destination, IMessageProducer producer)
     {
+        ArgumentNullException.ThrowIfNull(destination);
+        ArgumentNullException.ThrowIfNull(producer);
+
         Destination = destination;
         _producer = producer;
     }

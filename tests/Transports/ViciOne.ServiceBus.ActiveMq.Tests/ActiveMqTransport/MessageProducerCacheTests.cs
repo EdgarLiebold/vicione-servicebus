@@ -233,6 +233,147 @@ public sealed class MessageProducerCacheTests
         Assert.Equal(3, Volatile.Read(ref usageSignals));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "t79-cached-producer-rejects-missing-owners")]
+    public void CachedProducer_RejectsMissingDestinationAndNativeProducerAtConstruction()
+    {
+        IDestination destination = Destination();
+        IMessageProducer producer = Producer((method, _) => Default(method.ReturnType));
+
+        Assert.Equal("destination", Assert.Throws<ArgumentNullException>(() =>
+            new CachedMessageProducer(null!, producer)).ParamName);
+        Assert.Equal("producer", Assert.Throws<ArgumentNullException>(() =>
+            new CachedMessageProducer(destination, null!)).ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "t79-null-producer-factory-does-not-poison-cache-key")]
+    public async Task NullProducerFactory_DoesNotPoisonTheDestinationAndHealthyRetryOwnsItsDisposalAsync()
+    {
+        var cache = new MessageProducerCache();
+        IDestination destination = Destination();
+        IMessage message = InterfaceProxy<IMessage>.Create((method, _) => Default(method.ReturnType));
+        var factoryCalls = 0;
+        var sends = 0;
+        var disposals = 0;
+        IMessageProducer producer = Producer((method, args) => method.Name switch
+        {
+            nameof(IMessageProducer.Send) => Record(() =>
+            {
+                Assert.Same(message, Assert.Single(args!));
+                Interlocked.Increment(ref sends);
+            }),
+            nameof(IDisposable.Dispose) => Record(() => Interlocked.Increment(ref disposals)),
+            _ => Default(method.ReturnType),
+        });
+
+        try
+        {
+            ArgumentNullException rejected = await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                cache.GetMessageProducerAsync(destination, _ =>
+                {
+                    Interlocked.Increment(ref factoryCalls);
+                    return Task.FromResult<IMessageProducer>(null!);
+                }, TestContext.Current.CancellationToken));
+            Assert.Equal("producer", rejected.ParamName);
+
+            IMessageProducer recovered = await cache.GetMessageProducerAsync(destination, _ =>
+            {
+                Interlocked.Increment(ref factoryCalls);
+                return Task.FromResult(producer);
+            }, TestContext.Current.CancellationToken);
+            recovered.Send(message);
+            Assert.Same(recovered, await cache.GetMessageProducerAsync(destination,
+                _ => throw new InvalidOperationException("The healthy producer must remain cached."),
+                TestContext.Current.CancellationToken));
+            Assert.Equal(2, Volatile.Read(ref factoryCalls));
+            Assert.Equal(1, Volatile.Read(ref sends));
+            Assert.Equal(0, Volatile.Read(ref disposals));
+        }
+        finally
+        {
+            await cache.StopAsync("test complete", TestContext.Current.CancellationToken);
+        }
+
+        Assert.Equal(1, Volatile.Read(ref disposals));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "t79-explicit-send-settings-and-async-failure-preserve-ownership")]
+    public async Task ExplicitSendSettings_ReachTheNativeProducerAndFailedAsyncSendReportsOneUsageAsync()
+    {
+        IDestination owningDestination = Destination();
+        IDestination explicitDestination = Destination();
+        IMessage message = InterfaceProxy<IMessage>.Create((method, _) => Default(method.ReturnType));
+        const MsgDeliveryMode mode = MsgDeliveryMode.NonPersistent;
+        const MsgPriority priority = MsgPriority.Highest;
+        TimeSpan lifetime = TimeSpan.FromMinutes(17);
+        var pending = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var expectedFailure = new InvalidOperationException("native send rejected");
+        var calls = new List<(string Name, object?[] Arguments)>();
+        IMessageProducer producer = Producer((method, args) =>
+        {
+            if (method.Name is not (nameof(IMessageProducer.Send) or nameof(IMessageProducer.SendAsync))
+                || args?.Length != 5)
+                throw new InvalidOperationException($"Unexpected producer call: {method.Name}.");
+
+            calls.Add((method.Name, args));
+            return method.Name == nameof(IMessageProducer.SendAsync) ? pending.Task : null;
+        });
+        var cached = new CachedMessageProducer(owningDestination, producer);
+        var usageSignals = 0;
+        ((IResourceUsageSource)cached).Used += () => usageSignals++;
+
+        cached.Send(explicitDestination, message, mode, priority, lifetime);
+        Task failedSend = cached.SendAsync(explicitDestination, message, mode, priority, lifetime);
+
+        Assert.Same(pending.Task, failedSend);
+        Assert.Equal(2, usageSignals);
+        Assert.Equal([nameof(IMessageProducer.Send), nameof(IMessageProducer.SendAsync)],
+            calls.Select(call => call.Name));
+        Assert.All(calls, call =>
+        {
+            Assert.Same(explicitDestination, call.Arguments[0]);
+            Assert.Same(message, call.Arguments[1]);
+            Assert.Equal(mode, call.Arguments[2]);
+            Assert.Equal(priority, call.Arguments[3]);
+            Assert.Equal(lifetime, call.Arguments[4]);
+        });
+
+        pending.TrySetException(expectedFailure);
+        Assert.Same(expectedFailure, await Assert.ThrowsAsync<InvalidOperationException>(() => failedSend));
+        Assert.Equal(2, usageSignals);
+        Assert.Equal(2, calls.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "t79-synchronous-native-async-throw-reports-usage-first")]
+    public void NativeAsyncSendThrow_ReportsOneUsageBeforePropagatingTheExactSynchronousFailure()
+    {
+        IDestination destination = Destination();
+        IMessage message = InterfaceProxy<IMessage>.Create((method, _) => Default(method.ReturnType));
+        var expectedFailure = new InvalidOperationException("native producer already closed");
+        var nativeCalls = 0;
+        var usageSignals = 0;
+        IMessageProducer producer = Producer((method, args) =>
+        {
+            Assert.Equal(nameof(IMessageProducer.SendAsync), method.Name);
+            Assert.Same(message, Assert.Single(args!));
+            Assert.Equal(1, usageSignals);
+            nativeCalls++;
+            throw expectedFailure;
+        });
+        var cached = new CachedMessageProducer(destination, producer);
+        ((IResourceUsageSource)cached).Used += () => usageSignals++;
+
+        Action invoke = () => _ = cached.SendAsync(message);
+        InvalidOperationException actual = Assert.Throws<InvalidOperationException>(invoke);
+
+        Assert.Same(expectedFailure, actual);
+        Assert.Equal(1, nativeCalls);
+        Assert.Equal(1, usageSignals);
+    }
+
     private static IDestination Destination() =>
         InterfaceProxy<IDestination>.Create((method, _) => Default(method.ReturnType));
 

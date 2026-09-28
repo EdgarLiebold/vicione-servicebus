@@ -1,5 +1,21 @@
 # A+ remediation test plan
 
+## T79 ActiveMQ cached producer admission and send ownership
+
+1. Red-first: reject null destination and null native producer at the public
+   wrapper constructor, and reject a null factory result without installing a
+   poisoned cache entry. Retry the same destination with a healthy producer,
+   prove its send works and shutdown disposes it exactly once.
+2. Exercise the explicit send overloads with distinct destination, payload,
+   mode, priority and TTL. Assert exact delegate arguments and synchronous
+   usage before a pending async send; a failed async send retains its original
+   exception and adds no extra usage or retry. Also prove a native asynchronous
+   API that throws synchronously observes usage before delegate invocation.
+3. Run the affected ActiveMQ unit class during implementation, review
+   pseudo-mutations and assertion quality, obtain independent read-only Red
+   Team review, then verify the provider unit project at the exact commit.
+   Keep the product-wide 33-profile run for the agreed multi-packet checkpoint.
+
 ## T78 Azure Table saga native-property restoration
 
 1. Feed `AzureTableEntityConverter` a real `TableEntity` whose DateTime

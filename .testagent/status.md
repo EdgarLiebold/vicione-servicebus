@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## Current T79 — ActiveMQ cached producer admission and send ownership
+
+Two red-first failures proved that `CachedMessageProducer` accepted a null
+destination and producer, allowing a factory that returned null to install a
+poisoned cache entry. The constructor now rejects both missing dependencies
+at admission. A recovery test proves the same destination can then cache a
+healthy producer, send once and dispose once. An explicit send test proves
+destination, payload, delivery mode, priority and TTL forwarding across sync
+and async calls, immediate usage reporting, and exact async failure identity
+without retry. Red Team found the missing synchronous-throw branch of the
+native async API; an exact usage-before-delegate counterprobe is added. The
+affected class passes 9/9. Final read-only Red Team re-review is PASS with
+no remaining concrete P1/P2 finding. Exact-commit provider verification is
+pending. See the
+[T79 packet](coverage-a-plus-20260921/t79-activemq-producer-admission.md).
+T74 remains the latest complete product-wide coverage/CRAP profile.
+
 ## Current T78 — Azure Table saga native-property restoration
 
 Three tests cover the Azure Tables SDK's non-UTC `DateTimeOffset` values
