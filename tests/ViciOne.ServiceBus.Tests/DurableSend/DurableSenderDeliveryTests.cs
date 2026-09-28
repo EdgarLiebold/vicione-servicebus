@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
+using ViciOne.ServiceBus.Tests.Monitoring;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.DurableSend;
@@ -239,6 +241,97 @@ public sealed class DurableSenderDeliveryTests
         Assert.Same(expected, actual);
         Assert.Equal(1, dispatcher.DispatchCount);
         Assert.Equal(1, (await SnapshotAsync(inner)).StoredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-PERSISTENCE", "dispatch-cancellation-retains-intent-for-lease-replay")]
+    public async Task DispatchCancellation_RetainsTheIntentForDeliveryAfterTheLeaseExpiresAsync()
+    {
+        IOutboxStore<ITestBus> store = Store();
+        using var cancellation = new CancellationTokenSource();
+        var dispatcher = new CancelOnceDispatcher(cancellation);
+        var time = new FakeTimeProvider(Epoch);
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
+        await AdmitAsync(store);
+
+        OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => driver.DeliverDueBatchAsync(cancellation.Token));
+        Assert.Equal(cancellation.Token, canceled.CancellationToken);
+        Assert.Equal(1, dispatcher.DispatchCount);
+        Assert.Equal(1, (await SnapshotAsync(store)).StoredCount);
+        Assert.False(await driver.DeliverDueBatchAsync(TestCancellationToken));
+
+        time.Advance(TimeSpan.FromMinutes(2).Add(TimeSpan.FromSeconds(1)));
+        Assert.True(await driver.DeliverDueBatchAsync(TestCancellationToken));
+        Assert.Equal(2, dispatcher.DispatchCount);
+        Assert.Equal([1, 1], dispatcher.Attempts);
+        Assert.Equal(0, (await SnapshotAsync(store)).StoredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-PERSISTENCE", "post-dispatch-cancellation-retains-intent-for-lease-replay")]
+    public async Task StateTransitionCancellation_AfterAcceptedDispatchReplaysThePersistedIntentAsync()
+    {
+        IOutboxStore<ITestBus> inner = Store();
+        using var cancellation = new CancellationTokenSource();
+        var store = new ControlledStore(inner) { CancelMarkDeliveredOnce = cancellation };
+        var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted);
+        var time = new FakeTimeProvider(Epoch);
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
+        await AdmitAsync(store);
+
+        OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => driver.DeliverDueBatchAsync(cancellation.Token));
+        Assert.Equal(cancellation.Token, canceled.CancellationToken);
+        Assert.Equal(1, dispatcher.DispatchCount);
+        Assert.Equal(1, (await SnapshotAsync(inner)).StoredCount);
+        Assert.False(await driver.DeliverDueBatchAsync(TestCancellationToken));
+
+        time.Advance(TimeSpan.FromMinutes(2).Add(TimeSpan.FromSeconds(1)));
+        Assert.True(await driver.DeliverDueBatchAsync(TestCancellationToken));
+        Assert.Equal(2, dispatcher.DispatchCount);
+        Assert.Equal([1, 1], dispatcher.Attempts);
+        Assert.Equal(0, (await SnapshotAsync(inner)).StoredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RACE", "consumer-completion-wins-timeout-quarantine-transition")]
+    public async Task ConsumerCompletion_DuringTimeoutQuarantineWinsWithoutFalseEvidenceAsync()
+    {
+        IOutboxStore<ITestBus> inner = Store();
+        var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.AwaitConsumerCompletion);
+        var store = new ControlledStore(inner)
+        {
+            BeforeQuarantineAsync = token => dispatcher.LastCompletion!.CompleteAsync(token),
+        };
+        var time = new FakeTimeProvider(Epoch);
+        using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
+            store,
+            dispatcher,
+            time,
+            options =>
+            {
+                options.MaximumDeliveryAttempts = 1;
+                options.ConsumerCompletionTimeout = TimeSpan.FromMinutes(5);
+            });
+        using var observations = new MetricObservationSession(driver.MeterScope);
+        await AdmitAsync(store);
+
+        Assert.True(await driver.DeliverDueBatchAsync(TestCancellationToken));
+        Assert.Equal(1, (await SnapshotAsync(inner)).AwaitingConsumerCompletionCount);
+
+        time.Advance(TimeSpan.FromMinutes(5));
+        Assert.True(await driver.DeliverDueBatchAsync(TestCancellationToken));
+        Assert.Equal(1, store.QuarantineCallCount);
+        Assert.True(store.BeforeQuarantineResult);
+        Assert.Equal(1, dispatcher.DispatchCount);
+        Assert.Equal(0, (await SnapshotAsync(inner)).StoredCount);
+        Assert.Empty(await QuarantineAsync(inner));
+        Assert.Equal(
+            ["awaiting-consumer-completion", "delivered"],
+            observations.Measurements
+                .Where(measurement => measurement.Name == ServiceBusTelemetry.Metrics.DurableSenderDelivery)
+                .Select(measurement => measurement.Tag(ServiceBusTelemetry.Attributes.Outcome)));
     }
 
     [Fact]
@@ -525,6 +618,7 @@ public sealed class DurableSenderDeliveryTests
         public bool CompleteBeforeReturn { get; init; }
         public bool CompleteBeforeThrow { get; init; }
         public int DispatchCount { get; private set; }
+        public List<int> Attempts { get; } = [];
         public IDurableSendConsumerCompletion? LastCompletion { get; private set; }
 
         public async Task<DurableSendDispatchResult> DispatchAsync(
@@ -533,6 +627,7 @@ public sealed class DurableSenderDeliveryTests
         {
             cancellationToken.ThrowIfCancellationRequested();
             DispatchCount++;
+            Attempts.Add(context.Attempt);
             LastCompletion = context.ConsumerCompletion;
             if (CompleteBeforeReturn || CompleteBeforeThrow)
                 await context.ConsumerCompletion.CompleteAsync(cancellationToken);
@@ -554,6 +649,27 @@ public sealed class DurableSenderDeliveryTests
             cancellationToken.ThrowIfCancellationRequested();
             DispatchCount++;
             return Task.FromException<DurableSendDispatchResult>(exception);
+        }
+    }
+
+    private sealed class CancelOnceDispatcher(CancellationTokenSource cancellation) : IDurableSendDispatcher<ITestBus>
+    {
+        public int DispatchCount { get; private set; }
+        public List<int> Attempts { get; } = [];
+
+        public Task<DurableSendDispatchResult> DispatchAsync(
+            DurableSendDispatchContext context,
+            CancellationToken cancellationToken = default)
+        {
+            DispatchCount++;
+            Attempts.Add(context.Attempt);
+            if (DispatchCount == 1)
+            {
+                cancellation.Cancel();
+                return Task.FromCanceled<DurableSendDispatchResult>(cancellationToken);
+            }
+
+            return Task.FromResult(DurableSendDispatchResult.TransportAccepted);
         }
     }
 
@@ -629,7 +745,12 @@ public sealed class DurableSenderDeliveryTests
     {
         public IReadOnlyList<DurableSendDelivery>? ClaimResult { get; init; }
         public Exception? MarkDeliveredException { get; init; }
+        public CancellationTokenSource? CancelMarkDeliveredOnce { get; init; }
+        public Func<CancellationToken, ValueTask<bool>>? BeforeQuarantineAsync { get; init; }
         public DateTimeOffset? LastScheduledRetryAt { get; private set; }
+        public int QuarantineCallCount { get; private set; }
+        public bool? BeforeQuarantineResult { get; private set; }
+        private bool _markDeliveredCanceled;
 
         public Task<DurableSendAdmissionResult> AdmitAsync(
             SerializedDurableSend message,
@@ -652,6 +773,13 @@ public sealed class DurableSenderDeliveryTests
             DateTimeOffset deliveredAt,
             CancellationToken cancellationToken = default)
         {
+            if (CancelMarkDeliveredOnce is { } cancellation && !_markDeliveredCanceled)
+            {
+                _markDeliveredCanceled = true;
+                cancellation.Cancel();
+                return Task.FromCanceled<bool>(cancellationToken);
+            }
+
             if (cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled<bool>(cancellationToken);
 
@@ -696,15 +824,20 @@ public sealed class DurableSenderDeliveryTests
                 cancellationToken);
         }
 
-        public Task<bool> QuarantineAsync(
+        public async Task<bool> QuarantineAsync(
             DurableSendId id,
             DurableSendLease lease,
             int deliveryAttempts,
             DurableSendFailureKind failureKind,
             string? failureType,
             DateTimeOffset quarantinedAt,
-            CancellationToken cancellationToken = default) =>
-            inner.QuarantineAsync(
+            CancellationToken cancellationToken = default)
+        {
+            QuarantineCallCount++;
+            if (BeforeQuarantineAsync is { } beforeQuarantine)
+                BeforeQuarantineResult = await beforeQuarantine(cancellationToken);
+
+            return await inner.QuarantineAsync(
                 id,
                 lease,
                 deliveryAttempts,
@@ -712,6 +845,7 @@ public sealed class DurableSenderDeliveryTests
                 failureType,
                 quarantinedAt,
                 cancellationToken);
+        }
 
         public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) =>
             inner.GetSnapshotAsync(cancellationToken);

@@ -47,6 +47,8 @@ public sealed class DurableSenderDeliveryTestDriver<TBus> : IDisposable
     public Task<bool> DeliverDueBatchAsync(CancellationToken cancellationToken = default)
         => _service.DeliverDueBatchAsync(cancellationToken);
 
+    public object MeterScope => _meterFactory;
+
     public TimeSpan CalculateRetryDelay(DurableSendId id, int attempt)
         => _service.CalculateRetryDelay(id, attempt);
 
