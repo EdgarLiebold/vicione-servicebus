@@ -18,7 +18,8 @@ runner/settings bindings, nine broker logs and exact XML-derived counts. The
 [T58 measurement](coverage-a-plus-20260921/product-wide-profile-5e9509367.md)
 and [acceptance map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md)
 record the evidence. CHANGELOG and the generated CHANGELIST are published;
-local and remote branch HEAD match at `a6a3bd340`. Global Line/Branch A+
+their publication commit `a6a3bd340` was verified on the remote branch.
+Global Line/Branch A+
 remains open, so the next connected behavior packet starts from this baseline.
 
 ## Current T57 — ingress middleware packet measured
