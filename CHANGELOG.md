@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added message-handler adapter tests across all eight context/message and
+  zero-to-three dependency signatures. They prove exact pending task identity,
+  ordered inputs, one invocation, asynchronous success/failure, and exact
+  synchronous exceptions. Substituting a completed task or a null message
+  failed controlled counterprobes. The focused class passes 24/24 and complete
+  Core passes 7,015/7,015 on exact test commit `190a35eb4`; adversarial
+  review is PASS. Product code did not change.
+
 - Added request-handler consumer tests for pending handler and response
   operations across all eight message/context and zero-to-three dependency
   signatures. All four consumer arities now prove that null responses are

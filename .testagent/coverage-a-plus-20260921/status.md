@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T97 message handler task contract packet
+
+All eight message-handler adapter shapes now prove pending task and exact
+outcome forwarding, message/context and ordered dependency identity, one
+invocation, and synchronous exception propagation. The focused class passes
+24/24 and complete Core passes 7,015/7,015 on exact test commit `190a35eb4`.
+Two controlled counterprobes failed, product source was restored, and
+read-only Red Team review is PASS. See [T97 evidence](t97-message-handler-task-contract.md).
+The twelfth packet after T85 is complete. A fresh 33-profile product-wide
+measurement is due; global A+ remains open.
+
 ## Current T96 request handler outcome packet
 
 All eight request-handler delegate signatures now prove pending handler and
