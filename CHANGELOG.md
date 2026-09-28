@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected Consumer, Handler and Instance middleware lifecycle accounting:
+  a failure in `next` after successful consumption now propagates without
+  recording a second fault for the already completed consumer. Its process
+  activity and metrics also finish before downstream work. A red-first test
+  reproduced the duplicate fault in all three forms. Twenty-eight new cases
+  check exact context and exception identity, asynchronous notification order,
+  caller versus dependency cancellation, per-delivery retry budgets, circuit
+  recovery and process-span ownership. The affected Core suite passes
+  6,887/6,887 without skips; final product-wide coverage measurement follows.
+
 - Durable admission atomicity verification: the EF reliable inbox now has
   SQLite and real PostgreSQL regression cases that save a first business record
   and outgoing intent inside a transaction, reject a later oversized message,

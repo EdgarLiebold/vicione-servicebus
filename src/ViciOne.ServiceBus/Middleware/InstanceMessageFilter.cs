@@ -52,7 +52,6 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
 
             await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName).ConfigureAwait(false);
 
-            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
                                           && !context.CancellationToken.IsCancellationRequested)
@@ -78,5 +77,7 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
             activity?.Stop();
             instrument?.Complete();
         }
+
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }

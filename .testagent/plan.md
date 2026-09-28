@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## Current T57 — connected ingress middleware packet
+
+T56 is published and remote-verified at `9bc78539d`. T57 covers the three
+consumer-entry filters and their common retry/circuit-breaker journey in one
+[bounded plan](coverage-a-plus-20260921/t57-ingress-middleware-plan.md).
+All 28 new cases pass focused validation. The red-first downstream-failure
+control failed for all three filter forms on old product bytes; the fix moves
+`next` outside consumer fault classification and process telemetry. Red-team
+P2 context and per-delivery retry oracles are repaired. Its additional
+downstream-cancellation and activity-boundary cases are green. Complete the
+final Core-project suite, read-only review, assertion/pseudo-mutation audit,
+then freeze and take one full33 measurement for the combined packet.
+
 ## T56 — durable admission transaction packet (focused controls complete)
 
 1. Confirm the EF reliable-inbox SQLite harness can admit one outgoing envelope

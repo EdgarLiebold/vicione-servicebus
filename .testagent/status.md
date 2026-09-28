@@ -1,5 +1,27 @@
 # A+ remediation test status
 
+## Current T57 — ingress middleware packet in validation
+
+T56 publication is complete; local and remote HEAD were `9bc78539d` before
+this packet. T56's authoritative 33-receipt report records13,222 green tests,
+91.6110% physical lines,84.2340% conservative branches and zero CRAP>30;
+global A+ remains open. The older T55/T56 pending labels below are historical.
+
+T57 groups Consumer/Handler/Instance filters with Retry/Circuit Breaker. A
+bounded Microsoft Roslyn pairing, red-first downstream-failure test (3/3 red
+on old product), manual product correction in three filters, and targeted
+28/28 green cases are complete. Red Team's two P2 oracle findings were fixed:
+the actual work context is checked, and retry attempts are counted by delivery
+identity. Downstream cancellation and process-activity boundary cases address
+its later review limits. The final Core suite passes6,887/6,887 without skips;
+read-only Red Team sees no concrete remaining packet blocker. The Microsoft
+assertion-quality and pseudo-mutation review finds eight methods with substantive
+exact oracles, and the red-first old-product probe is causal evidence. Freeze,
+full33 profile and independent audit remain.
+The [T57 plan and review log](coverage-a-plus-20260921/t57-ingress-middleware-plan.md)
+contains the concrete contract matrix. One full33 measurement follows packet
+acceptance; no new global A+ claim is made from targeted tests.
+
 ## T55 frozen measurement — complete, independent audit clean
 
 Implementation `48a8b2ce9` passes all33 fresh profiles, 13,218 tests with no

@@ -48,7 +48,6 @@ public class HandlerMessageFilter<TMessage> :
 
             Interlocked.Increment(ref _completed);
 
-            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
                                           && !context.CancellationToken.IsCancellationRequested)
@@ -76,5 +75,7 @@ public class HandlerMessageFilter<TMessage> :
             activity?.Stop();
             instrument?.Complete();
         }
+
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }
