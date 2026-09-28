@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10930 |
+| Added | 10932 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -155,6 +155,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-87402d8d7.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-8adf57e76.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-8d6621c48.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-8f54d90a7.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-90239365c.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-90819758b.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-9307916a4.md` | Added |  |
@@ -248,6 +249,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t56-durable-admission-atomicity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t57-ingress-middleware-plan.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t59-saga-request-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
