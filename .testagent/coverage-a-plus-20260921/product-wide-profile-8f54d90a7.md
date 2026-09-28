@@ -31,8 +31,10 @@ fixture groups have empty findings after teardown. Their nine broker logs
 match the recorded SHA-256 hashes.
 
 The first Azure Table local-integration attempt (`artifacts/t59-profile-24`)
-failed an existing JobService observation test: no `IJobFaulted` was observed,
-and its log also records Azure Table ETag 412 conflicts. That run has no valid
+failed an existing JobService observation test: no `IJobFaulted` was observed
+before the observation sequence ended. The same profile log also records Azure
+Table ETag 412 conflicts in concurrently running Future tests; it does not
+establish those conflicts as the cause of the JobService failure. That run has no valid
 receipt and is not part of the accepted aggregate. The new isolated fixture
 passed the same complete 40-test project at
 `artifacts/t59-profile-24-r1/receipt.json`; both fixture teardown finding

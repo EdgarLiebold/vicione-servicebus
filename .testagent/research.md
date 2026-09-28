@@ -1,5 +1,19 @@
 # A+ remediation research
 
+## Current T60 — persistent JobService terminal and slot behavior
+
+The bounded target spans Azure Table and EF Core/PostgreSQL local JobService
+integration suites, their requirement projections, and their harness fixtures.
+Both providers already had one-job completed, faulted, canceled and clock
+controls. The new acceptance checklist covers genuine two-job overlap, terminal
+ownership, exact consumer attempts, persisted Saga state, and release of a
+single slot after completion, fault or cancellation. T59's short Azure Table
+observation failure motivated provider-sized harness waits. The unchanged
+source tree permits reuse of the prior Microsoft Roslyn pairing report, a
+static reference heuristic rather than execution evidence. The full
+[T60 map](coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md)
+records selected contracts and limits.
+
 ## Current T59 — larger saga request lifecycle packet
 
 T58 is complete and pushed. The [T59 contract map](coverage-a-plus-20260921/t59-saga-request-lifecycle.md)

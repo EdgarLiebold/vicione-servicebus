@@ -1,5 +1,23 @@
 # A+ remediation test status
 
+## Current T60 — persistent JobService packet ready for full33
+
+T59 is published and remote-verified. Six new hard integration cases cover
+two simultaneous jobs with separated success/fault persistence and the
+one-slot terminal release matrix: completion, fault and cancellation through
+Azure Table, plus fault through EF Core/PostgreSQL. Provider-sized observation
+timeouts address the T59 short-wait failure without weakening assertions.
+Azure Table passes 44/44 and EF Core/PostgreSQL passes 96/96 in fresh isolated
+fixtures, with zero skips and empty teardown findings. Read-only Red Team found
+and reaccepted fixes for real overlap, exact attempt counts, temporal slot
+exclusion and cleanup on failure; no concrete blocker remains. An isolated
+Completed-slot product mutation fails exactly the new completion-to-waiting
+Azure Table test (7 pass, 1 fail) and never touched MAIN source. The
+[T60 map](coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md)
+records evidence and limits. Frozen full33, independent audit, changelog,
+generated change list and remote publication are pending. Global Line/Branch
+A+ remains open.
+
 ## Current T59 — larger Saga packet in progress
 
 T58 is complete, audited and pushed. T59 uses one connected Saga request
