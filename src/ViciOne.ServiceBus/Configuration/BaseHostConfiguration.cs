@@ -232,14 +232,14 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         configurator.ConcurrentMessageLimit = definition.ConcurrentMessageLimit;
 
         if (definition.PrefetchCount.HasValue)
-            configurator.PrefetchCount = (ushort)definition.PrefetchCount.Value;
+            configurator.PrefetchCount = definition.PrefetchCount.Value;
         else if (definition.ConcurrentMessageLimit.HasValue)
         {
             var concurrentMessageLimit = definition.ConcurrentMessageLimit.Value;
 
-            var calculatedPrefetchCount = concurrentMessageLimit * 12 / 10;
+            var calculatedPrefetchCount = (long)concurrentMessageLimit * 12 / 10;
 
-            configurator.PrefetchCount = (ushort)calculatedPrefetchCount;
+            configurator.PrefetchCount = (int)Math.Clamp(calculatedPrefetchCount, int.MinValue, int.MaxValue);
         }
 
         definition.Configure(configurator);

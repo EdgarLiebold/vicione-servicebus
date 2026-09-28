@@ -1,5 +1,24 @@
 # A+ remediation research
 
+## T70 endpoint-definition prefetch width across Core and RabbitMQ
+
+Target inventory: `BaseHostConfiguration.ApplyEndpointDefinition` projects the
+provider-neutral `IEndpointDefinition.PrefetchCount`/`ConcurrentMessageLimit`
+(`int?`) into an `IReceiveEndpointConfigurator.PrefetchCount` (`int`). It
+currently casts both explicit and derived prefetch counts to `ushort` before
+transport validation. Thus 65,536 becomes zero, and an inferred count from
+60,000 concurrent messages becomes 6,464 rather than 72,000. The shared
+implementation affects InMemory and broker transports. RabbitMQ's AMQP QoS
+count is genuinely `ushort`, but its receive-settings getter also casts an
+`int` unchecked; the Rabbit-specific endpoint must report out-of-range
+configuration and prevent a bypassed context build from using a wrapped
+value. The existing Roslyn pairing and T63 aggregate are reused; the frozen
+Core profile has 58/69 lines in `BaseHostConfiguration`. Acceptance: preserve
+full-width values through the neutral layer, avoid arithmetic overflow when
+deriving 120% of concurrency, accept RabbitMQ's exact 65,535 boundary, reject
+65,536 as a named validation failure before constructing a runtime channel,
+and retain InMemory's valid 65,536/72,000 values without wrapping.
+
 ## T69 RabbitMQ native stream retention and offset configuration
 
 Target inventory: `RabbitMqReceiveEndpointConfiguration.Stream(...)` and

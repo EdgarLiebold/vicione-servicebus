@@ -192,9 +192,10 @@ public sealed class AmazonSqsMessageReceiver :
         public FifoPartitionedTaskExecutor(ReceiveSettings receiveSettings)
         {
             IPartitionHashGenerator hashGenerator = new Murmur3PartitionHashGenerator();
-            int partitionCapacity = Math.Max(
-                1,
-                (receiveSettings.PrefetchCount + receiveSettings.ConcurrentMessageLimit - 1) / receiveSettings.ConcurrentMessageLimit);
+            int partitionCapacity = (int)Math.Clamp(
+                ((long)receiveSettings.PrefetchCount + receiveSettings.ConcurrentMessageLimit - 1) / receiveSettings.ConcurrentMessageLimit,
+                1L,
+                int.MaxValue);
             _keyExecutorPool = new PartitionedTaskExecutor<Message>(MessageGroupIdProvider,
                 receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit, partitionCapacity, hashGenerator);
         }

@@ -34,7 +34,14 @@ public class RabbitMqReceiveSettings :
     /// <summary>Gets or sets the prefetch count.</summary>
     public ushort PrefetchCount
     {
-        get => (ushort)_configuration.Transport.PrefetchCount;
+        get
+        {
+            int value = _configuration.Transport.PrefetchCount;
+            if (value < 0 || value > ushort.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(PrefetchCount), value, "RabbitMQ prefetch count must be between 0 and 65535.");
+
+            return (ushort)value;
+        }
         set => _configuration.Transport.Configurator.PrefetchCount = value;
     }
 

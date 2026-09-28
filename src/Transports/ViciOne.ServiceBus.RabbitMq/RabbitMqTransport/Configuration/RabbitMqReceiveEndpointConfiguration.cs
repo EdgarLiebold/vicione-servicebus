@@ -150,6 +150,9 @@ public class RabbitMqReceiveEndpointConfiguration :
         if (_settings.PurgeOnStartup)
             yield return this.Warning(queueName, "Existing messages in the queue will be purged on service start");
 
+        if (_endpointConfiguration.Transport.PrefetchCount > ushort.MaxValue)
+            yield return this.Failure("PrefetchCount", "must be at most 65535 for RabbitMQ").WithParentKey(queueName);
+
         foreach (var result in base.Validate())
             yield return result.WithParentKey(queueName);
     }

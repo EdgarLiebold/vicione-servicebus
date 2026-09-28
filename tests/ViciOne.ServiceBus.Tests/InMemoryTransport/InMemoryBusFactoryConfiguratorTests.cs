@@ -197,6 +197,53 @@ public sealed class InMemoryBusFactoryConfiguratorTests
         Assert.Equal(1, callbackCount);
     }
 
+    [Theory]
+    [InlineData(65_536, null, 65_536)]
+    [InlineData(null, 60_000, 72_000)]
+    [InlineData(null, int.MaxValue, int.MaxValue)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "definition-prefetch-preserves-full-width-values")]
+    public void EndpointDefinition_PreservesFullWidthExplicitAndDerivedPrefetch(
+        int? specifiedPrefetch, int? concurrentLimit, int expectedPrefetch)
+    {
+        (InMemoryBusFactoryConfigurator configurator, _) = CreateConfigurator();
+        int? observedPrefetch = null;
+        int? observedConcurrentLimit = null;
+
+        configurator.ReceiveEndpoint(
+            new NeutralEndpointDefinition(specifiedPrefetch, concurrentLimit),
+            null,
+            (Action<IReceiveEndpointConfigurator>)(endpoint =>
+            {
+                observedPrefetch = endpoint.PrefetchCount;
+                observedConcurrentLimit = endpoint.ConcurrentMessageLimit;
+            }));
+
+        Assert.Equal(expectedPrefetch, observedPrefetch);
+        Assert.Equal(concurrentLimit, observedConcurrentLimit);
+    }
+
+    [Theory]
+    [InlineData(-1, null, -1)]
+    [InlineData(null, int.MinValue, int.MinValue)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "negative-definition-prefetch-remains-invalid")]
+    public void EndpointDefinition_NegativePrefetchFailsHostValidation(
+        int? specifiedPrefetch, int? concurrentLimit, int expectedPrefetch)
+    {
+        (InMemoryBusFactoryConfigurator configurator, InMemoryBusConfiguration bus) = CreateConfigurator();
+        int? observedPrefetch = null;
+
+        configurator.ReceiveEndpoint(
+            new NeutralEndpointDefinition(specifiedPrefetch, concurrentLimit),
+            null,
+            (Action<IReceiveEndpointConfigurator>)(endpoint => observedPrefetch = endpoint.PrefetchCount));
+
+        Assert.Equal(expectedPrefetch, observedPrefetch);
+        Assert.Contains(bus.HostConfiguration.Validate(), result =>
+            result.Disposition == ValidationResultDisposition.Failure
+            && (result.Key.Contains("PrefetchCount", StringComparison.Ordinal)
+                || result.Key.Contains("ConcurrentMessageLimit", StringComparison.Ordinal)));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-CONFIGURATION", "virtual-host-value-remains-one-address-component")]
     public void Host_PreservesTheCompleteVirtualHostAsOneAddressComponent()
@@ -378,8 +425,10 @@ public sealed class InMemoryBusFactoryConfiguratorTests
 
     private sealed record HostOrderMessage;
 
-    private sealed class NeutralEndpointDefinition : DefaultEndpointDefinition
+    private sealed class NeutralEndpointDefinition(int? prefetchCount = null, int? concurrentMessageLimit = null) : DefaultEndpointDefinition
     {
+        public override int? PrefetchCount => prefetchCount;
+        public override int? ConcurrentMessageLimit => concurrentMessageLimit;
         public override string GetEndpointName(IEndpointNameFormatter formatter) => "neutral-endpoint";
     }
 

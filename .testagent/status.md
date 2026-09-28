@@ -1,5 +1,31 @@
 # A+ remediation test status
 
+## Current T70 — endpoint-definition prefetch width across Core and RabbitMQ
+
+Red-first InMemory definition cases failed 3/3 on the original narrowing:
+explicit 65,536 became zero, a derived 72,000 became 6,464, and an inferred
+value from `int.MaxValue` became 65,535 after overflow. The shared host now
+preserves explicit integers and derives prefetch using wide arithmetic with
+an integer ceiling. A negative custom definition is checked through host
+validation, so the shared path cannot turn it into a valid positive count.
+RabbitMQ keeps its 16-bit broker limit: exact 65,535 reaches settings, while
+explicit 65,536 or derived 72,000 yields a named host validation failure;
+direct settings projection throws instead of silently sending QoS zero.
+The RabbitMQ high-value case failed before the product correction. Full Core
+passed 6,910/6,910 and RabbitMQ unit 516/516 before Red Team expansion.
+The independent Red Team then found two connected defects: `int.MinValue`
+concurrency made an invalid derived prefetch appear positive, and an admitted
+`int.MaxValue` prefetch overflowed Amazon SQS FIFO partition-capacity math.
+Both new counterprobes failed on the unchanged respective product paths.
+The host now clamps both integer limits and SQS widens its ceiling division.
+Expanded full Core passes 6,911/6,911 and Amazon SQS 322/322, while the
+earlier RabbitMQ full unit run passed 516/516; all had zero failures/skips.
+The read-only Red Team re-review is PASS without another concrete finding. The
+RabbitMQ requirement label now stops at the observed settings boundary.
+Requirement mappings cover the added variants.
+The complete Line/Branch/CRAP profile is deferred to the grouped milestone;
+these project test results are not a new global coverage claim.
+
 ## Current T69 — RabbitMQ native stream retention and offset boundaries
 
 Public endpoint tests reproduced four exact-age/invalid-age failures before

@@ -11,6 +11,19 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Preserved the full integer prefetch value when endpoint definitions configure
+  InMemory and other transports. Derived values now use wide arithmetic and
+  stop at both integer limits. Amazon SQS computes FIFO partition capacity
+  without integer overflow, preserving queue admission and backpressure under
+  a large prefetch value. RabbitMQ reports prefetch above 65,535 as a
+  named configuration failure before its 16-bit QoS setting can wrap to zero;
+  direct settings projection also rejects out-of-range values. Red-first tests
+  exposed the previous wrap and arithmetic overflow. Full Core passes
+  6,911/6,911, Amazon SQS 322/322, and RabbitMQ 516/516 unit tests. The
+  independent Red Team found the two additional overflow paths and passed
+  the re-review after correction. Product-wide coverage and CRAP
+  remain scheduled for the grouped milestone.
+
 - Corrected RabbitMQ stream retention and offset configuration. Retention
   periods now use exact whole-second broker units instead of rounding 36 hours
   to two days or 90 minutes to two hours; invalid negative or fractional-second

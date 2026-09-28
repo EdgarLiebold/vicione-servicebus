@@ -1,5 +1,28 @@
 # A+ remediation test plan
 
+## T70 endpoint-definition prefetch width across Core and RabbitMQ
+
+1. Red-first public InMemory endpoint-definition tests for explicit 65,536,
+   derived 72,000 from concurrent limit 60,000, and overflow-safe derivation
+   at `int.MaxValue`; assert the callback's actual endpoint prefetch and
+   concurrent limit rather than exercising arithmetic in isolation. A negative
+   custom definition must still fail host validation.
+2. Red-first RabbitMQ definition tests for the exact 65,535 accepted boundary,
+   65,536 explicit rejected boundary and derived 72,000 rejected boundary.
+   Assert the full-width neutral callback value,
+   named host validation failure and guarded receive-settings projection so
+   direct context creation cannot silently use QoS zero.
+3. Remove the provider-neutral narrowing, use long arithmetic with an int
+   ceiling for inferred prefetch, add RabbitMQ-specific validation/projection
+   guard, run affected Core/RabbitMQ suites, independent read-only Red Team
+   and targeted counterprobes. Measure globally at the agreed group milestone
+   unless this cross-transport change raises a broader contract signal.
+4. Red Team found an `int.MinValue` derived-prefetch wrap and Amazon SQS FIFO
+   capacity overflow at the newly admitted full-width value. Add red-first
+   Core and real receiver backpressure tests; clamp both ends of the derived
+   integer and widen the SQS ceiling division before projecting its capacity.
+   Run the SQS project and have the Red Team re-review the complete packet.
+
 ## T69 RabbitMQ native stream retention and offset configuration
 
 1. Red-first public endpoint cases: 36h and 90m/90s project exact broker

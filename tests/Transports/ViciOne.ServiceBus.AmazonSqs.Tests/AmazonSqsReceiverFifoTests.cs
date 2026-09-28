@@ -123,6 +123,44 @@ public sealed class AmazonSqsReceiverFifoTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-SQS-RECEIVE", "wide-prefetch-does-not-collapse-fifo-partition-capacity")]
+    public async Task FifoReceiver_WidePrefetchAdmitsQueuedMessagesWhileFirstIsBlockedAsync()
+    {
+        QueueReceiveSettings settings = CreateSettings(int.MaxValue, 2);
+        var blockedEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseBlocked = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var harness = new ReceiverHarness(
+            [FifoMessage("first", "group-A", "1"), FifoMessage("second", "group-A", "2"), FifoMessage("third", "group-A", "3")],
+            expectedDispatches: 3,
+            settings,
+            async id =>
+            {
+                if (id == "first")
+                {
+                    blockedEntered.TrySetResult();
+                    await releaseBlocked.Task;
+                }
+            });
+
+        try
+        {
+            await blockedEntered.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            await harness.SecondPollStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+
+            Assert.Equal(int.MaxValue, harness.Settings.PrefetchCount);
+            Assert.Equal(2, harness.Settings.ConcurrentMessageLimit);
+            Assert.Equal(["first"], harness.DispatchSnapshot);
+        }
+        finally
+        {
+            releaseBlocked.TrySetResult();
+        }
+
+        Assert.Equal(["first", "second", "third"],
+            await harness.Dispatched.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+    }
+
     [Theory]
     [InlineData(null, "1", "MessageGroupId")]
     [InlineData(" ", "1", "MessageGroupId")]
@@ -229,6 +267,7 @@ public sealed class AmazonSqsReceiverFifoTests
         public QueueReceiveSettings Settings { get; }
         public AmazonSqsMessageReceiver Receiver { get; }
         public TaskCompletionSource<IReadOnlyList<string>> Dispatched { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource SecondPollStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public int PollCount => Volatile.Read(ref _polls);
         public int DispatchCount
         {
@@ -272,6 +311,7 @@ public sealed class AmazonSqsReceiverFifoTests
             if (poll == 1)
                 return _firstBatch;
 
+            SecondPollStarted.TrySetResult();
             await Task.Delay(Timeout.InfiniteTimeSpan, Assert.IsType<CancellationToken>(args[3]));
             return Array.Empty<Message>();
         }
@@ -298,10 +338,14 @@ public sealed class AmazonSqsReceiverFifoTests
         }
     }
 
-    private static QueueReceiveSettings CreateSettings()
+    private static QueueReceiveSettings CreateSettings(int? prefetchCount = null, int? concurrentMessageLimit = null)
     {
         var topology = new AmazonSqsTopologyConfiguration(AmazonSqsBusFactory.CreateMessageTopology());
         var parent = new AmazonSqsEndpointConfiguration(topology);
+        if (prefetchCount.HasValue)
+            parent.Transport.Configurator.PrefetchCount = prefetchCount.Value;
+        if (concurrentMessageLimit.HasValue)
+            parent.Transport.Configurator.ConcurrentMessageLimit = concurrentMessageLimit.Value;
         return new QueueReceiveSettings(parent.CreateEndpointConfiguration(false), QueueName, true, false);
     }
 
