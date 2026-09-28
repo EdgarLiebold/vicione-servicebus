@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added six persistent JobService integration cases across Azure Table/Azurite
+  and EF Core/PostgreSQL. They check genuine overlapping success and fault,
+  per-job terminal state and events, and release of a held execution slot after
+  completion, fault or cancellation. The affected local projects pass 44/44
+  and 96/96 without skips; both provider fixtures have empty findings. A
+  deliberate Completed-state slot-release defect fails the new Azure Table
+  completion test. Observation timeouts now match the validated local-provider
+  operation timeout. T59 is the latest complete 33-profile coverage/CRAP
+  baseline; no new product-wide figure is claimed for this packet. The next
+  full measurement will cover several larger connected packets.
+
 - Added a larger multi-response Saga request verification packet: stored
   request-ID routing, three response types, service fault, real Quartz timeout,
   callback owner override, missing/wrong IDs, two active Saga owners and stale

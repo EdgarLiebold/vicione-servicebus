@@ -57,5 +57,11 @@ research/plan/implement path. `find-untested-sources` supplied Roslyn pairing;
 `test-gap-analysis` and `assertion-quality` guided the explicit gates,
 per-invocation capture and terminal-event oracles. `run-tests` selected the
 SDK 10/MTP/xUnit v3 class filters. `coverage-analysis` uses the strict 33-profile
-receipt aggregate and independent XML audit. The frozen product-wide T60
-measurement, its independent audit, changelog and publication are still pending.
+receipt aggregate and independent XML audit for product-wide claims. The T60
+full-profile run was stopped during profile 00 after the PO requested larger
+packets and fewer global measurements; no T60 product-wide coverage result is
+claimed. T59 remains the last complete 33-profile baseline. The affected-provider
+test results and counterprobe above are the T60 acceptance evidence. The next
+global measurement will bundle multiple connected packets, with targeted
+project and impact checks between measurements. Changelog and publication are
+pending.

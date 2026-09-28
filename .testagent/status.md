@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T60 — persistent JobService packet ready for full33
+## Current T60 — persistent JobService packet accepted by affected-provider checks
 
 T59 is published and remote-verified. Six new hard integration cases cover
 two simultaneous jobs with separated success/fault persistence and the
@@ -14,9 +14,16 @@ exclusion and cleanup on failure; no concrete blocker remains. An isolated
 Completed-slot product mutation fails exactly the new completion-to-waiting
 Azure Table test (7 pass, 1 fail) and never touched MAIN source. The
 [T60 map](coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md)
-records evidence and limits. Frozen full33, independent audit, changelog,
-generated change list and remote publication are pending. Global Line/Branch
-A+ remains open.
+records evidence and limits. The PO requested larger connected packets and
+fewer complete profile runs. The T60 full33 attempt was stopped during profile
+00, so T59 remains the last product-wide coverage/CRAP baseline; no T60 global
+figure is claimed. Between full measurements, require the affected project
+suites, neighboring contract/regression tests, adversarial review and a
+meaningful counterprobe for each larger packet. Repeat all 33 exact profiles
+after roughly four such packets, or sooner for cross-assembly contract/build
+changes or a milestone requiring a fresh global claim. Independent XML/fixture
+audit accompanies each full run. Changelog, generated change list and remote
+publication are pending. Global Line/Branch A+ remains open.
 
 ## Current T59 — larger Saga packet in progress
 

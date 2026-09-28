@@ -1,16 +1,22 @@
 # A+ remediation test plan
 
-## Current T60 — two-provider JobService packet before one full33
+## Current T60 — two-provider JobService packet and batched measurement cadence
 
 The [T60 acceptance map](coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md)
 maps each terminal/slot contract to a concrete integration test. Six new cases
 are implemented across Azure Table and EF Core/PostgreSQL. The full affected
 local projects pass 44/44 and 96/96. Read-only Red Team rechecked repaired
 oracles; the isolated Completed-slot product mutation failed exactly the new
-Azure Table case. Next: freeze the exact implementation/doc commit, run one
-complete 33-profile measurement, independently audit receipts/XML and fixture
-logs, then update the changelog and generated change list and push. Global
-Line/Branch A+ remains open.
+Azure Table case. The PO requested larger packets and fewer complete runs, so
+the T60 full33 attempt was stopped during profile 00. T59 remains the last
+complete global baseline. Next: record T60 in the changelog, regenerate the
+change list and push, then build larger connected packets across related
+behavior and providers. For each packet, run affected projects and adjacent
+contract/regression suites, verify meaningful test oracles with adversarial
+review and a counterprobe, and record the exact limits of that evidence. Run
+the full 33 profiles with an independent receipt/XML/fixture audit after about
+four packets, or earlier for a cross-assembly contract/build change or a
+milestone that needs a new global A+ claim. Global Line/Branch A+ remains open.
 
 ## Current T59 — complete one larger Saga packet before full33
 
