@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10976 |
+| Added | 10978 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -276,6 +276,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t92-durable-delivery-cancellation-race.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t93-cache-usage-fault-capacity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t94-active-mq-cached-producer.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t95-request-lifecycle-publication.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16385,6 +16386,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestCompletionPublicationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestForwardingTimeoutActivitiesDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestLifecyclePublicationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineResponseAndFaultIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeMetadataContractTests.cs` | Added |  |

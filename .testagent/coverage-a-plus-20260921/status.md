@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T95 saga request lifecycle publication packet
+
+Both request-start and request-fault activities now reject missing context or
+pipeline continuation before publishing. The old product failed the new
+negative oracle; the fix passes 6/6 focused tests and 6,971/6,971 complete
+Core tests on exact commit `775efa3e2`. A fault-payload-type counterprobe
+failed the structured metadata test; source was restored. Read-only Red Team
+re-review is PASS after its partial-publication P2 finding was fixed. See
+[T95 evidence](t95-request-lifecycle-publication.md). T85 remains the latest
+complete product-wide checkpoint; global A+ remains open.
+
 ## Current T94 ActiveMQ cached producer contract packet
 
 All native factory, send, close/dispose and eight property forwarding shapes

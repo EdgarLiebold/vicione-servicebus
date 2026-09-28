@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed saga request-start and request-fault activities that could publish a
+  lifecycle event before discovering a missing pipeline continuation. Both
+  now validate context and continuation before publication. New tests verify
+  complete started and structured-fault metadata, asynchronous publication
+  order, failure propagation, invalid messages, and all four null boundaries.
+  The old behavior failed the regression test; a fault-payload counterchange
+  also failed. Focused tests pass 6/6 and complete Core passes 6,971/6,971
+  on exact commit `775efa3e2`; adversarial re-review is PASS.
+
 - Added ActiveMQ cached-producer contract tests for every native factory and
   send overload, close/dispose lifecycle, and all eight public property pairs.
   Pending native tasks prove exact async task forwarding; usage order and
