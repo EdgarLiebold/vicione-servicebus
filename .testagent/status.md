@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## T104 — in-memory outbox release admission
+
+Five deterministic tests prove that deferred sends and scheduler
+cancellations crossing release execute exactly once, leave no pending entry,
+and reject canceled admissions, including cancellation during lock wait.
+The provider callback runs outside both internal locks. The two original
+races failed red-first; focused tests pass 5/5 and complete Core passes
+7,043/7,043 on `d954933e6`. The first
+read-only Red Team review found two adjacent P2 gaps; both were fixed and
+final re-review is PASS. See [T104 evidence](coverage-a-plus-20260921/t104-inmemory-outbox-release-admission.md).
+T97 remains the global profile; Line and Branch A+ are still open.
+
 ## T103 — startup ownership for multiple bus and durable registrations
 
 Two real-DI tests establish rejection of duplicate transport/limits owners

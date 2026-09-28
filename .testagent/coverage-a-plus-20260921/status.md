@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T104 in-memory outbox release admission packet
+
+Deferred send and scheduled cancellation admission are now linearized with
+release and drain. Canceled producers waiting on the admission lock are
+rejected, and immediate provider callbacks run outside internal locks.
+The original race tests failed red-first; five focused behavioral tests pass
+5/5 and complete Core passes 7,043/7,043 on `d954933e6`. The final read-only Red Team re-review is PASS after two
+P2 findings were corrected. See
+[T104 evidence](t104-inmemory-outbox-release-admission.md). T97 remains the
+latest global checkpoint; Line and Branch A+ remain open.
+
 ## Current T103 bus composition ownership packet
 
 Real DI startup tests now prove that duplicate transport and limits owners

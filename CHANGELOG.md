@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed an in-memory outbox race that could acknowledge a deferred send or
+  scheduled cancellation after the final release drain without executing it.
+  Admission now checks release and cancellation under the queue lock, while
+  immediate scheduler callbacks run outside internal locks. Five deterministic
+  regressions cover the lost-send boundary, exact one-time delivery, empty
+  queues, cancellation during lock wait, and callback lock state. The original
+  race tests failed red-first; focused tests pass 5/5 and complete Core passes
+  7,043/7,043 on `d954933e6`.
+  Independent adversarial re-review is PASS. The global Line and Branch A+
+  targets remain open.
+
 - Added startup tests for two simultaneous transport/limits owners on one bus
   beside a healthy neighbor and for duplicate catalog, outbox, inbox,
   scheduler, and dispatcher ownership. They require exact diagnostics before
