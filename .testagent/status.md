@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## Current T58 — four related journeys implemented, packet review open
+
+T57 was published and remote-verified at `25ef0c773`. T58 groups four related
+registration, scope and failure families in one larger packet. The bounded
+research, Microsoft Roslyn pairing and read-only selection review are complete.
+Four new integrated families pass focused runs (1+2+2+2 cases). The complete
+Core suite and requirement projection pass 6,894/6,894. Read-only Red Team
+found two oracle gaps: journal ownership is now checked by exact correlation
+ID, and four compensation scopes must be disposed. A wrong-owner product
+mutation fails both journal variants and is byte-restored. No product source
+changed and no fresh full33 measurement is claimed. Format/quality review,
+frozen full33, independent audit and publication remain. See the
+[T58 acceptance map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md).
+
 ## Current T57 — ingress middleware packet measured
 
 T56 publication is complete; local and remote HEAD were `9bc78539d` before

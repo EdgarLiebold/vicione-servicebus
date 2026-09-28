@@ -1,5 +1,18 @@
 # A+ remediation research
 
+## Current T58 — registration, scope and failure journeys
+
+T57 is complete and remote-verified at `25ef0c773`. The next larger packet
+follows consumer registration through DI filter scopes, retry/rescue
+and two-bus journal isolation. Its eight-source candidate inventory, existing deep-test
+controls, one Microsoft Roslyn pairing and behavior acceptance map are recorded
+in [T58 research and plan](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md).
+The read-only selection review corrected three assumptions in the map. Four
+behavior families are now implemented without a product-source change. The
+owner-filter inversion is killed by both journal variants and restored at
+the original SHA. The complete Core suite passes 6,894/6,894; see the map for
+the remaining full33 and audit work.
+
 ## T56 — durable admission across reliable inbox and scoped outbox
 
 Baseline is pushed T55 `45e250bf0`, with33 valid profiles and5,819 remaining

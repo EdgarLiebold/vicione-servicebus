@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## Current T58 — one larger registration-to-failure packet
+
+Use the [T58 behavior map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md)
+for four connected families: consumer discovery and registration; scoped
+compensation filters; retry/rescue order and exclusion; message-journal ownership
+across two active buses. Existing bus-stop and rescue-failure tests are controls.
+The seven new parameterized cases and complete Core suite pass. A read-only
+Red Team review strengthened the journal-owner and scope-dispose oracles; both
+are green. A real owner-filter inversion was killed by both journal variants
+and restored byte-for-byte. Finish quality and formatting gates, then freeze
+and measure all 33 profiles once. The selection corrections and authoring
+diagnoses are recorded in the map.
+
 ## Current T57 — connected ingress middleware packet
 
 T56 is published and remote-verified at `9bc78539d`. T57 covers the three

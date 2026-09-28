@@ -262,6 +262,98 @@ public sealed class BusCompositionStartupValidationTests
         Assert.All(store.Entries, static entry => Assert.Empty(entry.Body.ToArray()));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-ACTIVATION", "journal-observers-stay-on-selected-bus-with-live-neighbor")]
+    public async Task UseMessageJournal_ObservesOnlyItsSelectedBusWhileBothBusesDeliverAsync(bool journalOnSecondary)
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(10);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var store = new RecordingStore();
+        var primaryDelivered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondaryDelivered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Guid primaryId = NewId.NextGuid();
+        Guid secondaryId = NewId.NextGuid();
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            if (!journalOnSecondary)
+                bus.UseMessageJournal(journal => journal
+                    .UseStore(store)
+                    .Policy(new CorrelationOnlyPolicy())
+                    .Options(MessageJournalOptions.ContinueMessageFlow(TimeSpan.FromSeconds(1), TimeProvider.System)));
+            bus.UsingInMemory((_, transport) =>
+            {
+                transport.Host(new Uri("loopback://t58-journal-primary/"));
+                transport.ReceiveEndpoint("input", endpoint => endpoint.Handler<OwnedJournalProbe>(_ =>
+                {
+                    primaryDelivered.TrySetResult();
+                    return Task.CompletedTask;
+                }));
+            });
+        });
+        services.AddViciOneServiceBus<IOrdersBus>(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            if (journalOnSecondary)
+                bus.UseMessageJournal(journal => journal
+                    .UseStore(store)
+                    .Policy(new CorrelationOnlyPolicy())
+                    .Options(MessageJournalOptions.ContinueMessageFlow(TimeSpan.FromSeconds(1), TimeProvider.System)));
+            bus.UsingInMemory((_, transport) =>
+            {
+                transport.Host(new Uri("loopback://t58-journal-secondary/"));
+                transport.ReceiveEndpoint("input", endpoint => endpoint.Handler<OwnedJournalProbe>(_ =>
+                {
+                    secondaryDelivered.TrySetResult();
+                    return Task.CompletedTask;
+                }));
+            });
+        });
+
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        IBusControl primary = provider.GetRequiredService<IBusControl>();
+        IBusControl secondary = (IBusControl)provider.GetRequiredService<IOrdersBus>();
+        try
+        {
+            await primary.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await secondary.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+
+            ISendEndpoint primaryInput = await primary.GetSendEndpointAsync(
+                new Uri("loopback://t58-journal-primary/input"), cancellationToken: cancellationToken);
+            ISendEndpoint secondaryInput = await secondary.GetSendEndpointAsync(
+                new Uri("loopback://t58-journal-secondary/input"), cancellationToken: cancellationToken);
+            await primaryInput.SendAsync(new OwnedJournalProbe(primaryId), cancellationToken);
+            await secondaryInput.SendAsync(new OwnedJournalProbe(secondaryId), cancellationToken);
+            await primaryDelivered.Task.WaitAsync(timeout, cancellationToken);
+            await secondaryDelivered.Task.WaitAsync(timeout, cancellationToken);
+            await store.SendAndConsumeObserved.Task.WaitAsync(timeout, cancellationToken);
+        }
+        finally
+        {
+            await secondary.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await primary.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+
+        Assert.Equal(2, store.Entries.Count);
+        Assert.Equal(1, store.Entries.Count(static entry => entry.Operation == MessageJournalOperation.Send));
+        Assert.Equal(1, store.Entries.Count(static entry => entry.Operation == MessageJournalOperation.Consume));
+        string ownerId = (journalOnSecondary ? secondaryId : primaryId).ToString("D");
+        Assert.All(store.Entries, entry => Assert.Equal(
+            ownerId, Assert.Single(entry.Metadata).Value));
+        Assert.All(store.Entries, static entry => Assert.Equal(
+            MessageJournalMetadataKeys.CorrelationId, Assert.Single(entry.Metadata).Key));
+        Assert.All(store.Entries, static entry => Assert.Empty(entry.Body.ToArray()));
+
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-ACTIVATION", "incomplete-builder-reports-all-required-parts")]
     public void UseMessageJournal_RejectsEveryMissingRequiredPartTogether()
@@ -302,6 +394,8 @@ public sealed class BusCompositionStartupValidationTests
 
     public sealed record JournalProbe(string Value);
 
+    public sealed record OwnedJournalProbe(Guid CorrelationId) : ICorrelatedBy<Guid>;
+
     sealed class RecordingStore : IMessageJournalStore
     {
         public ConcurrentQueue<MessageJournalEntry> Entries { get; } = new();
@@ -335,6 +429,25 @@ public sealed class BusCompositionStartupValidationTests
                 MessageJournalDataClassification.Internal,
                 capture.ContentType,
                 capture.MessageTypes));
+        }
+    }
+
+    sealed class CorrelationOnlyPolicy : IMessageJournalPolicy
+    {
+        public ValueTask<MessageJournalProjection?> ProjectAsync(
+            MessageJournalCapture capture,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            string correlationId = capture.Metadata[MessageJournalMetadataKeys.CorrelationId];
+            return ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
+                MessageJournalDataClassification.Internal,
+                capture.ContentType,
+                capture.MessageTypes,
+                new Dictionary<string, string>
+                {
+                    [MessageJournalMetadataKeys.CorrelationId] = correlationId,
+                }));
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -10,6 +11,62 @@ namespace ViciOne.ServiceBus.Tests.DependencyInjection;
 
 public sealed class ContainerNamespaceDiscoveryTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONTAINER-DISCOVERY", "assembly-filter-preserves-definition-and-ignores-repeated-assembly")]
+    public async Task AssemblyDiscovery_RegistersOnlySelectedConsumerAndDeliversThroughItsDefinitionAsync()
+    {
+        TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions().OperationTimeout!.Value;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var assembly = typeof(ContainerDiscovery.DiscoveryMarker).Assembly;
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumers(
+                    type => type == typeof(ContainerDiscovery.DiscoveryPingConsumer),
+                    assembly,
+                    assembly);
+                configuration.AddRequestClient<ContainerDiscovery.DiscoveryPing>(new Uri("queue:ping-queue"));
+                configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+            })
+            .BuildServiceProvider(validateScopes: true);
+
+        IConsumerRegistration[] registrations = provider.GetServices<IConsumerRegistration>().ToArray();
+        Assert.Single(registrations, registration =>
+            registration.Type == typeof(ContainerDiscovery.DiscoveryPingConsumer));
+        Assert.DoesNotContain(registrations, registration =>
+            registration.Type == typeof(ContainerDiscovery.DiscoveryExcludedConsumer));
+        Assert.IsType<ContainerDiscovery.DiscoveryPingConsumerDefinition>(
+            provider.GetRequiredService<IConsumerDefinition<ContainerDiscovery.DiscoveryPingConsumer>>());
+
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: cancellationToken)
+            .WaitAsync(timeout, cancellationToken);
+        try
+        {
+            Guid correlationId = NewId.NextGuid();
+            IRequestClient<ContainerDiscovery.DiscoveryPing> client =
+                harness.CreateRequestClient<ContainerDiscovery.DiscoveryPing>();
+            Response<ContainerDiscovery.DiscoveryPong> response = await client
+                .GetResponseAsync<ContainerDiscovery.DiscoveryPong>(
+                    new ContainerDiscovery.DiscoveryPing(correlationId), cancellationToken);
+            IPublishedMessage<ContainerDiscovery.PingReceived> published = await harness.Published
+                .SelectAsync<ContainerDiscovery.PingReceived>(
+                    message => message.Context.Message.CorrelationId == correlationId,
+                    cancellationToken)
+                .FirstObservedAsync(cancellationToken: cancellationToken)
+                .WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal(correlationId, response.Message.CorrelationId);
+            Assert.Equal(correlationId, published.Context.Message.CorrelationId);
+            Assert.Equal("ping-queue", response.SourceAddress!.AbsolutePath.Trim('/'));
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-DISCOVERY", "consumer-saga-machine-and-activities-run-on-discovered-endpoints")]
     public async Task NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEndAsync()
