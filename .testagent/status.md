@@ -1,5 +1,16 @@
 # A+ remediation test status
 
+## T99 — hotspot contract triage
+
+Reviewed recurring scheduler send/publish, retry configuration and policies,
+property-provider selection, and receive dispatch against existing behavioral
+tests. The independent Red Team found no verified concrete P1/P2. A possible
+two-token Reliable-Inbox change remains an unestablished contract choice;
+normal production calls use the consume-context token. No product or test
+change was justified, so no test or full profile was run and this review does
+not advance the 20–30 remediation-packet counter. See the
+[T99 review](coverage-a-plus-20260921/t99-hotspot-contract-triage.md).
+
 ## Current T98 — persistent outbox cancellation handoff
 
 The six durable send capture paths now pass the caller's cancellation token

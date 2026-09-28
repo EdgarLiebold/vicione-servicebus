@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10985 |
+| Added | 10986 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -281,6 +281,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t96-request-handler-outcomes.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t97-message-handler-task-contract.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t98-persistent-outbox-cancellation.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t99-hotspot-contract-triage.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
