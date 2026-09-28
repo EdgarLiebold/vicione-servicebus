@@ -6,7 +6,8 @@ Three tests cover the Azure Tables SDK's non-UTC `DateTimeOffset` values
 restored as exact UTC `DateTime` values, strict rejection of twenty-one malformed
 native fields, and sparse nullable property projection with explicit
 false/zero/empty values. The affected entity-converter class passes 29/29
-after two Red Team counterprobes.
+after two Red Team counterprobes. On exact product/test commit `c289cf2c8`,
+the complete Azure Table provider unit project passes 92/92.
 Assertion review found distinct value, type, exception, collection-presence
 and absence oracles; no assertion-free or trivial-only new test. Static
 pseudo-mutation review found that offset normalization, coercion of wrong

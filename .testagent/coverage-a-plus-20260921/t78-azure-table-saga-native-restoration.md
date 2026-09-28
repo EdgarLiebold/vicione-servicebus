@@ -35,6 +35,12 @@ defaults and defaulted absent nullable fields would fail. Independent
 read-only Red Team final re-review is PASS with no remaining concrete P1/P2
 finding. No numeric mutation score or current
 product-wide coverage value is claimed. T74 remains the latest complete
-Line/Branch/CRAP measurement; the next full provider/Core and 33-profile
+Line/Branch/CRAP measurement; the next complete Core and 33-profile
 run follows the agreed multi-packet checkpoint unless a broad behavior
 change requires an earlier run.
+
+The complete Azure Table provider unit project passed 92/92 on exact
+product/test commit `c289cf2c8` with zero failures and skips. The later
+documentation-only commit does not alter that product/test tree. The
+product-wide 33-profile aggregate remains scheduled for the grouped
+checkpoint.
