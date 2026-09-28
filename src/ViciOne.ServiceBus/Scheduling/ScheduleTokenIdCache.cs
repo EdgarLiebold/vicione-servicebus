@@ -24,6 +24,9 @@ internal sealed class ScheduleTokenIdCache<T>
         Guid? result = _selector(message);
         if (result.HasValue)
         {
+            if (result.Value == Guid.Empty)
+                throw new ArgumentException("The selected scheduling token cannot be empty.", nameof(message));
+
             tokenId = result.Value;
             return true;
         }

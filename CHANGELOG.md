@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Rejected an empty token returned by a configured one-time scheduling token
+  selector before command, delayed-transport or SQL endpoint resolution. Such
+  a token could previously be reported as accepted and then rejected by the
+  Quartz consumer or SQL cancellation path. Red-first Core tests reproduced
+  the acceptance; final focused Core and SQL suites pass 24/24 and 4/4,
+  including requirement projections and valid-token recovery.
+
 - Corrected assembly scanning when the same assembly is registered through
   direct, named and type-based entry points. Repeated registration previously
   duplicated discovered types; a red-first public API test observed three

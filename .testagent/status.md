@@ -1,5 +1,25 @@
 # A+ remediation test status
 
+## Current T65 — reject empty configured scheduling tokens
+
+The three users of `ScheduleTokenIdCache<T>.GetTokenId` are the command,
+transport-delay and SQL scheduling providers. Quartz rejects an empty one-time
+token after dispatch, while SQL cancellation also rejects it. Red-first Core
+checks on the unchanged product source failed exactly the new command and
+delay cases (20/22 passed); both demonstrated that `Guid.Empty` was accepted.
+The shared cache now rejects an empty selected token before endpoint resolution
+or dispatch and retains null-to-generated and valid-token behavior. Each
+provider test proves no dispatch on the invalid message and a subsequent valid
+token in the handle and send context; delay and SQL also assert the header.
+The exact `message` parameter and diagnosis are asserted. Final focused Core
+tests plus requirement projection pass 24/24; SQL tests plus projection pass
+4/4. The SQL test project's existing `Microsoft.Extensions.TimeProvider.Testing`
+reference required a fresh restore; its final run is clean. Independent
+read-only Red Team review found no remaining concrete issue. This is packet
+two of the larger measurement group; no product-wide Line/Branch/CRAP claim
+is inferred from these focused runs.
+
+
 ## Current T64 — assembly discovery
 
 The Microsoft code-testing-agent research/plan pipeline used the existing

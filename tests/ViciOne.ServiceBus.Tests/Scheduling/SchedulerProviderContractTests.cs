@@ -156,6 +156,38 @@ public sealed class SchedulerProviderContractTests
         Assert.Contains("cannot be applied to another send context", error.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULE-TOKEN", "empty-selector-token-rejected-before-command-dispatch")]
+    public async Task EmptySelectedToken_CannotDispatchACommand_AndAValidTokenRecoversAsync()
+    {
+        ScheduleTokenId.UseTokenId<SelectedTokenProbe>(message => message.TokenId);
+        Guid validToken = NewId.NextGuid();
+        int dispatches = 0;
+        InMemorySendContext<ScheduleMessage>? sentContext = null;
+        var provider = new RecordingProvider(async (command, pipe, cancellationToken) =>
+        {
+            dispatches++;
+            sentContext = new InMemorySendContext<ScheduleMessage>(command, cancellationToken);
+            await pipe.SendAsync(sentContext);
+        });
+
+        ArgumentException rejected = await Assert.ThrowsAsync<ArgumentException>(() => provider.ScheduleSendAsync(
+            Destination, DueAt, new SelectedTokenProbe(Guid.Empty),
+            Pipe.Empty<SendContext<SelectedTokenProbe>>(), TestContext.Current.CancellationToken));
+        Assert.Equal("message", rejected.ParamName);
+        Assert.Contains("selected scheduling token cannot be empty", rejected.Message, StringComparison.Ordinal);
+        Assert.Equal(0, dispatches);
+        Assert.Null(sentContext);
+
+        ScheduledMessage<SelectedTokenProbe> accepted = await provider.ScheduleSendAsync(
+            Destination, DueAt, new SelectedTokenProbe(validToken),
+            Pipe.Empty<SendContext<SelectedTokenProbe>>(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, dispatches);
+        Assert.Equal(validToken, accepted.TokenId);
+        Assert.Equal(validToken, Assert.IsType<InMemorySendContext<ScheduleMessage>>(sentContext).ScheduledMessageId);
+    }
+
     private sealed class RecordingProvider(
         Func<ScheduleMessage, IPipe<SendContext<ScheduleMessage>>, CancellationToken, Task> dispatch) :
         BaseScheduleMessageProvider
@@ -169,6 +201,8 @@ public sealed class SchedulerProviderContractTests
     }
 
     private sealed record Probe;
+
+    private sealed record SelectedTokenProbe(Guid TokenId);
 
     private class UnexpectedInvocationProxy : DispatchProxy
     {

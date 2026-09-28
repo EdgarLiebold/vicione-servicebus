@@ -1,5 +1,19 @@
 # A+ remediation test plan
 
+## Current T65 — scheduling token admission
+
+1. Red-first Core command, delayed transport and SQL provider checks. An empty
+   configured selector result must fail before endpoint resolution/dispatch.
+   A subsequent valid token must reach the endpoint and match the returned
+   handle, send context and scheduling header.
+2. Reject the empty selector result once in `ScheduleTokenIdCache<T>`, shared
+   by all three production callers. Preserve generated and valid selected IDs.
+3. Run focused Core and SQL scheduler tests plus requirement projections on the
+   final source, followed by read-only adversarial review and a bounded causal
+   counterprobe. Defer the full profile to the larger package group unless
+   cross-assembly review exposes a broader contract risk.
+
+
 ## Current T64 — assembly discovery behavior
 
 1. Reproduce duplicate assembly/type results when `Assembly`, generic

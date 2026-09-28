@@ -219,6 +219,41 @@ public sealed class SchedulerTimeProviderTests
         Assert.Equal(tokenId, scheduled.TokenId);
         Assert.Equal(tokenId, Assert.IsType<InMemorySendContext<TokenProbe>>(
             ((ScheduleEndpointProxy)(object)endpoint).Context).ScheduledMessageId);
+        Assert.Equal(1, ((SchedulerEndpointProviderProxy)(object)endpoints).ResolutionCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULE-TOKEN", "empty-selector-token-rejected-before-endpoint-resolution")]
+    public async Task DelayedScheduler_RejectsEmptySelectedTokenBeforeResolvingEndpoint_AndRecoversAsync()
+    {
+        ScheduleTokenId.UseTokenId<AdmissionTokenProbe>(message => message.TokenId);
+        ISendEndpoint endpoint = DispatchProxy.Create<AdvancedScheduleEndpoint, ScheduleEndpointProxy>();
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, SchedulerEndpointProviderProxy>();
+        var endpointProvider = (SchedulerEndpointProviderProxy)(object)endpoints;
+        endpointProvider.Endpoint = endpoint;
+        var provider = new DelayedScheduleMessageProvider(endpoints, new FakeTimeProvider(CommandTime));
+        Uri destination = new("loopback://localhost/token-probe");
+        DateTimeOffset dueAt = CommandTime + TimeSpan.FromMinutes(10);
+        Guid validToken = NewId.NextGuid();
+
+        ArgumentException rejected = await Assert.ThrowsAsync<ArgumentException>(() => provider.ScheduleSendAsync(
+            destination, dueAt, new AdmissionTokenProbe(Guid.Empty),
+            Pipe.Empty<SendContext<AdmissionTokenProbe>>(), TestContext.Current.CancellationToken));
+        Assert.Equal("message", rejected.ParamName);
+        Assert.Equal(0, endpointProvider.ResolutionCount);
+        Assert.Null(((ScheduleEndpointProxy)(object)endpoint).Context);
+
+        ScheduledMessage<AdmissionTokenProbe> accepted = await provider.ScheduleSendAsync(
+            destination, dueAt, new AdmissionTokenProbe(validToken),
+            Pipe.Empty<SendContext<AdmissionTokenProbe>>(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, endpointProvider.ResolutionCount);
+        Assert.Equal(validToken, accepted.TokenId);
+        var context = Assert.IsType<InMemorySendContext<AdmissionTokenProbe>>(
+            ((ScheduleEndpointProxy)(object)endpoint).Context);
+        Assert.Equal(validToken, context.ScheduledMessageId);
+        Assert.True(context.Headers.TryGetHeader(MessageHeaders.SchedulingTokenId, out object? header));
+        Assert.Equal(validToken.ToString("D"), header);
     }
 
     [Fact]
@@ -335,6 +370,8 @@ public sealed class SchedulerTimeProviderTests
 
     private sealed record TokenProbe(Guid TokenId);
 
+    private sealed record AdmissionTokenProbe(Guid TokenId);
+
     private sealed record NullSelectorProbe;
 
     private interface AdvancedScheduleEndpoint :
@@ -387,6 +424,14 @@ public sealed class SchedulerTimeProviderTests
                 return tokenPipe.SendAsync(context);
             }
 
+            if (targetMethod.Name == "SendAsync"
+                && args is [AdmissionTokenProbe admissionMessage, IPipe<SendContext<AdmissionTokenProbe>> admissionPipe, CancellationToken _])
+            {
+                var context = new InMemorySendContext<AdmissionTokenProbe>(admissionMessage);
+                Context = context;
+                return admissionPipe.SendAsync(context);
+            }
+
             throw new NotSupportedException(targetMethod.Name);
         }
     }
@@ -395,13 +440,19 @@ public sealed class SchedulerTimeProviderTests
     {
         public ISendEndpoint Endpoint { get; set; } = null!;
 
+        public int ResolutionCount { get; private set; }
+
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
-            return targetMethod.Name == "GetSendEndpointAsync"
-                ? Task.FromResult(Endpoint)
-                : throw new NotSupportedException(targetMethod.Name);
+            if (targetMethod.Name == "GetSendEndpointAsync")
+            {
+                ResolutionCount++;
+                return Task.FromResult(Endpoint);
+            }
+
+            throw new NotSupportedException(targetMethod.Name);
         }
     }
 

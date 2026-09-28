@@ -7,7 +7,7 @@ public static class ScheduleTokenId
 {
     /// <summary>Registers the process-wide token selector for a message contract.</summary>
     /// <typeparam name="T">The message contract.</typeparam>
-    /// <param name="tokenIdSelector">Returns an existing scheduling token, or <see langword="null" /> to generate one.</param>
+    /// <param name="tokenIdSelector">Returns a non-empty existing scheduling token, or <see langword="null" /> to generate one.</param>
     public static void UseTokenId<T>(Func<T, Guid?> tokenIdSelector)
         where T : class
     {

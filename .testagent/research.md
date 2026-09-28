@@ -1,5 +1,21 @@
 # A+ remediation research
 
+## T65 scheduling token admission across providers
+
+`ScheduleTokenIdCache<T>.GetTokenId` accepts `Guid.Empty` from a configured
+selector. Its three production callers are the base command scheduler, the
+transport-delay provider and the SQL scheduling provider. Quartz rejects an
+empty one-time command token, and SQL cancellation rejects an empty token.
+Thus a producer can report scheduling accepted for an unusable identity.
+Existing scheduler/SQL tests prove generated and valid selected tokens, but
+none rejects an empty selected token before endpoint resolution. The existing
+Roslyn source/test pairing inventory is reused. Acceptance: empty selection
+fails before remote or SQL dispatch, while the same configured selector accepts
+a subsequent non-empty token with matching handle, wire/context identity and
+header. Use distinct test contract types to avoid process-wide selector state
+coupling.
+
+
 ## Current T63 — Event Hubs partial-batch confirmation and retry
 
 The T62 Red Team found a separate provider outcome defect in the connected

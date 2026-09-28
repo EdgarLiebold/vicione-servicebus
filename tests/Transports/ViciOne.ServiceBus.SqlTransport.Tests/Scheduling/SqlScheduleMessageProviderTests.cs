@@ -36,6 +36,41 @@ public sealed class SqlScheduleMessageProviderTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-SCHEDULE-TOKEN", "empty-selector-token-rejected-before-sql-dispatch")]
+    public async Task EmptySelectedToken_CannotResolveSqlEndpoint_AndAValidTokenRecoversAsync()
+    {
+        ScheduleTokenId.UseTokenId<SelectedTokenProbe>(message => message.TokenId);
+        ISendEndpoint endpoint = DispatchProxy.Create<AdvancedScheduleEndpoint, ScheduleEndpointProxy>();
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, EndpointProviderProxy>();
+        var endpointProvider = (EndpointProviderProxy)(object)endpoints;
+        endpointProvider.Endpoint = endpoint;
+        ISqlHostConfiguration hostConfiguration = DispatchProxy.Create<ISqlHostConfiguration, UnsupportedProxy>();
+        var provider = new SqlScheduleMessageProvider(hostConfiguration, endpoints);
+        Uri destination = new("db://localhost/transport/scheduled");
+        DateTimeOffset dueAt = DateTimeOffset.UtcNow.AddMinutes(5);
+        Guid validToken = Guid.NewGuid();
+
+        ArgumentException rejected = await Assert.ThrowsAsync<ArgumentException>(() => provider.ScheduleSendAsync(
+            destination, dueAt, new SelectedTokenProbe(Guid.Empty),
+            Pipe.Empty<SendContext<SelectedTokenProbe>>(), TestContext.Current.CancellationToken));
+        Assert.Equal("message", rejected.ParamName);
+        Assert.Equal(0, endpointProvider.ResolutionCount);
+        Assert.Null(((ScheduleEndpointProxy)(object)endpoint).Context);
+
+        ScheduledMessage<SelectedTokenProbe> accepted = await provider.ScheduleSendAsync(
+            destination, dueAt, new SelectedTokenProbe(validToken),
+            Pipe.Empty<SendContext<SelectedTokenProbe>>(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, endpointProvider.ResolutionCount);
+        Assert.Equal(validToken, accepted.TokenId);
+        SendContext context = Assert.IsType<MessageSendContext<SelectedTokenProbe>>(
+            ((ScheduleEndpointProxy)(object)endpoint).Context);
+        Assert.Equal(validToken, context.ScheduledMessageId);
+        Assert.True(context.Headers.TryGetHeader(MessageHeaders.SchedulingTokenId, out object? header));
+        Assert.Equal(validToken.ToString("D"), header);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-SQL-SCHEDULE-ARGUMENTS", "public-scheduling-boundary-rejects-invalid-input")]
     public async Task PublicOperations_RejectInvalidArgumentsBeforeResolvingTransportStateAsync()
     {
@@ -68,6 +103,8 @@ public sealed class SqlScheduleMessageProviderTests
 
     private sealed record Probe;
 
+    private sealed record SelectedTokenProbe(Guid TokenId);
+
     private interface AdvancedScheduleEndpoint :
         ISendEndpoint,
         ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint;
@@ -76,13 +113,19 @@ public sealed class SqlScheduleMessageProviderTests
     {
         public ISendEndpoint Endpoint { get; set; } = null!;
 
+        public int ResolutionCount { get; private set; }
+
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
-            return targetMethod.Name == "GetSendEndpointAsync"
-                ? Task.FromResult(Endpoint)
-                : throw new NotSupportedException(targetMethod.Name);
+            if (targetMethod.Name == "GetSendEndpointAsync")
+            {
+                ResolutionCount++;
+                return Task.FromResult(Endpoint);
+            }
+
+            throw new NotSupportedException(targetMethod.Name);
         }
     }
 
@@ -100,6 +143,14 @@ public sealed class SqlScheduleMessageProviderTests
                 var context = new MessageSendContext<Probe>(message);
                 Context = context;
                 return pipe.SendAsync(context);
+            }
+
+            if (targetMethod.Name == "SendAsync"
+                && args is [SelectedTokenProbe messageWithToken, IPipe<SendContext<SelectedTokenProbe>> tokenPipe, CancellationToken _])
+            {
+                var context = new MessageSendContext<SelectedTokenProbe>(messageWithToken);
+                Context = context;
+                return tokenPipe.SendAsync(context);
             }
 
             throw new NotSupportedException(targetMethod.Name);
