@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 internal static class SortedSetExtensions
 {
-    internal static bool TryGetMinValueStartingFrom(this SortedSet<int> set, DateTimeOffset start, bool allowValueBeforeStartDay, out int minimumDay)
+    internal static bool TryGetMinValueStartingFrom(this SortedSet<int> set, DateTimeOffset start, out int minimumDay)
     {
         ArgumentNullException.ThrowIfNull(set);
 
@@ -23,9 +23,6 @@ internal static class SortedSetExtensions
             minimumDay = startDay;
             return true;
         }
-
-        if (allowValueBeforeStartDay && set.Min < startDay)
-            return true;
 
         if (set.Max < startDay)
             return false;

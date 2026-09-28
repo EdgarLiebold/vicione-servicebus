@@ -977,10 +977,9 @@ internal sealed class CronExpression :
             new DateTimeOffset(date.Year, date.Month, date.Day, hour, date.Minute, date.Second, date.Millisecond, date.Offset));
     }
 
-    (SortedSet<int> daysOfMonthSet, bool dayHasNegativeOffset) CalculateDaysOfMonth(DateTimeOffset date)
+    SortedSet<int> CalculateDaysOfMonth(DateTimeOffset date)
     {
         var daysOfMonthSet = new SortedSet<int>(_daysOfMonth);
-        var dayHasNegativeOffset = false;
 
         if (_lastDayOfMonth)
         {
@@ -996,9 +995,9 @@ internal sealed class CronExpression :
                 daysOfMonthSet.Add(lastDayOfMonthWithOffset);
         }
         else if (_nearestWeekday)
-            (daysOfMonthSet, dayHasNegativeOffset) = CalculateNearestWeekdayForDaysOfMonth(date, daysOfMonthSet);
+            daysOfMonthSet = CalculateNearestWeekdayForDaysOfMonth(date, daysOfMonthSet);
 
-        return (daysOfMonthSet, dayHasNegativeOffset);
+        return daysOfMonthSet;
     }
 
     int CalculateNearestWeekdayForLastDay(DateTimeOffset date, int lastDayOfMonthWithOffset)
@@ -1024,7 +1023,7 @@ internal sealed class CronExpression :
         return calculatedLastDayWithOffset;
     }
 
-    static (SortedSet<int> daysOfMonthSet, bool dayHasNegativeOffset) CalculateNearestWeekdayForDaysOfMonth(DateTimeOffset date, SortedSet<int> daysOfMonthSet)
+    static SortedSet<int> CalculateNearestWeekdayForDaysOfMonth(DateTimeOffset date, SortedSet<int> daysOfMonthSet)
     {
         var endDayOfMonth = GetLastDayOfMonth(date.Month, date.Year);
         var minDay = daysOfMonthSet.Min > endDayOfMonth ? endDayOfMonth : daysOfMonthSet.Min;
@@ -1035,16 +1034,14 @@ internal sealed class CronExpression :
         if (dayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
             daysOfMonthSet.Remove(minDay);
 
-        var (adjustedDay, dayHasNegativeOffset) = AdjustDayToNearestWeekday(minDay, dayOfWeek, endDayOfMonth);
+        var adjustedDay = AdjustDayToNearestWeekday(minDay, dayOfWeek, endDayOfMonth);
         daysOfMonthSet.Add(adjustedDay);
 
-        return (daysOfMonthSet, dayHasNegativeOffset);
+        return daysOfMonthSet;
     }
 
-    static (int day, bool dayHasNegativeOffset) AdjustDayToNearestWeekday(int day, DayOfWeek dayOfWeek, int endDayOfMonth)
+    static int AdjustDayToNearestWeekday(int day, DayOfWeek dayOfWeek, int endDayOfMonth)
     {
-        var dayHasNegativeOffset = false;
-
         switch (dayOfWeek)
         {
             case DayOfWeek.Saturday when day == 1:
@@ -1052,18 +1049,16 @@ internal sealed class CronExpression :
                 break;
             case DayOfWeek.Saturday:
                 day -= 1;
-                dayHasNegativeOffset = true;
                 break;
             case DayOfWeek.Sunday when day == endDayOfMonth:
                 day -= 2;
-                dayHasNegativeOffset = true;
                 break;
             case DayOfWeek.Sunday:
                 day += 1;
                 break;
         }
 
-        return (day, dayHasNegativeOffset);
+        return day;
     }
 
     NextFireTimeCursor ProgressNextFireTimeDayOfMonth(DateTimeOffset date)
@@ -1074,8 +1069,8 @@ internal sealed class CronExpression :
         var tMonth = month;
 
         // Resolve the next eligible day from the day-of-month rule.
-        (SortedSet<int>? daysOfMonthCalculated, var setIncludesDayBeforeStartDay) = CalculateDaysOfMonth(date);
-        if (daysOfMonthCalculated.TryGetMinValueStartingFrom(date, setIncludesDayBeforeStartDay, out var min))
+        SortedSet<int> daysOfMonthCalculated = CalculateDaysOfMonth(date);
+        if (daysOfMonthCalculated.TryGetMinValueStartingFrom(date, out var min))
         {
             tDay = day;
             day = min;
@@ -1084,14 +1079,13 @@ internal sealed class CronExpression :
             var lastDay = GetLastDayOfMonth(month, date.Year);
             if (day > lastDay)
             {
-                day = daysOfMonthCalculated.Min;
+                day = 1;
                 month++;
             }
         }
         else
         {
-            day = _lastDayOfMonth ? daysOfMonthCalculated.Min : _daysOfMonth.Min;
-
+            day = 1;
             month++;
         }
 

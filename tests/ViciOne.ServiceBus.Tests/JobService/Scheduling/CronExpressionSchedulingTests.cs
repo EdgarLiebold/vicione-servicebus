@@ -114,6 +114,51 @@ public sealed class CronExpressionSchedulingTests
         Assert.DoesNotContain(second.DayOfWeek, weekend);
     }
 
+    [Theory]
+    [InlineData("1W", 2022, 1, 3)] // The first falls on Saturday: remain in January.
+    [InlineData("30W", 2024, 6, 28)] // The last falls on Sunday: remain in June.
+    [InlineData("31W", 2024, 3, 29)] // Sunday at the end of a 31-day month.
+    [InlineData("31W", 2024, 2, 29)] // Clamp the requested day to leap February.
+    [InlineData("15W", 2024, 6, 14)] // An ordinary Saturday moves backward.
+    [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "nearest-weekday-month-boundaries")]
+    public void NearestWeekday_StaysWithinItsMonthAndFiresExactlyOnce(
+        string dayField, int year, int month, int expectedDay)
+    {
+        var expression = UtcExpression($"0 0 9 {dayField} {month} ? {year}");
+        var expected = Utc(year, month, expectedDay, 9, 0);
+
+        Assert.Equal(expected, expression.GetTimeAfter(Utc(year, month, 1, 0, 0)));
+        Assert.NotEqual(DayOfWeek.Saturday, expected.DayOfWeek);
+        Assert.NotEqual(DayOfWeek.Sunday, expected.DayOfWeek);
+        Assert.True(expression.IsSatisfiedBy(expected));
+        Assert.False(expression.IsSatisfiedBy(expected.AddDays(-1)));
+        Assert.False(expression.IsSatisfiedBy(expected.AddDays(1)));
+        Assert.Null(expression.GetTimeAfter(expected));
+    }
+
+    [Theory]
+    [InlineData("15W", 2024, 5, 15, 2024, 6, 14, 2024, 7, 15)]
+    [InlineData("31W", 2024, 3, 29, 2024, 4, 30, 2024, 5, 31)]
+    [InlineData("30W", 2024, 6, 28, 2024, 7, 30, 2024, 8, 30)]
+    [InlineData("31W", 2024, 1, 31, 2024, 2, 29, 2024, 3, 29)]
+    [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "nearest-weekday-next-month")]
+    public void NearestWeekday_AfterFiringMovesToTheAdjustedDayInTheNextMonth(
+        string dayField, int firstYear, int firstMonth, int firstDay,
+        int nextYear, int nextMonth, int nextDay,
+        int thirdYear, int thirdMonth, int thirdDay)
+    {
+        var expression = UtcExpression($"0 0 9 {dayField} * ?");
+        var first = Utc(firstYear, firstMonth, firstDay, 9, 0);
+        var next = Utc(nextYear, nextMonth, nextDay, 9, 0);
+        var third = Utc(thirdYear, thirdMonth, thirdDay, 9, 0);
+
+        Assert.Equal(first, expression.GetTimeAfter(first.AddDays(-1)));
+        Assert.Equal(next, expression.GetTimeAfter(first));
+        Assert.Equal(third, expression.GetTimeAfter(next));
+        Assert.True(expression.IsSatisfiedBy(next));
+        Assert.False(expression.IsSatisfiedBy(next.AddDays(-1)));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "year-crossing-remains-defined")]
     public void WeekdayExpression_CrossesTheYearWithoutLosingItsNextOccurrence()
