@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added four task-lifecycle tests for pending success and failure paths,
+  exact outcome transfer, and virtual-clock timeout boundaries. The
+  Abstractions suite passes 940/940; no product implementation changed.
+
 - Added mediator dispatch tests for callback-configured direct send, runtime
   publish, consume-scope forwarding, and response. They check asynchronous
   configuration order, transport-visible headers, exact callback failure,

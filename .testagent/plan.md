@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## T73 asynchronous task outcome ownership
+
+1. Add focused xUnit cases in the existing `TaskExtensionsTests` and
+   `TaskTimeoutTimeProviderTests` for pending source result/fault paths,
+   generic virtual-time deadline and caller location, and typed/untyped
+   outcome transfer including target terminality.
+2. Keep source unchanged unless a behavioral counterexample fails. Verify
+   exact values, exception identity, cancellation identity, unchanged target
+   state, and the exact fake-time boundary; reject line-touch-only assertions.
+3. Run affected Abstractions tests, independent read-only Red Team, and
+   exact-commit focused tests. Defer the full 33-profile measurement to the
+   grouped milestone agreed with the user.
+
 ## T72 callback-configured mediator dispatch
 
 1. Use mediator handlers as observable dispatch endpoints for direct send,

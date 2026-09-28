@@ -1,5 +1,21 @@
 # A+ remediation research
 
+## T73 asynchronous task outcome ownership
+
+The frozen T63 union leaves 36/126 physical lines in `TaskExtensions`
+uncovered. They cluster in pending `OrCanceledAsync<T>` source outcomes,
+generic timeout and numerical timeout overloads, and success/failure transfer
+in both `TrySetFromTask` overloads. `Agent` uses the non-generic transfer for
+readiness/completion; `OneTimeSetupMethod` uses the typed transfer for its
+terminal value. Existing tests cover cancellation identity, active timeout
+with a fake clock, stopped-agent retry, and one-time reentrancy. The new
+bounded acceptance cases are: pending source completion/fault must preserve
+its exact outcome while a cancelable caller is waiting; a generic task must
+time out exactly at the virtual boundary with caller location; successful and
+faulted terminal task transfer must preserve the exact value or exception and never overwrite an already
+completed target. These outcomes matter to real Agent and one-time setup
+callers, independently of any numeric coverage gain.
+
 ## T72 callback-configured mediator dispatch
 
 The frozen T63 aggregate has related uncovered lines in four Abstractions

@@ -59,6 +59,27 @@ public sealed class TaskExtensionsTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-OR-CANCELED", "pending-source-result-and-failure-paths")]
+    public async Task OrCanceled_PendingSourcesPreserveExactResultAndFailureAsync()
+    {
+        var successfulSource = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var failedSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var failure = new SourceTaskException("pending source failed");
+        using var caller = new CancellationTokenSource();
+
+        Task<int> result = successfulSource.Task.OrCanceledAsync(caller.Token);
+        Task fault = failedSource.Task.OrCanceledAsync(caller.Token);
+        Assert.False(result.IsCompleted);
+        Assert.False(fault.IsCompleted);
+
+        successfulSource.SetResult(73);
+        failedSource.SetException(failure);
+        Assert.Equal(73, await result);
+        Assert.Same(failure, await Assert.ThrowsAsync<SourceTaskException>(() => fault));
+
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TASK-OR-CANCELED", "abandoned-fault-is-observed")]
     public void OrCanceled_ObservesAFaultThatArrivesAfterCancellation()
     {
@@ -132,6 +153,38 @@ public sealed class TaskExtensionsTests
 
         Assert.Equal(expected, untyped.CancellationToken);
         Assert.Equal(expected, typed.CancellationToken);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-OUTCOME-TRANSFER", "exact-success-and-failure-outcomes")]
+    public async Task TrySetFromTask_TransfersExactSuccessAndFailureWithoutReplacingTerminalTargetsAsync()
+    {
+        var failure = new SourceTaskException("transferred source failure");
+        var untypedSuccess = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var typedSuccess = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var untypedFailure = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var typedFailure = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        untypedSuccess.TrySetFromTask(Task.CompletedTask, 31);
+        typedSuccess.TrySetFromTask(Task.FromResult(32));
+        untypedFailure.TrySetFromTask(Task.FromException(failure), 33);
+        typedFailure.TrySetFromTask(Task.FromException<int>(failure));
+
+        Assert.Equal(31, await untypedSuccess.Task);
+        Assert.Equal(32, await typedSuccess.Task);
+        Assert.Same(failure, await Assert.ThrowsAsync<SourceTaskException>(() => untypedFailure.Task));
+        Assert.Same(failure, await Assert.ThrowsAsync<SourceTaskException>(() => typedFailure.Task));
+
+        untypedSuccess.TrySetFromTask(Task.FromResult(99), 99);
+        typedSuccess.TrySetFromTask(Task.FromResult(99));
+        untypedSuccess.TrySetFromTask(Task.FromException(failure), 99);
+        typedSuccess.TrySetFromTask(Task.FromException<int>(failure));
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        untypedSuccess.TrySetFromTask(Task.FromCanceled(cancellation.Token), 99);
+        typedSuccess.TrySetFromTask(Task.FromCanceled<int>(cancellation.Token));
+        Assert.Equal(31, await untypedSuccess.Task);
+        Assert.Equal(32, await typedSuccess.Task);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

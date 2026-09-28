@@ -46,6 +46,44 @@ public sealed class TaskTimeoutTimeProviderTests
         Assert.Equal(173, await observed);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CLOCK", "generic-exact-boundary-and-caller-location")]
+    public async Task PendingGenericTask_TimesOutAtTheExactClockBoundaryWithCallerLocationAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(17);
+        var clock = new FakeTimeProvider(StartTime);
+        var source = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<int> observed = source.Task.OrTimeoutAsync(timeout, clock, TestContext.Current.CancellationToken,
+            memberName: "ConfiguredHandler", filePath: "handler.cs", lineNumber: 87);
+
+        clock.Advance(timeout - TimeSpan.FromTicks(1));
+        Assert.False(observed.IsCompleted);
+        clock.Advance(TimeSpan.FromTicks(1));
+
+        TimeoutException actual = await Assert.ThrowsAsync<TimeoutException>(() => observed)
+            .WaitAsync(TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
+        Assert.Equal("Operation in ConfiguredHandler timed out at handler.cs:87", actual.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CLOCK", "pending-source-failure-paths")]
+    public async Task PendingSourceFailure_PreservesExactFailureBeforeTheVirtualDeadlineAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(19);
+        var clock = new FakeTimeProvider(StartTime);
+        var failure = new InvalidOperationException("provider task failed");
+        var untypedSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var typedSource = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task untyped = untypedSource.Task.OrTimeoutAsync(timeout, clock, TestContext.Current.CancellationToken);
+        Task<int> typed = typedSource.Task.OrTimeoutAsync(timeout, clock, TestContext.Current.CancellationToken);
+
+        untypedSource.SetException(failure);
+        typedSource.SetException(failure);
+        Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => untyped));
+        Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => typed));
+
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

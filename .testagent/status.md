@@ -1,5 +1,20 @@
 # A+ remediation test status
 
+## Current T73 — asynchronous task outcome ownership
+
+Four new tests exercise pending task completion/fault paths, exact typed and
+untyped task-outcome transfer, a generic virtual-time deadline with caller
+location, and preservation of source failure before the virtual deadline.
+They use exact values and exception identity, terminal-target non-overwrite
+checks across success, fault and cancellation, and a one-tick boundary. Focused
+TaskExtensions/TaskTimeout tests pass 17/17; the full Abstractions suite,
+including requirement projection, passes 940/940 without failures or skips.
+No product source changed. Red Team found and prompted correction of two
+oracle gaps: previously asserted events only after awaited completion, and
+terminal targets were challenged only by successful later sources. Final
+re-review is PASS, with no remaining concrete blocker. The frozen
+T63 product-wide Line/Branch/CRAP figures are not updated by these tests.
+
 ## Current T72 — callback-configured mediator dispatch
 
 Four new in-process mediator journeys exercise the four related Abstractions
