@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10974 |
+| Added | 10976 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -275,6 +275,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t91-assembly-scanner-discovery.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t92-durable-delivery-cancellation-race.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t93-cache-usage-fault-capacity.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t94-active-mq-cached-producer.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15256,6 +15257,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendContextContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ActiveMqSessionProducerCancellationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/CachedMessageProducerContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/Configuration/ActiveMqHostSettingsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionCreationFailureTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ActiveMqTransport/ConnectionListenerFailureTests.cs` | Added |  |

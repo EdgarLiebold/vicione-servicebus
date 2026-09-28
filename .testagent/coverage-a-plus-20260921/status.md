@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T94 ActiveMQ cached producer contract packet
+
+All native factory, send, close/dispose and eight property forwarding shapes
+are checked with exact arguments, usage order, result and task identities.
+The focused class passes 33/33 and complete ActiveMQ passes 266/266 on exact
+test commit `323dce211`. Two controlled forwarding counterprobes failed;
+product source was restored. Read-only Red Team re-review is PASS after the
+async factory and property gaps were closed. See
+[T94 evidence](t94-active-mq-cached-producer.md). T85 remains the latest
+complete product-wide checkpoint; global A+ remains open.
+
 ## Current T93 resource-cache usage fault packet
 
 Two new tests prove that a usage-event detachment failure or a failed

@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added ActiveMQ cached-producer contract tests for every native factory and
+  send overload, close/dispose lifecycle, and all eight public property pairs.
+  Pending native tasks prove exact async task forwarding; usage order and
+  property behavior are checked. Two controlled forwarding errors failed the
+  new tests. The focused class passes 33/33 and complete ActiveMQ passes
+  266/266 on exact test commit `323dce211`; adversarial re-review is PASS.
+  Product code did not change.
+
 - Added resource-cache tests for usage-event faults during eviction and
   partial subscription compensation. They prove once-only disposal, index
   removal, successor admission under capacity pressure, and two warning
