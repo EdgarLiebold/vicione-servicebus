@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added public typed receive-dispatcher lifecycle tests with real consumers.
+  They verify two simultaneous serialized deliveries, separate completion,
+  cumulative and peak metrics, awaited zero-activity notification, caller cancellation and
+  a healthy successor. The dispatcher class passes 4/4 focused tests and
+  the affected Core project passes 6,944/6,944 on the exact test commit;
+  adversarial re-review was PASS. Product code did not change in this packet.
+
 - Corrected shared EF Core saga registration to finish configuration and
   validation before admitting the saga map. A red-first regression test
   reproduced a retained map after a callback exception; the final test also
