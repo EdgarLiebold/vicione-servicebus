@@ -1,5 +1,22 @@
 # A+ remediation test plan
 
+## T76 saga request lifecycle and completion publication
+
+1. Add red-first tests for all normal request activity constructor
+   dependencies in typed and untyped variants. Assert exact argument names
+   and that no activity is accepted with missing configuration; repair only
+   the confirmed fail-fast defect.
+2. Use the existing strict in-memory activity harness for normal request
+   address precedence, exact payload and request identity, async send
+   completion before state persistence/continuation, and send failure or
+   cancellation isolation. Add completion-publication cases with exact
+   response payload/metadata and awaited factory/transport ordering.
+3. Review each assertion against plausible mutations and the Microsoft
+   assertion-quality guidance, obtain independent read-only Red Team review,
+   run focused tests during implementation and one exact-commit Core receipt
+   for the packet. Keep the 33-profile product measurement at the agreed
+   multi-packet checkpoint.
+
 ## T75 saga declaration atomicity and response routing
 
 1. Add red-first composite configuration cases for property and named

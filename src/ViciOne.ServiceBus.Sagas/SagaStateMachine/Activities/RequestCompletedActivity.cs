@@ -35,6 +35,9 @@ public class RequestCompletedActivity<TSaga, TMessage> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         await context.PublishAsync<IRequestCompleted>(new
         {
             context.Saga.CorrelationId,
@@ -101,6 +104,9 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task ExecuteAsync(IBehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+
         Task<TResponse> responseTask = _messageFactory(context)
             ?? throw new InvalidOperationException("The response factory returned a null task.");
         TResponse response = await responseTask.ConfigureAwait(false)

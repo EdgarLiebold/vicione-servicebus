@@ -19,7 +19,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     /// <param name="request">The request.</param>
     protected RequestActivityImpl(IRequest<TInstance, TRequest, TResponse> request)
     {
-        _request = request;
+        _request = request ?? throw new ArgumentNullException(nameof(request));
     }
 
     /// <summary>Sends request.</summary>

@@ -9,6 +9,214 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachine;
 
 public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t76-normal-request-invalid-declaration-fails-before-dispatch")]
+    public void NormalRequest_RejectsMissingDeclarationDependenciesBeforeTheMachineRuns()
+    {
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out _);
+        var untypedFactory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var typedFactory = new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+
+        AssertArgument("request", () => new RequestActivity<Saga, Request, Response>(null!, untypedFactory));
+        AssertArgument("messageFactory", () => new RequestActivity<Saga, Request, Response>(request, null!));
+        AssertArgument("request", () => new RequestActivity<Saga, Request, Response>(
+            null!, _ => OverrideAddress, untypedFactory));
+        AssertArgument("serviceAddressProvider", () => new RequestActivity<Saga, Request, Response>(
+            request, null!, untypedFactory));
+        AssertArgument("messageFactory", () => new RequestActivity<Saga, Request, Response>(
+            request, _ => OverrideAddress, null!));
+
+        AssertArgument("request", () => new RequestActivity<Saga, Data, Request, Response>(null!, typedFactory));
+        AssertArgument("messageFactory", () => new RequestActivity<Saga, Data, Request, Response>(request, null!));
+        AssertArgument("request", () => new RequestActivity<Saga, Data, Request, Response>(
+            null!, _ => OverrideAddress, typedFactory));
+        AssertArgument("serviceAddressProvider", () => new RequestActivity<Saga, Data, Request, Response>(
+            request, null!, typedFactory));
+        AssertArgument("messageFactory", () => new RequestActivity<Saga, Data, Request, Response>(
+            request, _ => OverrideAddress, null!));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t76-normal-request-awaits-send-before-persist-and-next")]
+    public async Task NormalRequest_AwaitsTheExactSendBeforePersistingTheRequestIdAndContinuingAsync()
+    {
+        var trace = new List<string>();
+        var sent = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var message = new Request();
+        using var cancellation = new CancellationTokenSource();
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, args) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            Assert.Same(message, args[0]);
+            Assert.Equal(cancellation.Token, args[2]);
+            trace.Add("send");
+            return sent.Task;
+        });
+        var saga = new Saga();
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out Guid requestId, trace);
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            endpoint: endpoint,
+            endpointAddress: address =>
+            {
+                trace.Add("endpoint");
+                Assert.Equal(OverrideAddress, address);
+            },
+            cancellationToken: cancellation.Token,
+            endpointCancellation: token => Assert.Equal(CancellationToken.None, token));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(observed =>
+        {
+            Assert.Same(context, observed);
+            trace.Add("factory");
+            return Task.FromResult(new InitializedMessage<Request>(message));
+        });
+        var next = new NextBehavior(trace);
+        var activity = new RequestActivity<Saga, Request, Response>(request, observed =>
+        {
+            Assert.Same(context, observed);
+            trace.Add("provider");
+            return OverrideAddress;
+        }, factory);
+
+        Task running = activity.ExecuteAsync(context, next);
+        Assert.False(running.IsCompleted);
+        Assert.Null(saga.RequestId);
+        Assert.Empty(next.Seen);
+        Assert.Equal(["provider", "factory", "generate", "endpoint", "send"], trace);
+
+        sent.SetResult();
+        await running;
+        Assert.Equal(requestId, saga.RequestId);
+        Assert.Same(context, Assert.Single(next.Seen));
+        Assert.Equal(["provider", "factory", "generate", "endpoint", "send", "persist", "next"], trace);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t76-typed-normal-request-send-failure-preserves-owner")]
+    public async Task TypedNormalRequest_SendFailurePreservesThePreviousRequestAndSkipsContinuationAsync()
+    {
+        var failure = new InvalidOperationException("send rejected");
+        var previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var trace = new List<string>();
+        var message = new Request();
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, args) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            Assert.Same(message, args[0]);
+            trace.Add("send");
+            return Task.FromException(failure);
+        });
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out _, trace);
+        IBehaviorContext<Saga, Data> context = NewContext<IBehaviorContext<Saga, Data>>(saga,
+            endpoint: endpoint, endpointAddress: address => Assert.Equal(ConfiguredAddress, address));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(observed =>
+        {
+            Assert.Same(context, observed);
+            trace.Add("factory");
+            return Task.FromResult(new InitializedMessage<Request>(message));
+        });
+        var next = new TypedNextBehavior(trace: trace);
+        var activity = new RequestActivity<Saga, Data, Request, Response>(request,
+            _ => null!, factory);
+
+        Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            activity.ExecuteAsync(context, next)));
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(next.Seen);
+        Assert.Equal(["factory", "generate", "send"], trace);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t76-normal-request-pre-cancellation-has-no-effects")]
+    public async Task NormalRequest_PreCanceledContextDoesNotResolveAddressBuildMessageOrSendAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var trace = new List<string>();
+        var previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out _, trace);
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            cancellationToken: cancellation.Token,
+            endpointAddress: _ => trace.Add("endpoint"));
+        IBehaviorContext<Saga, Data> typedContext = NewContext<IBehaviorContext<Saga, Data>>(saga,
+            cancellationToken: cancellation.Token,
+            endpointAddress: _ => trace.Add("typed-endpoint"));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(_ =>
+        {
+            trace.Add("factory");
+            return Task.FromResult(new InitializedMessage<Request>(new Request()));
+        });
+        var typedFactory = new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(_ =>
+        {
+            trace.Add("typed-factory");
+            return Task.FromResult(new InitializedMessage<Request>(new Request()));
+        });
+        var untyped = new RequestActivity<Saga, Request, Response>(request, _ =>
+        {
+            trace.Add("provider");
+            return OverrideAddress;
+        }, factory);
+        var typed = new RequestActivity<Saga, Data, Request, Response>(request, _ =>
+        {
+            trace.Add("typed-provider");
+            return OverrideAddress;
+        }, typedFactory);
+        var next = new NextBehavior(trace);
+        var typedNext = new TypedNextBehavior(trace: trace);
+
+        OperationCanceledException untypedCanceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            untyped.ExecuteAsync(context, next));
+        OperationCanceledException typedCanceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            typed.ExecuteAsync(typedContext, typedNext));
+        Assert.Equal(cancellation.Token, untypedCanceled.CancellationToken);
+        Assert.Equal(cancellation.Token, typedCanceled.CancellationToken);
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(trace);
+        Assert.Empty(next.Seen);
+        Assert.Empty(typedNext.Seen);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t76-normal-request-inflight-send-cancellation-preserves-owner")]
+    public async Task NormalRequest_InFlightSendCancellationPreservesPreviousIdAndSkipsContinuationAsync()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var sent = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var trace = new List<string>();
+        var previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, args) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            Assert.Equal(cancellation.Token, args[2]);
+            trace.Add("send");
+            return sent.Task;
+        });
+        var request = NewRequest(TimeSpan.Zero, ConfiguredAddress, out _, trace);
+        IBehaviorContext<Saga, Data> context = NewContext<IBehaviorContext<Saga, Data>>(saga,
+            endpoint: endpoint, cancellationToken: cancellation.Token,
+            endpointAddress: address => Assert.Equal(ConfiguredAddress, address));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(_ =>
+            Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var next = new TypedNextBehavior(trace: trace);
+        var activity = new RequestActivity<Saga, Data, Request, Response>(request, factory);
+
+        Task running = activity.ExecuteAsync(context, next);
+        Assert.False(running.IsCompleted);
+        Assert.Equal(["generate", "send"], trace);
+        Assert.Equal(previousId, saga.RequestId);
+        cancellation.Cancel();
+        sent.SetCanceled(cancellation.Token);
+        OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => running);
+        Assert.Equal(cancellation.Token, canceled.CancellationToken);
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(next.Seen);
+        Assert.Equal(["generate", "send"], trace);
+    }
+
     static readonly Uri InputAddress = new("loopback://localhost/input");
     static readonly Uri ConfiguredAddress = new("loopback://localhost/configured");
     static readonly Uri OverrideAddress = new("loopback://localhost/override");

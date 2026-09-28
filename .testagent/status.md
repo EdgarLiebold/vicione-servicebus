@@ -1,5 +1,23 @@
 # A+ remediation test status
 
+## Current T76 — saga request lifecycle and completion publication
+
+Two red-first failures exposed missing fail-fast validation in normal
+`RequestActivity` construction and in both completion activities before
+publication. The product now validates those dependencies before dispatch
+or side effects. Focused request and completion classes pass 21/21 and 5/5.
+The tests prove exact send order, address and payload ownership, request-ID
+persistence only after accepted send, pre-admission and in-flight cancellation,
+completion envelope identity and UTC time, async publication order, and
+failure isolation. Red Team's first review found an uncovered cancellation
+mutation; two counterprobes now pass. Its second review found an unobserved
+early response-factory side effect; the invalid-pipeline test now forbids it.
+Final read-only Red Team re-review is PASS with no remaining concrete P1/P2
+finding.
+See the [T76 packet](coverage-a-plus-20260921/t76-saga-request-lifecycle.md).
+Exact-commit Core verification and publication remain. T74 is still the
+latest complete product-wide coverage/CRAP profile.
+
 ## Current T75 — saga composite declaration and dual-response request
 
 Eight red-first cases exposed invalid composite declaration mutating the

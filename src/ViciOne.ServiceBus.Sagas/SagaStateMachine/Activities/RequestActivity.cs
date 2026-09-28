@@ -23,7 +23,7 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
     public RequestActivity(IRequest<TInstance, TRequest, TResponse> request, ContextMessageFactory<IBehaviorContext<TInstance>, TRequest> messageFactory)
         : base(request)
     {
-        _messageFactory = messageFactory;
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => request.Settings.ServiceAddress ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
@@ -35,7 +35,8 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
         ContextMessageFactory<IBehaviorContext<TInstance>, TRequest> messageFactory)
         : base(request)
     {
-        _messageFactory = messageFactory;
+        ArgumentNullException.ThrowIfNull(serviceAddressProvider);
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => serviceAddressProvider(context) ?? request.Settings.ServiceAddress
             ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
@@ -135,7 +136,7 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
         ContextMessageFactory<IBehaviorContext<TInstance, TData>, TRequest> messageFactory)
         : base(request)
     {
-        _messageFactory = messageFactory;
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => request.Settings.ServiceAddress ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }
 
@@ -147,7 +148,8 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
         ContextMessageFactory<IBehaviorContext<TInstance, TData>, TRequest> messageFactory)
         : base(request)
     {
-        _messageFactory = messageFactory;
+        ArgumentNullException.ThrowIfNull(serviceAddressProvider);
+        _messageFactory = messageFactory ?? throw new ArgumentNullException(nameof(messageFactory));
         _serviceAddressProvider = context => serviceAddressProvider(context) ?? request.Settings.ServiceAddress
             ?? EndpointConvention.GetDestinationAddress<TRequest>(context);
     }

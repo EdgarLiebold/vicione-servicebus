@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected normal saga request declaration to reject missing request,
+  message factory and service-address provider before the machine can run.
+  Request completion now rejects a missing pipeline context or continuation
+  before publishing an event. Red-first tests reproduced both defects.
+  Request lifecycle tests verify exact send and completion ordering,
+  request-ID ownership through failures and cancellation, and the original
+  or generated completion payload and metadata. Focused request and
+  completion classes pass 21/21 and 5/5; exact-commit Core verification
+  remains.
+
 - Corrected saga composite declaration so invalid constituents fail before a
   property event is replaced or a named event is registered. Tests reproduce
   both former defects and verify null, empty, oversized and uninitialized

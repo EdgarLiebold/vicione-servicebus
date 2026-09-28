@@ -1,5 +1,28 @@
 # A+ remediation research
 
+## T76 saga request lifecycle and completion publication
+
+The frozen T74 profile observes 74/89 uncovered lines in the request
+extension overloads, 56/60 in send callback overloads, 19/35 in request
+completion publication and 15/46 in normal request activity. The large
+extension counts mostly represent forwarding overloads and alone are no
+reason to add tests. The static Roslyn pairing artifact from T75 is reused.
+The existing faulted-request suite exercises address precedence, async send
+ordering, persisted request identity, timeout scheduling and failure, while
+normal `RequestActivity` has no direct activity test. The two
+`RequestCompletedActivity` variants have no direct runtime test.
+
+Source review found a concrete configuration defect: the normal request
+activity constructors accept null request, message factory and explicit
+service-address provider. The faulted variant rejects those values at
+declaration. A null normal dependency can thus enter the state-machine graph
+and fail only when a message arrives. Acceptance requires fail-fast named
+argument errors at declaration, real send order/identity and failure
+isolation on the normal path, and completion publication with exact payload,
+metadata, async ordering and failure non-continuation. Request and send
+extension overloads will be selected only when they expose distinct runtime
+semantics, not to touch their uncovered lines.
+
 ## T75 saga declaration atomicity and response routing
 
 The T74 exact-commit profile observed 109 uncovered physical lines in
