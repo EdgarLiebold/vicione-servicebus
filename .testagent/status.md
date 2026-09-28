@@ -1,5 +1,21 @@
 # A+ remediation test status
 
+## Current T59 — larger Saga packet in progress
+
+T58 is complete, audited and pushed. T59 uses one connected Saga request
+lifecycle packet before the next full33 measurement. Read-only Red Team
+screened out duplicate T18/T20/T47 scenarios. Thirty new cases cover property
+request IDs, first/second/third response, fault, real Quartz timeout, missing
+and wrong IDs, callback owner override, two live request owners and stale
+two-/three-response generations. Original one-response controls remain. The
+changed classes pass 35/35 and 12/12; the complete Quartz project passes
+318/318 including Requirement projection. Verify-only format and diff checks
+pass. Red Team's two concrete review concerns were fixed and reaccepted. Two
+real product correlation counterprobes failed exactly as expected and the source
+was byte-restored. The [T59 map](coverage-a-plus-20260921/t59-saga-request-lifecycle.md)
+records the acceptance evidence. Next: freeze and run the one full33, audit,
+publish. No new global profile or A+ claim has been made.
+
 ## Current T58 — complete and remote-verified
 
 T57 was published and remote-verified at `25ef0c773`. T58 groups four related

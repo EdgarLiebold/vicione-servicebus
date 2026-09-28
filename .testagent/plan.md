@@ -1,5 +1,17 @@
 # A+ remediation test plan
 
+## Current T59 — complete one larger Saga packet before full33
+
+Follow the [T59 acceptance matrix](coverage-a-plus-20260921/t59-saga-request-lifecycle.md).
+Thirty new cases across two Quartz files are implemented; the complete project
+passes 318/318 without skips. Two active owners, two-/three-response routing,
+real Quartz timeouts, fault diagnosis, missing/wrong IDs, callback override and
+stale request generations are verified. Read-only Red Team accepted the repaired
+oracles; two real product correlation counterprobes failed as expected and were
+byte-restored. Freeze the implementation commit, run one full33 measurement
+with independent audit, then publish changelog and generated CHANGELIST.
+Global Line/Branch A+ remains open.
+
 ## Current T58 — one larger registration-to-failure packet
 
 Use the [T58 behavior map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md)

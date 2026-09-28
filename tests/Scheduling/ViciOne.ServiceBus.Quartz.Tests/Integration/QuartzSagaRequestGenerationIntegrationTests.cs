@@ -19,11 +19,21 @@ namespace ViciOne.ServiceBus.Quartz.Tests.Integration;
 public sealed class QuartzSagaRequestGenerationIntegrationTests
 {
     [Theory]
-    [InlineData("response")]
-    [InlineData("fault")]
-    [InlineData("timeout")]
+    [InlineData("response", 1)]
+    [InlineData("fault", 1)]
+    [InlineData("timeout", 1)]
+    [InlineData("response", 2)]
+    [InlineData("response2", 2)]
+    [InlineData("fault", 2)]
+    [InlineData("timeout", 2)]
+    [InlineData("response", 3)]
+    [InlineData("response2", 3)]
+    [InlineData("response3", 3)]
+    [InlineData("fault", 3)]
+    [InlineData("timeout", 3)]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "stale-generation-preserves-next-request-and-quartz-trigger")]
-    public async Task PreviousRequestMessages_CannotCompleteOrCancelTheNextRequestOfTheSameSagaAsync(string staleKind)
+    public async Task PreviousRequestMessages_CannotCompleteOrCancelTheNextRequestOfTheSameSagaAsync(
+        string staleKind, int responseCount)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
         CancellationToken token = TestContext.Current.CancellationToken;
@@ -32,7 +42,27 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
         Uri inputAddress = new($"loopback://localhost/{prefix}-saga");
         Uri serviceAddress = new($"loopback://localhost/{prefix}-service");
         var repository = new InMemorySagaRepository<GenerationState>();
-        var machine = new GenerationMachine(serviceAddress);
+        ViciOneServiceBusStateMachine<GenerationState> machine = responseCount switch
+        {
+            1 => new GenerationMachine(serviceAddress),
+            2 => new TwoGenerationMachine(serviceAddress),
+            3 => new MultiGenerationMachine(serviceAddress),
+            _ => throw new ArgumentOutOfRangeException(nameof(responseCount)),
+        };
+        IState pendingState = machine switch
+        {
+            GenerationMachine one => one.Validation.Pending,
+            TwoGenerationMachine two => two.Validation.Pending,
+            MultiGenerationMachine three => three.Validation.Pending,
+            _ => throw new InvalidOperationException("Unexpected request machine"),
+        };
+        IState completedState = machine switch
+        {
+            GenerationMachine one => one.Completed,
+            TwoGenerationMachine two => two.Completed,
+            MultiGenerationMachine three => three.Completed,
+            _ => throw new InvalidOperationException("Unexpected request machine"),
+        };
         var firstRequest = new TaskCompletionSource<ConsumeContext<Validate>>(TaskCreationOptions.RunContinuationsAsynchronously);
         var secondRequest = new TaskCompletionSource<ConsumeContext<Validate>>(TaskCreationOptions.RunContinuationsAsynchronously);
         var requests = new ConcurrentQueue<Validate>();
@@ -52,13 +82,17 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
         });
         var firstScheduled = new QuartzSagaRequestTimeoutIntegrationTests.ScheduleMessageCapture();
         var firstCompleted = new ConsumeCompletionObserver<Accepted>(message => message.Generation == 1);
-        var secondCompleted = new ConsumeCompletionObserver<Accepted>(message => message.Generation == 2);
+        var secondAccepted = new ConsumeCompletionObserver<Accepted>(message => message.Generation == 2);
+        var secondRejected = new ConsumeCompletionObserver<Rejected>(message => message.Generation == 2);
+        var secondDuplicate = new ConsumeCompletionObserver<Duplicate>(message => message.Generation == 2);
         var begun = new ConsumeCompletionObserver<Begin>(message => message.Generation == 2);
         var canceled = new ConsumeCompletionObserver<CancelScheduledMessage>(_ => true, 2);
         var sends = new CancellationSends();
         using ConnectHandle scheduledHandle = fixture.Bus.ConnectConsumeObserver(firstScheduled);
         using ConnectHandle firstCompletedHandle = fixture.Bus.ConnectConsumeObserver(firstCompleted);
-        using ConnectHandle secondCompletedHandle = fixture.Bus.ConnectConsumeObserver(secondCompleted);
+        using ConnectHandle secondAcceptedHandle = fixture.Bus.ConnectConsumeObserver(secondAccepted);
+        using ConnectHandle secondRejectedHandle = fixture.Bus.ConnectConsumeObserver(secondRejected);
+        using ConnectHandle secondDuplicateHandle = fixture.Bus.ConnectConsumeObserver(secondDuplicate);
         using ConnectHandle begunHandle = fixture.Bus.ConnectConsumeObserver(begun);
         using ConnectHandle canceledHandle = fixture.Bus.ConnectConsumeObserver(canceled);
         using ConnectHandle sendsHandle = fixture.Bus.ConnectSendObserver(sends);
@@ -78,7 +112,7 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
         await SendWithRequestIdAsync(input, new Accepted(sagaId, 1, "first accepted"), firstId, token);
         await firstCompleted.Completed.WaitAsync(timeout, token);
         await firstCanceled.Completed.WaitAsync(timeout, token);
-        Assert.Equal(machine.Completed, State(repository, sagaId).CurrentState);
+        Assert.Equal(completedState, State(repository, sagaId).CurrentState);
         Assert.Null(State(repository, sagaId).RequestId);
         Assert.False(await fixture.Scheduler.Exists(QuartzTriggerKey.ForOneTime(firstId, fixture.SchedulerNamespace), token));
 
@@ -105,6 +139,12 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
             case "response":
                 await SendWithRequestIdAsync(input, new Accepted(sagaId, 1, "late duplicate"), firstId, token, probeId);
                 break;
+            case "response2":
+                await SendWithRequestIdAsync(input, new Rejected(sagaId, 1, "late rejection"), firstId, token, probeId);
+                break;
+            case "response3":
+                await SendWithRequestIdAsync(input, new Duplicate(sagaId, 1, "late duplicate"), firstId, token, probeId);
+                break;
             case "fault":
                 Fault<Validate> fault = new ValidationFault(NewId.NextGuid(), first.MessageId,
                     new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero),
@@ -122,7 +162,7 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
         }
         await received.Completed.WaitAsync(timeout, token);
         GenerationState pending = State(repository, sagaId);
-        Assert.Equal(machine.Validation.Pending, pending.CurrentState);
+        Assert.Equal(pendingState, pending.CurrentState);
         Assert.Equal(secondId, pending.RequestId);
         Assert.Equal(1, pending.CompletedCount);
         Assert.Equal("first accepted", pending.Result);
@@ -131,12 +171,28 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
         Assert.Equal(new[] { firstId }, sends.Tokens);
         Assert.True(await fixture.Scheduler.Exists(QuartzTriggerKey.ForOneTime(secondId, fixture.SchedulerNamespace), token));
 
-        await SendWithRequestIdAsync(input, new Accepted(sagaId, 2, "second accepted"), secondId, token);
-        await secondCompleted.Completed.WaitAsync(timeout, token);
+        Task responseCompleted;
+        switch (responseCount)
+        {
+            case 1:
+                responseCompleted = secondAccepted.Completed;
+                await SendWithRequestIdAsync(input, new Accepted(sagaId, 2, "second accepted"), secondId, token);
+                break;
+            case 2:
+                responseCompleted = secondRejected.Completed;
+                await SendWithRequestIdAsync(input, new Rejected(sagaId, 2, "second accepted"), secondId, token);
+                break;
+            case 3:
+                responseCompleted = secondDuplicate.Completed;
+                await SendWithRequestIdAsync(input, new Duplicate(sagaId, 2, "second accepted"), secondId, token);
+                break;
+            default: throw new ArgumentOutOfRangeException(nameof(responseCount));
+        }
+        await responseCompleted.WaitAsync(timeout, token);
         await canceled.Completed.WaitAsync(timeout, token);
         await fixture.Bus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         GenerationState completed = State(repository, sagaId);
-        Assert.Equal(machine.Completed, completed.CurrentState);
+        Assert.Equal(completedState, completed.CurrentState);
         Assert.Null(completed.RequestId);
         Assert.Equal(2, completed.CompletedCount);
         Assert.Equal("second accepted", completed.Result);
@@ -205,6 +261,8 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
     public sealed record Begin(Guid CorrelationId, int Generation) : ICorrelatedBy<Guid>;
     public sealed record Validate(Guid CorrelationId, int Generation) : ICorrelatedBy<Guid>;
     public sealed record Accepted(Guid CorrelationId, int Generation, string Result) : ICorrelatedBy<Guid>;
+    public sealed record Rejected(Guid CorrelationId, int Generation, string Result) : ICorrelatedBy<Guid>;
+    public sealed record Duplicate(Guid CorrelationId, int Generation, string Result) : ICorrelatedBy<Guid>;
     public sealed record Expired(Guid CorrelationId, Guid RequestId, Validate Message,
         DateTimeOffset Timestamp, DateTimeOffset ExpirationTime) : IRequestTimeoutExpired<Validate>;
     public sealed record ValidationFault(Guid FaultId, Guid? FaultedMessageId, DateTimeOffset Timestamp,
@@ -263,5 +321,87 @@ public sealed class QuartzSagaRequestGenerationIntegrationTests
         public IState Failed { get; } = null!;
         public IState ExpiredState { get; } = null!;
         public IRequest<GenerationState, Validate, Accepted> Validation { get; } = null!;
+    }
+
+    public sealed class TwoGenerationMachine : ViciOneServiceBusStateMachine<GenerationState>
+    {
+        public TwoGenerationMachine(Uri serviceAddress)
+        {
+            InstanceState(state => state.CurrentState);
+            Request(() => Validation, state => state.RequestId, settings =>
+            {
+                settings.ServiceAddress = serviceAddress;
+                settings.Timeout = TimeSpan.FromHours(1);
+                settings.Completed = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.Completed2 = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.Faulted = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.TimeoutExpired = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+            });
+            Initially(When(Started)
+                .Request(Validation, context => new Validate(context.Saga.CorrelationId, context.Message.Generation))
+                .TransitionTo(Validation.Pending));
+            During(Completed, When(Started)
+                .Request(Validation, context => new Validate(context.Saga.CorrelationId, context.Message.Generation))
+                .TransitionTo(Validation.Pending));
+            During(Validation.Pending,
+                When(Validation.Completed).Then(context => Record(context.Saga, context.Message.Result)).TransitionTo(Completed),
+                When(Validation.Completed2).Then(context => Record(context.Saga, context.Message.Result)).TransitionTo(Completed),
+                When(Validation.Faulted).Then(context => context.Saga.FaultCount++).TransitionTo(Failed),
+                When(Validation.TimeoutExpired).Then(context => context.Saga.TimeoutCount++).TransitionTo(ExpiredState));
+        }
+
+        private static void Record(GenerationState state, string result)
+        {
+            state.CompletedCount++;
+            state.Result = result;
+        }
+
+        public IEvent<Begin> Started { get; } = null!;
+        public IState Completed { get; } = null!;
+        public IState Failed { get; } = null!;
+        public IState ExpiredState { get; } = null!;
+        public IRequest<GenerationState, Validate, Accepted, Rejected> Validation { get; } = null!;
+    }
+
+    public sealed class MultiGenerationMachine : ViciOneServiceBusStateMachine<GenerationState>
+    {
+        public MultiGenerationMachine(Uri serviceAddress)
+        {
+            InstanceState(state => state.CurrentState);
+            Request(() => Validation, state => state.RequestId, settings =>
+            {
+                settings.ServiceAddress = serviceAddress;
+                settings.Timeout = TimeSpan.FromHours(1);
+                settings.Completed = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.Completed2 = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.Completed3 = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.Faulted = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+                settings.TimeoutExpired = correlation => correlation.OnMissingInstance(missing => missing.Discard());
+            });
+            Initially(When(Started)
+                .Request(Validation, context => new Validate(context.Saga.CorrelationId, context.Message.Generation))
+                .TransitionTo(Validation.Pending));
+            During(Completed, When(Started)
+                .Request(Validation, context => new Validate(context.Saga.CorrelationId, context.Message.Generation))
+                .TransitionTo(Validation.Pending));
+            During(Validation.Pending,
+                When(Validation.Completed).Then(context => Record(context.Saga, context.Message.Result)).TransitionTo(Completed),
+                When(Validation.Completed2).Then(context => Record(context.Saga, context.Message.Result)).TransitionTo(Completed),
+                When(Validation.Completed3).Then(context => Record(context.Saga, context.Message.Result)).TransitionTo(Completed),
+                When(Validation.Faulted).Then(context => context.Saga.FaultCount++).TransitionTo(Failed),
+                When(Validation.TimeoutExpired).Then(context => context.Saga.TimeoutCount++).TransitionTo(ExpiredState));
+        }
+
+        private static void Record(GenerationState state, string result)
+        {
+            state.CompletedCount++;
+            state.Result = result;
+        }
+
+        public IEvent<Begin> Started { get; } = null!;
+        public IState Completed { get; } = null!;
+        public IState Failed { get; } = null!;
+        public IState ExpiredState { get; } = null!;
+        public IRequest<GenerationState, Validate, Accepted, Rejected, Duplicate> Validation { get; } = null!;
     }
 }

@@ -1,5 +1,18 @@
 # A+ remediation research
 
+## Current T59 — larger saga request lifecycle packet
+
+T58 is complete and pushed. The [T59 contract map](coverage-a-plus-20260921/t59-saga-request-lifecycle.md)
+groups property-stored request IDs, multiple response types, fault and real Quartz
+timeout ownership, custom correlation, missing/stale IDs and request generations.
+Existing Saga-ID, one-response and callback integration tests were screened by
+read-only Red Team to avoid duplicate coverage. The prior full-repo Microsoft
+Roslyn pairing and T58 measured gap list are reused for selection. Thirty new
+cases pass across two Quartz files; the complete affected project passes
+318/318 without skips. Two-response and three-response owner, fault, timeout
+and stale-generation families are complete. Read-only Red Team final review
+and two causal counterprobes are complete. The one frozen full33 remains.
+
 ## Current T58 — registration, scope and failure journeys
 
 T57 is complete and remote-verified at `25ef0c773`. The next larger packet
