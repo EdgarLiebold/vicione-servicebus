@@ -1,5 +1,37 @@
 # A+ remediation research
 
+## T101 classic EF transactional outbox state provenance
+
+`EntityFrameworkTransactionalScopedBusContext` infers persistence solely from
+`_outboxState.State == Unchanged`. A caller can call `AcceptAllChanges`, set
+the state to `Unchanged`, or detach all staged messages before SaveChanges.
+`EnsureOutboxState` then signals delivery and starts a new batch without a
+durable row; the existing `TrackerTransition` test even expects the false
+signal. Abort searches messages by mutable OutboxId rather than exact staged
+entity ownership. The neighboring T100 durable-send path already fixed the
+same class of tracker-state confusion with exact staged entries, pre-save
+validation and save-event evidence. The classic path has distinct state and
+message records, so it needs its own behavioral regressions.
+
+Acceptance: no false signal or successful commit after unsaved tracker state
+changes; no partial state/message write; abort detaches only exact session
+entities and preserves foreign business or outbox entries. A successful
+external SaveChanges, including `SaveChanges(false)`, must complete only the
+owned batch once and allow a subsequent batch. Use SQLite and fresh contexts.
+Read-only Red Team review found that a caller could also set `Status=Delivered`
+or `LastSequenceNumber=long.MaxValue` before save, causing the delivery worker
+to discard or skip unsent messages. It also found that factory rejection after
+state attach left an empty active session and blocked a healthy retry. The
+accepted fix validates every initial delivery field before save and creates
+the message before attaching a new state, with compensation if attach fails.
+The second review found a narrower EF tracking failure: `ChangeTracker.Tracked`
+can throw after EF attaches an entity but before `DbContext.Add` returns its
+entry. A test that only rejects an invalid message ID does not exercise this
+path. A two-case real-EF test now throws once for State or Message tracking,
+requires both Local sets to be empty, and then commits a healthy retry.
+Cleanup must use the newly constructed entity reference even when no entry was
+returned to the caller.
+
 ## T100 EF transactional outbox tracker loss
 
 Manual review of `EntityFrameworkScopedBusContext` found that `WasCommitted()`

@@ -1,5 +1,31 @@
 # A+ remediation test plan
 
+## T101 classic EF transactional outbox state provenance
+
+1. Add red-first SQLite cases for manually accepted/detached `OutboxState`,
+   detached staged messages, and mutable `OutboxId` on an owned message. Assert
+   commit fails before persistence, notification stays zero, abort preserves
+   foreign entries, and fresh database state has no partial batch.
+2. Replace tracker-state-only completion with exact state/message ownership,
+   SavingChanges preflight, and SavedChanges evidence. Exercise external
+   SaveChanges(false) through repeat commit and a new batch while retaining
+   unrelated business tracking state. Keep the caller-owned transaction and
+   SaveChanges-interceptor trust boundary consistent with T100.
+3. Run the focused class during implementation, perform controlled
+   counterprobes and independent read-only Red Team review, then run the full
+   EF project on an exact implementation commit. Update requirement projection,
+   changelog and evidence; push. Defer the global 33-profile aggregate to the
+   agreed multi-packet checkpoint.
+
+The Red Team extension adds a two-case red-first delivery-state mutation test
+(`Delivered` and `LastSequenceNumber`) and a rejected-first-send retry test.
+These must prove zero durable rows and notifications after unsafe state, and a
+healthy first batch after invalid factory input without an explicit abort.
+The second review adds a two-case `ChangeTracker.Tracked` failure probe for
+State and Message: verify no orphan tracker entry, exact original exception,
+then healthy retry and exactly one persisted batch. Implement reference-based
+compensation for entities attached before `DbContext.Add` throws.
+
 ## T100 EF transactional outbox tracker loss
 
 1. Add red-first SQLite tests in `EntityFrameworkOutboxWriteCoordinatorTests`

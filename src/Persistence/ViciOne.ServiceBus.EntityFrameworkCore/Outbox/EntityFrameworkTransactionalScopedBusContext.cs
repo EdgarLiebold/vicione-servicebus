@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,7 +35,10 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
     readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator = new();
     bool _disposed;
     Guid _outboxId = NewId.NextGuid();
+    DateTimeOffset _outboxCreated;
     EntityEntry<OutboxState>? _outboxState;
+    readonly List<EntityEntry<OutboxMessage>> _stagedMessages = [];
+    bool _saveIncludedSession;
     IPublishEndpoint? _publishEndpoint;
     IScopedClientFactory? _scopedClientFactory;
     ISendEndpointProvider? _sendEndpointProvider;
@@ -58,7 +62,9 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _persistenceIdentity = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
             .Require("Entity Framework transactional outbox");
+        _dbContext.SavingChanges += OnSavingChanges;
         _dbContext.SavedChanges += OnSavedChanges;
+        _dbContext.SaveChangesFailed += OnSaveChangesFailed;
     }
 
     public ISendEndpointProvider SendEndpointProvider =>
@@ -92,15 +98,25 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
             }
 
             MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
-            EnsureOutboxState();
-
             var message = OutboxMessageFactory.Create(
                 context,
                 ServiceBusMetadataJson.ObjectDeserializer,
                 _timeProvider,
                 outboxId: _outboxId,
                 admittedBody: admittedBody);
-            _dbContext.Add(message);
+            bool hadSession = _outboxState != null;
+            try
+            {
+                EnsureOutboxState();
+                _stagedMessages.Add(_dbContext.Add(message));
+            }
+            catch
+            {
+                DetachIfTracked(message);
+                if (!hadSession && _stagedMessages.Count == 0)
+                    DetachPendingOutbox();
+                throw;
+            }
             return Task.CompletedTask;
         }, cancellationToken);
     }
@@ -111,20 +127,13 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         return _writeCoordinator.ExecuteAsync(async () =>
         {
             ThrowIfDisposed();
-            if (WasCommitted())
-            {
-                CompleteCommittedOutbox();
-                return;
-            }
+            EnsureSessionPending();
 
             await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             if (_outboxState == null)
                 return;
 
-            if (!WasCommitted())
-                throw new InvalidOperationException("The transactional outbox SaveChanges operation did not persist the staged outbox state.");
-
-            CompleteCommittedOutbox();
+            throw new InvalidOperationException("The transactional outbox SaveChanges operation did not persist the staged outbox state.");
         }, cancellationToken);
     }
 
@@ -135,12 +144,6 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (WasCommitted())
-            {
-                CompleteCommittedOutbox();
-                throw new InvalidOperationException("A persisted transactional outbox session cannot be aborted.");
-            }
-
             DetachPendingOutbox();
             return Task.CompletedTask;
         }, cancellationToken);
@@ -172,7 +175,9 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
                     + $"Staged outbox {abandonedOutboxId} records were discarded to prevent accidental later persistence.");
             }
 
+            _dbContext.SavingChanges -= OnSavingChanges;
             _dbContext.SavedChanges -= OnSavedChanges;
+            _dbContext.SaveChangesFailed -= OnSaveChangesFailed;
             _disposed = true;
         });
 
@@ -190,54 +195,134 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
 
     void EnsureOutboxState()
     {
-        if (_outboxState != null && !WasCommitted())
+        if (_outboxState != null)
+        {
+            EnsureSessionPending();
             return;
+        }
 
-        if (WasCommitted())
-            CompleteCommittedOutbox();
-
-        _outboxId = NewId.NextGuid();
-        _outboxState = _dbContext.Add(new OutboxState
+        _outboxCreated = _timeProvider.GetUtcNow();
+        var state = new OutboxState
         {
             OutboxId = _outboxId,
             BusKey = _persistenceIdentity,
-            Created = _timeProvider.GetUtcNow().UtcDateTime,
+            Created = _outboxCreated,
             Status = OutboxDeliveryStatus.Pending,
-        });
+        };
+        try
+        {
+            _outboxState = _dbContext.Add(state);
+        }
+        catch
+        {
+            DetachIfTracked(state);
+            throw;
+        }
     }
 
-    bool WasCommitted() => _outboxState?.State == EntityState.Unchanged;
+    void EnsureSessionPending()
+    {
+        if (_outboxState is null)
+            return;
+
+        bool stateTracked = _dbContext.ChangeTracker.Entries<OutboxState>()
+            .Any(entry => ReferenceEquals(entry.Entity, _outboxState.Entity));
+        if (!stateTracked || _outboxState.State != EntityState.Added
+            || _outboxState.Entity.OutboxId != _outboxId
+            || _outboxState.Entity.BusKey != _persistenceIdentity
+            || _stagedMessages.Count == 0)
+            throw new InvalidOperationException("The transactional outbox has staged state that is no longer pending under this session.");
+
+        OutboxState state = _outboxState.Entity;
+        if (state.Created != _outboxCreated
+            || state.Status != OutboxDeliveryStatus.Pending
+            || state.LockId != Guid.Empty
+            || state.RowVersion is not null
+            || state.NextDeliveryTime is not null
+            || state.DeliveryAttempts != 0
+            || state.LastFailureKind != OutboxFailureKind.None
+            || state.LastFailureCode != OutboxFailureCode.None
+            || state.LastFailureTime is not null
+            || state.LastExceptionType is not null
+            || state.FailedSequenceNumber is not null
+            || state.FailedMessageId is not null
+            || state.Delivered is not null
+            || state.LastSequenceNumber is not null)
+            throw new InvalidOperationException("The transactional outbox delivery state was changed before persistence.");
+
+        var tracked = new HashSet<OutboxMessage>(
+            _dbContext.ChangeTracker.Entries<OutboxMessage>().Select(entry => entry.Entity),
+            ReferenceEqualityComparer.Instance);
+        foreach (EntityEntry<OutboxMessage> entry in _stagedMessages)
+        {
+            if (!tracked.Contains(entry.Entity) || entry.State != EntityState.Added
+                || entry.Entity.OutboxId != _outboxId)
+                throw new InvalidOperationException("The transactional outbox has staged messages that are no longer pending under this session.");
+        }
+    }
+
+    void OnSavingChanges(object? sender, SavingChangesEventArgs eventArgs)
+    {
+        _saveIncludedSession = false;
+        EnsureSessionPending();
+        _saveIncludedSession = _outboxState != null;
+    }
 
     void OnSavedChanges(object? sender, SavedChangesEventArgs eventArgs)
     {
-        CompleteCommittedOutbox();
+        if (_saveIncludedSession && _outboxState is not null
+            && eventArgs.EntitiesSavedCount >= _stagedMessages.Count + 1
+            && _outboxState.State is EntityState.Added or EntityState.Unchanged
+            && _stagedMessages.All(entry => entry.State is EntityState.Added or EntityState.Unchanged))
+            CompleteCommittedOutbox();
+        _saveIncludedSession = false;
+    }
+
+    void OnSaveChangesFailed(object? sender, SaveChangesFailedEventArgs eventArgs)
+    {
+        _saveIncludedSession = false;
     }
 
     void CompleteCommittedOutbox()
     {
-        if (_outboxState == null || !WasCommitted())
+        if (_outboxState == null)
             return;
 
-        _notification.SignalDelivery();
+        foreach (EntityEntry<OutboxMessage> entry in _stagedMessages)
+            entry.State = EntityState.Unchanged;
+        _outboxState.State = EntityState.Unchanged;
+        _stagedMessages.Clear();
         _outboxState = null;
         _outboxId = NewId.NextGuid();
+        _notification.SignalDelivery();
     }
 
     void DetachPendingOutbox()
     {
-        foreach (var entry in _dbContext.ChangeTracker.Entries<OutboxMessage>()
-                     .Where(entry => entry.Entity.OutboxId == _outboxId)
-                     .ToArray())
+        var tracked = new HashSet<OutboxMessage>(
+            _dbContext.ChangeTracker.Entries<OutboxMessage>().Select(entry => entry.Entity),
+            ReferenceEqualityComparer.Instance);
+        foreach (EntityEntry<OutboxMessage> entry in _stagedMessages)
         {
-            if (entry.State != EntityState.Unchanged)
+            if (tracked.Contains(entry.Entity))
                 entry.State = EntityState.Detached;
         }
 
-        if (_outboxState is { State: not EntityState.Unchanged })
+        if (_outboxState != null && _dbContext.ChangeTracker.Entries<OutboxState>()
+            .Any(entry => ReferenceEquals(entry.Entity, _outboxState.Entity)))
             _outboxState.State = EntityState.Detached;
 
+        _stagedMessages.Clear();
         _outboxState = null;
         _outboxId = NewId.NextGuid();
+        _saveIncludedSession = false;
+    }
+
+    void DetachIfTracked<TEntity>(TEntity entity) where TEntity : class
+    {
+        if (_dbContext.ChangeTracker.Entries<TEntity>()
+            .Any(entry => ReferenceEquals(entry.Entity, entity)))
+            _dbContext.Entry(entity).State = EntityState.Detached;
     }
 
     void ThrowIfDisposed()

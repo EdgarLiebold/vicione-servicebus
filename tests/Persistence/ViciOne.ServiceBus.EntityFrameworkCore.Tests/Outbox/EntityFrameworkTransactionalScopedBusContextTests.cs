@@ -257,8 +257,8 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "tracker-transition-rolls-state-and-preserves-foreign-intent")]
-    public async Task TrackerTransition_RollsAcceptedStateAndAbortPreservesForeignIntentAsync()
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "tracker-transition-rejects-unsaved-state-and-preserves-foreign-intent")]
+    public async Task TrackerTransition_RejectsUnsavedStateAndAbortPreservesForeignIntentAsync()
     {
         await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
         using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
@@ -285,14 +285,197 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
         OutboxState acceptedState = Assert.Single(fixture.DbContext.Set<OutboxState>().Local);
         fixture.DbContext.Entry(acceptedState).State = EntityState.Unchanged;
 
-        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 2), TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 2), TestContext.Current.CancellationToken));
         await context.AbortAsync(TestContext.Current.CancellationToken);
         await context.AbortAsync(TestContext.Current.CancellationToken);
 
-        Assert.Equal(1, fixture.Notification.DeliveredCount);
+        Assert.Equal(0, fixture.Notification.DeliveredCount);
         Assert.Equal(EntityState.Added, fixture.DbContext.Entry(foreign).State);
         Assert.Equal(EntityState.Added, fixture.DbContext.Entry(inbox).State);
         Assert.False(context.HasActiveSession);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-accept-all-changes-cannot-signal-unsaved-classic-intent")]
+    public async Task AcceptAllChanges_CannotSignalOrCommitUnsavedClassicIntentAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        fixture.DbContext.ChangeTracker.AcceptAllChanges();
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        Assert.True(context.HasActiveSession);
+        await context.AbortAsync(token);
+        await using ClassicOutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<OutboxState>().AsNoTracking().ToArrayAsync(token));
+        Assert.Empty(await persisted.Set<OutboxMessage>().AsNoTracking().ToArrayAsync(token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-detached-message-cannot-complete-classic-batch")]
+    public async Task DetachedStagedMessage_CannotCompleteOrSignalPartialClassicBatchAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        OutboxMessage message = Assert.Single(fixture.DbContext.Set<OutboxMessage>().Local);
+        fixture.DbContext.Entry(message).State = EntityState.Detached;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        await context.AbortAsync(token);
+        await using ClassicOutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<OutboxState>().AsNoTracking().ToArrayAsync(token));
+        Assert.Empty(await persisted.Set<OutboxMessage>().AsNoTracking().ToArrayAsync(token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-abort-uses-exact-message-ownership")]
+    public async Task Abort_DetachesOwnedMessageEvenAfterIdChangeAndPreservesForeignMatchAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        OutboxMessage owned = Assert.Single(fixture.DbContext.Set<OutboxMessage>().Local);
+        Guid sessionId = Assert.IsType<Guid>(owned.OutboxId);
+        owned.OutboxId = Guid.NewGuid();
+        var foreign = new OutboxMessage
+        {
+            OutboxId = sessionId,
+            MessageId = Guid.NewGuid(),
+            SentTime = Now,
+            ContentType = "application/json",
+            MessageType = "[]",
+            Body = "{}",
+        };
+        fixture.DbContext.Add(foreign);
+
+        await context.AbortAsync(token);
+
+        Assert.Equal(EntityState.Detached, fixture.DbContext.Entry(owned).State);
+        Assert.Equal(EntityState.Added, fixture.DbContext.Entry(foreign).State);
+        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        Assert.False(context.HasActiveSession);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-mutated-delivery-state-cannot-discard-unsent-intent")]
+    public async Task MutatedDeliveryState_CannotCommitOrSignalUnsentIntentAsync(bool markDelivered)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        OutboxState state = Assert.Single(fixture.DbContext.Set<OutboxState>().Local);
+        if (markDelivered)
+            state.Status = OutboxDeliveryStatus.Delivered;
+        else
+            state.LastSequenceNumber = long.MaxValue;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("delivery", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        await using ClassicOutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<OutboxState>().AsNoTracking().ToArrayAsync(token));
+        Assert.Empty(await persisted.Set<OutboxMessage>().AsNoTracking().ToArrayAsync(token));
+        await context.AbortAsync(token);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-rejected-first-send-leaves-classic-session-reusable")]
+    public async Task RejectedFirstSend_LeavesClassicSessionReusableWithoutAbortAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+
+        await Assert.ThrowsAsync<MessageException>(() => context.AddSendAsync(CreateSendContext(Guid.Empty, 1), token));
+
+        Assert.False(context.HasActiveSession);
+        Assert.Empty(fixture.DbContext.Set<OutboxState>().Local);
+        Guid validId = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(validId, 2), token);
+        await context.CommitAsync(token);
+        await using ClassicOutboxDbContext persisted = fixture.CreateFreshContext();
+        OutboxMessage stored = await persisted.Set<OutboxMessage>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(validId, stored.MessageId);
+        Assert.Equal(1, fixture.Notification.DeliveredCount);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-add-tracking-failure-leaves-no-orphan-and-allows-retry")]
+    public async Task TrackingFailure_LeavesNoOrphanAndAllowsHealthyRetryAsync(bool throwOnState)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        var sentinel = new InvalidOperationException("tracked event failed");
+        bool throwOnce = true;
+        fixture.DbContext.ChangeTracker.Tracked += (_, args) =>
+        {
+            if (throwOnce && (throwOnState ? args.Entry.Entity is OutboxState : args.Entry.Entity is OutboxMessage))
+            {
+                throwOnce = false;
+                throw sentinel;
+            }
+        };
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token));
+
+        Assert.Same(sentinel, failure);
+        Assert.False(context.HasActiveSession);
+        Assert.Empty(fixture.DbContext.Set<OutboxState>().Local);
+        Assert.Empty(fixture.DbContext.Set<OutboxMessage>().Local);
+        Guid validId = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(validId, 2), token);
+        await context.CommitAsync(token);
+        await using ClassicOutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(validId, (await persisted.Set<OutboxMessage>().AsNoTracking().SingleAsync(token)).MessageId);
+        Assert.Equal(1, await persisted.Set<OutboxState>().AsNoTracking().CountAsync(token));
+        Assert.Equal(1, fixture.Notification.DeliveredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t101-external-save-without-acceptance-completes-classic-batch-once")]
+    public async Task ExternalSaveWithoutAcceptance_CompletesClassicBatchOnceAndAllowsNextBatchAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+        var business = new BusinessRecord(Guid.NewGuid(), "caller owned");
+        fixture.DbContext.Add(business);
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+
+        await fixture.DbContext.SaveChangesAsync(acceptAllChangesOnSuccess: false, token);
+
+        Assert.False(context.HasActiveSession);
+        Assert.Equal(1, fixture.Notification.DeliveredCount);
+        Assert.Equal(EntityState.Added, fixture.DbContext.Entry(business).State);
+        fixture.DbContext.ChangeTracker.AcceptAllChanges();
+        await context.CommitAsync(token);
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 2), token);
+        await context.CommitAsync(token);
+        Assert.Equal(2, fixture.Notification.DeliveredCount);
+        await using ClassicOutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(2, await persisted.Set<OutboxState>().AsNoTracking().CountAsync(token));
+        Assert.Equal(2, await persisted.Set<OutboxMessage>().AsNoTracking().CountAsync(token));
+        Assert.Equal(business, await persisted.Set<BusinessRecord>().AsNoTracking().SingleAsync(token));
     }
 
     [Fact]
@@ -439,6 +622,9 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
             Services,
             TimeProvider,
             PersistenceIdentity);
+
+        public ClassicOutboxDbContext CreateFreshContext() => new(
+            new DbContextOptionsBuilder<ClassicOutboxDbContext>().UseSqlite(_connection).Options);
 
         public async ValueTask DisposeAsync()
         {
