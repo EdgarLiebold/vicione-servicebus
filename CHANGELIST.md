@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10936 |
+| Added | 10938 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -252,6 +252,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t59-saga-request-lifecycle.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t61-activemq-producer-ownership.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t62-send-observer-outcome.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -15403,6 +15404,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerBatchSenderTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerCacheTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerDeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerOutcomeTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubProducerResolutionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubReceiveAdmissionTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs` | Added |  |
