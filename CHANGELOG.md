@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added an integrated raw-handler test for `UseMessageScope`. It proves a
+  distinct scope for each success, failure and subsequent success; matching
+  handler scope/provider identity; no disposal while asynchronous work is
+  blocked; exactly one disposal after completion; and a fault tied to the
+  failing message and exception. Removing `UseMessageScope` fails the test
+  with a missing scope payload. The focused class passes 1/1 and complete
+  Core passes 6,957/6,957 on the exact test commit; adversarial re-review is
+  PASS. Product code did not change in this packet.
+
 - Fixed nearest-weekday cron progression: a backward-adjusted date could
   repeat after firing, while a partial correction skipped an adjusted date
   in the next month. An exhausted month now restarts at day 1, and the day

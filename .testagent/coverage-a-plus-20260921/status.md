@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T90 message scope handler packet
+
+A raw handler on a real `UseMessageScope` endpoint now proves scope and
+provider identity, separate scopes over success/failure/success, no early
+disposal during asynchronous work, exactly one disposal after each operation,
+and an exactly attributed fault. An isolated removal of `UseMessageScope`
+failed with a missing `IServiceScope` payload. The focused class passes 1/1
+and complete Core passes 6,957/6,957 on exact commit `2e153870e`.
+Independent read-only Red Team re-review is PASS after three oracle fixes.
+See [T90 evidence](t90-message-scope-handler-lifetime.md). T85 remains the
+latest complete product-wide checkpoint; global A+ is open.
+
 ## Current T89 cron nearest-weekday packet
 
 `GetTimeAfter` could repeat an already fired backward-adjusted `W` date;
