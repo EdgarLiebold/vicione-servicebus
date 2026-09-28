@@ -66,13 +66,16 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(sagaRepository);
 
-        sagaRepository.AddSagaClassMap(sagaClassMap ?? new ActionSagaClassMap<TSaga>());
-        return configurator.EntityFrameworkRepository(cfg =>
-        {
-            cfg.UseDbContextFactory(sagaRepository.CreateDbContext);
+        var repositoryConfigurator = new EntityFrameworkSagaRepositoryConfigurator<TSaga>();
+        repositoryConfigurator.UseDbContextFactory(sagaRepository.CreateDbContext);
+        configure?.Invoke(repositoryConfigurator);
 
-            configure?.Invoke(cfg);
-        });
+        repositoryConfigurator.Validate().ThrowIfContainsFailure("The Entity Framework saga repository configuration is invalid:");
+
+        sagaRepository.AddSagaClassMap(sagaClassMap ?? new ActionSagaClassMap<TSaga>());
+        configurator.Repository(x => repositoryConfigurator.Register(x));
+
+        return configurator;
     }
 
     /// <summary>Configures all job-service saga state machines to use EF Core repositories.</summary>

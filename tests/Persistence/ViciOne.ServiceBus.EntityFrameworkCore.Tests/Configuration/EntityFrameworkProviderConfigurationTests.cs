@@ -1,10 +1,12 @@
 using System.Data;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.EntityFrameworkCore;
+using ViciOne.ServiceBus.EntityFrameworkCore.Configuration;
 using ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -160,6 +162,43 @@ public sealed class EntityFrameworkProviderConfigurationTests
 
         Assert.True(pessimistic.IsTransactionEnabled);
         Assert.Equal(IsolationLevel.ReadCommitted, pessimistic.IsolationLevel);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-CONFIGURATION", "failed-shared-configuration-does-not-consume-saga-map")]
+    public void SharedSagaRegistration_FailedConfigurationLeavesTheRepositoryAvailableForRetry()
+    {
+        var shared = new EntityFrameworkSagaRepository(
+            EntityFrameworkSagaRepository.CreateOptionsBuilder().UseSqlite("Data Source=:memory:").Options);
+        var failure = new InvalidOperationException("saga configuration rejected");
+        var services = new ServiceCollection();
+
+        services.AddViciOneServiceBus(configuration =>
+        {
+            ISagaRegistrationConfigurator<ConfigurationSaga> registration = configuration.AddSaga<ConfigurationSaga>();
+
+            InvalidOperationException actual = Assert.Throws<InvalidOperationException>(() =>
+                registration.EntityFrameworkRepository(shared, _ => throw failure, sagaClassMap: new ConfigurationSagaMap()));
+            Assert.Same(failure, actual);
+
+            using DbContext afterFailure = shared.CreateDbContext();
+            Assert.Null(afterFailure.Model.FindEntityType(typeof(ConfigurationSaga)));
+
+            ConfigurationException invalid = Assert.Throws<ConfigurationException>(() =>
+                registration.EntityFrameworkRepository(shared, configure: null, sagaClassMap: new ConfigurationSagaMap()));
+            Assert.Contains("LockStatementProvider", invalid.Message, StringComparison.Ordinal);
+            using DbContext afterValidationFailure = shared.CreateDbContext();
+            Assert.Null(afterValidationFailure.Model.FindEntityType(typeof(ConfigurationSaga)));
+
+            registration.EntityFrameworkRepository(shared, repository => repository.UseSqlite(),
+                sagaClassMap: new ConfigurationSagaMap());
+        });
+
+        using DbContext afterRetry = shared.CreateDbContext();
+        Assert.Equal("RecoveredSagas", afterRetry.Model.FindEntityType(typeof(ConfigurationSaga))?.GetTableName());
+        using ServiceProvider provider = services.BuildServiceProvider();
+        Assert.IsType<OptimisticSagaRepositoryLockStrategy<ConfigurationSaga>>(
+            provider.GetRequiredService<ISagaRepositoryLockStrategy<ConfigurationSaga>>());
     }
 
     [Fact]
@@ -530,6 +569,15 @@ public sealed class EntityFrameworkProviderConfigurationTests
                     busOutbox.UseAsDefault();
             });
         });
+    }
+
+    private sealed class ConfigurationSagaMap : SagaClassMap<ConfigurationSaga>
+    {
+        protected override void Configure(EntityTypeBuilder<ConfigurationSaga> entity, ModelBuilder model)
+        {
+            base.Configure(entity, model);
+            entity.ToTable("RecoveredSagas");
+        }
     }
 
     public sealed class ConfigurationSaga : ISaga
