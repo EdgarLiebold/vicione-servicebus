@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added assembly scanner integration tests using real assembly files. They
+  distinguish DLL-only from `.exe`-extension discovery, prove scanning
+  continues after an invalid DLL, and verify that the assembly predicate
+  rejects a loaded decoy in both path overloads. A controlled early-exit
+  counterchange fails the new test. The focused class passes 11/11 and Core
+  passes 6,960/6,960 on the exact test commit; adversarial re-review is PASS.
+  Product code did not change in this packet.
+
 - Added an integrated raw-handler test for `UseMessageScope`. It proves a
   distinct scope for each success, failure and subsequent success; matching
   handler scope/provider identity; no disposal while asynchronous work is

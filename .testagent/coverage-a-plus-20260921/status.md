@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T91 assembly scanner packet
+
+Path-based discovery now proves DLL-only versus DLL-plus-EXE-extension
+selection, continuation after an invalid image, assembly-level rejection
+after file discovery, exact membership and type discovery. The focused class
+passes 11/11; complete Core passes 6,960/6,960 on exact commit `d1523e474`.
+An isolated early-exit counterprobe fails the new test; source was restored.
+Read-only Red Team re-review is PASS after two oracle corrections. See
+[T91 evidence](t91-assembly-scanner-discovery.md). T85 remains the latest
+complete product-wide checkpoint; global A+ remains open.
+
 ## Current T90 message scope handler packet
 
 A raw handler on a real `UseMessageScope` endpoint now proves scope and
