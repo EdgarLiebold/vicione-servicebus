@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10923 |
+| Added | 10926 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -178,6 +178,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-c28c3c9d3.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-c28e9feb4.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-c4b3faeda.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-d0263d89e.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-d286a336a.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-d35c33649.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-d415d2cbf.md` | Added |  |
@@ -244,6 +245,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t54-transport-ownership-and-isolation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t55-consumer-outbox-recovery.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t56-durable-admission-atomicity.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t57-ingress-middleware-plan.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16195,6 +16197,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerSettingsTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextPayloadPropagationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ConsumerIngressFilterContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Contexts/BindContextProxyTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
