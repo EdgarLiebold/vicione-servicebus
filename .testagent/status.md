@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T57 — ingress middleware packet in validation
+## Current T57 — ingress middleware packet measured
 
 T56 publication is complete; local and remote HEAD were `9bc78539d` before
 this packet. T56's authoritative 33-receipt report records13,222 green tests,
@@ -16,11 +16,16 @@ identity. Downstream cancellation and process-activity boundary cases address
 its later review limits. The final Core suite passes6,887/6,887 without skips;
 read-only Red Team sees no concrete remaining packet blocker. The Microsoft
 assertion-quality and pseudo-mutation review finds eight methods with substantive
-exact oracles, and the red-first old-product probe is causal evidence. Freeze,
-full33 profile and independent audit remain.
+exact oracles, and the red-first old-product probe is causal evidence. Frozen
+implementation `d0263d89e` passes all 33 fresh profiles: 13,250 tests without
+failures or skips, 85,902/93,754 physical lines (91.62489%), 31,048/36,845
+conservative branches (84.26652%), 26,071 method identities and zero CRAP>30.
+Four fixture groups have empty findings. Independent read-only audit confirms
+487/487 hashes, 66/66 runner/settings bindings, all XML-derived counts and
+nine broker logs without discrepancy. Publication remains; global A+ is open.
 The [T57 plan and review log](coverage-a-plus-20260921/t57-ingress-middleware-plan.md)
-contains the concrete contract matrix. One full33 measurement follows packet
-acceptance; no new global A+ claim is made from targeted tests.
+contains the concrete contract matrix. The [complete T57 measurement](coverage-a-plus-20260921/product-wide-profile-d0263d89e.md)
+records the full33 result and its limits.
 
 ## T55 frozen measurement — complete, independent audit clean
 

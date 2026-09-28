@@ -9,9 +9,12 @@ All 28 new cases pass focused validation. The red-first downstream-failure
 control failed for all three filter forms on old product bytes; the fix moves
 `next` outside consumer fault classification and process telemetry. Red-team
 P2 context and per-delivery retry oracles are repaired. Its additional
-downstream-cancellation and activity-boundary cases are green. Complete the
-final Core-project suite, read-only review, assertion/pseudo-mutation audit,
-then freeze and take one full33 measurement for the combined packet.
+downstream-cancellation and activity-boundary cases are green. The final Core
+suite passes 6,887/6,887. Frozen `d0263d89e` passes all 33 profiles and 13,250
+tests with 91.62489% lines, 84.26652% conservative branches and zero CRAP>30.
+Independent receipt/XML and fixture audit is clean; finish publication. Then select a larger connected
+packet from remaining product behavior gaps, with focused build/test feedback
+during implementation and one complete measurement after acceptance.
 
 ## T56 — durable admission transaction packet (focused controls complete)
 

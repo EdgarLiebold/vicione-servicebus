@@ -19,7 +19,11 @@ entry below records what the current work changed for anyone reading the source.
   check exact context and exception identity, asynchronous notification order,
   caller versus dependency cancellation, per-delivery retry budgets, circuit
   recovery and process-span ownership. The affected Core suite passes
-  6,887/6,887 without skips; final product-wide coverage measurement follows.
+  6,887/6,887 without skips. The frozen 33-profile measurement passes 13,250
+  tests across 32 product assemblies: 85,902/93,754 physical lines (91.62489%),
+  31,048/36,845 conservative branches (84.26652%) and zero method CRAP>30.
+  Relative to T56, 13 more lines and 12 more conservative branches are covered.
+  Global A+ coverage remains open.
 
 - Durable admission atomicity verification: the EF reliable inbox now has
   SQLite and real PostgreSQL regression cases that save a first business record
