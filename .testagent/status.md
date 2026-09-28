@@ -1,5 +1,28 @@
 # A+ remediation test status
 
+## Current T71 — request-rate partial-failure ownership
+
+Two red-first public algorithm cases failed on the original catch-and-return
+behavior: a provider enumerable failed after yielding one result, and a grouped
+result callback failed after one completion. Both previously returned a
+partial count. A third counterprobe exercises a lazy ordering sequence that
+throws after its first item. The algorithm now propagates exact later errors
+while retaining completed prior work; two simultaneously blocked recovery
+groups and a single-permit ungrouped recovery make permit loss observable. Red Team also
+found a post-admission cancellation race in `Task.Run`: a canceled scheduling
+token could prevent the callback's permit-release `finally` from running.
+Admitted callbacks now start without that scheduling token and still receive
+the caller token. A controlled cancellation/recovery test exercises the public
+lifecycle; the exact scheduling interleaving remains source-review evidence.
+The proposed SQS FIFO dispatch-failure
+journey was withdrawn after source inspection: its executor owns faults after
+queue admission, and the algorithm cannot observe those faults. Focused
+algorithm tests pass 35/35. Full Abstractions passes 936/936, Amazon SQS
+322/322, and SQL Transport 229/229, with zero failures/skips. Requirement
+variants map the four behavioral cases. Independent Red Team re-review passed
+after strengthening the grouped capacity oracle; it found no remaining
+concrete blocker. No new product-wide Line/Branch/CRAP claim is made.
+
 ## Current T70 — endpoint-definition prefetch width across Core and RabbitMQ
 
 Red-first InMemory definition cases failed 3/3 on the original narrowing:

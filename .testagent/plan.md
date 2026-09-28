@@ -1,5 +1,25 @@
 # A+ remediation test plan
 
+## T71 request-rate partial-failure ownership across Abstractions and SQS
+
+1. Red-first algorithm tests for a result sequence that yields one item and
+   then throws, a grouped callback that completes one item then faults, and
+   a lazy ordering sequence that fails after one item.
+   Assert exact exception identity, prior work once, and a subsequent valid
+   pass to show capacity recovery.
+2. Verify the SQS FIFO ownership boundary: its callback completes at queue
+   admission and the executor owns later dispatch failures. Do not assert
+   that a later dispatch fault stops the polling loop.
+3. Remove only the two partial-error swallowing catches and verify the
+   affected Abstractions, SQS, and SQL Transport projects, requirement
+   projection, adversarial review, and targeted counterprobes. Retain the batched global profile
+   cadence agreed with the user.
+4. Red Team found a cancellation race between permit acquisition and
+   `Task.Run`. Start admitted callbacks without a scheduling token, retain the
+   callback's caller token, and verify cancellation/recovery with one permit.
+   Record that the exact interleaving is source-reviewed because no public
+   deterministic hook exists.
+
 ## T70 endpoint-definition prefetch width across Core and RabbitMQ
 
 1. Red-first public InMemory endpoint-definition tests for explicit 65,536,

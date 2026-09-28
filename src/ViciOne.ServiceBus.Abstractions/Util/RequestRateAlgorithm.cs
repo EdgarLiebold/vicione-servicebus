@@ -238,33 +238,25 @@ public class RequestRateAlgorithm :
         IEnumerable<T> results = await requestCallback(activeRequest.ResultLimit, activeRequest.CancellationToken).ConfigureAwait(false);
 
         var count = 0;
-        try
+        foreach (var result in results)
         {
-            foreach (var result in results)
+            await _resultSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+            async Task RunResultCallbackAsync()
             {
-                await _resultSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-
-                async Task RunResultCallbackAsync()
+                try
                 {
-                    try
-                    {
-                        await resultCallback(result, cancellationToken).ConfigureAwait(false);
-                    }
-                    finally
-                    {
-                        if (!_disposed)
-                            _resultSemaphore.Release();
-                    }
+                    await resultCallback(result, cancellationToken).ConfigureAwait(false);
                 }
-
-                Add(Task.Run(() => RunResultCallbackAsync(), cancellationToken));
-                count++;
+                finally
+                {
+                    if (!_disposed)
+                        _resultSemaphore.Release();
+                }
             }
-        }
-        catch (Exception)
-        {
-            if (count == 0)
-                throw;
+
+            Add(Task.Run(() => RunResultCallbackAsync()));
+            count++;
         }
 
         await activeRequest.CompleteAsync(count, CancellationToken.None).ConfigureAwait(false);
@@ -337,26 +329,18 @@ public class RequestRateAlgorithm :
     {
         var count = 0;
 
-        try
+        foreach (var result in orderCallback(results))
         {
-            foreach (var result in orderCallback(results))
+            await _resultSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
             {
-                await _resultSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                try
-                {
-                    await resultCallback(result, cancellationToken).ConfigureAwait(false);
-                }
-                finally
-                {
-                    _resultSemaphore.Release();
-                }
-                count++;
+                await resultCallback(result, cancellationToken).ConfigureAwait(false);
             }
-        }
-        catch (Exception)
-        {
-            if (count == 0)
-                throw;
+            finally
+            {
+                _resultSemaphore.Release();
+            }
+            count++;
         }
 
         return count;

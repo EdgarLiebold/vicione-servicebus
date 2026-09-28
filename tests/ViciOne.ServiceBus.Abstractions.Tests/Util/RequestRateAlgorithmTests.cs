@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Globalization;
+using System.IO;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Util;
@@ -10,6 +11,182 @@ namespace ViciOne.ServiceBus.Abstractions.Tests.Util;
 public sealed class RequestRateAlgorithmTests
 {
     private static readonly TimeSpan CompletionTimeout = TimeSpan.FromSeconds(10);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-RUN", "partial-enumeration-failure-retains-cause-and-capacity")]
+    public async Task Run_PartialResultEnumerationPropagatesCauseAndRecoversAsync()
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 2, requestResultLimit: 2, concurrentResultLimit: 1);
+        var failure = new InvalidOperationException("provider enumeration failed after a result");
+        var firstProcessed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondProcessed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var processed = new ConcurrentQueue<int>();
+
+        IEnumerable<int> FaultingResults()
+        {
+            yield return 1;
+            throw failure;
+        }
+
+        Task ProcessAsync(int result, CancellationToken _)
+        {
+            processed.Enqueue(result);
+            if (result == 1)
+                firstProcessed.TrySetResult();
+            else if (result == 2)
+                secondProcessed.TrySetResult();
+            return Task.CompletedTask;
+        }
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            algorithm.RunAsync<int>((_, _) => Task.FromResult<IEnumerable<int>>(FaultingResults()), ProcessAsync,
+                TestContext.Current.CancellationToken));
+
+        Assert.Same(failure, actual);
+        await firstProcessed.Task.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+
+        int recovered = await algorithm.RunAsync<int>(
+            (_, _) => Task.FromResult<IEnumerable<int>>([2]), ProcessAsync,
+            TestContext.Current.CancellationToken).WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        await secondProcessed.Task.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        Assert.Equal(1, recovered);
+        Assert.Equal([1, 2], processed.ToArray());
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-GROUPED-RUN", "partial-group-failure-retains-cause-and-capacity")]
+    public async Task GroupedRun_PartialGroupFailurePropagatesCauseAndRecoversAsync()
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 2, requestResultLimit: 2, concurrentResultLimit: 2);
+        var failure = new InvalidOperationException("second grouped dispatch failed");
+        var processed = new ConcurrentQueue<int>();
+
+        Task ProcessAsync(int result, CancellationToken _)
+        {
+            if (result == 2)
+                throw failure;
+            processed.Enqueue(result);
+            return Task.CompletedTask;
+        }
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            algorithm.RunAsync<int, int>(
+                (_, _) => Task.FromResult<IEnumerable<int>>([1, 2]),
+                ProcessAsync,
+                results => results.GroupBy(_ => 0),
+                results => results.OrderBy(value => value),
+                TestContext.Current.CancellationToken));
+
+        Assert.Same(failure, actual);
+        Assert.Equal([1], processed.ToArray());
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+
+        await AssertBothGroupedPermitsRecoverAsync(algorithm, processed);
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-GROUPED-RUN", "partial-order-enumeration-failure-retains-cause-and-capacity")]
+    public async Task GroupedRun_PartialOrderEnumerationPropagatesCauseAndRecoversAsync()
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 2, requestResultLimit: 2, concurrentResultLimit: 2);
+        var failure = new InvalidDataException("ordered stream failed after a result");
+        var processed = new ConcurrentQueue<int>();
+
+        IEnumerable<int> FaultingOrder(IEnumerable<int> results)
+        {
+            yield return results.First();
+            throw failure;
+        }
+
+        InvalidDataException actual = await Assert.ThrowsAsync<InvalidDataException>(() =>
+            algorithm.RunAsync<int, int>(
+                (_, _) => Task.FromResult<IEnumerable<int>>([1, 2]),
+                (result, _) => { processed.Enqueue(result); return Task.CompletedTask; },
+                results => results.GroupBy(_ => 0),
+                FaultingOrder,
+                TestContext.Current.CancellationToken));
+
+        Assert.Same(failure, actual);
+        Assert.Equal([1], processed.ToArray());
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+
+        await AssertBothGroupedPermitsRecoverAsync(algorithm, processed);
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+    }
+
+    private static async Task AssertBothGroupedPermitsRecoverAsync(RequestRateAlgorithm algorithm, ConcurrentQueue<int> processed)
+    {
+        var bothStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var bothCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var entered = 0;
+        var completed = 0;
+
+        async Task ProcessAsync(int result, CancellationToken cancellationToken)
+        {
+            if (Interlocked.Increment(ref entered) == 2)
+                bothStarted.TrySetResult();
+            await release.Task.WaitAsync(cancellationToken);
+            processed.Enqueue(result);
+            if (Interlocked.Increment(ref completed) == 2)
+                bothCompleted.TrySetResult();
+        }
+
+        Task<int> recovery = algorithm.RunAsync<int, int>(
+            (_, _) => Task.FromResult<IEnumerable<int>>([3, 4]),
+            ProcessAsync,
+            results => results.GroupBy(value => value),
+            results => results,
+            TestContext.Current.CancellationToken);
+        try
+        {
+            await bothStarted.Task.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        }
+        finally
+        {
+            release.TrySetResult();
+        }
+
+        int recovered = await recovery.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        await bothCompleted.Task.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        Assert.Equal(2, recovered);
+        Assert.Equal([1, 3, 4], processed.OrderBy(value => value));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CANCELLATION", "canceled-admitted-result-releases-capacity")]
+    public async Task Run_CancelingAnAdmittedResultReleasesCapacityForTheNextPassAsync()
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 1, requestResultLimit: 1, concurrentResultLimit: 1);
+        using var canceledPass = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        var firstStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        int firstCount = await algorithm.RunAsync<int>(
+            (_, _) => Task.FromResult<IEnumerable<int>>([1]),
+            async (_, cancellationToken) =>
+            {
+                firstStarted.TrySetResult();
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            },
+            canceledPass.Token);
+
+        Assert.Equal(1, firstCount);
+        await firstStarted.Task.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        canceledPass.Cancel();
+
+        int secondCount = await algorithm.RunAsync<int>(
+            (_, _) => Task.FromResult<IEnumerable<int>>([2]),
+            (_, _) => { secondCompleted.TrySetResult(); return Task.CompletedTask; },
+            TestContext.Current.CancellationToken).WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+        await secondCompleted.Task.WaitAsync(CompletionTimeout, TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, secondCount);
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-RUN", "process-every-result")]

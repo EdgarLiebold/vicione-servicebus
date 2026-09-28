@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected adaptive receive scheduling when a provider enumerates one result
+  and then fails, or an ordered group fails after one result. These failures
+  now retain their exact cause instead of returning a successful partial
+  count; earlier completed work and capacity for a later pass are preserved.
+  An admitted callback also retains its result permit until it runs and
+  releases it, even if the caller cancels before the ThreadPool schedules it.
+  Red-first tests exposed the partial-error swallowing; Red Team source review
+  found the cancellation race. Full Abstractions, Amazon
+  SQS, and SQL Transport suites pass 936/936, 322/322, and 229/229. The full
+  Line/Branch/CRAP measurement remains scheduled for the grouped milestone.
+
 - Preserved the full integer prefetch value when endpoint definitions configure
   InMemory and other transports. Derived values now use wide arithmetic and
   stop at both integer limits. Amazon SQS computes FIFO partition capacity

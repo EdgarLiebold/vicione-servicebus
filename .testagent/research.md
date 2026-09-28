@@ -1,5 +1,29 @@
 # A+ remediation research
 
+## T71 request-rate partial-failure ownership across Abstractions and SQS
+
+The frozen T63 profile leaves 31/321 lines in `RequestRateAlgorithm` uncovered,
+including the `count > 0` exception paths in the ungrouped result enumerator
+and grouped ordered result dispatcher. Both catches return a partial count
+after a later failure. Amazon SQS FIFO uses the grouped overload in its
+receive loop, but its executor separately owns failures after queue admission;
+the algorithm owns only admission failures. SQL and SQS standard receive paths use
+the ungrouped overload. Existing algorithm tests establish adaptive limits,
+rate permits and cancellation, while SQS FIFO tests establish ordering and
+partition admission. Acceptance is behavioral: after earlier successful work,
+the exact later provider enumeration or group callback error must propagate;
+completed work must not be replayed or reclassified, and request/result permits
+must remain usable. A proposed SQS post-admission dispatch-failure test was
+rejected because it crossed the executor's ownership boundary. The source/test pairing and frozen coverage inventory
+are reused. No global profile is due until the grouped milestone.
+Red Team additionally identified cancellation after result-permit acquisition:
+`Task.Run` with the caller token can produce a canceled task without executing
+the callback's sole permit-release `finally`. Scheduling must be unconditional
+once the permit is owned; the callback still observes the caller token.
+The exact post-acquire/pre-schedule race has no deterministic public hook, so
+its closure is established by source review and a broader admitted-cancellation
+recovery test, not a claim that the race itself was reproduced in a test.
+
 ## T70 endpoint-definition prefetch width across Core and RabbitMQ
 
 Target inventory: `BaseHostConfiguration.ApplyEndpointDefinition` projects the
