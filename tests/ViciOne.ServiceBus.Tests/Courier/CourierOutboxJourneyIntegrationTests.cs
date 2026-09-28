@@ -10,27 +10,30 @@ namespace ViciOne.ServiceBus.Tests.Courier;
 public sealed class CourierOutboxJourneyIntegrationTests
 {
     [Theory]
-    [InlineData(false, false)]
-    [InlineData(false, true)]
-    [InlineData(true, false)]
-    [InlineData(true, true)]
+    [InlineData(false, CompletionVariableShape.Object)]
+    [InlineData(false, CompletionVariableShape.Enumerable)]
+    [InlineData(true, CompletionVariableShape.Object)]
     [RequirementCoverage("REQ-VSB-COURIER-REVISION", "retry-outbox-commits-only-selected-route-and-attempt")]
     public async Task ExecuteRetry_RevisesTheRouteAndDeliversOnlyCommittedAttemptEffectsAsync(
-        bool concurrentDelivery, bool terminate)
+        bool terminate, CompletionVariableShape completionShape)
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var state = new JourneyState();
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-execute-outbox-journey");
-        var next = harness.AddExecuteActivity<RecordingActivity, JourneyArguments>(_ => new RecordingActivity(state));
+        var next = harness.AddExecuteActivity<RecordingActivity, JourneyArguments>(
+            _ => new RecordingActivity(state, harness.InputQueueAddress, completionShape));
+        next.ExecuteReceiveEndpointConfiguring += endpoint => endpoint.UseVolatileOutbox();
         var executing = harness.AddExecuteActivity<RevisingActivity, JourneyArguments>(
             _ => new RevisingActivity(state, harness.InputQueueAddress, () => next.ExecuteAddress, terminate));
-        executing.ExecuteReceiveEndpointConfiguring += endpoint => ConfigureRetryOutbox(endpoint, concurrentDelivery);
+        executing.ExecuteReceiveEndpointConfiguring += endpoint => ConfigureRetryOutbox(endpoint, false);
         using var effects = new CourierMessageRecorder<AttemptEffect>(2);
+        using var successorEffects = new CourierMessageRecorder<SuccessorEffect>(1);
         using var completed = new CourierMessageRecorder<IRoutingSlipCompleted>(1);
         using var revised = new CourierMessageRecorder<IRoutingSlipRevised>(1);
         using var terminated = new CourierMessageRecorder<IRoutingSlipTerminated>(1);
         effects.Configure(harness);
+        successorEffects.Configure(harness);
         completed.Configure(harness);
         revised.Configure(harness);
         terminated.Configure(harness);
@@ -42,6 +45,7 @@ public sealed class CourierOutboxJourneyIntegrationTests
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.SetVariable("Seed", "original-seed");
+            builder.SetVariable("RemoveMe", "stale-value");
             builder.AddActivity(executing.Name, executing.ExecuteAddress, new JourneyArguments("execute-input"));
             builder.AddActivity("Discarded", next.ExecuteAddress, new JourneyArguments("must-not-run"));
 
@@ -53,16 +57,28 @@ public sealed class CourierOutboxJourneyIntegrationTests
                 state.Attempts);
             Assert.Empty(state.AdmittedEffects);
             Assert.Empty(effects.Messages);
+            Assert.Empty(successorEffects.Messages);
+            Assert.Empty(state.AdmittedSuccessorEffects);
             Assert.Empty(state.Executed);
             Assert.Empty(completed.Messages);
             Assert.Empty(revised.Messages);
             Assert.Empty(terminated.Messages);
 
             state.Release.TrySetResult();
-            await Task.WhenAll(
-                effects.WaitAsync(timeout, cancellationToken),
-                completed.WaitAsync(timeout, cancellationToken),
-                terminate ? terminated.WaitAsync(timeout, cancellationToken) : revised.WaitAsync(timeout, cancellationToken));
+            await effects.WaitAsync(timeout, cancellationToken);
+            if (terminate)
+                await Task.WhenAll(completed.WaitAsync(timeout, cancellationToken), terminated.WaitAsync(timeout, cancellationToken));
+            else
+            {
+                await Task.WhenAll(revised.WaitAsync(timeout, cancellationToken),
+                    state.SuccessorPending.Task.WaitAsync(timeout, cancellationToken));
+                Assert.Empty(state.AdmittedSuccessorEffects);
+                Assert.Empty(successorEffects.Messages);
+                Assert.Empty(completed.Messages);
+                state.SuccessorRelease.TrySetResult();
+                await Task.WhenAll(successorEffects.WaitAsync(timeout, cancellationToken),
+                    completed.WaitAsync(timeout, cancellationToken));
+            }
             await harness.StopAsync(cancellationToken);
 
             AssertEffects(state, effects, trackingNumber, "execute");
@@ -72,7 +88,12 @@ public sealed class CourierOutboxJourneyIntegrationTests
             Assert.Equal("committed-route", completion.GetVariable<string>("Outcome"));
             if (terminate)
             {
+                Assert.False(completion.Message.Variables.ContainsKey("Final"));
+                Assert.Equal("stale-value", completion.GetVariable<string>("RemoveMe"));
                 Assert.Empty(state.Executed);
+                Assert.False(state.SuccessorPending.Task.IsCompleted);
+                Assert.Empty(state.AdmittedSuccessorEffects);
+                Assert.Empty(successorEffects.Messages);
                 Assert.Empty(revised.Messages);
                 ConsumeContext<IRoutingSlipTerminated> terminal = Assert.Single(terminated.Messages);
                 Assert.Equal(trackingNumber, terminal.Message.TrackingNumber);
@@ -81,7 +102,13 @@ public sealed class CourierOutboxJourneyIntegrationTests
             }
             else
             {
+                Assert.Equal("final:committed-route", completion.GetVariable<string>("Final"));
+                Assert.False(completion.Message.Variables.ContainsKey("RemoveMe"));
                 Assert.Equal(["replacement:committed-route"], state.Executed);
+                Assert.Equal(new SuccessorEffect(trackingNumber, "replacement:committed-route"),
+                    Assert.Single(state.AdmittedSuccessorEffects));
+                Assert.Equal(new SuccessorEffect(trackingNumber, "replacement:committed-route"),
+                    Assert.Single(successorEffects.Messages).Message);
                 Assert.Empty(terminated.Messages);
                 ConsumeContext<IRoutingSlipRevised> revision = Assert.Single(revised.Messages);
                 Assert.Equal(trackingNumber, revision.Message.TrackingNumber);
@@ -95,6 +122,7 @@ public sealed class CourierOutboxJourneyIntegrationTests
         finally
         {
             state.Release.TrySetResult();
+            state.SuccessorRelease.TrySetResult();
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
@@ -228,20 +256,28 @@ public sealed class CourierOutboxJourneyIntegrationTests
     public sealed record JourneyArguments(string Value);
     public sealed record JourneyLog(string Original, string Resource);
     public sealed record AttemptEffect(Guid TrackingNumber, string Phase, int Attempt, int Sequence);
+    public sealed record SuccessorEffect(Guid TrackingNumber, string Value);
     public sealed record AttemptObservation(Guid TrackingNumber, int Attempt, string Value, string Seed);
+
+    public enum CompletionVariableShape { Object, Enumerable }
 
     public sealed class JourneyState : ISendObserver
     {
         public ConcurrentQueue<AttemptObservation> Attempts { get; } = new();
         public ConcurrentQueue<AttemptEffect> AdmittedEffects { get; } = new();
+        public ConcurrentQueue<SuccessorEffect> AdmittedSuccessorEffects { get; } = new();
         public ConcurrentQueue<string> Executed { get; } = new();
         public TaskCompletionSource Pending { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public TaskCompletionSource Release { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource SuccessorPending { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource SuccessorRelease { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
             if (context.Message is AttemptEffect effect)
                 AdmittedEffects.Enqueue(effect);
+            if (context.Message is SuccessorEffect successorEffect)
+                AdmittedSuccessorEffects.Enqueue(successorEffect);
             return Task.CompletedTask;
         }
 
@@ -274,12 +310,34 @@ public sealed class CourierOutboxJourneyIntegrationTests
         }
     }
 
-    public sealed class RecordingActivity(JourneyState state) : IExecuteActivity<JourneyArguments>
+    public sealed class RecordingActivity(JourneyState state, Uri effectAddress, CompletionVariableShape completionShape)
+        : IExecuteActivity<JourneyArguments>
     {
-        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<JourneyArguments> context)
+        public async Task<ExecutionResult> ExecuteAsync(ExecuteContext<JourneyArguments> context)
         {
-            state.Executed.Enqueue($"{context.Arguments.Value}:{context.GetVariable<string>("Outcome")}");
-            return Task.FromResult(context.Completed());
+            string outcome = context.GetVariable<string>("Outcome")!;
+            string value = $"{context.Arguments.Value}:{outcome}";
+            state.Executed.Enqueue(value);
+            ISendEndpoint endpoint = await context.GetSendEndpointAsync(effectAddress, context.CancellationToken);
+            await endpoint.SendAsync(new SuccessorEffect(context.TrackingNumber, value), context.CancellationToken);
+            state.SuccessorPending.TrySetResult();
+            await state.SuccessorRelease.Task.WaitAsync(context.CancellationToken);
+            ExecutionResult result = completionShape switch
+            {
+                CompletionVariableShape.Object => context.CompletedWithVariables(new
+                {
+                    Final = $"final:{outcome}",
+                    RemoveMe = (string?)null,
+                }),
+                CompletionVariableShape.Enumerable => context.CompletedWithVariables(
+                    (IEnumerable<KeyValuePair<string, object>>)
+                    [
+                        new("Final", $"final:{outcome}"),
+                        new("RemoveMe", null!),
+                    ]),
+                _ => throw new ArgumentOutOfRangeException(nameof(completionShape)),
+            };
+            return result;
         }
     }
 
