@@ -11,7 +11,11 @@ Roslyn pairing and T58 measured gap list are reused for selection. Thirty new
 cases pass across two Quartz files; the complete affected project passes
 318/318 without skips. Two-response and three-response owner, fault, timeout
 and stale-generation families are complete. Read-only Red Team final review
-and two causal counterprobes are complete. The one frozen full33 remains.
+and two causal counterprobes are complete. The frozen 33-profile measurement
+and independent audit pass: 13,287 tests, 91.73582% lines, 84.36423%
+conservative branches and zero CRAP>30. One initial Azure Table local failure
+passed 40/40 in a fresh fixture; the failed run remains diagnostic evidence.
+Global Line/Branch A+ is open.
 
 ## Current T58 — registration, scope and failure journeys
 

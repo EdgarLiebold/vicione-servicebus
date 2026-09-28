@@ -11,6 +11,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a larger multi-response Saga request verification packet: stored
+  request-ID routing, three response types, service fault, real Quartz timeout,
+  callback owner override, missing/wrong IDs, two active Saga owners and stale
+  one-/two-/three-response generations. Thirty new cases and the complete
+  Quartz project (318/318) pass. Two deliberate correlation defects were
+  detected by the corresponding tests and restored byte-for-byte. The frozen
+  33-profile measurement passes 13,287 tests across 32 product assemblies:
+  86,006/93,754 physical lines (91.73582%), 31,084/36,845 conservative
+  branches (84.36423%) and zero methods with CRAP>30. Independent receipt/XML
+  audit and four accepted broker-fixture groups are clean. One initial Azure
+  Table local test observation failed and passed in a fresh fixture; the failed
+  attempt remains documented. No product source changed; global Line/Branch A+
+  remains open.
+
 - Added a connected registration-to-failure verification packet: filtered
   consumer discovery and its definition, scoped compensation with observed
   disposal, retry exhaustion before selected rescue, and message-journal

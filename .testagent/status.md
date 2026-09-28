@@ -13,8 +13,14 @@ changed classes pass 35/35 and 12/12; the complete Quartz project passes
 pass. Red Team's two concrete review concerns were fixed and reaccepted. Two
 real product correlation counterprobes failed exactly as expected and the source
 was byte-restored. The [T59 map](coverage-a-plus-20260921/t59-saga-request-lifecycle.md)
-records the acceptance evidence. Next: freeze and run the one full33, audit,
-publish. No new global profile or A+ claim has been made.
+records the acceptance evidence. Frozen `8f54d90a7` passed all 33 fresh
+profiles: 13,287 tests, 86,006/93,754 lines (91.73582%), 31,084/36,845
+conservative branches (84.36423%) and zero CRAP>30. Independent audit checks
+487 hashes, 66 runner/settings bindings, exact XML counts and four clean
+accepted fixture groups. The first Azure Table local attempt failed one
+existing JobService observation amid ETag 412 conflicts; a new isolated
+fixture passed 40/40, with both attempts retained. Changelog is updated;
+generate CHANGELIST and publish. Global Line/Branch A+ remains open.
 
 ## Current T58 — complete and remote-verified
 

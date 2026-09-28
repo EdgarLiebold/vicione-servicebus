@@ -58,7 +58,7 @@ Zweiantwort-Fall rot, `Completed3` genau den dritten Dreiantwort-Fall.
 Die Produktdatei ist jeweils bytegenau auf SHA-256
 `b34154afbdcca7bef514d35fd589519f2ae14c7b9d2bdb1f940cb87f5856eeae`
 zurückgestellt. Verify-only-Formatprüfung und `git diff --check` bestehen.
-Kein Produktcode geändert, noch kein Vollprofil und keine A+-Behauptung.
+Kein Produktcode geändert und keine globale Line-/Branch-A+-Behauptung.
 
 Das read-only Red Team hat die Auswahl gegen T18/T20/T47 und den fertigen
 Testcode geprüft. Zwei konkrete Orakellücken wurden geschlossen; die
@@ -66,5 +66,11 @@ Nachprüfung fand keinen weiteren konkreten Blocker. Die Microsoft-Skills
 `code-testing-agent`, `find-untested-sources`, `run-tests`, `test-gap-analysis`
 und `assertion-quality` wurden angewandt; die neuen Matrizen prüfen exakte
 Ergebnisse, Saga-Zustände, gespeicherte IDs, Transportheader, Trigger und
-negative Nachbarwirkungen. Das Paket ist bereit für den einmaligen frozen
-full33-Lauf samt Audit, Changelog, CHANGELIST und autorisiertem Push.
+negative Nachbarwirkungen. Der einmalige frozen full33-Lauf und der unabhängige
+Audit sind abgeschlossen: 13.287/13.287 Tests, 91,73582 % Zeilen,
+84,36423 % konservative Zweige und CRAP>30 = 0. Der erste Azure-Table-Local-
+Versuch scheiterte an einer bestehenden JobService-Beobachtung mit
+ETag-Konflikten; der vollständige Wiederholungslauf bestand 40/40 in einer
+neuen Fixture. Beide Versuche und Teardown-Findings sind im
+[T59-Messbericht](product-wide-profile-8f54d90a7.md) dokumentiert.
+Changelog ist ergänzt; CHANGELIST und Publikation folgen.

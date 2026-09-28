@@ -8,9 +8,12 @@ passes 318/318 without skips. Two active owners, two-/three-response routing,
 real Quartz timeouts, fault diagnosis, missing/wrong IDs, callback override and
 stale request generations are verified. Read-only Red Team accepted the repaired
 oracles; two real product correlation counterprobes failed as expected and were
-byte-restored. Freeze the implementation commit, run one full33 measurement
-with independent audit, then publish changelog and generated CHANGELIST.
-Global Line/Branch A+ remains open.
+byte-restored. Frozen `8f54d90a7` passed all 33 receipts: 13,287 tests,
+91.73582% physical lines, 84.36423% conservative branches and zero CRAP>30.
+Independent hash/XML/fixture audit agrees. One initial Azure Table local test
+failed on a JobService observation with ETag conflicts; its new-fixture 40/40
+retry is the accepted receipt. Complete publication with changelog, generated
+CHANGELIST and authorized push. Global Line/Branch A+ remains open.
 
 ## Current T58 — one larger registration-to-failure packet
 
