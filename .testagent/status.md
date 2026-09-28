@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## Current T77 — reliable scheduler timing and lease ownership
+
+Two public scheduler and in-memory store tests cover exact relative send and
+publish times, distinct destinations, serialized payloads, rejected input
+without admission, and due-time tick boundaries. Cancellation of a leased
+intent must fail without removing it or invalidating its original fencing
+lease; an independent neighbor can still be canceled. The affected class
+passes 39/39. The independent Red Team review identified a missing exact
+lease counterprobe, which now passes. Final read-only Red Team re-review is
+PASS with no remaining concrete P1/P2 finding. See the
+[T77 packet](coverage-a-plus-20260921/t77-reliable-scheduler-ownership.md).
+The next Core and product-wide coverage/CRAP runs are grouped with the next
+multi-packet checkpoint; T74 remains the latest complete profile.
+
 ## Current T76 — saga request lifecycle and completion publication
 
 Two red-first failures exposed missing fail-fast validation in normal
@@ -16,7 +30,7 @@ early response-factory side effect; the invalid-pipeline test now forbids it.
 Final read-only Red Team re-review is PASS with no remaining concrete P1/P2
 finding.
 See the [T76 packet](coverage-a-plus-20260921/t76-saga-request-lifecycle.md).
-Remote publication remains. T74 is still the
+T76 was published remotely. T74 is still the
 latest complete product-wide coverage/CRAP profile.
 
 ## Current T75 — saga composite declaration and dual-response request
@@ -34,7 +48,7 @@ prove routing by the saga request header, closing a Red Team finding.
 Independent read-only Red Team re-review of the complete packet is PASS with
 no remaining concrete P1/P2 finding.
 See the [T75 packet](coverage-a-plus-20260921/t75-saga-composite-request.md).
-Remote publication remains. The T74 global coverage figures
+T75 was published remotely. The T74 global coverage figures
 are stale for this changed source/test tree; the next 33-profile measurement
 is grouped under the agreed interval.
 

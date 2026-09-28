@@ -309,6 +309,154 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "t77-relative-send-and-publish-use-clock-route-and-admission-boundaries")]
+    public async Task MessageScheduler_RelativeSendAndPublishUseTheClockAndDoNotAdmitRejectedAttemptsAsync()
+    {
+        var sendDestination = new Uri("loopback://reliable-relative/send");
+        var publishDestination = new Uri("loopback://reliable-relative/publish");
+        var clock = new FakeTimeProvider(Epoch);
+        var services = new ServiceCollection();
+        services.AddSingleton<TimeProvider>(clock);
+        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://reliable-relative/"));
+                bus.Route<TypedMessage>(publishDestination);
+            });
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<TypedMessage>("vicione.tests.relative-scheduler");
+            });
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IMessageScheduler scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
+        var sendMessage = new TypedMessage("relative-send");
+        var publishMessage = new TypedMessage("relative-publish");
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => scheduler.ScheduleSendAsync(
+            sendDestination, TimeSpan.FromTicks(-1), sendMessage, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => scheduler.SchedulePublishAsync(
+            TimeSpan.FromTicks(-1), publishMessage, TestCancellationToken));
+        using var canceled = new CancellationTokenSource();
+        canceled.Cancel();
+        OperationCanceledException sendCanceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            scheduler.ScheduleSendAsync(sendDestination, TimeSpan.FromMinutes(1), sendMessage, canceled.Token));
+        OperationCanceledException publishCanceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            scheduler.SchedulePublishAsync(TimeSpan.FromMinutes(1), publishMessage, canceled.Token));
+        Assert.Equal(canceled.Token, sendCanceled.CancellationToken);
+        Assert.Equal(canceled.Token, publishCanceled.CancellationToken);
+        Assert.Equal(0, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+
+        ScheduledMessage<TypedMessage> send = await scheduler.ScheduleSendAsync(
+            sendDestination, TimeSpan.FromMinutes(20), sendMessage, TestCancellationToken);
+        clock.Advance(TimeSpan.FromMinutes(3));
+        ScheduledMessage<TypedMessage> publish = await scheduler.SchedulePublishAsync(
+            TimeSpan.FromMinutes(40), publishMessage, TestCancellationToken);
+        Assert.Equal((Epoch.AddMinutes(20), sendDestination, sendMessage),
+            (send.DueAt, send.Destination, send.Payload));
+        Assert.Equal((Epoch.AddMinutes(43), publishDestination, publishMessage),
+            (publish.DueAt, publish.Destination, publish.Payload));
+        Assert.Same(sendMessage, send.Payload);
+        Assert.Same(publishMessage, publish.Payload);
+        Assert.NotEqual(send.TokenId, publish.TokenId);
+        Assert.Empty(await store.ClaimDueAsync(Epoch.AddMinutes(20).AddTicks(-1), 10,
+            TimeSpan.FromMinutes(1), TestCancellationToken));
+
+        DurableSendDelivery first = Assert.Single(await store.ClaimDueAsync(Epoch.AddMinutes(20), 10,
+            TimeSpan.FromHours(1), TestCancellationToken));
+        Assert.Equal(send.TokenId, first.Message.Id.Value);
+        Assert.Equal(sendDestination, first.Message.DestinationAddress);
+        Assert.Equal(send.DueAt, first.Message.DueAt);
+        Assert.Contains(sendMessage.Value, Encoding.UTF8.GetString(first.Message.Body.Span), StringComparison.Ordinal);
+        Assert.Empty(await store.ClaimDueAsync(Epoch.AddMinutes(43).AddTicks(-1), 10,
+            TimeSpan.FromMinutes(1), TestCancellationToken));
+
+        DurableSendDelivery second = Assert.Single(await store.ClaimDueAsync(Epoch.AddMinutes(43), 10,
+            TimeSpan.FromMinutes(1), TestCancellationToken));
+        Assert.Equal(publish.TokenId, second.Message.Id.Value);
+        Assert.Equal(publishDestination, second.Message.DestinationAddress);
+        Assert.Equal(publish.DueAt, second.Message.DueAt);
+        Assert.Contains(publishMessage.Value, Encoding.UTF8.GetString(second.Message.Body.Span), StringComparison.Ordinal);
+        Assert.Equal(2, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "t77-leased-cancel-fails-without-removing-owned-or-neighbor-intent")]
+    public async Task MessageScheduler_CannotCancelLeasedIntentAndCanStillCancelIndependentNeighborAsync()
+    {
+        var destination = new Uri("loopback://reliable-lease-cancel/messages");
+        var clock = new FakeTimeProvider(Epoch);
+        var services = new ServiceCollection();
+        services.AddSingleton<TimeProvider>(clock);
+        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://reliable-lease-cancel/")));
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<TypedMessage>("vicione.tests.lease-cancel");
+            });
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IMessageScheduler scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
+        DateTimeOffset dueAt = Epoch.AddMinutes(5);
+        ScheduledMessage<TypedMessage> leased = await scheduler.ScheduleSendAsync(destination, dueAt,
+            new TypedMessage("leased"), TestCancellationToken);
+        ScheduledMessage<TypedMessage> neighbor = await scheduler.ScheduleSendAsync(destination, dueAt.AddHours(1),
+            new TypedMessage("neighbor"), TestCancellationToken);
+        DurableSendDelivery claimed = Assert.Single(await store.ClaimDueAsync(dueAt, 10,
+            TimeSpan.FromMinutes(2), TestCancellationToken));
+        Assert.Equal(leased.TokenId, claimed.Message.Id.Value);
+
+        InvalidOperationException rejected = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            scheduler.CancelScheduledSendAsync(leased, TestCancellationToken));
+        Assert.Contains("can no longer be cancelled", rejected.Message, StringComparison.Ordinal);
+        Assert.Contains(leased.TokenId.ToString(), rejected.Message, StringComparison.Ordinal);
+        Assert.Equal(2, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+        Assert.True(await store.ScheduleRetryAsync(
+            claimed.Message.Id,
+            claimed.Lease,
+            2,
+            dueAt.AddMinutes(3),
+            DurableSendFailureKind.Transient,
+            "lease-preserved-after-cancel",
+            dueAt,
+            TestCancellationToken));
+
+        await scheduler.CancelScheduledSendAsync(neighbor, TestCancellationToken);
+        Assert.Equal(1, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+        DurableSendDelivery recovered = Assert.Single(await store.ClaimDueAsync(dueAt.AddMinutes(3), 10,
+            TimeSpan.FromHours(3), TestCancellationToken));
+        Assert.Equal(leased.TokenId, recovered.Message.Id.Value);
+        Assert.Equal(destination, recovered.Message.DestinationAddress);
+        Assert.Equal(2, recovered.DeliveryAttempts);
+        Assert.Equal(DurableSendStatus.RetryScheduled, recovered.Status);
+        Assert.Empty(await store.ClaimDueAsync(dueAt.AddHours(2), 10, TimeSpan.FromMinutes(1), TestCancellationToken));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "default-and-typed-bus-schedulers-have-isolated-owners")]
     public async Task MessageScheduler_MultiBusRegistrationsRemainIsolatedAsync()
     {

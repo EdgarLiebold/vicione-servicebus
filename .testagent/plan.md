@@ -1,5 +1,20 @@
 # A+ remediation test plan
 
+## T77 reliable scheduler timing and cancellation ownership
+
+1. Add one connected in-memory durable scheduling test for negative and
+   pre-canceled relative send/publish calls, followed by valid relative
+   send and publish at different fake-clock instants. Assert exact handles,
+   stored due times, routed destinations, payloads and no early claim.
+2. Add a lease-state test in the same public scheduler setup: after a due
+   intent is claimed, cancellation reports invalid state and cannot remove
+   that intent or a neighboring unclaimed schedule. A later cancel of that
+   neighbor succeeds. Review exact error and independent state oracles.
+3. Use targeted affected-class tests during implementation, pseudo-mutation
+   and assertion-quality review, then independent read-only Red Team. Group
+   complete Core and 33-profile measurements at a coherent multi-packet
+   checkpoint, or run earlier when a broad contract change demands it.
+
 ## T76 saga request lifecycle and completion publication
 
 1. Add red-first tests for all normal request activity constructor

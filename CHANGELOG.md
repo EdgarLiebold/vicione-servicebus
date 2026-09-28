@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added public reliable-scheduler tests with an injected clock and real
+  in-memory durable store. They verify exact relative send and publish due
+  times, separate routing, payload and token identity, rejected admissions,
+  one-tick claim boundaries, and preservation of the original fencing lease
+  when cancellation of a claimed intent is rejected. An independent queued
+  neighbor remains cancelable. The affected class passes 39/39; no product
+  implementation changed in this packet.
+
 - Corrected normal saga request declaration to reject missing request,
   message factory and service-address provider before the machine can run.
   Request completion now rejects a missing pipeline context or continuation

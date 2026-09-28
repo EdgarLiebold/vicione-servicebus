@@ -1,5 +1,26 @@
 # A+ remediation research
 
+## T77 reliable scheduler timing and cancellation ownership
+
+The frozen T74 profile leaves 28/71 physical lines in
+`ReliableMessageScheduler` uncovered. Existing Core integration proves an
+absolute due time, metadata persistence, one successful cancellation and
+multi-bus registration. It does not prove relative delay from the injected
+clock, relative publish route ownership, rejection without admission after
+negative delay or pre-cancellation, or cancellation behavior after a store
+lease has already been claimed. These behaviors are meaningful for durable
+delivery even if method coverage did not change. The relevant recurring
+scheduler tests were inspected and already strongly cover control commands;
+no duplicate recurring tests are planned. The T75 Roslyn pairing artifact
+is reused for source selection; the T74 coverage snapshot is stale for the
+current tree.
+
+Acceptance: with a fake clock, relative send and publish handles and stored
+intents agree on exact due times, destinations and payloads; rejected inputs
+leave the store empty and a later valid schedule succeeds. Once a due intent
+has been leased, scheduler cancellation must fail with the precise invalid
+state and leave the leased intent and an independent neighbor intact.
+
 ## T76 saga request lifecycle and completion publication
 
 The frozen T74 profile observes 74/89 uncovered lines in the request
