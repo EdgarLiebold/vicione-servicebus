@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T87 focused fault recovery request packet
+
+The catch-path request journey passes 2/2 outcomes, and the complete Core
+project passes 6,948/6,948 on exact test commit `45d9c2f16`. It verifies
+the original failure context, deferred factory, dynamic address precedence,
+three independent correlation IDs, response routing and no send or state
+transition after factory failure. Read-only Red Team re-review is PASS after
+two oracle corrections. No product source changed. See
+[T87 evidence](t87-fault-recovery-request.md). T85 remains the latest
+complete product-wide Line/Branch/CRAP checkpoint; global A+ is still open.
+
 ## Current T86 focused saga packet
 
 The data-free saga-signal send contract passes 2/2 integrated outcomes, and

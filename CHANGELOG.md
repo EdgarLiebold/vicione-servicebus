@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added an integrated catch-path saga request test with dynamic address and
+  deferred factory. It verifies original failure context, three distinct
+  correlation IDs, exact request and response routing, and no request or
+  state advance if the factory fails. The focused theory passes 2/2 and Core
+  passes 6,948/6,948 on the exact test commit; adversarial re-review is PASS.
+  Product code did not change in this packet.
+
 - Added integrated tests for a data-free saga signal sending a pending message
   task with a callback. They verify that no callback or delivery occurs before
   the task completes, exact destination and transport metadata on success, and
