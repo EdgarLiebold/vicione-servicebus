@@ -36,7 +36,7 @@ internal sealed class InMemoryOutboxMessageSchedulerContext :
             schedulerFactory(consumeContext) ?? throw new InvalidOperationException("The message scheduler factory returned null."));
 
         _scheduledMessages = [];
-        _cancelMessages = new InMemoryOutboxDeferredMethodCollection();
+        _cancelMessages = new InMemoryOutboxDeferredMethodCollection(clearToSend);
     }
 
     /// <summary>Gets the factory used to resolve the scoped message scheduler.</summary>
@@ -580,13 +580,18 @@ internal sealed class InMemoryOutboxMessageSchedulerContext :
     Task AddCancelMessageAsync(Func<Task> cancel, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(cancel);
-        if (cancellationToken.IsCancellationRequested)
+        try
+        {
+            lock (_listLock)
+                if (_cancelMessages.TryQueue(cancel, cancellationToken))
+                    return Task.CompletedTask;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
             return Task.FromCanceled(cancellationToken);
-        if (_clearToSend.IsCompleted)
-            return cancel() ?? throw new InvalidOperationException("The scheduled-message cancellation returned a null task.");
+        }
 
-        lock (_listLock)
-            return _cancelMessages.AddAsync(cancel, cancellationToken);
+        return cancel() ?? throw new InvalidOperationException("The scheduled-message cancellation returned a null task.");
     }
 
     /// <summary>Cancels every scheduled message tracked by this outbox.</summary>

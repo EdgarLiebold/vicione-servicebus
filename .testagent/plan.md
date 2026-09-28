@@ -1,5 +1,23 @@
 # A+ remediation test plan
 
+## T104 in-memory outbox release admission race
+
+1. Add deterministic red-first tests for deferred send and scheduler
+   cancellation admission crossing `ClearToSend` and final drain. Use real
+   collection/context APIs and an observable scheduler. Assert exactly one
+   delivery, no pending operation, and correct identity/cancellation token.
+2. Make each admission check and enqueue atomic with its drain lock. Give the
+   scheduler's cancellation collection the same release task and avoid
+   invoking externally supplied operations while holding the collection lock.
+3. Run focused tests during implementation, use a controlled counterprobe,
+   obtain read-only adversarial review, then complete Core on the exact commit.
+   Update requirement projection, status, changelog and changelist and push.
+   Retain the 20–30 packet interval for the 33-profile global measurement.
+
+Red Team extension: prove provider callbacks run outside `_listLock` and
+tokens canceled while blocked on either admission lock never enter the queue
+or invoke the operation. Keep the exact cancellation token observable.
+
 ## T103 bus composition ownership across buses
 
 1. Extend the existing host composition suite with one default-bus duplicate

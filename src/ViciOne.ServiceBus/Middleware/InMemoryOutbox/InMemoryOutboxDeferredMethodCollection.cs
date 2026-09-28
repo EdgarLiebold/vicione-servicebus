@@ -28,18 +28,32 @@ internal sealed class InMemoryOutboxDeferredMethodCollection
     public Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        if (cancellationToken.IsCancellationRequested)
+        try
+        {
+            if (TryQueue(method, cancellationToken))
+                return Task.CompletedTask;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
             return Task.FromCanceled(cancellationToken);
-        if (_clearToSend?.IsCompleted ?? false)
-            return method() ?? throw new InvalidOperationException("The deferred outbox operation returned a null task.");
+        }
 
-        var executionContext = ExecutionContext.Capture();
+        return method() ?? throw new InvalidOperationException("The deferred outbox operation returned a null task.");
+    }
 
+    internal bool TryQueue(Func<Task> method, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(method);
         lock (_pendingMethods)
         {
-            _pendingMethods.Add(new InMemoryOutboxDeferredMethod(executionContext, method));
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!(_clearToSend?.IsCompleted ?? false))
+            {
+                _pendingMethods.Add(new InMemoryOutboxDeferredMethod(ExecutionContext.Capture(), method));
+                return true;
+            }
 
-            return Task.CompletedTask;
+            return false;
         }
     }
 

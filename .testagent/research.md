@@ -1,5 +1,33 @@
 # A+ remediation research
 
+## T104 in-memory outbox release admission race
+
+`InMemoryOutboxConsumeContext.ExecutePendingActionsAsync` marks `ClearToSend`
+complete immediately before draining deferred sends. The collection's
+`AddAsync` checks that task outside `_pendingMethods` lock. A concurrent Add
+can read incomplete, block at the lock, and enqueue after the drain has
+removed its final batch, leaving an acknowledged send permanently pending.
+The scheduler cancellation path has the same split: it reads `ClearToSend`
+outside `_listLock`, then queues into a deferred collection with no release
+task. A cancellation admitted at that boundary can also be stranded.
+
+Acceptance: when either producer has passed its old release check and blocks
+on its admission lock, then release and drain happen, the admitted operation
+must execute exactly once and leave no pending entry. Both tests will hold
+the existing synchronization object to force that sequence, observe that
+the producer thread is waiting for the monitor, release the outbox and drain,
+then assert exact send/cancellation effects and empty queue. A canceled
+producer must not be admitted. No timing-based hope of hitting the race.
+
+Red Team found two adjacent admission hazards in the first repair. An
+immediate scheduler cancellation could invoke provider code while `_listLock`
+was still held, and a token canceled while its producer waited for the
+admission lock could still be accepted. The corrected contract checks the
+token and release state at one collection lock, then invokes any immediate
+callback after leaving both internal locks. The regression observes the
+callback's lock state and cancels two producers while each is blocked on its
+admission lock, requiring the exact token and zero side effects.
+
 ## T103 bus composition ownership across buses
 
 The T97 core report has 63 uncovered physical lines in
