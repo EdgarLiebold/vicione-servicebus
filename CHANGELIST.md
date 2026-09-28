@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10926 |
+| Added | 10930 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -138,6 +138,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-4e7b54c22.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-5c3e6c3a4.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-5da15ce2e.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/product-wide-profile-5e9509367.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-6352ef3e9.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-643b5ab4c.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/product-wide-profile-6a0aca709.md` | Added |  |
@@ -246,6 +247,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t55-consumer-outbox-recovery.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t56-durable-admission-atomicity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t57-ingress-middleware-plan.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16233,12 +16235,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RetryOperationOwnershipTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RetryRescueJourneyIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/SagaIngressRedeliveryDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/SagaInitiationMessageFilterDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/SagaMessageFilterContractDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/SagaObservationMessageFilterDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/SagaSplitMergeRescueDeepContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ScopedCompensationFilterIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutActivityContextTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
