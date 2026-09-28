@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## Current T98 — persistent outbox cancellation handoff
+
+The six durable send capture paths now pass the caller's cancellation token
+through to outbox admission. Red-first failures proved that cancellation after
+context creation previously allowed admission. Twenty-one focused cases prove
+the seven send shapes, exact token/context/message/pipe behavior, rejection
+after cancellation, and correct waiting and error propagation for delayed
+storage admission. A controlled untyped-pipe counterprobe failed its two
+targeted cases. Complete Core passes 7,036/7,036 on exact commit `f221b6af1`;
+independent Red Team re-review is PASS with no concrete P1/P2. See the
+[T98 packet](coverage-a-plus-20260921/t98-persistent-outbox-cancellation.md).
+T97 remains the latest full product-wide profile; Line and Branch A+ remain
+open. T98 is packet one of the new 20–30 packet measurement interval.
+
 ## Current T79 — ActiveMQ cached producer admission and send ownership
 
 Two red-first failures proved that `CachedMessageProducer` accepted a null

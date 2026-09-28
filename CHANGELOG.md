@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed persistent outbox send capture to carry the caller's cancellation
+  token through durable admission. Cancellation after transport context
+  creation can no longer admit the message. A seven-shape test matrix proves
+  exact token, context, message and pipe behavior, plus waiting for delayed
+  storage admission and propagating its exact error. Red-first and controlled
+  counterprobe failures verified the regression tests; focused tests pass
+  21/21 and complete Core passes 7,036/7,036 on `f221b6af1`. Independent
+  adversarial review is PASS. The next global coverage/CRAP checkpoint remains
+  on the agreed larger packet interval.
+
 - Completed the next strict 33-profile product-wide checkpoint on commit
   `3cb94a285`: 13,604/13,604 test executions, 32 assemblies,
   86,639/93,963 covered physical lines (92.20544%), 31,312/36,927

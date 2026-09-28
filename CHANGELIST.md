@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10983 |
+| Added | 10985 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -280,6 +280,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t95-request-lifecycle-publication.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t96-request-handler-outcomes.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t97-message-handler-task-contract.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t98-persistent-outbox-cancellation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-activity-fault-phase.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/timeout-consume-fault-phase.md` | Added |  |
 | `.testagent/iteration119-acquired-scope-packet.md` | Added |  |
@@ -16269,6 +16270,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxMessageRepositoryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/OutboxSendEndpointBoundaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/PersistentOutboxCancellationHandoffTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxConsumerIdentityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs` | Added |  |
