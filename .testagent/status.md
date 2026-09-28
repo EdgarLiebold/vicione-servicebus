@@ -17,11 +17,12 @@ accepting the exact limit. The negative-length case failed red before the
 guard. Public comments now distinguish RabbitMQ's `last` chunk from `next`
 and describe timestamp attachment at a chunk boundary.
 
-Ten focused stream cases pass, the full RabbitMQ unit project passes 513/513,
-and a fresh RabbitMQ fixture passed 2/2 stream/cluster broker tests. The
+At the committed source/test tree `67320a969`, ten focused stream cases pass,
+the full RabbitMQ unit project passes 513/513, and a fresh RabbitMQ fixture
+passed 2/2 stream/cluster broker tests. The
 stream broker test asserts that the real queue declares `36h` and delivers a
 message; fixture findings are empty in
-`artifacts/run-output/vicione-047447b7a79c/fixture-findings.json`.
+`artifacts/run-output/vicione-2697a2e6c577/fixture-findings.json`.
 An earlier method-filter attempt selected zero tests (exit 8) and is excluded
 from acceptance; the corrected class-filter run passed. Inline mutation and
 assertion review found no assertion-free or trivial-only new tests: the cases
