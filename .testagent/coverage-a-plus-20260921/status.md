@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T86 focused saga packet
+
+The data-free saga-signal send contract passes 2/2 integrated outcomes, and
+the complete Core project passes 6,946/6,946 on exact test commit `11028352e`.
+The test distinguishes deferred message creation, callback metadata and order,
+successful delivery, and failure without send or continuation. Read-only Red
+Team review is PASS after correction of the requirement projection and cleanup
+token. No product source changed. See [T86 evidence](t86-saga-signal-send.md).
+The next full 33-profile measurement follows the agreed larger packet cadence;
+T85 remains the latest complete product-wide measurement.
+
 ## Current T85 product-wide checkpoint
 
 The tenth-packet checkpoint on `fa4a1a910` passes a strict 33-receipt,

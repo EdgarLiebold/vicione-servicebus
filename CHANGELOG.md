@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added integrated tests for a data-free saga signal sending a pending message
+  task with a callback. They verify that no callback or delivery occurs before
+  the task completes, exact destination and transport metadata on success, and
+  preserved cause with no send or continuation on failure. The focused theory
+  passes 2/2 and Core passes 6,946/6,946 on the exact test commit; independent
+  adversarial review is PASS. Product code did not change in this packet.
+
 - Completed a fresh 33-receipt product-wide Line/Branch/CRAP measurement on
   commit `fa4a1a910`: 13,500/13,500 test executions passed, all 32 product
   assemblies and required provider/portability profiles were present. Line
