@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Strengthened the integrated Courier retry and outbox journey. The revised
+  route's successor now proves its outgoing effect is buffered until release,
+  then admitted and delivered once. Both object and enumerable completion
+  variables update the result and remove a stale key; termination proves the
+  successor never runs. A controlled removal of its outbox failed both revise
+  cases. The focused class passes 7/7 and Core passes 6,947/6,947 on the exact
+  test commit; adversarial re-review is PASS. Redundant concurrent-delivery
+  rows were removed because that behavior was not distinguished here.
+
 - Added an integrated catch-path saga request test with dynamic address and
   deferred factory. It verifies original failure context, three distinct
   correlation IDs, exact request and response routing, and no request or

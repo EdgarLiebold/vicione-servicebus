@@ -1,5 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T88 Courier successor outbox packet
+
+The revised-route successor now proves a send stays buffered before its
+release and is admitted and consumed exactly once afterward. Object and
+enumerable completion variables both update the final result and remove a
+stale key; a terminated route never runs its successor. The focused class
+passes 7/7 and complete Core passes 6,947/6,947 on exact test commit
+`798d1e99e`. An isolated removal of the successor outbox failed both revise
+cases, and independent read-only Red Team re-review is PASS after two P2
+oracle corrections. See [T88 evidence](t88-courier-successor-outbox.md).
+No product source changed. T85 remains the latest complete product-wide
+Line/Branch/CRAP checkpoint; global A+ is still open.
+
 ## Current T87 focused fault recovery request packet
 
 The catch-path request journey passes 2/2 outcomes, and the complete Core
