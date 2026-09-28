@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed EF transactional outbox sessions that could claim a commit after
+  staged records were detached, reserve capacity twice for a duplicate ID,
+  or persist a message without matching capacity. Exact staged-entry and
+  capacity checks now guard SaveChanges; abort restores the prior ledger.
+  Successful `SaveChanges(false)` accepts only outbox-owned entries, so later
+  commits and batches do not reinsert them. Twelve new requirement variants
+  pass 28/28 focused tests and 359/359 EF tests on `ea3ce51ee`; independent
+  adversarial review is PASS. Caller-owned outer transactions and EF
+  SaveChanges-interceptor assumptions are documented. The global Line/Branch
+  A+ checkpoint remains open.
+
 - Fixed persistent outbox send capture to carry the caller's cancellation
   token through durable admission. Cancellation after transport context
   creation can no longer admit the message. A seven-shape test matrix proves

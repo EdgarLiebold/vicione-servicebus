@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T100 EF transactional outbox packet
+
+Lost tracked sends, duplicate reservations, capacity drift and
+`SaveChanges(false)` reinserts are fixed on `ea3ce51ee`. Twelve new requirement
+variants cover these faults, external saves and caller-owned transaction
+rollback. Focused tests pass 28/28; the complete EF project passes 359/359 on
+the exact implementation commit. Independent read-only Red Team review is
+PASS. See [T100 evidence](t100-ef-outbox-tracker-loss.md). T97 remains the
+latest global Line/Branch/CRAP checkpoint; Line and Branch A+ remain open.
+
 ## Current T97 product-wide checkpoint
 
 The twelfth-packet checkpoint on `3cb94a285` passes a strict 33-receipt,
