@@ -37,10 +37,11 @@ payload-based routing. This complements the
 existing three-response test that stores a separate request ID in a saga
 property. The two new request journeys pass 2/2 with no product change.
 
-The final targeted composite suite passed 12/12. The complete Core suite
-passed 6,929/6,929 before the additional fault case was added; the two
-request journeys then passed 2/2. The exact-commit full Core run remains.
-Manual Microsoft
+The final targeted composite suite passed 12/12 and both request journeys
+passed 2/2. The complete Core suite passed 6,930/6,930 on commit
+`60cc7f6eb`; `artifacts/t75-core-receipt/receipt.json` binds the run to the
+exact source and test trees, 13 unchanged binaries and 1,923 tracked product
+sources. Manual Microsoft
 assertion-quality review found exception, identity, collection, state and
 negative oracles in the composite cases, and exact routing, header,
 destination, count, state, exact fault identity, neighbor isolation and
@@ -53,7 +54,7 @@ No numeric mutation score is claimed. Independent read-only Red Team re-review
 of the composite, success-request and corrected fault-request paths is PASS
 with no remaining concrete P1/P2 findings.
 
-The exact-commit Core receipt and remote publication are pending. The T74
+Remote publication is pending. The T74
 33-profile Line/Branch/CRAP report remains the latest complete product-wide
 measurement; these source/test changes make its percentages stale. The next
 full measurement follows the agreed 10–12-packet interval unless a broad

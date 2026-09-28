@@ -18,9 +18,9 @@ entry below records what the current work changed for anyone reading the source.
   declaration that raises once. A two-saga request journey also verifies that
   either accepted response follows the request-header ID even when its payload
   names a different saga. A faulting request affects only its own saga while a
-  healthy neighbor succeeds; the fault keeps the exact request ID and cause.
-  The complete Core suite passed before this last case was added; final
-  exact-commit verification remains.
+  healthy neighbor succeeds; the fault keeps the exact request-header ID,
+  decoy payload ID and cause. The exact-commit Core suite passes 6,930/6,930;
+  independent Red Team re-review has no remaining concrete P1/P2 finding.
 
 - Added four task-lifecycle tests for pending success and failure paths,
   exact outcome transfer, and virtual-clock timeout boundaries. The
