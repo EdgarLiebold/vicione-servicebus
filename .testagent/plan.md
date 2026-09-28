@@ -1,5 +1,19 @@
 # A+ remediation test plan
 
+## T103 bus composition ownership across buses
+
+1. Extend the existing host composition suite with one default-bus duplicate
+   transport/limits case and a healthy secondary bus. Assert the exact two
+   ownership causes, bus identity, and neighbor acceptance.
+2. Register one real reliable-messaging contract declaration and two
+   nonmaterializing descriptors for each required owner. Assert the five
+   distinct ambiguous-owner causes and that no dummy factory ran.
+3. Run only this class while editing; perform a controlled cardinality
+   counterprobe; obtain independent read-only adversarial review. On the exact
+   test commit run the complete Core project, then update evidence, changelog,
+   requirements projection and changelist and push. Keep the 33-profile global
+   measurement on the agreed 20–30-packet interval.
+
 ## T102 classic EF outbox cursor and cleanup integrity
 
 1. Add red-first real SQLite tests for a Pending row with a cursor beyond its

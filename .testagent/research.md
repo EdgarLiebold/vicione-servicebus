@@ -1,5 +1,27 @@
 # A+ remediation research
 
+## T103 bus composition ownership across buses
+
+The T97 core report has 63 uncovered physical lines in
+`Configuration/BusFactoryConfigurator.cs`, but the next test decision is based
+on startup ownership risk rather than that count. Roslyn static pairing labels
+`BusCompositionValidation.cs` unpaired because the existing
+`BusCompositionStartupValidationTests` use the public host configuration path
+and find the internal validator by `IHostedService`; these tests do exercise
+missing transport/limits, orphan and duplicate features, and missing durable
+owners. The remaining contract gap is ambiguous *multiple* transport and
+limits registrations for one bus alongside a healthy neighbor, plus multiple
+owners for every durable component. A host must reject all contradictions
+before constructing any configured bus or store and must not misattribute the
+fault to a different bus.
+
+Acceptance: real DI registrations trigger a combined diagnostic for duplicate
+transport and limits only on their owning bus; a second configured bus starts
+validation successfully. Reliable messaging with a valid contract catalog but
+duplicate catalog, outbox, inbox, schedule and dispatcher descriptors reports
+all five ownership faults without materializing those descriptors. Assertions
+must identify the bus and each cause, not merely expect an exception.
+
 ## T102 classic EF outbox cursor and cleanup integrity
 
 The delivery source pages messages with `SequenceNumber > LastSequenceNumber`.

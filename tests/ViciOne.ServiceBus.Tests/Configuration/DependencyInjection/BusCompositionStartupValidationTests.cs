@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.MessageJournal;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -60,6 +61,39 @@ public sealed class BusCompositionStartupValidationTests
         Assert.Contains(failures, static failure => failure.StartsWith("Transport for bus 'default':", StringComparison.Ordinal));
         Assert.Contains(failures, static failure => failure.StartsWith("Message limits for bus 'default':", StringComparison.Ordinal));
         Assert.All(failures, static failure => Assert.EndsWith(".", failure, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-COMPOSITION", "duplicate-transport-and-limits-affect-only-owning-bus")]
+    public async Task StartupValidation_RejectsBothAmbiguousOwnersWithoutFaultingNeighborBusAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.UsingInMemory();
+        });
+        services.AddViciOneServiceBus<IOrdersBus>(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.UsingInMemory();
+        });
+        BusCompositionRegistrations.AddTransport<IBus>(services, typeof(object));
+        services.AddSingleton<IMessageLimitsRegistration>(new MessageLimitsRegistration<IBus>(MessageLimits.Conservative));
+        await using ServiceProvider provider = services.BuildServiceProvider();
+
+        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
+            CompositionValidator<IBus>(provider).StartAsync(TestContext.Current.CancellationToken));
+
+        string[] failures = exception.Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(2, failures.Length);
+        Assert.Contains(failures, static failure => failure.StartsWith(
+            "Transport for bus 'default': multiple transport owners are selected", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.StartsWith(
+            "Message limits for bus 'default': Limits has multiple owners", StringComparison.Ordinal));
+        Assert.DoesNotContain(typeof(IOrdersBus).FullName!, exception.Message, StringComparison.Ordinal);
+        await CompositionValidator<IOrdersBus>(provider).StartAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -169,6 +203,54 @@ public sealed class BusCompositionStartupValidationTests
         Assert.Contains(failures, static failure => failure.Contains("no inbox store", StringComparison.Ordinal));
         Assert.Contains(failures, static failure => failure.Contains("no schedule store", StringComparison.Ordinal));
         Assert.All(failures, static failure => Assert.StartsWith("Reliable messaging for bus 'default':", failure, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUS-COMPOSITION", "all-ambiguous-durable-owners-fail-before-materialization")]
+    public async Task StartupValidation_ReportsEveryAmbiguousDurableOwnerBeforeMaterializationAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(bus =>
+        {
+            bus.Limits(MessageLimits.Conservative);
+            bus.UsingInMemory();
+            bus.UseReliableMessaging(reliable =>
+            {
+                ConfigurePolicy(reliable);
+                reliable.AddMessageContract<JournalProbe>("vicione.tests.journal-probe");
+            });
+        });
+        var materializations = 0;
+        AddConflictingOwners(typeof(IMessageContractCatalog));
+        AddConflictingOwners(typeof(IOutboxStore<IBus>));
+        AddConflictingOwners(typeof(IInboxStore<IBus>));
+        AddConflictingOwners(typeof(IScheduleStore<IBus>));
+        AddConflictingOwners(typeof(IDurableSendDispatcher<IBus>));
+        await using ServiceProvider provider = services.BuildServiceProvider();
+
+        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
+            CompositionValidator<IBus>(provider).StartAsync(TestContext.Current.CancellationToken));
+
+        string[] failures = exception.Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(5, failures.Length);
+        Assert.All(failures, static failure => Assert.StartsWith("Reliable messaging for bus 'default':", failure, StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("multiple message-contract catalog owners", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("multiple persistence store owners", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("multiple inbox store owners", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("multiple schedule store owners", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("multiple transport dispatcher owners", StringComparison.Ordinal));
+        Assert.Equal(0, materializations);
+
+        void AddConflictingOwners(Type serviceType)
+        {
+            for (var index = 0; index < 2; index++)
+                services.AddSingleton(serviceType, _ =>
+                {
+                    materializations++;
+                    throw new InvalidOperationException("Ambiguous services must not be materialized.");
+                });
+        }
     }
 
     [Fact]
