@@ -1,5 +1,21 @@
 # A+ remediation research
 
+## T72 callback-configured mediator dispatch
+
+The frozen T63 aggregate has related uncovered lines in four Abstractions
+entry points: consume-scope send (48/74), response (30/34), direct send
+(26/38), and publish (22/38). The static pairing inventory was already run
+for this campaign. Existing Abstractions tests prove consume-scope overload
+validation and forwarding, while Core mediator tests cover ordinary dispatch,
+headers, and requests. The missing behavioral question is whether synchronous
+and asynchronous callback pipes actually configure messages before dispatch
+and whether an asynchronous callback delays completion and propagates failure.
+The bounded T72 inventory is those four entry points and the in-process
+mediator tests. Acceptance requires transport-visible metadata, exact payload
+and explicit contract forwarding (a declared interface distinct from its concrete type), callback ordering, and a negative callback outcome; a
+counterpart without a callback must not provide the configured metadata.
+The T63 report remains a targeting snapshot, not a current coverage claim.
+
 ## T71 request-rate partial-failure ownership across Abstractions and SQS
 
 The frozen T63 profile leaves 31/321 lines in `RequestRateAlgorithm` uncovered,

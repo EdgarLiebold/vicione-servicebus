@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added mediator dispatch tests for callback-configured direct send, runtime
+  publish, consume-scope forwarding, and response. They check asynchronous
+  configuration order, transport-visible headers, exact callback failure,
+  non-delivery after failure, metadata isolation between messages, and exact
+  forwarding of an explicit interface contract distinct from the runtime type.
+  The affected Core suite passes 6,916/6,916; the independent Red Team
+  re-review found no remaining blocker.
+
 - Corrected adaptive receive scheduling when a provider enumerates one result
   and then fails, or an ordered group fails after one result. These failures
   now retain their exact cause instead of returning a successful partial

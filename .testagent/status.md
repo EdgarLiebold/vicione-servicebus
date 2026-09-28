@@ -1,5 +1,24 @@
 # A+ remediation test status
 
+## Current T72 — callback-configured mediator dispatch
+
+Four new in-process mediator journeys exercise the four related Abstractions
+callback entry points: direct send waits for async metadata configuration;
+runtime publish preserves the original callback exception, delivers nothing
+on failure, and recovers with an exact header; consume-scope send configures
+only its forwarded message; and response awaits async configuration before
+the request client sees the response and header. Red Team found that identical
+declared and runtime types allowed a message-type forwarding mutant to survive.
+A fifth endpoint-boundary test checks the original concrete object and its
+distinct declared interface type. All five focused tests pass. Inline
+assertion review finds value, ordering, non-delivery and isolation oracles;
+the independent Red Team re-review is PASS with no remaining concrete blocker.
+The first full Core run passed 6915/6916 and timed out in an unchanged
+JobService observation test; that test passed 1/1 in isolation and the second
+complete Core run passed 6916/6916 without skips. No product source changed
+and no product-wide Line/Branch/CRAP value is inferred from the frozen T63
+baseline.
+
 ## Current T71 — request-rate partial-failure ownership
 
 Two red-first public algorithm cases failed on the original catch-and-return

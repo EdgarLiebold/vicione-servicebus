@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10944 |
+| Added | 10945 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -16175,6 +16175,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Logging/LogContextTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Logging/MessageActivityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Logging/StartedActivityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/CallbackConfiguredDispatchTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Mediator/ContainerMediatorIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorMessageBodySerializerContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorReceiveContextContractTests.cs` | Added |  |

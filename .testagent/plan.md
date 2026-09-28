@@ -1,5 +1,20 @@
 # A+ remediation test plan
 
+## T72 callback-configured mediator dispatch
+
+1. Use mediator handlers as observable dispatch endpoints for direct send,
+   publish, consume-scope send, and response. Exercise both synchronous and
+   asynchronous callback forms where their completion semantics differ.
+2. Assert exact payload, header or identifier configured by the callback,
+   absent-header controls, and that asynchronous sends cannot complete before
+   the configuration callback is released. Publish a concrete message under
+   an explicit interface contract and assert at the endpoint boundary that
+   the original message and distinct declared type arrive exactly once.
+   Verify a callback failure retains the original exception and prevents delivery.
+3. Run only affected Core/Mediator project tests during this packet, review
+   assertions with pseudo-mutation reasoning and independent Red Team, then
+   commit and push. Retain the grouped full coverage/CRAP cadence.
+
 ## T71 request-rate partial-failure ownership across Abstractions and SQS
 
 1. Red-first algorithm tests for a result sequence that yields one item and
