@@ -10,6 +10,26 @@ attempt stopped during restore because sandbox networking blocked NuGet audit
 metadata (`NU1900`); the accepted `t63-profile-00-r1` used the normal network
 path and passed all 6,897 Core tests. The failed restore produced no receipt.
 
+An independent read-only audit reconstructed all figures directly from the
+33 Cobertura XML documents and found no discrepancy. It checked all 33
+source/test tree and runner/settings bindings; 355 binary/PDB hashes, 99
+log hashes and 33 XML hashes (487/487 artifact files); and each complete MTP
+test summary. The 32 assembly and 2,775 observed source-file identities
+agree. The Top-25 CRAP rows match exactly. The four fixture finding files
+each contain `findings: []`, and all nine brokerlog hashes agree with their
+recorded values. Their own SHA-256 values are:
+
+| Fixture | Findings SHA-256 |
+| --- | --- |
+| Shared six-broker `vicione-28bce5cebbe0` | `1562f8300de891977f1383ec040f81dbfcf7354ab2fd558c05ce2ca5b491ac96` |
+| RabbitMQ `vicione-0b39d2dbceca` | `c17dbf6647b131b7ca746bee5b6a06b4ffe06b52e6df9557c1631693de4d3806` |
+| Service Bus `vicione-377f590cead0` | `530c4dd23cce779fa3104011f1744df08bb091fe53baedd57cafabbd96a74461` |
+| SQL Server `vicione-0220616f2f9c` | `a6940e4f17b06d501e0d3b23ac397e83890c4f6a6e898b37dd627434012440e1` |
+
+The receipts do not themselves bind those four separate fixture files
+cryptographically. The independent audit verified their internal hashes and
+the run logs; the table records their exact bytes for later review.
+
 | Measure | T59 | T63 frozen commit | Change |
 | --- | ---: | ---: | ---: |
 | Passed tests | 13,287 | 13,318 | +31 |

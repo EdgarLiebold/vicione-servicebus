@@ -23,7 +23,10 @@ The once-per-four-packets 33-profile measurement is complete on frozen
 `e1cf685fe`: 13,318 tests and one CRAP>30 regression in the new batch pipe.
 That method was split by responsibility; fresh focused coverage measures its
 new method/helper scores at 6.04/14.27, with all seven batch-pipe methods
-below 30. Independent audit of the frozen full measurement is pending.
+below 30. Independent audit of the frozen full measurement found no
+discrepancy across 487 hashed artifacts, all 33 XML/test summaries and four
+empty fixture finding lists. The four fixture files are documented separately
+because the receipt schema does not bind them.
 For future work, group six to eight connected packets between full profiles,
 with an earlier full run only for cross-assembly contracts, a critical CRAP
 signal or a milestone requiring a global claim. Within each packet test

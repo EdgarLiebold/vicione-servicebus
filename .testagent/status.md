@@ -17,7 +17,9 @@ rates were 91.74426%/84.37983%; these are diagnostic values for the commit
 before the extraction. The next global run is planned after six to eight
 connected packets, or earlier for a wider contract change or new critical
 signal. Global Line/Branch A+ remains open. Independent audit of the 33
-frozen receipts is in progress.
+frozen receipts found no discrepancy: 487 artifact hashes, every XML/test
+summary and four empty fixture finding lists agree. The fixture files are
+recorded separately from the receipts.
 
 ## Current T62 — send observer outcome packet in affected-project validation
 
