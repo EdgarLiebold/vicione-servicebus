@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T102 EF outbox delivery integrity packet
+
+Contradictory persisted cursor/status values no longer let the worker claim
+delivery or delete unsent messages. The cursor is checked before any external
+send, with a completion race guard and cleanup invariant. Red-first SQLite
+regressions and a controlled counterprobe caught the original and intermediate
+faults. The focused class passes 11/11, complete EF unit tests 371/371 on
+`bb89661c2`, and canonical PostgreSQL integration 8/8. Independent read-only
+Red Team re-review is PASS. See [T102 evidence](t102-ef-outbox-delivery-cursor.md).
+T97 remains the latest global checkpoint; Line and Branch A+ remain open.
+
 ## Current T101 classic EF transactional outbox packet
 
 The classic outbox now validates exact State and Message ownership, initial

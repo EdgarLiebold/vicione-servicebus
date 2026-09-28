@@ -1,5 +1,21 @@
 # A+ remediation test status
 
+## T102 — EF outbox persisted cursor and cleanup integrity
+
+Two new requirement variants exercise inconsistent Pending and Delivered
+states and a mixed cursor window through real SQLite persistence. The original
+implementation failed red-first: it deleted unsent messages or sent a later
+message before detecting the older one. The repaired source checks before
+external send, checks again at completion, and refuses cleanup with remaining
+messages. The tests assert exact message identity, retained state/cursor/lock,
+zero transport sends, and no progress over two attempts; they have substantive
+negative and side-effect oracles. Disabling the late completion guard in a
+controlled counterprobe failed the regression. The focused class passes 11/11,
+complete EF unit project 371/371 on `bb89661c2`, and canonical PostgreSQL
+integration 8/8 with empty fixture findings. Read-only Red Team re-review is
+PASS. See [T102 evidence](coverage-a-plus-20260921/t102-ef-outbox-delivery-cursor.md).
+T97 remains the latest global profile; Line and Branch A+ remain open.
+
 ## T99 — hotspot contract triage
 
 Reviewed recurring scheduler send/publish, retry configuration and policies,

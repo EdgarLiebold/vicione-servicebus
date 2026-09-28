@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed EF outbox delivery and cleanup when persisted state contradicts
+  unsent messages. The worker now rejects invalid cursor state before external
+  sends, guards completion against races, and retains messages if cleanup
+  encounters any remainder. Red-first SQLite tests caught silent loss and an
+  intermediate duplicate-send risk; focused tests pass 11/11, complete EF
+  unit tests 371/371 on `bb89661c2`, and canonical PostgreSQL integration
+  8/8. Independent adversarial review is PASS. Global Line and Branch A+
+  remain open.
+
 - Fixed the classic EF transactional outbox falsely treating a tracked state
   change as a database commit. It now validates exact State and Message
   ownership, rejects unsafe delivery-state mutations before saving, and
