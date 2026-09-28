@@ -41,9 +41,11 @@ test now counts factory calls and requires zero for both invalid inputs.
 Independent read-only Red Team final re-review is PASS with no remaining
 concrete P1/P2 finding.
 
-Focused xUnit v3/MTP results on the current tree: normal/faulted request
-activity class 21/21, completion class 5/5. The exact-commit full Core
-receipt is pending. No numeric mutation score or current product-wide
+Focused xUnit v3/MTP results: normal/faulted request activity class 21/21,
+completion class 5/5. The exact-commit full Core receipt at
+`artifacts/t76-core-receipt/receipt.json` verifies 6,940/6,940 tests on
+commit `6b6aef0d5`, with 13 unchanged binaries and 1,923 tracked product
+sources. No numeric mutation score or current product-wide
 coverage value is claimed. The T74 33-profile report remains the latest
 complete Line/Branch/CRAP measurement; the next aggregate follows the
 agreed multi-packet interval unless a broad contract change requires it.

@@ -5,7 +5,8 @@
 Two red-first failures exposed missing fail-fast validation in normal
 `RequestActivity` construction and in both completion activities before
 publication. The product now validates those dependencies before dispatch
-or side effects. Focused request and completion classes pass 21/21 and 5/5.
+or side effects. Focused request and completion classes pass 21/21 and 5/5;
+the exact-commit Core receipt on `6b6aef0d5` verifies 6,940/6,940.
 The tests prove exact send order, address and payload ownership, request-ID
 persistence only after accepted send, pre-admission and in-flight cancellation,
 completion envelope identity and UTC time, async publication order, and
@@ -15,7 +16,7 @@ early response-factory side effect; the invalid-pipeline test now forbids it.
 Final read-only Red Team re-review is PASS with no remaining concrete P1/P2
 finding.
 See the [T76 packet](coverage-a-plus-20260921/t76-saga-request-lifecycle.md).
-Exact-commit Core verification and publication remain. T74 is still the
+Remote publication remains. T74 is still the
 latest complete product-wide coverage/CRAP profile.
 
 ## Current T75 — saga composite declaration and dual-response request

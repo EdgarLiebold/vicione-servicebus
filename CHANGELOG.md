@@ -18,8 +18,9 @@ entry below records what the current work changed for anyone reading the source.
   Request lifecycle tests verify exact send and completion ordering,
   request-ID ownership through failures and cancellation, and the original
   or generated completion payload and metadata. Focused request and
-  completion classes pass 21/21 and 5/5; exact-commit Core verification
-  remains.
+  completion classes pass 21/21 and 5/5; the exact-commit Core suite passes
+  6,940/6,940 and independent Red Team re-review has no remaining concrete
+  P1/P2 finding.
 
 - Corrected saga composite declaration so invalid constituents fail before a
   property event is replaced or a named event is registered. Tests reproduce
