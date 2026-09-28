@@ -234,8 +234,9 @@ public class ActiveMqSessionContext :
     /// <returns>A task that completes when the native send completes.</returns>
     public async Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
     {
-        var producer = await _messageProducerCache.GetMessageProducerAsync(destination,
-            x => _executor.ExecuteAsync(() => _session.CreateProducerAsync(x), cancellationToken), cancellationToken: cancellationToken).ConfigureAwait(false);
+        var producer = await _messageProducerCache.GetMessageProducerWithCancellationAsync(destination,
+            (x, creationToken) => _executor.ExecuteAsync(() => _session.CreateProducerAsync(x), creationToken),
+            cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await _executor.ExecuteAsync(() => producer.SendAsync(message, message.NMSDeliveryMode, message.NMSPriority, message.NMSTimeToLive)
             .OrCanceledAsync(cancellationToken), cancellationToken).ConfigureAwait(false);

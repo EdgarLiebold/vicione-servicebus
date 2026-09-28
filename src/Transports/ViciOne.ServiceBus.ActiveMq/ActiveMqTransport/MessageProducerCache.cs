@@ -30,14 +30,28 @@ public class MessageProducerCache :
     /// <summary>Gets an existing cached producer or creates one for a destination.</summary>
     /// <param name="key">The native destination used as the cache key.</param>
     /// <param name="factory">The asynchronous producer factory.</param>
-    /// <param name="cancellationToken">The token used to cancel cache lookup or creation.</param>
+    /// <param name="cancellationToken">Cancels this caller's cache lookup or wait without canceling shared creation.</param>
     /// <returns>A task that produces the cached native message producer.</returns>
     public async Task<IMessageProducer> GetMessageProducerAsync(IDestination key, MessageProducerFactory factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);
 
+        return await GetMessageProducerWithCancellationAsync(key, (destination, _) => factory(destination), cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Gets or creates a producer using cache-owned cancellation for shared creation.</summary>
+    /// <param name="key">The native destination used as the cache key.</param>
+    /// <param name="factory">The producer factory, given the token owned by the shared cache creation.</param>
+    /// <param name="cancellationToken">Cancels this caller's lookup or wait without canceling another caller's creation.</param>
+    /// <returns>A task that produces the cached native message producer.</returns>
+    internal async Task<IMessageProducer> GetMessageProducerWithCancellationAsync(IDestination key,
+        Func<IDestination, CancellationToken, Task<IMessageProducer>> factory, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(factory);
+
         return await _cache.GetOrAddAsync(key,
-            async (destination, _) => new CachedMessageProducer(destination, await factory(destination).ConfigureAwait(false)), cancellationToken: cancellationToken).ConfigureAwait(false);
+            async (destination, creationToken) => new CachedMessageProducer(destination,
+                await factory(destination, creationToken).ConfigureAwait(false)), cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Disposes all cached message producers when the cache agent stops.</summary>

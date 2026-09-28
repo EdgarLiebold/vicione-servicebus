@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## Current T61 — ActiveMQ producer ownership packet accepted by affected projects
+
+The [T61 acceptance record](coverage-a-plus-20260921/t61-activemq-producer-ownership.md)
+groups cache creation, session executor cancellation and native broker send
+ownership. Red Team found the first cache test missed an actual product defect:
+the initiating sender token canceled shared producer creation. A new session
+regression failed red on that path; the internal cache-owned-token fix keeps
+the public API unchanged. Full ActiveMQ Unit passes 229/229 and full broker
+LocalIntegration passes 106/106 with no skips, zero build warnings/errors and
+empty Classic/Artemis fixture findings. Read-only re-review reports no concrete
+blocker. The initial full broker run used no outage-control fixture option and
+failed only those two setup-dependent tests; its failed log is retained. The
+clean accepted run uses `--allow-broker-outage activemq`. T59 is still the last
+global 33-profile coverage/CRAP result. T61 changelog is drafted; generated
+change list and remote publication remain pending. Global Line/Branch A+
+remains open.
+
 ## Current T60 — persistent JobService packet accepted by affected-provider checks
 
 T59 is published and remote-verified. Six new hard integration cases cover

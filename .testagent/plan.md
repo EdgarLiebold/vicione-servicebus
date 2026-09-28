@@ -1,5 +1,23 @@
 # A+ remediation test plan
 
+## Current T61 — ActiveMQ producer ownership and native delivery
+
+Use the [T61 research](research.md) checklist. Phase 1 adds cache lifecycle
+cases to `MessageProducerCacheTests` and its requirement projection: canceled
+waiter with a surviving shared creation, then distinct destinations whose
+factories overlap and whose native producers are each released once. Phase 2
+adds a three-flavor broker case in the ActiveMQ LocalIntegration project that
+sends through one reused endpoint and a second destination, asserting exact
+payload ownership, priority and durability on native received messages.
+Phase 3 is complete: a read-only adversarial review found the real cancellation
+gap, the session-level regression failed on old product bytes, and the fix
+passed the full Unit (229/229) and broker LocalIntegration (106/106) projects.
+The first full broker attempt omitted the fixture's outage-control option;
+the accepted fresh run includes it and has empty findings. The changelog is
+updated; generate the change list, then push. The full 33-profile coverage/CRAP audit waits
+for the agreed batch of roughly four connected packets unless a broader change
+requires it sooner. No T61 global A+ figure is claimed from focused checks.
+
 ## Current T60 — two-provider JobService packet and batched measurement cadence
 
 The [T60 acceptance map](coverage-a-plus-20260921/t60-persistent-job-terminal-slots.md)

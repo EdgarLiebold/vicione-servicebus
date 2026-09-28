@@ -88,6 +88,115 @@ public sealed class MessageProducerCacheTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "canceled-producer-waiter-preserves-shared-creation")]
+    public async Task CanceledWaiter_DoesNotCancelAnotherSendersProducerCreationAsync()
+    {
+        var cache = new MessageProducerCache();
+        IDestination destination = Destination();
+        var factoryStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFactory = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var canceledWaiter = new CancellationTokenSource();
+        var factoryCalls = 0;
+        var disposalCalls = 0;
+        IMessageProducer producer = Producer((method, _) => method.Name switch
+        {
+            nameof(IDisposable.Dispose) => Record(() => Interlocked.Increment(ref disposalCalls)),
+            _ => Default(method.ReturnType),
+        });
+
+        try
+        {
+            Task<IMessageProducer> first = cache.GetMessageProducerWithCancellationAsync(destination, async (_, creationToken) =>
+            {
+                Interlocked.Increment(ref factoryCalls);
+                factoryStarted.TrySetResult();
+                await releaseFactory.Task.WaitAsync(creationToken);
+                return producer;
+            }, canceledWaiter.Token);
+            await factoryStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            Task<IMessageProducer> second = cache.GetMessageProducerWithCancellationAsync(destination,
+                (_, _) => throw new InvalidOperationException("A shared waiter must not create another producer."),
+                TestContext.Current.CancellationToken);
+
+            canceledWaiter.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => first.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+            releaseFactory.TrySetResult();
+
+            IMessageProducer survivor = await second.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            IMessageProducer cached = await cache.GetMessageProducerWithCancellationAsync(destination,
+                (_, _) => throw new InvalidOperationException("A committed producer must be reused."),
+                TestContext.Current.CancellationToken);
+            Assert.Same(survivor, cached);
+            Assert.Equal(1, Volatile.Read(ref factoryCalls));
+            Assert.Equal(0, Volatile.Read(ref disposalCalls));
+        }
+        finally
+        {
+            releaseFactory.TrySetResult();
+            await cache.StopAsync("test complete", TestContext.Current.CancellationToken);
+        }
+
+        Assert.Equal(1, Volatile.Read(ref disposalCalls));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "independent-destinations-create-and-release-independent-producers")]
+    public async Task DifferentDestinations_CreateConcurrentlyAndReleaseTheirOwnProducersAsync()
+    {
+        var cache = new MessageProducerCache();
+        IDestination firstDestination = Destination();
+        IDestination secondDestination = Destination();
+        var bothFactoriesStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFactories = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var factoryCalls = 0;
+        var firstDisposals = 0;
+        var secondDisposals = 0;
+        IMessageProducer firstProducer = Producer((method, _) => method.Name switch
+        {
+            nameof(IDisposable.Dispose) => Record(() => Interlocked.Increment(ref firstDisposals)),
+            _ => Default(method.ReturnType),
+        });
+        IMessageProducer secondProducer = Producer((method, _) => method.Name switch
+        {
+            nameof(IDisposable.Dispose) => Record(() => Interlocked.Increment(ref secondDisposals)),
+            _ => Default(method.ReturnType),
+        });
+
+        async Task<IMessageProducer> CreateAsync(IDestination destination)
+        {
+            if (Interlocked.Increment(ref factoryCalls) == 2)
+                bothFactoriesStarted.TrySetResult();
+            await releaseFactories.Task.WaitAsync(TestContext.Current.CancellationToken);
+            return ReferenceEquals(destination, firstDestination) ? firstProducer : secondProducer;
+        }
+
+        try
+        {
+            Task<IMessageProducer> first = cache.GetMessageProducerAsync(firstDestination, CreateAsync, TestContext.Current.CancellationToken);
+            Task<IMessageProducer> second = cache.GetMessageProducerAsync(secondDestination, CreateAsync, TestContext.Current.CancellationToken);
+            await bothFactoriesStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            releaseFactories.TrySetResult();
+
+            IMessageProducer firstResult = await first.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            IMessageProducer secondResult = await second.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            Assert.NotSame(firstResult, secondResult);
+            Assert.Equal(2, Volatile.Read(ref factoryCalls));
+            Assert.Same(firstResult, await cache.GetMessageProducerAsync(firstDestination,
+                _ => throw new InvalidOperationException("The first producer must remain cached."), TestContext.Current.CancellationToken));
+            Assert.Same(secondResult, await cache.GetMessageProducerAsync(secondDestination,
+                _ => throw new InvalidOperationException("The second producer must remain cached."), TestContext.Current.CancellationToken));
+        }
+        finally
+        {
+            releaseFactories.TrySetResult();
+            await cache.StopAsync("test complete", TestContext.Current.CancellationToken);
+        }
+
+        Assert.Equal(1, Volatile.Read(ref firstDisposals));
+        Assert.Equal(1, Volatile.Read(ref secondDisposals));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "cached-producer-operations-refresh-resource-usage")]
     public async Task ProducerOperations_RefreshUsageAndDelegateToTheOwnedProducerAsync()
     {

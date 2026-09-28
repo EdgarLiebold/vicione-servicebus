@@ -1,5 +1,34 @@
 # A+ remediation research
 
+## Current T61 — ActiveMQ cached producer and native send ownership
+
+The connected owner is the ActiveMQ producer cache through the native session
+send path and broker delivery in OpenWire, classic AMQP and Artemis AMQP. The
+bounded source inventory is `MessageProducerCache`, `CachedMessageProducer`,
+`ActiveMqSessionContext.SendAsync`, `ActiveMqSendTransportContext` and
+`ActiveMqReceiveContext`. Existing controls already check same-key single
+flight, creation failure retry, selected wrapper usage, transport timing,
+broker restart and native group/header round trips. The T55 gap inventory
+still lists wrapper and send-path gaps; most wrapper overloads are simple
+delegation and are not by themselves reasons to add tests. The source tree has
+not changed since the T58 Roslyn source/test pairing, so that static pairing
+is reused as a search aid, not test evidence.
+
+Acceptance checklist: cancel one waiting caller without losing another's
+shared producer creation; create two destinations concurrently and release
+both independently; prove that a reused send endpoint and another destination
+deliver their own payloads and native priority/durability over each broker
+flavor. Tests must assert exact creation/disposal counts, routing and native
+delivery fields, with no skip. A deliberate product counterchange and read-only
+Red Team review must challenge the oracles. The review found a real first-sender
+cancellation defect; a session-level red-first test reproduced it. The fix uses
+the cache-owned creation token through an internal path, keeping the public
+API stable. Full Unit and LocalIntegration projects pass 229/229 and 106/106;
+the fresh Classic/Artemis fixture has no findings. The [T61 acceptance record](coverage-a-plus-20260921/t61-activemq-producer-ownership.md)
+captures exact oracles, the failed first broker setup and the counterprobe.
+T59 remains the global coverage/CRAP baseline until several connected packets
+are ready for the next 33-profile run.
+
 ## Current T60 — persistent JobService terminal and slot behavior
 
 The bounded target spans Azure Table and EF Core/PostgreSQL local JobService

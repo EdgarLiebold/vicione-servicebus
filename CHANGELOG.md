@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected ActiveMQ producer creation shared by concurrent sends: cancellation
+  of the first sender no longer cancels another sender's pending producer.
+  The session executor now receives the cache-owned creation token through an
+  internal path; the public cache API remains unchanged. A red-first session
+  test reproduced the failure, and new cache tests check canceled waiters and
+  independent destinations. A three-flavor broker test checks exact native
+  routing, identity, priority and durability across sequential sends. Full
+  ActiveMQ Unit and LocalIntegration suites pass 229/229 and 106/106 with no
+  skips; fresh broker fixture findings are empty. T59 remains the latest
+  complete global coverage/CRAP measurement.
+
 - Added six persistent JobService integration cases across Azure Table/Azurite
   and EF Core/PostgreSQL. They check genuine overlapping success and fault,
   per-job terminal state and events, and release of a held execution slot after
