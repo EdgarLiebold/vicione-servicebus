@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed the next strict 33-profile product-wide checkpoint on commit
+  `3cb94a285`: 13,604/13,604 test executions, 32 assemblies,
+  86,639/93,963 covered physical lines (92.20544%), 31,312/36,927
+  conservatively covered branches (84.79432%), and zero methods with CRAP
+  above 30. Line and Branch A+ remain open. The full profile follows twelve
+  coherent packets since T85; future packets use targeted tests during work,
+  full affected-project tests at closure, and less frequent full profiles.
+
 - Added message-handler adapter tests across all eight context/message and
   zero-to-three dependency signatures. They prove exact pending task identity,
   ordered inputs, one invocation, asynchronous success/failure, and exact

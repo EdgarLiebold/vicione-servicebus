@@ -1,5 +1,14 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T97 product-wide checkpoint
+
+The twelfth-packet checkpoint on `3cb94a285` passes a strict 33-receipt,
+32-assembly, 13,604-test aggregate. Physical lines are 86,639/93,963
+(92.20544%); conservatively covered branches are 31,312/36,927
+(84.79432%); no method exceeds CRAP 30. The full
+[T97 report](product-wide-profile-3cb94a285.md) records comparison, fixture
+limits, and the larger-packet cadence. Global Line and Branch A+ remain open.
+
 ## Current T97 message handler task contract packet
 
 All eight message-handler adapter shapes now prove pending task and exact
