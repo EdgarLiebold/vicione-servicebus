@@ -28,6 +28,8 @@ public static class SqlScheduleMessageExtensions
     /// <param name="configurator">The configurator to update.</param>
     public static void AddSqlMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.Services.TryAddScoped<IMessageScheduler>(provider =>
         {
             var busInstance = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value;
@@ -47,6 +49,8 @@ public static class SqlScheduleMessageExtensions
     public static void AddSqlMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {
+        ArgumentNullException.ThrowIfNull(configurator);
+
         configurator.Services.TryAddScoped(provider =>
         {
             var busInstance = provider.GetRequiredService<IBusInstance<TBus>>();
