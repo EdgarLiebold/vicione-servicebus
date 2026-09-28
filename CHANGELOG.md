@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed the classic EF transactional outbox falsely treating a tracked state
+  change as a database commit. It now validates exact State and Message
+  ownership, rejects unsafe delivery-state mutations before saving, and
+  signals only after a complete EF save. Abort preserves foreign entries;
+  failed factory or EF tracking operations leave no orphan and allow retry.
+  External `SaveChanges(false)` completes only the owned batch. Seven new
+  requirement variants and one corrected existing variant pass 22/22 focused
+  tests and 368/368 EF tests on `2957da1d2`; independent adversarial review
+  is PASS. Global Line and Branch A+ remain open.
+
 - Fixed EF transactional outbox sessions that could claim a commit after
   staged records were detached, reserve capacity twice for a duplicate ID,
   or persist a message without matching capacity. Exact staged-entry and

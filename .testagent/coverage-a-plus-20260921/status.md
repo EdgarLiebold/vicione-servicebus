@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T101 classic EF transactional outbox packet
+
+The classic outbox now validates exact State and Message ownership, initial
+delivery fields and complete EF save evidence before signaling. Abort removes
+only owned entries; partial EF tracking failures leave no orphan and permit a
+healthy retry. Seven new requirement variants and one corrected existing
+variant pass 22/22 focused tests and 368/368 complete EF tests on exact commit
+`2957da1d2`. A controlled ownership counterprobe failed; the fix was restored.
+Independent read-only Red Team re-review is PASS. See
+[T101 evidence](t101-classic-ef-outbox-session.md). T97 remains the latest
+global checkpoint; Line and Branch A+ remain open.
+
 ## Current T100 EF transactional outbox packet
 
 Lost tracked sends, duplicate reservations, capacity drift and
