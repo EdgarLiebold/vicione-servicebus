@@ -1,5 +1,29 @@
 # A+ remediation research
 
+## T98 persistent outbox cancellation handoff
+
+The exact T97 33-profile aggregate leaves 33/109 physical lines in the
+persistent `OutboxSendEndpoint` unobserved. The coverage count alone does not
+justify tests. Manual source review found a real cancellation handoff gap:
+all six capture paths pass the caller token into transport context creation,
+but their common `AddSendAsync` helper calls `OutboxSendContext.AddSendAsync`
+without that token. The in-memory outbox implementation checks the token and
+the EF scoped bus uses it in its write coordinator. A cancellation after
+context creation can therefore still admit a persistent send. Existing
+`OutboxSendEndpointBoundaryTests` cover null inputs and volatile cancellation,
+but no persistent cancellation or exact token forwarding. The T98 Roslyn
+pairing artifact at `artifacts/t98-static-pairing.json` is static routing
+evidence, not behavioral or coverage evidence.
+
+Acceptance: all six capture callsites plus runtime-typed dispatch must pass
+the exact caller token to persistent admission; cancellation after context
+creation must reject admission without sending or recording. A user pipe must
+still configure the context. Verify exact message/context identity, one
+admission attempt, and no accepted record on cancellation. A pending
+admission must keep the send pending, and a delayed storage failure must
+surface unchanged. The seven-shape matrix distinguishes all six capture
+callsites and the explicit runtime-type dispatch path.
+
 ## T79 ActiveMQ cached producer admission and send ownership
 
 The frozen T74 profile leaves 63/79 lines in `CachedMessageProducer`

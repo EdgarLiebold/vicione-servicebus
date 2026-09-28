@@ -70,7 +70,7 @@ internal sealed class OutboxSendEndpoint :
         SendContext<T> context =
             await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(_context), cancellationToken).ConfigureAwait(false);
 
-        await AddSendAsync(context).ConfigureAwait(false);
+        await AddSendAsync(context, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Captures a typed message with typed send-context configuration for delivery after the outbox commits.</summary>
@@ -90,7 +90,7 @@ internal sealed class OutboxSendEndpoint :
         SendContext<T> context = await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
             .ConfigureAwait(false);
 
-        await AddSendAsync(context).ConfigureAwait(false);
+        await AddSendAsync(context, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Captures a message using its runtime type for delivery after the outbox commits.</summary>
@@ -139,7 +139,7 @@ internal sealed class OutboxSendEndpoint :
         SendContext<T> context = await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
             .ConfigureAwait(false);
 
-        await AddSendAsync(context).ConfigureAwait(false);
+        await AddSendAsync(context, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Captures a message using its runtime type and send-context configuration for delivery after the outbox commits.</summary>
@@ -194,7 +194,7 @@ internal sealed class OutboxSendEndpoint :
         SendContext<T> context =
             await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
 
-        await AddSendAsync(context).ConfigureAwait(false);
+        await AddSendAsync(context, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Initializes and captures a typed message with typed send-context configuration for delivery after the outbox commits.</summary>
@@ -218,7 +218,7 @@ internal sealed class OutboxSendEndpoint :
         SendContext<T> context =
             await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
 
-        await AddSendAsync(context).ConfigureAwait(false);
+        await AddSendAsync(context, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Initializes and captures a typed message with untyped send-context configuration for delivery after the outbox commits.</summary>
@@ -242,10 +242,10 @@ internal sealed class OutboxSendEndpoint :
         SendContext<T> context =
             await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
 
-        await AddSendAsync(context).ConfigureAwait(false);
+        await AddSendAsync(context, cancellationToken).ConfigureAwait(false);
     }
 
-    async Task AddSendAsync<T>(SendContext<T> context)
+    async Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
         where T : class
     {
         if (ForwardingExpiration.TryDiscard(context))
@@ -255,7 +255,7 @@ internal sealed class OutboxSendEndpoint :
         var instrument = LogContext.Current?.TryStartOutboxEnqueueMetrics();
         try
         {
-            await _context.AddSendAsync(context).ConfigureAwait(false);
+            await _context.AddSendAsync(context, cancellationToken).ConfigureAwait(false);
             activity?.Update(context);
         }
         catch (Exception ex)

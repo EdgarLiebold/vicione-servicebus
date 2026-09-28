@@ -1,5 +1,26 @@
 # A+ remediation test plan
 
+## T98 persistent outbox cancellation handoff
+
+1. Add red-first product tests for all six persistent capture callsites:
+   typed, typed-pipe, untyped-pipe, and the three initialized-message forms;
+   also exercise the explicit-runtime-type dispatcher. Use a controllable
+   transport that cancels after creating the send
+   context. Assert exact caller-token identity at `OutboxSendContext`, the
+   original message/context, one admission attempt, and zero admitted sends
+   after cancellation. In the success path, verify typed pipe metadata and
+   exact token forwarding. Hold persistent admission open for each shape and
+   release it with a specific storage failure; the outer send must remain
+   pending and propagate that same failure.
+2. Carry the caller token through the shared persistent outbox admission helper
+   only after the negative test proves the defect. Run focused tests during
+   the edit cycle, then full affected Core tests on the exact frozen commit.
+3. Review source and assertions for neighboring outbox lifetime failures,
+   perform controlled counterprobes and an independent read-only Red Team
+   review, update requirements/changelog/evidence, and push. Defer the next
+   product-wide aggregate to the new 20–30 coherent-packet cadence unless a
+   cross-cutting failure requires an earlier one.
+
 ## T79 ActiveMQ cached producer admission and send ownership
 
 1. Red-first: reject null destination and null native producer at the public
