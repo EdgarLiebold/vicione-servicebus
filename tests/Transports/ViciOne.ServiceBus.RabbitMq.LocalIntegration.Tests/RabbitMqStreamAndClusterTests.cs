@@ -22,7 +22,7 @@ public sealed class RabbitMqStreamAndClusterTests
             {
                 endpoint.Stream("native-reader", stream =>
                 {
-                    stream.MaxAge = TimeSpan.FromDays(14);
+                    stream.MaxAge = TimeSpan.FromHours(36);
                     stream.FromFirst();
                 });
                 endpoint.Handler<StreamMessage>(context =>
@@ -44,7 +44,7 @@ public sealed class RabbitMqStreamAndClusterTests
             started = true;
             RabbitMqBroker.QueueState state = await fixture.QueueAsync(queue, cancellationToken);
             Assert.Equal("stream", state.Arguments["x-queue-type"]);
-            Assert.Equal("14D", state.Arguments["x-max-age"]);
+            Assert.Equal("36h", state.Arguments["x-max-age"]);
 
             await bus.PublishAsync(new StreamMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

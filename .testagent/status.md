@@ -1,5 +1,35 @@
 # A+ remediation test status
 
+## Current T69 — RabbitMQ native stream retention and offset boundaries
+
+Public endpoint tests reproduced four exact-age/invalid-age failures before
+the fix: 36 hours, 90 minutes and 90 seconds were rounded to longer broker
+retention, and a negative age silently removed a prior limit. The age setter
+now chooses the largest exact whole-second RabbitMQ unit using integer ticks;
+negative or fractional-second values fail before changing a valid limit.
+Positive subsecond and zero values retain the existing removal contract.
+Another red-first test showed negative numeric and pre-epoch timestamp stream
+offsets replacing a valid position; these now fail atomically while UnixEpoch
+and offset zero remain accepted. Red Team found two more broker-size gates:
+`MaxLength` rejects negatives but accepts zero, and `MaxSegmentSize` rejects
+values above the pinned RabbitMQ 4.2 limit of 3,000,000,000 bytes while
+accepting the exact limit. The negative-length case failed red before the
+guard. Public comments now distinguish RabbitMQ's `last` chunk from `next`
+and describe timestamp attachment at a chunk boundary.
+
+Ten focused stream cases pass, the full RabbitMQ unit project passes 513/513,
+and a fresh RabbitMQ fixture passed 2/2 stream/cluster broker tests. The
+stream broker test asserts that the real queue declares `36h` and delivers a
+message; fixture findings are empty in
+`artifacts/run-output/vicione-047447b7a79c/fixture-findings.json`.
+An earlier method-filter attempt selected zero tests (exit 8) and is excluded
+from acceptance; the corrected class-filter run passed. Inline mutation and
+assertion review found no assertion-free or trivial-only new tests: the cases
+compare exact queue/consumer arguments, rejected state, and broker delivery.
+The independent read-only Red Team found the size boundaries and an outdated
+public comment; all are corrected and its final re-review is PASS. No global Line/Branch/CRAP value is inferred
+from this sixth packet after frozen T63; the full profile remains grouped.
+
 ## Current T68 — RabbitMQ no-ack publish cancellation lifetime
 
 The two channel wrappers disposed their linked cancellation sources when the

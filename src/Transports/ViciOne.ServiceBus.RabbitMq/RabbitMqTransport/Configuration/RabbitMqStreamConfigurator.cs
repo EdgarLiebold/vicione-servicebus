@@ -19,35 +19,55 @@ public class RabbitMqStreamConfigurator :
     /// <summary>Sets the maximum retained stream length in bytes.</summary>
     public long MaxLength
     {
-        set => _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxLengthInBytes] = value;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Stream maximum length cannot be negative.");
+
+            _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxLengthInBytes] = value;
+        }
     }
 
-    /// <summary>Sets maximum stream age using RabbitMQ's largest applicable whole-unit representation.</summary>
+    /// <summary>Sets maximum stream age using RabbitMQ's largest exact whole-unit representation; subsecond values remove the limit.</summary>
     public TimeSpan MaxAge
     {
         set
         {
-            string? text = null;
-            if (value.TotalDays >= 1)
-                text = $"{value.TotalDays:F0}D";
-            else if (value.TotalHours >= 1)
-                text = $"{value.TotalHours:F0}h";
-            else if (value.TotalMinutes >= 1)
-                text = $"{value.TotalMinutes:F0}m";
-            else if (value.TotalSeconds >= 1)
-                text = $"{value.TotalSeconds:F0}s";
+            if (value < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(value), "Stream maximum age cannot be negative.");
 
-            if (text == null)
+            if (value >= TimeSpan.FromSeconds(1) && value.Ticks % TimeSpan.TicksPerSecond != 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Stream maximum age must use whole seconds.");
+
+            if (value < TimeSpan.FromSeconds(1))
+            {
                 _settings.QueueArguments.Remove(RabbitMQ.Client.Headers.XMaxAge);
-            else
-                _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxAge] = text;
+                return;
+            }
+
+            long ticks = value.Ticks;
+            string text = ticks % TimeSpan.TicksPerDay == 0
+                ? $"{ticks / TimeSpan.TicksPerDay}D"
+                : ticks % TimeSpan.TicksPerHour == 0
+                    ? $"{ticks / TimeSpan.TicksPerHour}h"
+                    : ticks % TimeSpan.TicksPerMinute == 0
+                        ? $"{ticks / TimeSpan.TicksPerMinute}m"
+                        : $"{ticks / TimeSpan.TicksPerSecond}s";
+
+            _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxAge] = text;
         }
     }
 
     /// <summary>Sets the maximum stream segment size in bytes.</summary>
     public long MaxSegmentSize
     {
-        set => _settings.QueueArguments[RabbitMQ.Client.Headers.XStreamMaxSegmentSizeInBytes] = value;
+        set
+        {
+            if (value > 3_000_000_000L)
+                throw new ArgumentOutOfRangeException(nameof(value), "Stream segment size cannot exceed 3,000,000,000 bytes.");
+
+            _settings.QueueArguments[RabbitMQ.Client.Headers.XStreamMaxSegmentSizeInBytes] = value;
+        }
     }
 
     /// <summary>Sets the server-side stream filter value for this consumer.</summary>
@@ -60,13 +80,19 @@ public class RabbitMqStreamConfigurator :
     /// <param name="offset">The first stream offset to consume.</param>
     public void FromOffset(long offset)
     {
+        if (offset < 0)
+            throw new ArgumentOutOfRangeException(nameof(offset), "Stream offset cannot be negative.");
+
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = offset;
     }
 
-    /// <summary>Starts consumption at the first message at or after a UTC instant.</summary>
+    /// <summary>Starts consumption at RabbitMQ's timestamp-based stream chunk position for a UTC instant.</summary>
     /// <param name="timestamp">The stream timestamp boundary.</param>
     public void FromTimestamp(DateTimeOffset timestamp)
     {
+        if (timestamp < DateTimeOffset.UnixEpoch)
+            throw new ArgumentOutOfRangeException(nameof(timestamp), "Stream timestamp must be at or after the Unix epoch.");
+
         timestamp = timestamp.ToUniversalTime();
 
         _settings.ConsumeArguments.SetAmqpTimestamp(RabbitMQ.Client.Headers.XStreamOffset, timestamp);
@@ -78,7 +104,7 @@ public class RabbitMqStreamConfigurator :
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = "first";
     }
 
-    /// <summary>Starts consumption with messages appended after the consumer begins.</summary>
+    /// <summary>Starts consumption at the beginning of RabbitMQ's latest retained chunk.</summary>
     public void FromLast()
     {
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = "last";

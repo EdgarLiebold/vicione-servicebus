@@ -11,6 +11,19 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected RabbitMQ stream retention and offset configuration. Retention
+  periods now use exact whole-second broker units instead of rounding 36 hours
+  to two days or 90 minutes to two hours; invalid negative or fractional-second
+  changes preserve the earlier limit. Negative numeric and pre-epoch timestamp
+  offsets preserve the earlier consumer position. Maximum stream length is
+  nonnegative, and segment size cannot exceed RabbitMQ 4.2's 3,000,000,000-byte
+  limit. Public documentation now accurately describes timestamp and `last`
+  chunk behavior. Red-first tests exposed the original defects; the full
+  RabbitMQ unit project passes 513/513. A fresh real broker test passed 2/2,
+  confirmed a declared `36h` queue and message delivery, and reported no
+  fixture findings. The complete coverage/CRAP audit remains at the grouped
+  milestone.
+
 - Fixed RabbitMQ no-ack publishing through shared and scoped channel views:
   linked caller, owner and parent cancellation now remains active until the
   actual client publish finishes, even though the public no-ack call returns

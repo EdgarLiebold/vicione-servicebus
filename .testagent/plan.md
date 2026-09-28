@@ -1,5 +1,25 @@
 # A+ remediation test plan
 
+## T69 RabbitMQ native stream retention and offset configuration
+
+1. Red-first public endpoint cases: 36h and 90m/90s project exact broker
+   `x-max-age` arguments instead of rounded larger units; invalid negative
+   and fractional-second changes leave a previously configured retention
+   argument untouched. Keep existing subsecond-removal behavior.
+2. Inspect linked stream arguments through the built receive-endpoint context:
+   retention byte/segment size, offset and stable consumer tag must reach the
+   topology or consumer settings without conversion. Negative numeric and
+   pre-epoch timestamp offsets must leave a prior position intact; a valid
+   timestamp must project exact UTC epoch seconds.
+   Validate nonnegative maximum length and the exact 3,000,000,000-byte
+   segment maximum before modifying a previously valid broker argument; test
+   the accepted zero-length and upper-segment boundaries.
+3. Correct the time representation with integer ticks and validation before
+   mutation; run the focused and full RabbitMQ unit project once after the
+   implementation, perform pseudo-mutation/assertion-quality review and
+   independent read-only Red Team, then commit/push. Defer global profile to
+   grouped milestone.
+
 ## T68 RabbitMQ no-ack publish cancellation lifetime
 
 1. Red-first Shared and Scope tests with a controlled pending underlying

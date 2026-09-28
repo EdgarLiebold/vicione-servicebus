@@ -1,5 +1,35 @@
 # A+ remediation research
 
+## T69 RabbitMQ native stream retention and offset configuration
+
+Target inventory: `RabbitMqReceiveEndpointConfiguration.Stream(...)` and
+`RabbitMqStreamConfigurator` project stream queue and consume arguments from
+the public RabbitMQ receive-endpoint callback. The latest frozen full T63
+profile has 15/29 lines in the stream configurator and 87/126 in the endpoint
+configuration; later stream tests exist but are not included in those figures.
+The existing Roslyn pairing report and `RabbitMqStreamConfigurationTests` are
+reused. RabbitMQ's stream guide defines `x-max-age` units (D/h/m/s), maximum
+length and segment-size arguments, and offset forms (first, last, nonnegative
+numeric position, AMQP timestamp). Current `MaxAge` uses `F0` formatting on
+floating-point totals, so 36 hours can become `2D` and 90 seconds can become
+`2m`. A negative duration silently removes an existing age limit. Acceptance:
+represent whole-second retention exactly using the largest exact broker unit;
+reject negative and unrepresentable positive fractional seconds before
+changing a valid limit; preserve the documented positive subsecond removal
+behavior. RabbitMQ's server offset parser expects a nonnegative numeric offset
+or timestamp; the generic timestamp helper otherwise emits an ISO string for
+pre-epoch instants, which the stream parser interprets as an interval and
+rejects. Stream configuration therefore rejects negative offsets and pre-epoch
+instants before replacing a prior consumer position. Public endpoint tests
+inspect exact queue/consume arguments and state after rejection, not merely
+setter execution.
+RabbitMQ 4.2's server limit for stream segment size is exactly 3,000,000,000
+bytes, not 3 GiB; `x-max-length-bytes` is documented as nonnegative. Both
+limits were previously accepted without local validation. The server's segment
+checker enforces the upper limit only, so no lower-limit rule is inferred.
+The public implementation's `FromLast` comment also described the behavior of
+`next` although it writes `last`; it now matches the latest-chunk semantics.
+
 ## T68 RabbitMQ no-ack publish cancellation lifetime
 
 The last complete T63 coverage has 63/95 lines in `RabbitMqChannelContext`,
