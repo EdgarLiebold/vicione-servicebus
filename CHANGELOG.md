@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected SQL scheduler registration to reject a missing default or typed
+  bus configurator at the public boundary. New DI tests verify that a prior
+  scheduler keeps precedence, a non-SQL host is rejected, and both default
+  and typed schedulers retain their bus owner, configured clock and per-scope
+  lifetime. The independent Red Team found and closed two typed registration
+  gaps: scope reuse across owners and replacement of a pre-registered typed
+  scheduler. The affected SQL test project passes 233/233. This packet did
+  not run a new whole-repository Line/Branch/CRAP profile.
+
 - Corrected the ActiveMQ cached producer so a missing destination or native
   producer fails at construction. A null producer returned by a factory can
   no longer poison the destination cache key; a healthy retry can send and is
