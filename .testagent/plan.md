@@ -1,5 +1,28 @@
 # A+ remediation test plan
 
+## T100 EF transactional outbox tracker loss
+
+1. Add red-first SQLite tests in `EntityFrameworkOutboxWriteCoordinatorTests`
+   for complete tracker clearing and selective detachment after admission.
+   Assert commit fails rather than claiming success, session ownership remains
+   until abort, no durable record appears in a fresh context, and surviving
+   capacity counters return to their exact previous values. Retain an
+   unrelated business entity to prove abort scope. Also reject a repeated
+   message ID within one session before reserving capacity a second time;
+   commit the first intent and verify the database ledger in a fresh context.
+2. Correct commit detection and staged-capacity rollback only after the tests
+   reproduce the failure. Run the focused class during edits, then the full
+   EF unit project on the exact implementation commit.
+3. Apply controlled counterprobes, obtain independent read-only Red Team
+   review, update requirement projection, evidence and changelog, and push.
+   Do not run the 33-profile global aggregate for this single packet.
+
+The Red Team review expanded acceptance to the `SaveChanges(false)` lifecycle,
+CapacityState provenance and staged size integrity. Verify no reinsertion on a
+second commit or next batch; preserve unrelated business tracker state; prove
+outer-transaction rollback removes intent. Treat EF SaveChanges interceptors
+as trusted for their affected-row reports and document that boundary.
+
 ## T98 persistent outbox cancellation handoff
 
 1. Add red-first product tests for all six persistent capture callsites:

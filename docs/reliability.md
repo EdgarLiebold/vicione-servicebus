@@ -90,6 +90,12 @@ see [migrations/README.md](migrations/README.md).
 
 Within an application unit of work, outgoing messages join the same database transaction through
 the scoped bus or `context.Outgoing`. The delivery service can observe the intent only after commit.
+`IEntityFrameworkTransactionalOutbox.CommitAsync` saves business changes and message intent through
+the bound `DbContext`. If the caller owns an outer database transaction, the caller must commit it
+for those writes to become durable; rolling it back removes both business changes and message intent.
+The caller-owned EF Core SaveChanges pipeline must report actual persisted writes. A custom
+interceptor that suppresses a write while reporting a successful affected-row count can make the
+session treat unsaved intent as saved.
 
 `IDurableSender<TBus>.SendAsync` admits an intent through its own small transaction when the caller
 does not have an application transaction. `DurableSendReceipt` reports the durable commit; later

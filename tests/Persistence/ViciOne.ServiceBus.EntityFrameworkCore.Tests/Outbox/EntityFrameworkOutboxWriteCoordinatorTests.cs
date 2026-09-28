@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
@@ -149,6 +150,316 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         Assert.Equal(business, await fixture.DbContext.Set<BusinessRecord>().SingleAsync(TestContext.Current.CancellationToken));
         Assert.Empty(await fixture.DbContext.Set<DurableSendRecord>().ToListAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-cleared-tracker-cannot-claim-staged-send-was-committed")]
+    public async Task Commit_AfterTrackerClearRejectsLostIntentAndAllowsAbortAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid messageId = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(messageId, 1), token);
+        fixture.DbContext.ChangeTracker.Clear();
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(context.HasActiveSession);
+        await context.AbortAsync(token);
+        Assert.False(context.HasActiveSession);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+        Assert.Empty(await persisted.Set<DurableSendCapacityState>().AsNoTracking().ToArrayAsync(token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-detached-staged-send-releases-capacity-without-losing-business-state")]
+    public async Task Abort_AfterStagedRecordDetachmentReleasesCapacityAndPreservesBusinessStateAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        var business = new BusinessRecord(Guid.NewGuid(), "retained after detachment");
+        fixture.DbContext.Add(business);
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        DurableSendRecord staged = Assert.Single(fixture.DbContext.Set<DurableSendRecord>().Local);
+        long stagedBytes = staged.StorageSize;
+        fixture.DbContext.Entry(staged).State = EntityState.Detached;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(context.HasActiveSession);
+        await context.AbortAsync(token);
+        Assert.False(context.HasActiveSession);
+        await fixture.DbContext.SaveChangesAsync(token);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(business, await persisted.Set<BusinessRecord>().AsNoTracking().SingleAsync(token));
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+        DurableSendCapacityState capacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(0, capacity.StoredCount);
+        Assert.Equal(0, capacity.StoredBytes);
+        Assert.True(stagedBytes > 0);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-duplicate-message-id-does-not-reserve-capacity-twice")]
+    public async Task DuplicateMessageId_RejectsSecondAdmissionWithoutInflatingCommittedCapacityAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid id = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(id, 1), token);
+        DurableSendRecord first = Assert.Single(fixture.DbContext.Set<DurableSendRecord>().Local);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(id, 2), token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        DurableSendCapacityState pendingCapacity = Assert.Single(fixture.DbContext.Set<DurableSendCapacityState>().Local);
+        Assert.Equal(1, pendingCapacity.StoredCount);
+        Assert.Equal(first.StorageSize, pendingCapacity.StoredBytes);
+        await context.CommitAsync(token);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        DurableSendCapacityState capacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(id, stored.Id);
+        Assert.Equal(1, capacity.StoredCount);
+        Assert.Equal(stored.StorageSize, capacity.StoredBytes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-accept-all-changes-cannot-claim-unsaved-intent")]
+    public async Task AcceptAllChanges_WithoutDatabaseSaveCannotCompleteTheOutboxSessionAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        fixture.DbContext.ChangeTracker.AcceptAllChanges();
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(context.HasActiveSession);
+        await context.AbortAsync(token);
+        Assert.False(context.HasActiveSession);
+        var business = new BusinessRecord(Guid.NewGuid(), "saved after abandoned intent");
+        fixture.DbContext.Add(business);
+        await fixture.DbContext.SaveChangesAsync(token);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(business, await persisted.Set<BusinessRecord>().AsNoTracking().SingleAsync(token));
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+        DurableSendCapacityState capacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal((0, 0L), (capacity.StoredCount, capacity.StoredBytes));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-foreign-store-record-with-same-id-cannot-complete-own-session")]
+    public async Task ForeignStoreRecordWithSameId_CannotBeMistakenForACommittedOwnRecordAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid id = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(id, 1), token);
+        DurableSendRecord own = Assert.Single(fixture.DbContext.Set<DurableSendRecord>().Local);
+        var foreign = new DurableSendRecord
+        {
+            StoreKey = "foreign-store",
+            Id = id,
+            GenerationToken = Guid.NewGuid(),
+            ContractIdentity = own.ContractIdentity,
+            DestinationAddress = own.DestinationAddress,
+            ContentType = own.ContentType,
+            Body = own.Body,
+            StorageSize = own.StorageSize,
+            Status = DurableSendStatus.Pending,
+            EnqueuedAt = own.EnqueuedAt,
+        };
+        fixture.DbContext.Attach(foreign);
+
+        await context.CommitAsync(token);
+
+        Assert.Equal(EntityState.Unchanged, fixture.DbContext.Entry(foreign).State);
+        Assert.False(context.HasActiveSession);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(("default", id, own.GenerationToken), (stored.StoreKey, stored.Id, stored.GenerationToken));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-suppressed-save-cannot-complete-unsaved-intent")]
+    public async Task SuppressedSaveChanges_CannotCompleteAnUnpersistedOutboxSessionAsync(int reportedSavedCount)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var interceptor = new SuppressingSaveInterceptor();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync(interceptor: interceptor);
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        interceptor.Suppress = true;
+        interceptor.ReportedSavedCount = reportedSavedCount;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("did not persist", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(context.HasActiveSession);
+        interceptor.Suppress = false;
+        await context.AbortAsync(token);
+        var business = new BusinessRecord(Guid.NewGuid(), "saved after suppression");
+        fixture.DbContext.Add(business);
+        await fixture.DbContext.SaveChangesAsync(token);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(business, await persisted.Set<BusinessRecord>().AsNoTracking().SingleAsync(token));
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-persisted-tracked-id-collision-preserves-capacity")]
+    public async Task PersistedTrackedMessageIdCollision_RejectsBeforeReservingCapacityAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid id = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(id, 1), token);
+        await context.CommitAsync(token);
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.Set<DurableSendCapacityState>().Local);
+        long originalBytes = capacity.StoredBytes;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(id, 2), token));
+
+        Assert.Contains("already staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(context.HasActiveSession);
+        Assert.Equal((1, originalBytes), (capacity.StoredCount, capacity.StoredBytes));
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(id, stored.Id);
+        DurableSendCapacityState storedCapacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal((1, originalBytes), (storedCapacity.StoredCount, storedCapacity.StoredBytes));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-external-save-without-acceptance-retains-durable-ledger")]
+    public async Task ExternalSaveWithoutAcceptance_DoesNotReinsertOrRollBackPersistedIntentAsync(bool abort)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid id = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(id, 1), token);
+        await fixture.DbContext.SaveChangesAsync(acceptAllChangesOnSuccess: false, token);
+
+        if (abort)
+            await context.AbortAsync(token);
+        else
+            await context.CommitAsync(token);
+
+        await context.CommitAsync(token);
+        Guid nextId = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(nextId, 2), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord[] records = await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token);
+        DurableSendCapacityState capacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(new[] { id, nextId }.Order(), records.Select(record => record.Id).Order());
+        Assert.Equal((2, records.Sum(record => record.StorageSize)), (capacity.StoredCount, capacity.StoredBytes));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-external-save-without-acceptance-preserves-business-entry-state")]
+    public async Task ExternalSaveWithoutAcceptance_AcceptsOnlyOwnedOutboxEntriesAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        var business = new BusinessRecord(Guid.NewGuid(), "caller owned state");
+        fixture.DbContext.Add(business);
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+
+        await fixture.DbContext.SaveChangesAsync(acceptAllChangesOnSuccess: false, token);
+
+        Assert.False(context.HasActiveSession);
+        Assert.Equal(EntityState.Added, fixture.DbContext.Entry(business).State);
+        Assert.All(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>(),
+            entry => Assert.Equal(EntityState.Unchanged, entry.State));
+        Assert.Equal(EntityState.Unchanged,
+            Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>()).State);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(business, await persisted.Set<BusinessRecord>().AsNoTracking().SingleAsync(token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-caller-transaction-rollback-removes-outbox-intent")]
+    public async Task CallerTransactionRollback_RemovesSavedIntentWithoutPhantomRestagingAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        await using (var transaction = await fixture.DbContext.Database.BeginTransactionAsync(token))
+        {
+            await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+            await fixture.DbContext.SaveChangesAsync(acceptAllChangesOnSuccess: false, token);
+            Assert.False(context.HasActiveSession);
+            await transaction.RollbackAsync(token);
+        }
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+        Assert.Empty(await persisted.Set<DurableSendCapacityState>().AsNoTracking().ToArrayAsync(token));
+    }
+
+    [Theory]
+    [InlineData(EntityState.Unchanged)]
+    [InlineData(EntityState.Detached)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-missing-capacity-write-cannot-claim-commit")]
+    public async Task MissingCapacityWrite_CannotCommitTheStagedSendAsync(EntityState capacityState)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.Set<DurableSendCapacityState>().Local);
+        fixture.DbContext.Entry(capacity).State = capacityState;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("capacity", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.True(context.HasActiveSession);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+        await context.AbortAsync(token);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-mutated-staged-size-cannot-corrupt-capacity")]
+    public async Task MutatedStagedStorageSize_CannotCommitAnInconsistentCapacityLedgerAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), token);
+        DurableSendRecord record = Assert.Single(fixture.DbContext.Set<DurableSendRecord>().Local);
+        Assert.True(record.StorageSize > 0);
+        record.StorageSize = 0;
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() => context.CommitAsync(token));
+
+        Assert.Contains("staged", failure.Message, StringComparison.OrdinalIgnoreCase);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Empty(await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token));
+        await context.AbortAsync(token);
+        Assert.False(context.HasActiveSession);
     }
 
     [Fact]
@@ -342,14 +653,15 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         public RecordingNotification Notification { get; }
 
-        public static async Task<OutboxFixture> CreateAsync(int maximumEnvelopeBytes = 2 * 1024 * 1024)
+        public static async Task<OutboxFixture> CreateAsync(int maximumEnvelopeBytes = 2 * 1024 * 1024,
+            SaveChangesInterceptor? interceptor = null)
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);
-            var dbContext = new OutboxDbContext(
-                new DbContextOptionsBuilder<OutboxDbContext>()
-                    .UseSqlite(connection)
-                    .Options);
+            var optionsBuilder = new DbContextOptionsBuilder<OutboxDbContext>().UseSqlite(connection);
+            if (interceptor is not null)
+                optionsBuilder.AddInterceptors(interceptor);
+            var dbContext = new OutboxDbContext(optionsBuilder.Options);
             await dbContext.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
             var notification = new RecordingNotification();
             var serviceCollection = new ServiceCollection();
@@ -389,6 +701,16 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
             await _connection.DisposeAsync();
             await _services.DisposeAsync();
         }
+    }
+
+    private sealed class SuppressingSaveInterceptor : SaveChangesInterceptor
+    {
+        public bool Suppress { get; set; }
+        public int ReportedSavedCount { get; set; }
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default) =>
+            ValueTask.FromResult(Suppress ? InterceptionResult<int>.SuppressWithResult(ReportedSavedCount) : result);
     }
 
     public class ThrowingClientFactoryProxy : DispatchProxy

@@ -1,5 +1,40 @@
 # A+ remediation research
 
+## T100 EF transactional outbox tracker loss
+
+Manual review of `EntityFrameworkScopedBusContext` found that `WasCommitted()`
+uses `All` over tracked staged records. If `DbContext.ChangeTracker.Clear()`
+or detachment removes every staged record before `SaveChanges`, the empty
+enumeration returns true. `CommitAsync` then clears session ownership and
+returns successfully without storing the message; `AbortAsync` likewise calls
+the branch reserved for an already persisted session. Existing EF outbox tests
+prove normal commit, external save, abort and disposal, but do not detach a
+staged durable record before commit. The same class accounts for a partially
+detached record through a tracked capacity row; detachment may leave that row
+inflated if abort only counts still-tracked records.
+
+Acceptance: a lost staged record cannot be reported as committed; the caller
+must receive a clear failure, abort must release ownership, and a surviving
+capacity row must return to its previous count and byte values. Preserve
+unrelated business entities and previously committed records. Use real SQLite
+and a fresh DbContext to distinguish tracked state from persisted state.
+
+The same admission method reserves capacity before attaching the durable
+record. Reusing a message ID within one session can therefore fail during EF
+tracking after incrementing capacity. Acceptance also requires rejecting that
+duplicate before capacity changes while retaining the first valid intent.
+
+Adversarial review extended the packet to EF `AcceptAllChanges`, foreign-store
+IDs, suppressed saves, externally saved `SaveChanges(false)` sessions, missing
+capacity writes, and mutated staged size. The final design validates exact
+tracked records and the capacity reservation before EF writes, then completes
+the session from a successful `SavedChanges` event. For `SaveChanges(false)` it
+accepts only the outbox-owned entries, leaving caller business entries in
+their original state. Database readback after save was rejected because an
+independent outbox worker can legitimately change records and counters before
+the read. Caller-owned outer transactions retain their normal commit/rollback
+ownership. Custom SaveChanges interceptors must report actual persisted writes.
+
 ## T98 persistent outbox cancellation handoff
 
 The exact T97 33-profile aggregate leaves 33/109 physical lines in the
