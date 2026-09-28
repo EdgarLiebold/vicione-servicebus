@@ -312,13 +312,16 @@ public class RabbitMqReceiveEndpointConfiguration :
     }
 
     /// <summary>Sets the queue's RabbitMQ consumer acknowledgement timeout.</summary>
-    /// <param name="timeSpan">The positive acknowledgement timeout.</param>
+    /// <param name="timeSpan">The positive acknowledgement timeout in whole milliseconds.</param>
     public void SetDeliveryAcknowledgementTimeout(TimeSpan timeSpan)
     {
         if (timeSpan <= TimeSpan.Zero)
             throw new ArgumentException("The RabbitMQ consumer timeout must be > 0");
 
-        SetQueueArgument("x-consumer-timeout", (long)timeSpan.TotalMilliseconds);
+        if (timeSpan.Ticks % TimeSpan.TicksPerMillisecond != 0)
+            throw new ArgumentOutOfRangeException(nameof(timeSpan), "The RabbitMQ consumer timeout must use whole milliseconds.");
+
+        SetQueueArgument("x-consumer-timeout", timeSpan.Ticks / TimeSpan.TicksPerMillisecond);
     }
 
     /// <summary>Sets the queue's RabbitMQ consumer acknowledgement timeout from duration components.</summary>

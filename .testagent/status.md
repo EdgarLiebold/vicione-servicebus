@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## Current T66 — RabbitMQ queue configuration boundaries
+
+Red-first public receive-endpoint tests failed 2/2 on the original code:
+invalid quorum factor mutated exclusivity, and a fractional-ms timeout did
+not throw. First Red Team review found an atomization gap in the test and a
+double-precision product defect. A third red-first test reproduced the loss
+of one millisecond at 500,000,000,000,007 ms. Tests now assert state after
+each rejection; production converts exact ticks by integer division and
+validates quorum before mutation. Final focused boundary, stream and
+requirement-projection tests pass 6/6. The re-review confirmed all material
+findings were closed; its final low-severity diagnostic-text oracle was added
+and the same focused suite passed again 6/6. Complete 33-profile coverage/CRAP
+measurement remains deferred to the larger packet group.
+
 ## Current T65 — reject empty configured scheduling tokens
 
 The three users of `ScheduleTokenIdCache<T>.GetTokenId` are the command,

@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed RabbitMQ queue configuration boundaries: rejecting an invalid quorum
+  replication factor now preserves the earlier classic queue, exclusivity and
+  priority settings; fractional-millisecond acknowledgement timeouts no longer
+  overwrite a valid broker timeout with a truncated value. Whole-millisecond
+  timeouts now use exact integer conversion, fixing a large-value precision
+  loss found by Red Team. Red-first endpoint tests reproduced all three errors.
+  Focused boundary, stream and requirement tests pass 6/6; the next complete coverage/CRAP audit remains grouped with later
+  packets.
+
 - Rejected an empty token returned by a configured one-time scheduling token
   selector before command, delayed-transport or SQL endpoint resolution. Such
   a token could previously be reported as accepted and then rejected by the

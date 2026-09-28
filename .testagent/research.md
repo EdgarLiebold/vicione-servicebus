@@ -1,5 +1,18 @@
 # A+ remediation research
 
+## T66 RabbitMQ queue configuration boundaries
+
+The public receive-endpoint API forwards quorum selection and acknowledgement
+timeouts into `RabbitMqReceiveSettings` before provider startup. A rejected
+quorum replication factor currently changes queue type, exclusivity and priority
+first. A positive timeout with fractional milliseconds currently truncates to
+zero or an earlier deadline. Red Team also found that double conversion of
+a large whole-millisecond timeout loses one millisecond. Existing stream tests show how to inspect the
+projected broker arguments without starting RabbitMQ. Acceptance: failed
+configuration preserves prior settings, and valid follow-up quorum selection
+projects all compatible queue arguments. The existing source/test pairing
+inventory is reused.
+
 ## T65 scheduling token admission across providers
 
 `ScheduleTokenIdCache<T>.GetTokenId` accepts `Guid.Empty` from a configured

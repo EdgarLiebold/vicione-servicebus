@@ -1,5 +1,19 @@
 # A+ remediation test plan
 
+## T66 RabbitMQ queue configuration boundaries
+
+1. Red-first public receive-endpoint tests: invalid quorum factor preserves a
+   previously exclusive classic priority queue, then a valid factor projects
+   quorum type, group size, non-exclusivity and removal of priority. Sub-ms and
+   fractional-ms acknowledgement timeouts fail without replacing distinct valid
+   values. A large exact whole-millisecond timeout retains all digits.
+2. Move quorum validation before mutations; reject timeout durations that cannot
+   be represented as whole milliseconds; project valid timeouts using integer
+   tick division.
+3. Run focused boundary, neighboring stream and requirement-projection tests.
+   Review the assertions against production transitions and obtain read-only
+   adversarial review. Defer full 33-profile measurement to the package group.
+
 ## Current T65 — scheduling token admission
 
 1. Red-first Core command, delayed transport and SQL provider checks. An empty

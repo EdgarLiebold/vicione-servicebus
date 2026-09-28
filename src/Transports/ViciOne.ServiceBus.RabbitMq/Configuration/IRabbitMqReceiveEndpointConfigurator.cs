@@ -56,7 +56,7 @@ public interface IRabbitMqReceiveEndpointConfigurator :
     /// Sets RabbitMQ's delivery-acknowledgement timeout for the endpoint queue.
     /// <see href="https://www.rabbitmq.com/docs/consumers#acknowledgement-timeout"/>
     /// </summary>
-    /// <param name="timeSpan">The maximum time allowed before a delivery must be acknowledged.</param>
+    /// <param name="timeSpan">The maximum time allowed before a delivery must be acknowledged, in whole milliseconds.</param>
     void SetDeliveryAcknowledgementTimeout(TimeSpan timeSpan);
 
     /// <summary>

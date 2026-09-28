@@ -28,6 +28,9 @@ public class RabbitMqQueueConfigurator :
     /// <param name="replicationFactor">The optional initial quorum-group size.</param>
     public void SetQuorumQueue(int? replicationFactor)
     {
+        if (replicationFactor is < 1)
+            throw new ArgumentOutOfRangeException(nameof(replicationFactor), "Must be greater than zero and less than or equal to the cluster size.");
+
         SetQueueArgument(RabbitMQ.Client.Headers.XQueueType, "quorum");
         Exclusive = false;
 
@@ -35,9 +38,6 @@ public class RabbitMqQueueConfigurator :
 
         if (replicationFactor.HasValue)
         {
-            if (replicationFactor.Value < 1)
-                throw new ArgumentOutOfRangeException(nameof(replicationFactor), "Must be greater than zero and less than or equal to the cluster size.");
-
             SetQueueArgument(RabbitMQ.Client.Headers.XQuorumInitialGroupSize, replicationFactor.Value);
         }
     }
