@@ -31,6 +31,8 @@ pseudo-mutation review indicates dropping either constructor guard, caching a
 null producer, changing send settings or duplicating usage signals would fail
 the affected tests. Independent read-only Red Team final re-review is PASS
 with no remaining concrete P1/P2 finding. Exact-commit provider verification
-is pending. The T74 33-profile report remains the
+passes 233/233 tests on product/test commit `a59485a84` without failures or
+skips. The later documentation-only commit leaves that tree unchanged. The
+T74 33-profile report remains the
 latest complete Line/Branch/CRAP measurement; the next aggregate follows
 the agreed multi-packet interval unless a broad contract change requires it.

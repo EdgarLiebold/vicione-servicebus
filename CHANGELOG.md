@@ -17,8 +17,10 @@ entry below records what the current work changed for anyone reading the source.
   released exactly once on shutdown. Tests also prove exact explicit send
   settings, one usage signal per attempt and propagation of both a faulted
   native send task and a synchronous native async-call failure. Two red-first
-  failures reproduced the defect. The affected class passes 9/9; independent
-  Red Team re-review found no remaining concrete P1/P2 issue.
+  failures reproduced the defect. The affected class passes 9/9 and the
+  complete ActiveMQ unit project passes 233/233 on the exact product/test
+  commit; independent Red Team re-review found no remaining concrete P1/P2
+  issue.
 
 - Added Azure Table saga persistence tests for SDK-provided offset timestamps,
   strict failure on wrong required and nullable native storage types, and

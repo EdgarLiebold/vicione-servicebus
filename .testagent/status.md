@@ -12,8 +12,8 @@ and async calls, immediate usage reporting, and exact async failure identity
 without retry. Red Team found the missing synchronous-throw branch of the
 native async API; an exact usage-before-delegate counterprobe is added. The
 affected class passes 9/9. Final read-only Red Team re-review is PASS with
-no remaining concrete P1/P2 finding. Exact-commit provider verification is
-pending. See the
+no remaining concrete P1/P2 finding. The complete ActiveMQ provider unit
+project passes 233/233 on exact product/test commit `a59485a84`. See the
 [T79 packet](coverage-a-plus-20260921/t79-activemq-producer-admission.md).
 T74 remains the latest complete product-wide coverage/CRAP profile.
 
