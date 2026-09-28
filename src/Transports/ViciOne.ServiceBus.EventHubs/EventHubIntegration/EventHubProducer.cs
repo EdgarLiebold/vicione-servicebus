@@ -247,6 +247,7 @@ public class EventHubProducer :
     {
         readonly CancellationToken _cancellationToken;
         readonly EventHubSendTransportContext _context;
+        readonly bool[] _confirmedMessages;
         readonly IPipe<SendContext<T>>[] _initializerPipes;
         readonly T[] _messages;
         readonly IPipe<EventHubSendContext<T>> _pipe;
@@ -255,6 +256,7 @@ public class EventHubProducer :
             CancellationToken cancellationToken, IEnumerable<IPipe<SendContext<T>>>? sendPipes = null)
         {
             _messages = messages as T[] ?? messages.ToArray();
+            _confirmedMessages = new bool[_messages.Length];
             _context = context;
             _pipe = pipe;
             _initializerPipes = sendPipes as IPipe<SendContext<T>>[] ?? sendPipes?.ToArray() ?? [];
@@ -265,14 +267,19 @@ public class EventHubProducer :
         {
             LogContext.SetCurrentIfNull(_context.LogContext);
 
-            var contexts = new EventHubSendContext<T>[_messages.Length];
+            int[] pendingIndices = Enumerable.Range(0, _messages.Length)
+                .Where(index => !_confirmedMessages[index])
+                .ToArray();
+            var contexts = new EventHubSendContext<T>[pendingIndices.Length];
             if (contexts.Length == 0)
                 return;
 
             for (var i = 0; i < contexts.Length; i++)
             {
-                contexts[i] = await _context.CreateContextAsync(_messages[i], _pipe,
-                    _initializerPipes.Length > i ? _initializerPipes[i] : null, _cancellationToken).ConfigureAwait(false);
+                int originalIndex = pendingIndices[i];
+                contexts[i] = await _context.CreateContextAsync(_messages[originalIndex], _pipe,
+                    _initializerPipes.Length > originalIndex ? _initializerPipes[originalIndex] : null,
+                    _cancellationToken).ConfigureAwait(false);
             }
 
             BaseSendTransportContext? transportContext = _context as BaseSendTransportContext;
@@ -304,41 +311,76 @@ public class EventHubProducer :
                 }
                 catch (Exception exception)
                 {
-                    TryLogFault(sendContext, exception);
-
-                    if (_context.SendObservers.Count > 0)
+                    var confirmed = new List<EventHubSendContext<T>>();
+                    var unresolved = new List<EventHubSendContext<T>>();
+                    for (var index = 0; index < contexts.Length; index++)
                     {
-                        try
+                        if (contexts[index] is EventHubMessageSendContext<T> { IsProviderConfirmed: true })
                         {
-                            await Task.WhenAll(contexts.Select(c => _context.SendObservers.SendFaultAsync(c, exception))).ConfigureAwait(false);
+                            _confirmedMessages[pendingIndices[index]] = true;
+                            confirmed.Add(contexts[index]);
                         }
-                        catch (Exception observerFailure)
-                        {
-                            TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
-                        }
+                        else
+                            unresolved.Add(contexts[index]);
                     }
 
-                    activity?.AddExceptionEvent(exception);
+                    if (confirmed.Count > 0)
+                    {
+                        TryLogSent(confirmed[0], activity);
+                        await ObservePostAsync(confirmed).ConfigureAwait(false);
+                    }
+
+                    if (unresolved.Count == 0)
+                    {
+                        TryLogSecondaryFailure(exception, sendContext.DestinationAddress);
+                        return;
+                    }
+
+                    TryLogFault(unresolved[0], exception);
+                    await ObserveFaultAsync(unresolved, exception).ConfigureAwait(false);
+                    if (confirmed.Count == 0)
+                        activity?.AddExceptionEvent(exception);
                     throw;
                 }
 
+                for (var index = 0; index < pendingIndices.Length; index++)
+                    _confirmedMessages[pendingIndices[index]] = true;
                 TryLogSent(sendContext, activity);
-
-                if (_context.SendObservers.Count > 0)
-                {
-                    try
-                    {
-                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.PostSendAsync(c))).ConfigureAwait(false);
-                    }
-                    catch (Exception observerFailure)
-                    {
-                        TryLogSecondaryFailure(observerFailure, sendContext.DestinationAddress);
-                    }
-                }
+                await ObservePostAsync(contexts).ConfigureAwait(false);
             }
             finally
             {
                 activity?.Stop();
+            }
+        }
+
+        async Task ObservePostAsync(IReadOnlyList<EventHubSendContext<T>> contexts)
+        {
+            if (_context.SendObservers.Count == 0)
+                return;
+
+            try
+            {
+                await Task.WhenAll(contexts.Select(context => _context.SendObservers.PostSendAsync(context))).ConfigureAwait(false);
+            }
+            catch (Exception observerFailure)
+            {
+                TryLogSecondaryFailure(observerFailure, contexts[0].DestinationAddress);
+            }
+        }
+
+        async Task ObserveFaultAsync(IReadOnlyList<EventHubSendContext<T>> contexts, Exception sendFailure)
+        {
+            if (_context.SendObservers.Count == 0)
+                return;
+
+            try
+            {
+                await Task.WhenAll(contexts.Select(context => _context.SendObservers.SendFaultAsync(context, sendFailure))).ConfigureAwait(false);
+            }
+            catch (Exception observerFailure)
+            {
+                TryLogSecondaryFailure(observerFailure, contexts[0].DestinationAddress);
             }
         }
 

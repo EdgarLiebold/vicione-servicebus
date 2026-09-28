@@ -50,24 +50,29 @@ internal static class EventHubProducerBatchSender
 
         EventDataBatch? batch = null;
         Route currentRoute = default;
+        var batchStartIndex = 0;
 
         try
         {
-            foreach (PreparedEvent preparedEvent in events)
+            for (var index = 0; index < events.Length; index++)
             {
                 operationToken.ThrowIfCancellationRequested();
+                PreparedEvent preparedEvent = events[index];
 
                 if (batch is null || preparedEvent.Route != currentRoute)
                 {
                     if (batch is not null)
                     {
                         await producerContext.ProduceAsync(batch, operationToken).ConfigureAwait(false);
-                        disposeBatch(batch);
+                        MarkConfirmed(contexts, batchStartIndex, index);
+                        EventDataBatch completed = batch;
                         batch = null;
+                        DisposeBatchSafely(completed, disposeBatch);
                     }
 
                     currentRoute = preparedEvent.Route;
                     batch = await CreateBatchAsync(producerContext, currentRoute, operationToken).ConfigureAwait(false);
+                    batchStartIndex = index;
                 }
 
                 if (batch.TryAdd(preparedEvent.EventData))
@@ -77,10 +82,13 @@ internal static class EventHubProducerBatchSender
                     throw CreateMessageTooLargeException();
 
                 await producerContext.ProduceAsync(batch, operationToken).ConfigureAwait(false);
-                disposeBatch(batch);
+                MarkConfirmed(contexts, batchStartIndex, index);
+                EventDataBatch completedBatch = batch;
                 batch = null;
+                DisposeBatchSafely(completedBatch, disposeBatch);
 
                 batch = await CreateBatchAsync(producerContext, currentRoute, operationToken).ConfigureAwait(false);
+                batchStartIndex = index;
                 if (!batch.TryAdd(preparedEvent.EventData))
                     throw CreateMessageTooLargeException();
             }
@@ -88,14 +96,42 @@ internal static class EventHubProducerBatchSender
             if (batch is not null)
             {
                 await producerContext.ProduceAsync(batch, operationToken).ConfigureAwait(false);
-                disposeBatch(batch);
+                MarkConfirmed(contexts, batchStartIndex, contexts.Length);
+                EventDataBatch completed = batch;
                 batch = null;
+                DisposeBatchSafely(completed, disposeBatch);
             }
         }
         finally
         {
             if (batch is not null)
-                disposeBatch(batch);
+                DisposeBatchSafely(batch, disposeBatch);
+        }
+    }
+
+    static void MarkConfirmed<T>(EventHubMessageSendContext<T>[] contexts, int startIndex, int endIndex)
+        where T : class
+    {
+        for (var index = startIndex; index < endIndex; index++)
+            contexts[index].IsProviderConfirmed = true;
+    }
+
+    static void DisposeBatchSafely(EventDataBatch batch, Action<EventDataBatch> disposeBatch)
+    {
+        try
+        {
+            disposeBatch(batch);
+        }
+        catch (Exception disposeFailure)
+        {
+            try
+            {
+                LogContext.Error?.Log(disposeFailure, "An Event Hubs send batch failed to dispose after provider use");
+            }
+            catch (Exception)
+            {
+                // Cleanup diagnostics must not replace the provider outcome.
+            }
         }
     }
 

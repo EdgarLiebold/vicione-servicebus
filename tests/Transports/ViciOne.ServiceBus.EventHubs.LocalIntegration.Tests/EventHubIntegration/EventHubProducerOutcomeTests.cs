@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Observables;
@@ -100,7 +102,103 @@ public sealed class EventHubProducerOutcomeTests
         Assert.Equal(failProvider ? messages.Length : 0, observer.Faults.Length);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-OUTCOME", "partial-batch-retry-omits-confirmed-message-and-faults-only-pending-context")]
+    public async Task PartialBatchFailure_RetriesOnlyPendingMessageAndPreservesObserverOutcomesAsync()
+    {
+        var partialFailure = new ProviderFailureException();
+        var context = new RecordingTransportContext(partialFailure: partialFailure);
+        var observer = new FailingObserver();
+        await using var producer = new EventHubProducer(context);
+        using ConnectHandle handle = producer.ConnectSendObserver(observer);
+
+        await producer.ProduceAsync<Message>([new Message(1), new Message(2)], TestContext.Current.CancellationToken);
+
+        Assert.Equal(2, context.ProviderCalls);
+        Assert.Equal(new[] { new[] { 1, 2 }, new[] { 2 } }, context.SubmittedBatches);
+        Assert.Equal([1, 2, 2], context.SubmittedIndices);
+        Assert.Equal([1, 2, 2], observer.PreIndices);
+        Assert.Equal([1, 2], observer.PostIndices.Order());
+        (int Index, Exception Failure) fault = Assert.Single(observer.Faults);
+        Assert.Equal(2, fault.Index);
+        Assert.Same(partialFailure, fault.Failure);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-OUTCOME", "confirmed-partial-batch-span-remains-successful-when-later-context-fails")]
+    public async Task PartialBatchFailure_DoesNotMarkConfirmedMessageActivityAsFailedAsync()
+    {
+        var stopped = new ConcurrentQueue<Activity>();
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = stopped.Enqueue,
+        };
+        ActivitySource.AddActivityListener(listener);
+        var context = new RecordingTransportContext(partialFailure: new ProviderFailureException());
+        await using var producer = new EventHubProducer(context);
+
+        await producer.ProduceAsync<Message>([new Message(1), new Message(2)], TestContext.Current.CancellationToken);
+
+        Activity confirmed = Assert.Single(stopped, activity =>
+            Equals(activity.GetTagItem(ServiceBusTelemetry.Attributes.MessageId), MessageIdFor(1).ToString("D")));
+        Assert.Equal(ActivityStatusCode.Ok, confirmed.Status);
+        Assert.DoesNotContain(confirmed.Events, activityEvent => activityEvent.Name == ServiceBusTelemetry.Events.Exception);
+        Assert.Equal(new[] { new[] { 1, 2 }, new[] { 2 } }, context.SubmittedBatches);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-OUTCOME", "terminal-partial-batch-retry-preserves-confirmed-context-and-final-failure")]
+    public async Task TerminalRetryFailure_KeepsConfirmedMessageOutOfSecondAttemptAsync()
+    {
+        var partialFailure = new ProviderFailureException();
+        var terminalFailure = new ProviderFailureException();
+        var context = new RecordingTransportContext(partialFailure: partialFailure, terminalFailure: terminalFailure);
+        var observer = new FailingObserver();
+        await using var producer = new EventHubProducer(context);
+        using ConnectHandle handle = producer.ConnectSendObserver(observer);
+
+        ProviderFailureException actual = await Assert.ThrowsAsync<ProviderFailureException>(() =>
+            producer.ProduceAsync<Message>([new Message(1), new Message(2)], TestContext.Current.CancellationToken));
+
+        Assert.Same(terminalFailure, actual);
+        Assert.Equal(new[] { new[] { 1, 2 }, new[] { 2 } }, context.SubmittedBatches);
+        Assert.Equal([1, 2, 2], observer.PreIndices);
+        Assert.Equal([1], observer.PostIndices);
+        Assert.Equal([2, 2], observer.Faults.Select(fault => fault.Index));
+        Assert.Same(partialFailure, observer.Faults[0].Failure);
+        Assert.Same(terminalFailure, observer.Faults[1].Failure);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-OUTCOME", "partial-batch-retry-survives-post-fault-and-logger-secondary-failures")]
+    public async Task PartialRetry_SecondaryObserverAndLoggerFailuresCannotReplayConfirmedMessageAsync()
+    {
+        var context = new RecordingTransportContext(partialFailure: new ProviderFailureException());
+        var observer = new FailingObserver(postFailureIndex: 1, faultFailure: new ObserverFailureException());
+        await using var producer = new EventHubProducer(context);
+        using ConnectHandle handle = producer.ConnectSendObserver(observer);
+        ILogContext? previous = LogContext.Current;
+
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(new ThrowingLogger());
+            await producer.ProduceAsync<Message>([new Message(1), new Message(2)], TestContext.Current.CancellationToken);
+        }
+        finally
+        {
+            LogContext.Current = previous!;
+        }
+
+        Assert.Equal(new[] { new[] { 1, 2 }, new[] { 2 } }, context.SubmittedBatches);
+        Assert.Equal([1, 2], observer.PostIndices.Order());
+        Assert.Equal(2, Assert.Single(observer.Faults).Index);
+    }
+
     private sealed record Message(int Index);
+    private static Guid MessageIdFor(int index) => new($"00000000-0000-0000-0000-{index:000000000000}");
     private sealed class ProviderFailureException : Exception;
     private sealed class ObserverFailureException : Exception;
 
@@ -142,12 +240,15 @@ public sealed class EventHubProducerOutcomeTests
         }
     }
 
-    private sealed class RecordingTransportContext(Exception? providerFailure = null) : BasePipeContext, EventHubSendTransportContext
+    private sealed class RecordingTransportContext(Exception? providerFailure = null, Exception? partialFailure = null,
+        Exception? terminalFailure = null) : BasePipeContext, EventHubSendTransportContext
     {
         private readonly List<int> _submittedIndices = [];
+        private readonly List<int[]> _submittedBatches = [];
 
         public int ProviderCalls { get; private set; }
         public int[] SubmittedIndices => _submittedIndices.ToArray();
+        public int[][] SubmittedBatches => _submittedBatches.ToArray();
         public ILogContext LogContext { get; } = new QuietLogContext();
         public string EntityName => "outcome-test";
         public string ActivityName => "eventhub outcome test";
@@ -169,6 +270,7 @@ public sealed class EventHubProducerOutcomeTests
             var context = new EventHubMessageSendContext<T>(value, cancellationToken)
             {
                 DestinationAddress = new Uri("loopback://localhost/outcome-test"),
+                MessageId = MessageIdFor(((Message)(object)value).Index),
             };
             if (initializerPipe is not null)
                 await initializerPipe.SendAsync(context);
@@ -182,14 +284,39 @@ public sealed class EventHubProducerOutcomeTests
         public Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts,
             CancellationToken cancellationToken = default) where T : class => Submit(sendContexts);
 
-        public Task SendAsync(IPipe<ProducerContext> pipe, CancellationToken cancellationToken) => pipe.SendAsync(null!);
+        public async Task SendAsync(IPipe<ProducerContext> pipe, CancellationToken cancellationToken)
+        {
+            if (partialFailure is null)
+            {
+                await pipe.SendAsync(null!);
+                return;
+            }
+
+            try
+            {
+                await pipe.SendAsync(null!);
+            }
+            catch (Exception exception) when (ReferenceEquals(exception, partialFailure))
+            {
+                await pipe.SendAsync(null!);
+            }
+        }
 
         public void Probe(ProbeContext context) { }
 
         private Task Submit<T>(EventHubSendContext<T>[] contexts) where T : class
         {
             ProviderCalls++;
-            _submittedIndices.AddRange(contexts.Select(context => ((Message)(object)context.Message).Index));
+            int[] indices = contexts.Select(context => ((Message)(object)context.Message).Index).ToArray();
+            _submittedIndices.AddRange(indices);
+            _submittedBatches.Add(indices);
+            if (partialFailure is not null && ProviderCalls == 1)
+            {
+                ((EventHubMessageSendContext<T>)contexts[0]).IsProviderConfirmed = true;
+                return Task.FromException(partialFailure);
+            }
+            if (terminalFailure is not null && ProviderCalls > 1)
+                return Task.FromException(terminalFailure);
             return providerFailure is null ? Task.CompletedTask : Task.FromException(providerFailure);
         }
     }

@@ -19,6 +19,9 @@ public class EventHubMessageSendContext<T> :
     {
     }
 
+    // Set only after the provider confirms the batch containing this context.
+    internal bool IsProviderConfirmed { get; set; }
+
     /// <summary>Gets or sets the target partition identifier.</summary>
     public string? PartitionId { get; set; }
     /// <summary>Gets or sets the partition key used by Event Hubs routing.</summary>

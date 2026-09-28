@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## Current T63 — Event Hubs partial-batch outcome accepted
+
+The [T63 acceptance record](coverage-a-plus-20260921/t63-eventhub-partial-batch-outcome.md)
+documents red-first route/size confirmation, pending-only retry, exact
+observer/failure ownership, cleanup errors and telemetry. The final affected
+build has zero warnings/errors; sender and producer focused suites pass 15/15
+and 12/12. Existing real broker delivery passed 3/3 in a fresh fixture with
+empty findings. The read-only Red Team review found no remaining concrete
+blocker. T59 remains the last complete global measurement. The full 33-profile
+audit is due after the connected T60–T63 packet group; global Line/Branch A+
+remains open.
+
 ## Current T62 — send observer outcome packet in affected-project validation
 
 The [T62 acceptance record](coverage-a-plus-20260921/t62-send-observer-outcome.md)

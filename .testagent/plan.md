@@ -1,5 +1,27 @@
 # A+ remediation test plan
 
+## Current T63 — confirmed Event Hubs partial batches
+
+1. Red-first sender test: the first provider sub-batch confirms, a later one
+   fails. Assert exact per-context confirmation and disposal for route and size
+   splitting.
+2. Red-first producer retry test: a controlled first attempt confirms one
+   context and fails the next; a second attempt must contain only the pending
+   context. Check Pre/Post/Fault context indices, exception identity, exact
+   provider submissions and no replay of the confirmed message.
+3. Carry confirmation state through the existing batch sender/context/pipe,
+   keeping the public producer API stable. Run focused and complete affected
+   Event Hubs checks plus real broker delivery controls. Use adversarial
+   read-only review and the red-first failures as causal counterprobes.
+4. Freeze the accepted source/test tree and run all 33 coverage/CRAP profiles
+   with independent audit, as agreed after four connected packets.
+
+The T63 red-first replay and false-span tests failed as expected. Final
+focused sender and producer suites pass 15/15 and 12/12, and real broker
+delivery passes 3/3. Read-only Red Team review accepted the correction.
+The remaining step is the once-per-four-packets 33-profile measurement and
+independent audit.
+
 ## Current T62 — send observer outcome ownership
 
 1. Add a failing `PostSend` to the Core transport harness and prove exact

@@ -229,6 +229,89 @@ public sealed class EventHubProducerBatchSenderTests
         producer.AssertEveryBatchDisposed();
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "confirmed-earlier-route-or-size-batch-survives-later-provider-failure")]
+    public async Task LaterProviderFailure_PreservesOnlyEarlierConfirmedContextAsync(bool splitBySize)
+    {
+        var expected = new InvalidOperationException("second provider batch failed");
+        var producer = new RecordingProducerContext
+        {
+            MaximumEntriesPerBatch = splitBySize ? 2 : int.MaxValue,
+            ProduceException = expected,
+            FailProduceCall = 2,
+        };
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionKey: "first", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(2, partitionKey: "first", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(3, partitionKey: splitBySize ? "first" : "second", cancellationToken: TestContext.Current.CancellationToken),
+        ];
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            EventHubProducerBatchSender.SendAsync(producer, contexts,
+                TestContext.Current.CancellationToken, producer.DisposeBatch));
+
+        Assert.Same(expected, actual);
+        Assert.Equal([2, 1], producer.SentBatchSizes);
+        Assert.True(contexts[0].IsProviderConfirmed);
+        Assert.True(contexts[1].IsProviderConfirmed);
+        Assert.False(contexts[2].IsProviderConfirmed);
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "cleanup-failure-after-confirmed-batch-does-not-abort-later-batch")]
+    public async Task DisposeFailure_AfterConfirmedBatch_DoesNotResendOrAbortPendingBatchAsync()
+    {
+        var producer = new RecordingProducerContext
+        {
+            MaximumEntriesPerBatch = 1,
+            DisposeException = new InvalidOperationException("cleanup failed"),
+            FailDisposeCall = 1,
+        };
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionKey: "same", cancellationToken: TestContext.Current.CancellationToken),
+            CreateContext(2, partitionKey: "same", cancellationToken: TestContext.Current.CancellationToken),
+        ];
+
+        await EventHubProducerBatchSender.SendAsync(producer, contexts,
+            TestContext.Current.CancellationToken, producer.DisposeBatch);
+
+        Assert.Equal([1, 1], producer.SentBatchSizes);
+        Assert.Equal(2, producer.DisposeCalls);
+        Assert.All(contexts, context => Assert.True(context.IsProviderConfirmed));
+        producer.AssertEveryBatchDisposed();
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "cleanup-failure-cannot-mask-provider-batch-failure")]
+    public async Task DisposeFailure_AfterProviderFailure_PreservesPrimaryExceptionAsync()
+    {
+        var providerFailure = new InvalidOperationException("provider failed");
+        var producer = new RecordingProducerContext
+        {
+            ProduceException = providerFailure,
+            DisposeException = new InvalidOperationException("cleanup failed"),
+            FailDisposeCall = 1,
+        };
+        EventHubMessageSendContext<TestMessage>[] contexts =
+        [
+            CreateContext(1, partitionKey: "same", cancellationToken: TestContext.Current.CancellationToken),
+        ];
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            EventHubProducerBatchSender.SendAsync(producer, contexts,
+                TestContext.Current.CancellationToken, producer.DisposeBatch));
+
+        Assert.Same(providerFailure, actual);
+        Assert.Equal(1, producer.DisposeCalls);
+        Assert.False(contexts[0].IsProviderConfirmed);
+        producer.AssertEveryBatchDisposed();
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "every-context-cancellation-governs-shared-provider-operation")]
     public async Task EveryContextCancellation_GovernsTheSharedProviderOperationAsync()
@@ -299,6 +382,10 @@ public sealed class EventHubProducerBatchSenderTests
         public List<Route> CreatedRoutes { get; } = [];
         public int MaximumEntriesPerBatch { get; set; } = int.MaxValue;
         public Exception? ProduceException { get; set; }
+        public int? FailProduceCall { get; set; }
+        public Exception? DisposeException { get; set; }
+        public int? FailDisposeCall { get; set; }
+        public int DisposeCalls { get; private set; }
         public TaskCompletionSource ProduceStarted { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         public List<int> SentBatchSizes { get; } = [];
@@ -336,7 +423,7 @@ public sealed class EventHubProducerBatchSenderTests
             SentBatchSizes.Add(eventDataBatch.Count);
             ProduceStarted.TrySetResult();
 
-            if (ProduceException is not null)
+            if (ProduceException is not null && (FailProduceCall is null || SentBatchSizes.Count == FailProduceCall))
                 throw ProduceException;
 
             if (WaitForProduceCancellation)
@@ -351,8 +438,11 @@ public sealed class EventHubProducerBatchSenderTests
 
         public void DisposeBatch(EventDataBatch batch)
         {
+            DisposeCalls++;
             batch.Dispose();
             Assert.True(_disposedBatches.Add(batch), "A provider batch was disposed more than once.");
+            if (DisposeException is not null && (FailDisposeCall is null || DisposeCalls == FailDisposeCall))
+                throw DisposeException;
         }
     }
 }

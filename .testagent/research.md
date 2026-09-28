@@ -1,5 +1,28 @@
 # A+ remediation research
 
+## Current T63 — Event Hubs partial-batch confirmation and retry
+
+The T62 Red Team found a separate provider outcome defect in the connected
+Event Hubs batch path. `EventHubProducerBatchSender` can finish one route/size
+batch and later fail another. `BatchSendPipe` currently receives only one
+aggregate exception, sends `SendFault` for every input context, and the host
+retry policy reruns the same pipe from the beginning. The earlier confirmed
+batch is therefore mislabeled and can be submitted again. The existing batch
+sender tests verify route/size splitting and failure disposal, but only an
+initial provider failure. The T62 producer outcome tests verify all-or-none
+controlled provider results. Neither proves partial success across retries.
+
+The affected source owner is one Event Hubs integration package: batch sender,
+message send context, and producer batch pipe. Acceptance requires explicit
+progress from a confirmed provider sub-batch, PostSend only for that confirmed
+subset, SendFault only for unresolved messages, and retry of only unresolved
+messages. A provider send that itself throws remains uncertain and is not
+claimed confirmed. Tests must force both route and size splits, inspect exact
+provider call order and context identities, challenge disposal, and use a
+controlled retrying transport context to prove no replay. The existing real
+broker delivery suite is the adjacent regression control. T63 completes the
+four-packet interval T60–T63 before the next full 33-profile measurement.
+
 ## Current T62 — send observer outcome ownership
 
 The next connected packet follows one message from provider submission through

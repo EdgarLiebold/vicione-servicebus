@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed Event Hubs partial-batch progress: after one provider batch succeeds
+  and a later one fails, a retry sends only pending messages. Confirmed
+  contexts receive `PostSend`; unresolved contexts receive `SendFault` with
+  the original failure. Cleanup and observer failures cannot replay a
+  confirmed message. A confirmed message's telemetry span no longer records
+  a later message's failure. Red-first tests caught the replay and false span;
+  focused sender/producer suites pass 15/15 and 12/12, with a separate 3/3
+  real broker delivery control. T59 remains the latest global coverage/CRAP
+  measurement; the agreed full audit follows T60–T63.
+
 - Corrected send outcome ownership across the common transport and Event Hubs
   single/batch producers. A failed post-send observer or logger after provider
   confirmation can no longer report a false send fault or make the confirmed
