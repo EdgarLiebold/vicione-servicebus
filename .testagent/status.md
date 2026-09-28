@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## Current T74 — grouped product-wide measurement
+
+Ten connected packets after the frozen T63 baseline are measured together on
+commit `15afb3423`. The strict 33-receipt aggregate covers all 32 product
+assemblies and passes 13,389/13,389 unit, portability and local integration
+executions without failures or skips. Four isolated broker-fixture groups have
+empty finding lists. Physical lines are 86,296/93,951 (91.85214%);
+conservative branches are 31,191/36,923 (84.47580%). No measured method has
+CRAP > 30; the highest score is 30. The exact source/test trees and fixture
+hashes are in the [T74 report](coverage-a-plus-20260921/product-wide-profile-15afb3423.md).
+Independent read-only Red Team reconstructed every count and Top-25 CRAP row,
+verified 487/487 artifact hashes and 66/66 runner/settings bindings, and
+matched all nine broker-log hashes without discrepancy. The separate fixture
+files are not cryptographically bound to the aggregate. Global line and branch
+A+ work remains open; the next connected packet should use targeted tests
+until the next grouped measurement interval.
+
 ## Current T73 — asynchronous task outcome ownership
 
 Four new tests exercise pending task completion/fault paths, exact typed and
