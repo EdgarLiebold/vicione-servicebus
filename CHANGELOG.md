@@ -11,6 +11,17 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a connected registration-to-failure verification packet: filtered
+  consumer discovery and its definition, scoped compensation with observed
+  disposal, retry exhaustion before selected rescue, and message-journal
+  ownership across two active buses. Seven new integration cases and the Core
+  suite pass; a wrong-owner product mutation fails both journal variants.
+  The frozen 33-profile measurement passes 13,257 tests across 32 product
+  assemblies: 85,958/93,754 physical lines (91.68462%), 31,057/36,845
+  conservative branches (84.29095%) and zero methods with CRAP>30. Four
+  broker-fixture groups and independent receipt/XML audit are clean. No
+  product source changed in this packet; global Line/Branch A+ remains open.
+
 - Corrected Consumer, Handler and Instance middleware lifecycle accounting:
   a failure in `next` after successful consumption now propagates without
   recording a second fault for the already completed consumer. Its process

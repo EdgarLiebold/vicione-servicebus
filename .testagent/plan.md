@@ -9,9 +9,10 @@ across two active buses. Existing bus-stop and rescue-failure tests are controls
 The seven new parameterized cases and complete Core suite pass. A read-only
 Red Team review strengthened the journal-owner and scope-dispose oracles; both
 are green. A real owner-filter inversion was killed by both journal variants
-and restored byte-for-byte. Finish quality and formatting gates, then freeze
-and measure all 33 profiles once. The selection corrections and authoring
-diagnoses are recorded in the map.
+and restored byte-for-byte. Frozen `5e9509367` passes 33 fresh profiles and
+the independent audit: 13,257 tests, 91.68462% lines, 84.29095% conservative
+branches and zero CRAP>30. Finish documentation/CHANGELIST publication and
+select the next connected packet. See the [full report](coverage-a-plus-20260921/product-wide-profile-5e9509367.md).
 
 ## Current T57 — connected ingress middleware packet
 

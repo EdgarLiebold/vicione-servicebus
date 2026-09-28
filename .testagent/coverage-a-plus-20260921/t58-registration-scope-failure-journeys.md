@@ -67,7 +67,11 @@ Folgefehler-Route) und Zweibus-Journal (2/2) sind einzeln grün gewesen; die
 letzte Retry-Änderung ist gezielt mit 2/2 geprüft. Keine Produktquelle wurde
 geändert. Ein erneuter gemeinsamer Core-Lauf einschließlich
 Requirement-Projektion bestand 6.894/6.894. Qualitäts-Schlussreview und die einzige
-produktweite Vollmessung dieses Pakets stehen aus.
+produktweite Vollmessung dieses Pakets sind abgeschlossen. Die eingefrorene
+[T58-Vollmessung](product-wide-profile-5e9509367.md) umfasst alle 33 Profile,
+13.257 grüne Tests, 91,68462 % Zeilen, 84,29095 % konservative Branches und
+null Methoden mit CRAP > 30. Ein unabhängiger XML-/Hash-/Fixture-Audit stimmt
+vollständig überein; Line/Branch A+ bleibt offen.
 
 Die Retry/Rescue-Implementierung legte eine wichtige Pipeline-Grenze offen:
 `bus.UseMessageRetry(...)` registriert außen und lässt einen äußeren Rescue

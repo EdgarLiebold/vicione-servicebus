@@ -1,6 +1,6 @@
 # A+ remediation test status
 
-## Current T58 — four related journeys implemented, packet review open
+## Current T58 — complete measurement and audit; publication open
 
 T57 was published and remote-verified at `25ef0c773`. T58 groups four related
 registration, scope and failure families in one larger packet. The bounded
@@ -10,9 +10,15 @@ Core suite and requirement projection pass 6,894/6,894. Read-only Red Team
 found two oracle gaps: journal ownership is now checked by exact correlation
 ID, and four compensation scopes must be disposed. A wrong-owner product
 mutation fails both journal variants and is byte-restored. No product source
-changed and no fresh full33 measurement is claimed. Format/quality review,
-frozen full33, independent audit and publication remain. See the
-[T58 acceptance map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md).
+changed. Frozen `5e9509367` passes all 33 fresh profiles: 13,257 tests without
+failure or skip, 85,958/93,754 lines (91.68462%), 31,057/36,845
+conservative branches (84.29095%) and zero CRAP>30. Four broker fixture
+groups have empty findings. Independent audit checks 487/487 hashes, 66/66
+runner/settings bindings, nine broker logs and exact XML-derived counts. The
+[T58 measurement](coverage-a-plus-20260921/product-wide-profile-5e9509367.md)
+and [acceptance map](coverage-a-plus-20260921/t58-registration-scope-failure-journeys.md)
+record the evidence. Documentation, CHANGELIST and final remote publication
+remain; global Line/Branch A+ is open.
 
 ## Current T57 — ingress middleware packet measured
 

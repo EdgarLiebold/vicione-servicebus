@@ -10,8 +10,10 @@ in [T58 research and plan](coverage-a-plus-20260921/t58-registration-scope-failu
 The read-only selection review corrected three assumptions in the map. Four
 behavior families are now implemented without a product-source change. The
 owner-filter inversion is killed by both journal variants and restored at
-the original SHA. The complete Core suite passes 6,894/6,894; see the map for
-the remaining full33 and audit work.
+the original SHA. The complete Core suite passes 6,894/6,894. The frozen
+33-profile measurement and independent audit pass: 13,257 tests,
+91.68462% lines, 84.29095% conservative branches and zero CRAP>30. See the
+[T58 complete report](coverage-a-plus-20260921/product-wide-profile-5e9509367.md).
 
 ## T56 — durable admission across reliable inbox and scoped outbox
 
