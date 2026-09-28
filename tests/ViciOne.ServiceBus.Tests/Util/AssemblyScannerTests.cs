@@ -118,4 +118,82 @@ public sealed class AssemblyScannerTests
             Directory.Delete(path, recursive: true);
         }
     }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASSEMBLY-SCAN-FILTER", "managed-exe-extension-scan-and-bad-image-isolation")]
+    public void ExecutableExtensionScan_LoadsManagedAssemblyAfterInvalidDllImage()
+    {
+        string path = Path.Combine(Path.GetTempPath(), $"vsb-scanner-exe-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(path);
+        try
+        {
+            Assembly expected = typeof(AssemblyScannerTests).Assembly;
+            File.Copy(expected.Location, Path.Combine(path, "plugin-valid.exe"));
+            File.WriteAllBytes(Path.Combine(path, "plugin-invalid.dll"), [0, 1, 2, 3]);
+
+            var dllOnly = new AssemblyScanner();
+            dllOnly.IncludeFileNameStartsWith("PLUGIN-");
+            dllOnly.AssembliesFromPath(path);
+            Assert.False(dllOnly.HasAssemblies());
+            Assert.Equal(0, dllOnly.Count);
+
+            var withExecutables = new AssemblyScanner();
+            withExecutables.IncludeFileNameStartsWith("PLUGIN-");
+            withExecutables.AssembliesAndExecutablesFromPath(path);
+            withExecutables.Include(type => type == typeof(AssemblyScannerTests));
+
+            Assert.Equal(1, withExecutables.Count);
+            Assert.True(withExecutables.Contains(expected.GetName().Name!));
+            Assert.Equal([typeof(AssemblyScannerTests)], withExecutables.ScanForTypes().AllTypes());
+        }
+        finally
+        {
+            Directory.Delete(path, recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ASSEMBLY-SCAN-FILTER", "assembly-predicate-applies-after-file-discovery")]
+    public void PathScan_AssemblyPredicateRejectsLoadedDecoys(bool includeExecutables)
+    {
+        string path = Path.Combine(Path.GetTempPath(), $"vsb-scanner-predicate-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(path);
+        try
+        {
+            Assembly expected = typeof(AssemblyScannerTests).Assembly;
+            Assembly decoy = typeof(AssemblyScanner).Assembly;
+            File.Copy(expected.Location, Path.Combine(path,
+                includeExecutables ? "plugin-accepted.exe" : "plugin-accepted.dll"));
+            File.Copy(decoy.Location, Path.Combine(path, "plugin-decoy.dll"));
+
+            var observed = new HashSet<string>();
+            var scanner = new AssemblyScanner();
+            scanner.IncludeFileNameStartsWith("plugin-");
+            bool Accept(Assembly assembly)
+            {
+                observed.Add(assembly.GetName().Name!);
+                return assembly == expected;
+            }
+
+            if (includeExecutables)
+                scanner.AssembliesAndExecutablesFromPath(path, Accept);
+            else
+                scanner.AssembliesFromPath(path, Accept);
+
+            scanner.Include(type => type == typeof(AssemblyScannerTests));
+            Assert.Equal(2, observed.Count);
+            Assert.Contains(expected.GetName().Name!, observed);
+            Assert.Contains(decoy.GetName().Name!, observed);
+            Assert.Equal(1, scanner.Count);
+            Assert.True(scanner.Contains(expected.GetName().Name!));
+            Assert.False(scanner.Contains(decoy.GetName().Name!));
+            Assert.Equal([typeof(AssemblyScannerTests)], scanner.ScanForTypes().AllTypes());
+        }
+        finally
+        {
+            Directory.Delete(path, recursive: true);
+        }
+    }
 }
