@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed Azure Table journal rejection of an already overfull partition when
+  its capacity lease is absent: the store now checks the bounded partition
+  before creating the lease, then reads the authoritative entry snapshot after
+  the lease ETag. Azurite tests cover both lease states and a delayed competing
+  append, and also verify that service-client journal composition uses the
+  named table. The complete integration project passes 49/49.
+
 - The Azure Table runtime saga provider now has an Azurite-backed public-path
   test. It verifies the configured partition and row keys in physical storage
   and reloads the saga through the public repository factory with that same

@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T154 Azure Table journal boundary and lease ordering
+
+Adversarial review found an overfull-journal defect: when the capacity lease
+was missing, a refused append still created that lease. The store now performs
+a side-effect-free bounded preflight in the missing-lease path and retains its
+lease-ETag-before-authoritative-snapshot order. Red-first and two further
+source mutations distinguish the lease side effect, a wrong table name and a
+stale concurrency snapshot. The exact-commit Azure Table LocalIntegration
+receipt passes 49/49 at `0719e0cb4`; final read-only Red Team is PASS.
+No new product-wide Coverage/CRAP claim is made. See
+[T154 evidence](t154-azure-table-journal-boundary.md).
+
 ## Current T153 Azure Table runtime saga keys
 
 The public runtime provider and caller-supplied repository key formatter now

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11149 |
+| Added | 11150 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -249,6 +249,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t151-s3-startup-contract.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t152-dynamodb-mixed-saga.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t153-azure-table-runtime-keys.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t154-azure-table-journal-boundary.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
