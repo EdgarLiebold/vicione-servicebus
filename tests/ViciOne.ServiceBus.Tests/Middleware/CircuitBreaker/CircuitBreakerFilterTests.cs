@@ -364,6 +364,63 @@ public sealed class CircuitBreakerFilterTests
         await pipe.SendAsync(new TestPipeContext());
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "nested-caller-versus-mixed-and-dependency-cancellation")]
+    public async Task NestedCancellation_ReleasesOnlyPureCallerProbeAsync(int kind)
+    {
+        var time = new ObservableTimeProvider(StartTime);
+        var protectedCalls = 0;
+        Exception? outcome = new ExpectedFailureException("initial trip");
+        IPipe<TestPipeContext> pipe = CreatePipe(time, _ =>
+        {
+            Interlocked.Increment(ref protectedCalls);
+            return outcome is null ? Task.CompletedTask : Task.FromException(outcome);
+        });
+
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        time.Advance(TimeSpan.FromSeconds(1));
+        using var caller = new CancellationTokenSource();
+        using var dependency = new CancellationTokenSource();
+        caller.Cancel();
+        dependency.Cancel();
+        Exception canceled = kind == 3
+            ? new OperationCanceledException("operation canceled",
+                new ExpectedFailureException("inner business failure"), caller.Token)
+            : new OperationCanceledException("operation canceled",
+                kind == 2 ? dependency.Token : caller.Token);
+        outcome = kind switch
+        {
+            1 => new AggregateException(new AggregateException(canceled),
+                new ExpectedFailureException("business failure")),
+            4 => new AggregateException(new AggregateException(canceled), new AggregateException()),
+            _ => new AggregateException(new AggregateException(canceled)),
+        };
+
+        AggregateException observed = await Assert.ThrowsAsync<AggregateException>(
+            () => pipe.SendAsync(new TestPipeContext(caller.Token)));
+        Assert.Same(outcome, observed);
+        outcome = null;
+
+        if (kind == 0)
+        {
+            await pipe.SendAsync(new TestPipeContext());
+            Assert.Equal(3, protectedCalls);
+        }
+        else
+        {
+            CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
+                () => pipe.SendAsync(new TestPipeContext()));
+            Assert.Same(observed, rejection.InnerException);
+            Assert.False(rejection.ProbeInProgress);
+            Assert.Equal(2, protectedCalls);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "dependency-cancellation-reopens")]
     public async Task DependencyCancellation_IsAClassifiedProbeFailureAndReopensTheCircuitAsync()

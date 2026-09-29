@@ -1,5 +1,16 @@
 # A+ remediation test status
 
+## T133 — circuit-breaker aggregate cancellation ownership — 29 September 2026
+
+The real half-open pipe failed red-first only for a nested pure caller
+cancellation: it reopened instead of releasing the exclusive recovery probe.
+The structural classifier now checks every nested aggregate branch, the
+caller-token identity, cancellation inner errors, and empty branches. Mixed
+business and dependency failures still reopen with the exact observed cause.
+Focused tests and requirement mapping are green; independent read-only Red
+Team review is PASS with no concrete P1/P2. The complete Core suite is checked
+at the exact commit before push. No global coverage profile was repeated.
+
 ## T132 — outbox fault metric diagnostics — 29 September 2026
 
 A real outbox metric operation failed red-first when a custom exception's

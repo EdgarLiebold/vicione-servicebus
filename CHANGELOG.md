@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected half-open circuit-breaker cancellation ownership for nested
+  aggregates. A pure caller cancellation now releases the exclusive recovery
+  probe; a mixed business failure, a distinct dependency token, or a business
+  failure inside cancellation still reopens the circuit.
+
 - Retained faulted outbox measurements when a custom exception's base lookup
   throws. The metric records the original exception type and still completes
   once; a null base result also falls back to the original type.

@@ -1,5 +1,19 @@
 # A+ remediation research
 
+## T133 circuit-breaker aggregate cancellation ownership
+
+`CircuitBreakerFilter<TContext>.IsCallerCancellation` recognizes only a top-level
+`OperationCanceledException`. The current half-open suite proves direct caller
+and distinct dependency cancellations, but no aggregate owns either path.
+The half-open recovery contract requires a pure caller-cancellation aggregate
+to release the exclusive probe; a mixed failure or distinct dependency token
+must remain classified as a protected-operation failure. The existing real
+pipe harness, fake time, and exact-exception assertions are reused.
+The three initial theory cases failed red-first only for the pure nested
+caller cancellation; the mixed and distinct-token controls passed. A business
+failure inside cancellation and an empty aggregate branch were added as
+classification boundaries.
+
 ## T132 outbox fault metric diagnostics
 
 `MetricOperation.Complete` isolated a throwing exception diagnostic getter

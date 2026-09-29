@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## T133 circuit-breaker aggregate cancellation ownership
+
+1. Red-first exercise the real half-open pipe with a nested aggregate of
+   caller cancellations, then demand that the next call can acquire the probe.
+2. Control for an aggregate containing business failure and for a distinct
+   dependency cancellation while the caller is canceled; both must reopen.
+3. Repair only the proven classification bug, map the requirement, obtain
+   adversarial read-only review, and check the exact commit before push.
+
 ## T132 outbox fault metric diagnostics
 
 1. Red-first run a real outbox metric operation with throwing and null-returning

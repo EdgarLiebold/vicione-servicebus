@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
@@ -71,11 +73,45 @@ internal sealed class CircuitBreakerFilter<TContext> : IFilter<TContext>
 
     private static bool IsCallerCancellation(TContext context, Exception exception)
     {
-        if (exception is not OperationCanceledException canceled
-            || !context.CancellationToken.IsCancellationRequested)
+        CancellationToken callerToken = context.CancellationToken;
+        if (!callerToken.IsCancellationRequested)
             return false;
 
-        return !canceled.CancellationToken.CanBeCanceled
-            || canceled.CancellationToken == context.CancellationToken;
+        var pending = new Stack<Exception>();
+        var visited = new HashSet<Exception>(ReferenceEqualityComparer.Instance);
+        bool foundCancellation = false;
+        pending.Push(exception);
+
+        while (pending.Count > 0)
+        {
+            Exception current = pending.Pop();
+            if (!visited.Add(current))
+                continue;
+
+            if (current is AggregateException aggregate)
+            {
+                if (aggregate.InnerExceptions.Count == 0)
+                    return false;
+
+                foreach (Exception inner in aggregate.InnerExceptions)
+                    pending.Push(inner);
+            }
+            else if (current is OperationCanceledException canceled)
+            {
+                if (canceled.CancellationToken.CanBeCanceled
+                    && canceled.CancellationToken != callerToken)
+                    return false;
+
+                foundCancellation = true;
+                if (canceled.InnerException is { } inner)
+                    pending.Push(inner);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return foundCancellation;
     }
 }
