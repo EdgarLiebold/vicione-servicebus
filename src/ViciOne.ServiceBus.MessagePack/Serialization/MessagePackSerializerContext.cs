@@ -137,28 +137,33 @@ internal sealed class MessagePackSerializerContext :
                 continue;
             }
 
-            Exception? innerException = current.InnerException;
-            Exception? baseException;
-            try
-            {
-                baseException = current.GetBaseException();
-            }
-            catch
-            {
-                baseException = null;
-            }
-
-            bool hasBase = baseException is not null && !ReferenceEquals(baseException, current);
-            if (innerException is not null)
-                pending.Push((innerException, false));
-            if (hasBase && !ReferenceEquals(baseException, innerException))
-                pending.Push((baseException!, false));
-
-            if (innerException is null && !hasBase)
+            if (!TryPushExceptionCauses(current, pending))
                 return false;
         }
 
         return cancellation is not null;
+    }
+
+    static bool TryPushExceptionCauses(Exception current, Stack<(Exception Exception, bool Complete)> pending)
+    {
+        Exception? innerException = current.InnerException;
+        Exception? baseException;
+        try
+        {
+            baseException = current.GetBaseException();
+        }
+        catch
+        {
+            baseException = null;
+        }
+
+        bool hasBase = baseException is not null && !ReferenceEquals(baseException, current);
+        if (innerException is not null)
+            pending.Push((innerException, false));
+        if (hasBase && !ReferenceEquals(baseException, innerException))
+            pending.Push((baseException!, false));
+
+        return innerException is not null || hasBase;
     }
 
     /// <summary>Creates a serializer that preserves this envelope while forwarding it.</summary>
