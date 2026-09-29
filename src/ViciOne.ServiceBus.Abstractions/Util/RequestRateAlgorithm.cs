@@ -53,6 +53,7 @@ public class RequestRateAlgorithm :
     readonly CancellationTokenSource _disposeToken;
     readonly RequestRateAlgorithmOptions _options;
     readonly SemaphoreSlim _rateLimitChangeSemaphore = new SemaphoreSlim(1, 1);
+    readonly SemaphoreSlim _requestCountChangeSemaphore = new SemaphoreSlim(1, 1);
     readonly object _rateLimitLock = new object();
     readonly ITimer? _rateLimitTimer;
     readonly int _refreshThreshold;
@@ -418,21 +419,7 @@ public class RequestRateAlgorithm :
 
         _requestSemaphore.Release();
 
-        var currentRequestCount = _requestCount;
-
-        var requestCount = count >= _options.RequestResultLimit
-            ? Math.Min(_requestLimit, currentRequestCount + (_requestLimit - currentRequestCount + 1) / 2)
-            : Math.Max(1, currentRequestCount - currentRequestCount / 2);
-
-        if (requestCount != currentRequestCount)
-        {
-            var previousValue = Interlocked.CompareExchange(ref _requestCount, requestCount, currentRequestCount);
-
-            if (previousValue == currentRequestCount)
-                return ChangeRequestCountAsync(requestCount, currentRequestCount, cancellationToken);
-        }
-
-        return Task.CompletedTask;
+        return ChangeRequestCountAsync(count, cancellationToken);
     }
 
     internal void CancelRequest(int resultLimit)
@@ -589,27 +576,55 @@ public class RequestRateAlgorithm :
         }
     }
 
-    async Task ChangeRequestCountAsync(int newRequestCount, int currentRequestCount, CancellationToken cancellationToken = default)
+    async Task ChangeRequestCountAsync(int count, CancellationToken cancellationToken)
     {
-        if (newRequestCount < 1 || newRequestCount > _requestLimit)
-            throw new ArgumentOutOfRangeException(nameof(newRequestCount), $"The request count {newRequestCount} must be >= 1 and <= {_requestLimit}");
-
-        var previousRequestCount = currentRequestCount;
-        if (newRequestCount > previousRequestCount)
+        if (!_requestCountChangeSemaphore.Wait(0))
         {
-            var releaseCount = newRequestCount - previousRequestCount;
-
-            _requestSemaphore.Release(releaseCount);
+            using var queued = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
+            await _requestCountChangeSemaphore.WaitAsync(queued.Token).ConfigureAwait(false);
         }
-        else
+
+        try
         {
-            using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
+            if (_disposed)
+                return;
 
-            for (; previousRequestCount > newRequestCount; previousRequestCount--)
+            var currentRequestCount = _requestCount;
+            var newRequestCount = count >= _options.RequestResultLimit
+                ? Math.Min(_requestLimit, currentRequestCount + (_requestLimit - currentRequestCount + 1) / 2)
+                : Math.Max(1, currentRequestCount - currentRequestCount / 2);
+            if (newRequestCount == currentRequestCount)
+                return;
+
+            if (newRequestCount > currentRequestCount)
             {
-                await _requestSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
-
+                _requestSemaphore.Release(newRequestCount - currentRequestCount);
+                _requestCount = newRequestCount;
+                return;
             }
+
+            var acquired = 0;
+            using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _disposeToken.Token);
+            try
+            {
+                while (acquired < currentRequestCount - newRequestCount)
+                {
+                    await _requestSemaphore.WaitAsync(linked.Token).ConfigureAwait(false);
+                    acquired++;
+                }
+            }
+            catch
+            {
+                if (acquired > 0)
+                    _requestSemaphore.Release(acquired);
+                throw;
+            }
+
+            _requestCount = newRequestCount;
+        }
+        finally
+        {
+            _requestCountChangeSemaphore.Release();
         }
     }
 

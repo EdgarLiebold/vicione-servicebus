@@ -349,6 +349,137 @@ public sealed class RequestRateAlgorithmTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "canceled-shrink-restores-published-and-physical-capacity")]
+    public async Task CanceledAdaptiveShrink_RestoresTheOriginalConcurrentRequestCapacityAsync()
+    {
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        using var algorithm = CreateAlgorithm(prefetchCount: 4, requestResultLimit: 1);
+        for (var growth = 0; growth < 2; growth++)
+        {
+            using ActiveRequest full = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+            await full.CompleteAsync(1, testToken);
+        }
+        Assert.Equal(4, algorithm.RequestCount);
+
+        using ActiveRequest first = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest second = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest third = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest fourth = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        Assert.Equal(4, algorithm.ActiveRequestCount);
+
+        using var shrinkCancellation = new CancellationTokenSource();
+        Task shrink = first.CompleteAsync(0, shrinkCancellation.Token);
+        Assert.False(shrink.IsCompleted);
+        shrinkCancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => shrink.WaitAsync(CompletionTimeout, testToken));
+
+        second.Dispose();
+        third.Dispose();
+        fourth.Dispose();
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+        Assert.Equal(4, algorithm.RequestCount);
+
+        using ActiveRequest recoveredFirst = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest recoveredSecond = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest recoveredThird = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest recoveredFourth = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        Assert.Equal(4, algorithm.ActiveRequestCount);
+        using var blockedCancellation = new CancellationTokenSource();
+        Task<ActiveRequest> blocked = algorithm.BeginRequestAsync(blockedCancellation.Token);
+        Assert.False(blocked.IsCompleted);
+        blockedCancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => blocked.WaitAsync(CompletionTimeout, testToken));
+        Assert.Equal(4, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "overlapping-shrinks-commit-one-capacity-at-a-time")]
+    public async Task OverlappingEmptyCompletions_SerializeTheAdaptiveCapacityChangesAsync()
+    {
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        using var algorithm = CreateAlgorithm(prefetchCount: 4, requestResultLimit: 1);
+        for (var growth = 0; growth < 2; growth++)
+        {
+            using ActiveRequest full = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+            await full.CompleteAsync(1, testToken);
+        }
+        Assert.Equal(4, algorithm.RequestCount);
+
+        using ActiveRequest first = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest second = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest third = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest fourth = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+
+        Task firstShrink = first.CompleteAsync(0, testToken);
+        Assert.False(firstShrink.IsCompleted);
+        Assert.Equal(4, algorithm.RequestCount);
+        Task secondShrink = second.CompleteAsync(0, testToken);
+        await firstShrink.WaitAsync(CompletionTimeout, testToken);
+        Assert.Equal(2, algorithm.RequestCount);
+        Assert.False(secondShrink.IsCompleted);
+        Task thirdCompletion = third.CompleteAsync(0, testToken);
+        await secondShrink.WaitAsync(CompletionTimeout, testToken);
+        await thirdCompletion.WaitAsync(CompletionTimeout, testToken);
+        Assert.Equal(1, algorithm.RequestCount);
+
+        fourth.Dispose();
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+        using ActiveRequest admitted = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using var blockedCancellation = new CancellationTokenSource();
+        Task<ActiveRequest> blocked = algorithm.BeginRequestAsync(blockedCancellation.Token);
+        Assert.False(blocked.IsCompleted);
+        blockedCancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => blocked.WaitAsync(CompletionTimeout, testToken));
+        Assert.Equal(1, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "dispose-cancels-partial-adaptive-shrink")]
+    public async Task DisposingAlgorithm_CancelsAnInProgressAdaptiveShrinkWithoutLeakingTheLeaseAsync()
+    {
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        using var algorithm = CreateAlgorithm(prefetchCount: 4, requestResultLimit: 1);
+        for (var growth = 0; growth < 2; growth++)
+        {
+            using ActiveRequest full = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+            await full.CompleteAsync(1, testToken);
+        }
+
+        using ActiveRequest first = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest second = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest third = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        using ActiveRequest fourth = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        Task shrink = first.CompleteAsync(0, testToken);
+        Assert.False(shrink.IsCompleted);
+
+        algorithm.Dispose();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => shrink.WaitAsync(CompletionTimeout, testToken));
+        second.Dispose();
+        third.Dispose();
+        fourth.Dispose();
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+        await Assert.ThrowsAsync<ObjectDisposedException>(() => algorithm.BeginRequestAsync(testToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "canceled-completion-token-without-count-change-still-settles")]
+    public async Task AlreadyCanceledCompletionToken_WhenRequestLimitCannotChange_StillCompletesAsync()
+    {
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        using var algorithm = CreateAlgorithm(prefetchCount: 1, requestResultLimit: 1);
+        using ActiveRequest request = await algorithm.BeginRequestAsync(testToken);
+        using var canceledCompletion = new CancellationTokenSource();
+        canceledCompletion.Cancel();
+
+        await request.CompleteAsync(0, canceledCompletion.Token);
+
+        Assert.Equal(1, algorithm.RequestCount);
+        Assert.Equal(0, algorithm.ActiveRequestCount);
+        using ActiveRequest successor = await algorithm.BeginRequestAsync(testToken).WaitAsync(CompletionTimeout, testToken);
+        Assert.Equal(1, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-LIMITS", "prefetch-clamps-result-limit")]
     public void ResultLimit_IsClampedToPrefetchCount()
     {
