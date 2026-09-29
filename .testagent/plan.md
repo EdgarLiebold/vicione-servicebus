@@ -5567,3 +5567,25 @@ the two later-business reuse variants; both sources are independently restored b
    Azure provider-assigned physical Unschedule and test exact token,
    continuation and failure rollback. Repeat focused classes, full Core once
    on final bytes, and independent Red Team re-review.
+
+# T122 — nested exception filter audit
+
+1. Prove the nested multi-aggregate leaf is missed by public Handle, Ignore
+   and typed predicate configuration without changing the existing direct and
+   wrapper semantics. Keep test assertions tied to decisions and callback
+   identity rather than coverage counts.
+2. Apply the smallest traversal correction in ExceptionSpecification and
+   run the focused tests, Core Abstractions project and read-only Red Team
+   counterreview. Update requirements, API notes, changelog and change list;
+   commit and push after the packet is green. Reuse the current coverage
+   baseline because the user prioritizes code correctness.
+3. Close the Red Team `GetBaseException()` override regression with an exact
+   leaf-identity test for Handle type, Handle predicate and Ignore. The walk
+   must preserve those virtual results and avoid repeated scans of ordinary
+   inner chains. Verify a shared leaf invokes a predicate once and an
+   AggregateException node itself remains matchable.
+4. Close the second Red Team shared-wrapper counterexample. A wrapper first
+   visited through an ordinary inner chain must still probe its virtual base
+   when later reached as a direct AggregateException child. Red-first test the
+   shared graph; track structural visits and base probes independently. Freeze
+   and run the affected Abstractions and Core suites, then seek final re-review.

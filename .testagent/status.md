@@ -3737,3 +3737,21 @@ Requirement projection and Git whitespace checks passed. Independent read-only
 Red Team re-review is PASS with no remaining concrete P1/P2 in this scope.
 No fresh 33-profile measurement was run for T121 because the user accepts the
 current Line/Branch coverage and requested emphasis on code correctness.
+
+## T122 nested exception filter audit — 29 September 2026
+
+Nested multi-aggregate leaves were missed by Handle and Ignore, potentially
+changing retry, rescue, circuit-breaker and kill-switch decisions. Public
+contract tests first failed on the original traversal. The iterative traversal
+now visits every distinct structural exception and preserves virtual
+`GetBaseException()` selection. Two Red Team P2 counterexamples exposed a
+custom base override and a shared wrapper reached by two paths; each was
+reproduced red-first and fixed. Separate structural and base-probe sets ensure
+the shared wrapper is probed when needed without duplicate predicate calls.
+
+Final focused ExceptionSpecification tests passed 15/15. Full Abstractions
+passed 972/972 and full Core 7,209/7,209, with zero failures or skips. Git
+whitespace passed. Independent read-only Red Team re-review is PASS with no
+remaining concrete P1/P2 in this scope. No new global Line/Branch/CRAP
+measurement was run; the user accepts the current Line/Branch level and
+prioritizes correctness.

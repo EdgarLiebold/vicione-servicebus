@@ -4319,3 +4319,30 @@ global discovery or measurement is needed during this packet.
   already canceled messages idempotently. Unlike replacement, clearing the
   stored token after a completed Cancel prevents an old delivery from becoming
   current. Test success and failure state ordering for normal and faulted paths.
+
+# T122 — nested exception filter audit
+
+- Manually read `ExceptionSpecification`, `CompositeExceptionFilter`,
+  `CompositeFilter`, `CompositePredicate`, direct retry filters and the nearby
+  circuit-breaker/exception-filter tests. The specification considers an
+  aggregate's direct children and their `GetBaseException()` only. A nested
+  aggregate containing multiple leaves returns itself from `GetBaseException`,
+  so a configured leaf type can be missed by Handle, Ignore and typed predicates.
+- Microsoft documents `AggregateException.Flatten()` as the recursive operation
+  that exposes all original exceptions from a nested aggregate tree. Add a
+  red-first public-contract test through a concrete ExceptionSpecification
+  subclass. Assert inclusion, exclusion and exact predicate invocation on a
+  nested multi-aggregate; review direct/wrapped/empty branches before editing.
+- Red Team found a compatibility counterexample in the first iterative fix:
+  custom Exception subclasses can override virtual `GetBaseException()` to
+  expose a distinct failure even without `InnerException`. The original
+  implementation observed this result. A red-first custom override test failed
+  on the first fix. Preserve the original root and aggregate-child base probes,
+  plus leaf probes, while traversing normal inner chains structurally to avoid
+  repeated quadratic scans on deep wrappers.
+- Red Team then found that a shared custom wrapper can first be visited through
+  an ordinary inner chain without a base probe, then later as a direct aggregate
+  child. A single visited set incorrectly skips the second base probe. The
+  exact shared-reference graph failed red-first. Separate structural-visit and
+  base-probe sets now allow that one deferred virtual probe while still
+  evaluating each predicate once; Red Team final re-review is PASS.

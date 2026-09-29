@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ViciOne.ServiceBus.ExceptionFilters;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -94,32 +95,13 @@ public abstract class ExceptionSpecification :
 
     static bool Match(Exception exception, params Type[] exceptionTypes)
     {
-        var baseException = exception.GetBaseException();
-
-        if (baseException is AggregateException aggregateException)
+        foreach (Exception candidate in Traverse(exception))
         {
-            foreach (var innerException in aggregateException.InnerExceptions)
+            for (var i = 0; i < exceptionTypes.Length; i++)
             {
-                var baseInnerException = innerException.GetBaseException();
-
-                for (var i = 0; i < exceptionTypes.Length; i++)
-                {
-                    if (exceptionTypes[i].IsInstanceOfType(innerException))
-                        return true;
-
-                    if (exceptionTypes[i].IsInstanceOfType(baseInnerException))
-                        return true;
-                }
+                if (exceptionTypes[i].IsInstanceOfType(candidate))
+                    return true;
             }
-        }
-
-        for (var i = 0; i < exceptionTypes.Length; i++)
-        {
-            if (exceptionTypes[i].IsInstanceOfType(exception))
-                return true;
-
-            if (exceptionTypes[i].IsInstanceOfType(baseException))
-                return true;
         }
 
         return false;
@@ -128,26 +110,46 @@ public abstract class ExceptionSpecification :
     static bool Match<T>(Exception exception, Func<T, bool> filter)
         where T : Exception
     {
-        if (exception is T ofT && filter(ofT))
-            return true;
-
-        var baseException = exception.GetBaseException();
-
-        if (baseException is AggregateException aggregateException)
+        foreach (Exception candidate in Traverse(exception))
         {
-            foreach (var innerException in aggregateException.InnerExceptions)
-            {
-                if (innerException is T directInnerOfT && filter(directInnerOfT))
-                    return true;
-
-                var baseInnerException = innerException.GetBaseException();
-
-                if (!ReferenceEquals(baseInnerException, innerException) &&
-                    baseInnerException is T innerExceptionOfT && filter(innerExceptionOfT))
-                    return true;
-            }
+            if (candidate is T selected && filter(selected))
+                return true;
         }
 
-        return !ReferenceEquals(baseException, exception) && baseException is T exceptionOfT && filter(exceptionOfT);
+        return false;
+    }
+
+    static IEnumerable<Exception> Traverse(Exception exception)
+    {
+        var pending = new Stack<(Exception Exception, bool CheckBase)>();
+        var visited = new HashSet<Exception>(ReferenceEqualityComparer.Instance);
+        var baseChecked = new HashSet<Exception>(ReferenceEqualityComparer.Instance);
+        pending.Push((exception, true));
+
+        while (pending.Count > 0)
+        {
+            (Exception current, bool checkBase) = pending.Pop();
+            bool firstVisit = visited.Add(current);
+            if (firstVisit)
+                yield return current;
+
+            if ((checkBase || current.InnerException is null) && baseChecked.Add(current))
+            {
+                Exception baseException = current.GetBaseException();
+                if (baseException is not null && !ReferenceEquals(baseException, current))
+                    pending.Push((baseException, false));
+            }
+
+            if (!firstVisit)
+                continue;
+
+            if (current is AggregateException aggregate)
+            {
+                for (var index = aggregate.InnerExceptions.Count - 1; index >= 0; index--)
+                    pending.Push((aggregate.InnerExceptions[index], true));
+            }
+            else if (current.InnerException is { } inner)
+                pending.Push((inner, false));
+        }
     }
 }

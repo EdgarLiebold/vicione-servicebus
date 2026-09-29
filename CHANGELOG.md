@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed exception selection for nested `AggregateException` trees. Handle and
+  Ignore now inspect every distinct inner exception in a stable order, so
+  retry, rescue, circuit-breaker and kill-switch policies see a configured
+  leaf even when multiple aggregate levels wrap it. Strong contract tests
+  cover type matches, exclusion vetoes, typed predicates, outer wrappers and
+  shared exception instances.
+
 - Fixed Saga schedule replacement on delayed and native Azure scheduling.
   Replacement now rejects unsupported cancellation or missing delivery identity
   before constructing or dispatching a new message; the previous Saga token
@@ -24,8 +31,7 @@ entry below records what the current work changed for anyone reading the source.
   cancellation. The internal Job Service clears its token only for that mode,
   allowing its stale-event filter to discard the eventual delivery. Azure's
   provider-assigned cancellation continues to use the stored broker token.
-  Focused
-  regression tests cover the provider-mode matrix, header ownership and
+  Focused regression tests cover the provider-mode matrix, header ownership and
   deferred-cancel success facade.
 
 - Fixed Saga timeout cancellation identity. Expiry scheduling now sets its
@@ -36,7 +42,7 @@ entry below records what the current work changed for anyone reading the source.
   publish and SQL scheduling declare their supported mode; the bus scheduler,
   consume scope and in-memory outbox preserve it. Behavior tests verify the
   schedule/cancel sequence, early rejection, real provider classifications
-  and all four modes through both wrappers. Core 7,140/7,140 passed before
+  and the original four modes through both wrappers. Core 7,140/7,140 passed before
   the final test-strengthening edit; the changed focused tests and all three
   requirement projections passed afterward. Red Team final review is PASS.
 

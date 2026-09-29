@@ -71,6 +71,13 @@ header, not an ID inside the response body. The three-response overload accepts
 all three declared response types. Timeout correlation reads the timeout
 message's `RequestId`. Explicit correlation callbacks may override these defaults.
 
+## Exception selection
+
+`IExceptionConfigurator.Handle` and `Ignore` inspect the original exception,
+ordinary inner-exception chains and all branches of nested `AggregateException`
+trees. An `Ignore` match vetoes a broader `Handle` match. Typed predicates see
+each distinct exception instance at most once, in outer-to-inner order.
+
 ## Advanced SPI
 
 Framework extensions use `ViciOne.ServiceBus.Advanced` and its focused child namespaces:
