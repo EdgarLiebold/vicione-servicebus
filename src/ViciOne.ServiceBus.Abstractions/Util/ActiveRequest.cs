@@ -14,8 +14,8 @@ public sealed class ActiveRequest :
     readonly TimeProvider _timeProvider;
     readonly TimeSpan _timeout;
     ITimer? _cancelTimer;
-    bool _completed;
     int _disposed;
+    int _settlement;
 
     /// <summary>Initializes a new instance.</summary>
     /// <param name="algorithm">The algorithm.</param>
@@ -23,7 +23,7 @@ public sealed class ActiveRequest :
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <param name="timeout">The maximum duration allowed for the operation.</param>
     /// <param name="timeProvider">The time source used by the operation.</param>
-    public ActiveRequest(RequestRateAlgorithm algorithm, int resultLimit, CancellationToken cancellationToken, TimeSpan timeout,
+    internal ActiveRequest(RequestRateAlgorithm algorithm, int resultLimit, CancellationToken cancellationToken, TimeSpan timeout,
         TimeProvider timeProvider)
     {
         _algorithm = algorithm;
@@ -48,7 +48,14 @@ public sealed class ActiveRequest :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task CompleteAsync(int count, CancellationToken cancellationToken = default)
     {
-        _completed = true;
+        if (Volatile.Read(ref _disposed) != 0)
+            throw new ObjectDisposedException(nameof(ActiveRequest));
+
+        int previous = Interlocked.CompareExchange(ref _settlement, 1, 0);
+        if (previous == 1)
+            throw new InvalidOperationException("The request has already been completed.");
+        if (previous == 2)
+            throw new ObjectDisposedException(nameof(ActiveRequest));
 
         return _algorithm.EndRequestAsync(count, ResultLimit, cancellationToken);
     }
@@ -63,7 +70,7 @@ public sealed class ActiveRequest :
         _cancelTimer?.Dispose();
         _source.Dispose();
 
-        if (_completed)
+        if (Interlocked.CompareExchange(ref _settlement, 2, 0) != 0)
             return;
 
         _algorithm.CancelRequest(ResultLimit);
