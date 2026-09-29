@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed request lease settlement so duplicate completion, completion after
+  disposal, and concurrent completion/disposal cannot release the owner's
+  request permit or pending capacity twice. The `ActiveRequest` constructor is
+  now internal: external package callers must obtain an owned request through
+  `RequestRateAlgorithm.BeginRequestAsync`. This intentionally removes the
+  former public constructor from the unreleased package API; friend assemblies
+  retain internal access. Four red-first regressions verify accounting,
+  blocked requests, healthy successors and the external API boundary. Focused
+  tests pass 4/4; complete Abstractions passes 958/958 without skips. T97
+  remains the product-wide profile; global Line and Branch A+ remain open.
+  Fresh-package API validation and final adversarial re-review pass.
+
 - Fixed receive-side outbox cancellation ownership across classic InMemory
   and EF and outgoing admission across reliable InMemory and EF. Distinct
   delivery and operation tokens now cancel state transitions, serialization,

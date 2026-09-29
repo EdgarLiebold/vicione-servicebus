@@ -3921,3 +3921,33 @@ apply case-insensitively in a path scan. Tests use the public scanner API and
 three real copied assemblies with distinct manifest identities, with exact
 type/count assertions. No reflection-only
 or coverage-only overload tests are planned.
+# T108 — ActiveRequest settlement ownership
+
+Target inventory: `src/ViciOne.ServiceBus.Abstractions/Util/ActiveRequest.cs`
+and its owner `RequestRateAlgorithm.cs`; existing contract suite is
+`tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs`.
+The Microsoft find-untested-sources Roslyn pairing was run once at T107;
+the target is directly paired, so no repeated project-wide discovery is
+needed. Existing xUnit tests use `TestContext.Current.CancellationToken`,
+bounded `WaitAsync`, `RequirementCoverage`, and observable request counters.
+
+Acceptance checklist: (1) a lease completed twice must not decrement active
+count or release a second request permit; a healthy later lease must still
+work; (2) completion after disposal must fail without changing the already
+released capacity; (3) completion racing disposal must settle the lease
+exactly once, permit either winner, and leave a healthy successor. Existing
+source has a non-atomic `_completed` flag and unconditional
+`EndRequestAsync` on every completion, so these scenarios can corrupt the
+owner's accounting. Tests must assert visible capacity and counts, not just
+exception types. This is a product correctness and concurrency packet, not a
+coverage-only test.
+
+Read-only Red Team review found that the public `ActiveRequest` constructor
+can invent an unowned request without acquiring a permit. Settling it
+decrements owner counters and releases capacity never acquired. A fourth
+red-first API-boundary test fails on the public constructor; the constructor
+must be internal so external package callers cannot fabricate an owned lease.
+Friend assemblies remain trusted internals; the current repository has one
+production constructor call in `RequestRateAlgorithm.BeginRequestAsync`. The
+packed API baseline must reflect that deliberate
+pre-release public-surface correction.

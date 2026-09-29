@@ -1,5 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T108 ActiveRequest settlement ownership packet
+
+Three red-first cases exposed duplicate completion, completion after disposal,
+and concurrent completion/disposal corrupting the request owner's count and
+capacity. A fourth exposed an external caller's ability to invent an unowned
+lease. Atomic settlement and an internal constructor close those boundaries.
+Focused tests pass 4/4; complete Abstractions passes 958/958 with no skips.
+The fresh-package developer-journey/API gate passes (18 journeys, 31 packages,
+30 runtime APIs); final read-only adversarial review is PASS, with no remaining
+concrete P1/P2. See
+[T108 evidence](t108-active-request-settlement.md).
+T97 remains the latest global checkpoint; Line and Branch A+ remain open.
+
 ## Current T107 receive-side outbox cancellation packet
 
 Classic InMemory and EF receive outboxes preserve delivery cancellation

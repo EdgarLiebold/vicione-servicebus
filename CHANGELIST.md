@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10998 |
+| Added | 11000 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -232,6 +232,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t105-rabbitmq-quorum-configuration.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t106-reliable-inbox-distinct-cancellation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t107-receive-outbox-cancellation.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t108-active-request-settlement.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -15767,6 +15768,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Transports/PublishEndpointTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Transports/TransportSetHeaderAdapterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/TypeCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ActiveRequestSettlementTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ConnectableTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/PendingTaskCollectionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs` | Added |  |

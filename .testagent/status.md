@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## T108 — ActiveRequest settlement ownership
+
+Three red-first request lifecycle tests exposed duplicate release, completion
+after disposal and a completion/disposal race that drove the active count below
+zero. A fourth red-first test caught a public constructor that let external
+callers invent an unowned lease. Atomic settlement releases each real lease
+once, and construction is internal. Four focused tests pass; the complete
+Abstractions project passes 958/958 with zero skips. The fresh-package
+developer-journey/API gate passes (18 journeys, 31 packages, 30 runtime APIs);
+the committed API baseline removes exactly the public constructor. Final
+read-only Red Team review is PASS, with no remaining concrete P1/P2. See
+[T108 evidence](coverage-a-plus-20260921/t108-active-request-settlement.md).
+T97 remains the global profile; Line and Branch A+ remain open.
+
 ## T107 — receive-side outbox cancellation ownership
 
 Classic InMemory and EF receive outboxes now reject canceled delivery tokens

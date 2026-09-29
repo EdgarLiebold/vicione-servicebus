@@ -5269,3 +5269,22 @@ verify critical operations are included before calculating complete measured-sou
 Expanded-profile percentages are not directly comparable to the historical denominator.
 The separate recognition-removal mutation kills39/76 and the lease-release omission kills exactly
 the two later-business reuse variants; both sources are independently restored byte-for-byte.
+# T108 — ActiveRequest settlement ownership
+
+1. Add red-first xUnit tests for duplicate completion, completion after
+   disposal, and concurrent completion/disposal through the real
+   `RequestRateAlgorithm.BeginRequestAsync` API. Assert exact active count,
+   absence of an extra request permit, and healthy successor admission.
+2. Make `ActiveRequest` settlement atomic so exactly one of completion or
+   disposal updates owner accounting; keep timer and cancellation cleanup
+   idempotent. Check bounded edge outcomes and run focused tests while
+   editing.
+3. Apply the Microsoft test-gap-analysis and assertion-quality review to the
+   new tests, perform a controlled counterprobe, obtain read-only adversarial
+   Red Team review, then run the complete Abstractions project once on the
+   frozen packet. Update requirements, evidence, changelog, changelist and
+   push. Preserve the grouped global 33-profile cadence.
+4. Close Red Team P2: red-first assert no public lease constructor; make the
+   constructor internal, update the package API contract from fresh packages,
+   and repeat the full Abstractions host and read-only review. State the exact
+   external-caller guarantee: friend assemblies retain internal access.
