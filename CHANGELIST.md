@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11004 |
+| Added | 11006 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -236,6 +236,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t109-adaptive-request-count.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t110-transformation-property.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t111-transform-operation-token.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t112-recurring-cancellation-admission.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -16458,6 +16459,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/ExplicitRedeliveryIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerInitializedContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerRuntimeContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringCancellationAdmissionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringControlOwnershipTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringPublishAdmissionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulerContractTests.cs` | Added |  |

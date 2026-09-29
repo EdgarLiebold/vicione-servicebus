@@ -5360,3 +5360,24 @@ the two later-business reuse variants; both sources are independently restored b
    affected Core project once on the exact implementation commit. Record
    evidence, changelog, requirements and authorized push. The next global
    33-profile aggregate remains at the larger-packet checkpoint.
+
+# T112 — recurring command admission under caller cancellation
+
+1. Add one bounded scheduling test class with real public
+   `IRecurringMessageScheduler` entry points and recording endpoint/topology
+   boundaries. Red-first cover both scheduler implementations, send/publish
+   destinations and three pipe shapes under pre-cancellation. Cover cancel,
+   pause and resume controls, including no endpoint lookup when pre-canceled.
+2. Use a provider whose endpoint lookup stays pending to cancel between
+   resolution start and successful result. Exercise all three schedule pipe
+   shapes and all three controls. Assert original OCE token, zero command
+   delivery, and a healthy successor's exact command/token/address.
+3. Correct only demonstrated admission gaps at the internal schedule helpers
+   and control-command handoff boundaries. Keep argument validation order,
+   successful command shape, pipe execution and accepted-transport completion
+   semantics unchanged. Run the narrow scheduling class during edits.
+4. Apply test-gap and assertion-quality checks, obtain independent read-only
+   Red Team review, freeze implementation, run the complete Core project once
+   on the exact commit, then update requirement mapping, evidence, changelog,
+   changelist and push. Defer 33-profile global measurement to the grouped
+   checkpoint; no current A+ claim from T97 numbers.

@@ -1236,3 +1236,11 @@ Core 7,075/7,075 pass with zero skips. Read-only adversarial review is PASS,
 no concrete P1/P2. See `t111-transform-operation-token.md`. T97 is still
 the last global 33-profile aggregate; this packet does not claim current
 global A+.
+T112 closes recurring command cancellation admission on exact implementation
+commit `9d403c961`. Its red-first 24-case matrix failed against unchanged
+product. Final focused 24/24, neighboring Recurring 275/275 and complete Core
+7,099/7,099 pass with zero skips; the build has zero warnings/errors.
+Independent read-only adversarial re-review is PASS. The topology and endpoint
+resolution counterprobes close both initial P2 findings. See
+`t112-recurring-cancellation-admission.md`. T97 remains the latest global
+33-profile aggregate; this packet does not claim current global A+.

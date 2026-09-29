@@ -4020,3 +4020,31 @@ the failure. A pending accepted initializer must still be awaited, and its
 non-cancellation failure must remain the original failure. Tests must assert
 token identity, input/context identity, downstream count and result/failure;
 coverage-only cases are inadmissible.
+
+# T112 — recurring command admission under caller cancellation
+
+The T97 exact-commit aggregate reports 49/234 unhit physical lines in
+`EndpointRecurringMessageScheduler` and 49/216 in
+`PublishRecurringMessageScheduler`. Much of that is repeated argument
+validation, so this packet targets a concrete effect boundary instead of
+adding tests for line counts. The public `IRecurringMessageScheduler` contract
+states that each supplied token cancels the operation. Read both scheduler
+classes, their command helpers/control methods, the interface, and the
+existing completion, publish-admission, control-ownership and contract tests.
+The T107 Roslyn pairing report and T97 coverage files were reused without a
+new global discovery or measurement. Existing tests strongly check normal
+command payloads, pipes, transport acceptance, provider failures and
+cancellation reported by a dependency. They do not check a caller token that
+is already canceled when a dependency ignores it, or cancellation arriving
+while an endpoint provider resolves and then returns successfully.
+
+Acceptance: for both endpoint-send and command-publish schedulers, a
+pre-canceled schedule request (explicit send or publish destination; no pipe,
+typed pipe or untyped pipe) and each of the three control commands must not
+reach the transport. Endpoint resolution must not begin for a pre-canceled
+control command. For endpoint-backed scheduling and controls, cancellation
+during pending endpoint resolution must suppress later transport delivery
+even when the resolver ignores cancellation. The returned operation must be
+canceled with the caller's exact token; healthy successor commands must still
+reach the transport with the correct destination/identity. Tests observe
+external calls, token identity and recovery, not only exceptions.

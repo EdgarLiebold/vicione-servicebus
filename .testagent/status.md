@@ -3646,3 +3646,14 @@ no concrete P1/P2. The new assertions check token, context/input identity,
 exception source and downstream side effects; existing matrices still check
 pending completion and exact fault propagation. T97 remains the latest
 product-wide Line/Branch/CRAP checkpoint, so global A+ remains open.
+## T112 recurring command cancellation admission — 29 September 2026
+
+Implementation commit `9d403c961` now rejects caller cancellation before
+recurring command admission, topology lookup and endpoint resolution, and
+rechecks after awaited endpoint resolution. The red-first 24-case matrix
+failed against unchanged product. Final focused 24/24, neighboring Recurring
+275/275 and exact-commit complete Core 7,099/7,099 pass; build has zero
+warnings/errors. Requirements contain 4,394 unique tuples. Independent
+read-only adversarial re-review is PASS with no concrete P1/P2. See
+`coverage-a-plus-20260921/t112-recurring-cancellation-admission.md`. The
+product-wide profile remains T97; global A+ remains open.

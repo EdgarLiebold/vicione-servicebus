@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed recurring schedule and control commands that could reach a transport
+  after caller cancellation. Publish scheduling now checks cancellation
+  before topology lookup; endpoint scheduling and controls recheck after
+  endpoint resolution. Red-first regressions assert zero external calls,
+  exact token identity, command payload and healthy recovery. Focused tests
+  pass 24/24, neighboring Recurring tests 275/275 and complete Core
+  7,099/7,099 on `9d403c961`; adversarial re-review is PASS. The next
+  product-wide Line/Branch/CRAP profile remains on the grouped cadence.
+
 - Fixed cancellation handoff in send, consume, execute and compensate
   transformation filters. Each path now passes its context token to message
   initialization. Four pre-canceled regressions prevent downstream delivery
