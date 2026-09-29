@@ -60,6 +60,52 @@ public sealed class CronExpressionBoundaryRegressionTests
         Assert.Null(expression.GetTimeAfter(Utc(12, 31)));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "terminal-instant-has-no-next-occurrence")]
+    public void MaximumInstant_ExhaustsTheSupportedYearWithoutOverflow()
+    {
+        var expression = new CronExpression("0 0 0 1 1 ? 2199") { TimeZone = TimeZoneInfo.Utc };
+
+        Assert.Null(expression.GetTimeAfter(DateTimeOffset.MaxValue));
+        Assert.Null(expression.GetNextValidTimeAfter(DateTimeOffset.MaxValue));
+        Assert.False(expression.IsSatisfiedBy(DateTimeOffset.MaxValue));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(14)]
+    [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "minimum-instant-is-unsatisfied-and-finds-first-year")]
+    public void MinimumInstant_IsUnsatisfiedAndFindsTheFirstSupportedYear(int inputOffsetHours)
+    {
+        var expression = new CronExpression("0 0 0 1 1 ? 1970") { TimeZone = TimeZoneInfo.Utc };
+        var firstOccurrence = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        var minimumInstant = DateTimeOffset.MinValue.ToOffset(TimeSpan.FromHours(inputOffsetHours));
+
+        Assert.False(expression.IsSatisfiedBy(minimumInstant));
+        Assert.Equal(firstOccurrence, expression.GetTimeAfter(minimumInstant));
+        Assert.Equal(firstOccurrence, expression.GetNextValidTimeAfter(minimumInstant));
+        Assert.True(expression.IsSatisfiedBy(firstOccurrence));
+    }
+
+    [Theory]
+    [InlineData(-10, 9)]
+    [InlineData(-14, 13)]
+    [RequirementCoverage("REQ-VSB-CRON-SCHEDULING", "last-local-year-can-fire-in-next-utc-year")]
+    public void LastSupportedLocalYear_RemainsVisibleAcrossTheUtcYearBoundary(int zoneOffsetHours, int utcHour)
+    {
+        TimeZoneInfo western = TimeZoneInfo.CreateCustomTimeZone(
+            $"ViciOne.Cron.LastYear.Western.{zoneOffsetHours}", TimeSpan.FromHours(zoneOffsetHours), "Western", "Western");
+        var expression = new CronExpression("59 59 23 31 12 ? 2199") { TimeZone = western };
+        var lastOccurrence = new DateTimeOffset(2200, 1, 1, utcHour, 59, 59, TimeSpan.Zero);
+        var before = lastOccurrence.AddSeconds(-1);
+
+        Assert.Equal(lastOccurrence, expression.GetTimeAfter(before));
+        Assert.Equal(lastOccurrence, expression.GetNextValidTimeAfter(before));
+        Assert.True(expression.IsSatisfiedBy(lastOccurrence));
+        Assert.Null(expression.GetTimeAfter(lastOccurrence));
+        Assert.False(expression.IsSatisfiedBy(lastOccurrence.AddSeconds(1)));
+    }
+
     private static DateTimeOffset Utc(int month, int day) =>
         new(2026, month, day, 9, 0, 0, TimeSpan.Zero);
 }

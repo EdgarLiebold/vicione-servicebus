@@ -110,6 +110,9 @@ internal sealed class CronExpression :
     public bool IsSatisfiedBy(DateTimeOffset date)
     {
         var withoutMilliseconds = new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Offset);
+        if (withoutMilliseconds.UtcDateTime == DateTime.MinValue)
+            return false;
+
         var test = withoutMilliseconds.AddSeconds(-1);
         DateTimeOffset? timeAfter = GetTimeAfter(test);
 
@@ -1319,6 +1322,10 @@ internal sealed class CronExpression :
     /// <returns>The next scheduled UTC instant, or <see langword="null" /> when no supported year remains.</returns>
     public DateTimeOffset? GetTimeAfter(DateTimeOffset afterTime)
     {
+        // A local appointment in the last supported year may fall in the following UTC year.
+        if (afterTime.UtcDateTime.Year > CronYearRange.LastYear + 1)
+            return null;
+
         afterTime = afterTime.AddSeconds(1);
 
         var date = StripMilliseconds(afterTime);

@@ -5452,3 +5452,18 @@ the two later-business reuse variants; both sources are independently restored b
 3. Freeze the packet and run the complete affected Core project once, then
    record evidence, changelog, requirement mapping and push. Preserve the
    larger-packet product-wide 33-profile checkpoint cadence.
+# T117 — Cron terminal-year evaluation
+
+1. Add red-first tests for the MaxValue boundary across `GetTimeAfter`,
+   `GetNextValidTimeAfter` and `IsSatisfiedBy`; require null/null/false.
+   At MinValue, require false and verify that both search APIs still find
+   the first 1970 occurrence for UTC offsets 0 and +14. Prove the final
+   local 2199 second remains discoverable in UTC 2200 for zones UTC-10 and
+   UTC-14, followed by exact exhaustion. Run the Cron class while editing.
+2. Correct the terminal-year guard using the UTC instant and enough offset
+   margin to preserve every supported local 2199 date. Review a mutation
+   that would reject the UTC 2200 appointment and the old MaxValue overflow.
+3. Run the complete Core project once on the frozen code/test commit, get
+   independent read-only adversarial Red Team review, record risk and test
+   evidence, changelog and requirement mapping, then push. The complete
+   33-profile product-wide measurement remains at the grouped checkpoint.

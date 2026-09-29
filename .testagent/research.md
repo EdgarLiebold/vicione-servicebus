@@ -4125,3 +4125,33 @@ global discovery or measurement is needed during this packet.
   `test-gap-analysis` for mutation sensitivity, `assertion-quality` for the
   result assertions, and `run-tests` for the MTP command. Run the affected
   Core class while editing and the complete Core project once when frozen.
+# T117 — Cron terminal-year evaluation
+
+- `CronExpression` accepts years 1970 through 2199 and documents that
+  `GetTimeAfter`/`GetNextValidTimeAfter` return null when the supported year
+  range is exhausted. `GetTimeAfter` unconditionally adds a second before
+  it checks the range; `DateTimeOffset.MaxValue` therefore appears to throw
+  instead of returning null. `IsSatisfiedBy` delegates to that path and
+  should report false for a nonmatching terminal instant.
+- A local 2199 appointment in a negative-offset time zone can occur in UTC
+  year 2200, so an early cutoff at UTC 2200 would lose a real appointment.
+  Use UTC-10 and the extreme UTC-14 fixed-offset zone and exact instants on
+  both sides of the last supported local year, plus MaxValue, to distinguish
+  safe exhaustion from an overaggressive guard. At the other end,
+  `IsSatisfiedBy` subtracts a second and throws at the earliest UTC instant,
+  which can also be represented with a positive input offset.
+- Existing Cron tests cover parsing, ordinary month/year crossing, DST and
+  union calendars. The T98 Microsoft Roslyn static pairing maps this source
+  to multiple scheduling tests; it is a location aid, not proof of runtime
+  coverage. T114's strict 33-profile report shows 25 uncovered lines and
+  50 uncovered branches in this source, but the new cases are justified by
+  the documented terminal-year behavior rather than the counts.
+- Apply Microsoft `code-testing-agent` inline Research → Plan → Implement,
+  `test-gap-analysis` and `assertion-quality` for counterexample strength,
+  and `run-tests` for MTP commands. Keep global measurement on the grouped
+  cadence.
+- Red-first tests reproduced the MaxValue overflow in `GetTimeAfter` and the
+  MinValue underflow in `IsSatisfiedBy`. Independent read-only Red Team found
+  that the original UTC-10 test did not protect all supported negative zone
+  offsets, and that all three new requirement variants needed JSON projection.
+  Both findings are included in the current implementation/checklist.

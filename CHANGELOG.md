@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed cron evaluation at the representable time limits. A search after
+  `DateTimeOffset.MaxValue` now returns no next occurrence instead of
+  overflowing, and `IsSatisfiedBy` returns false at the earliest UTC instant
+  instead of subtracting outside the date range. Red-first tests caught both
+  errors. UTC-10 and UTC-14 cases prove that the last permitted local second
+  of 2199 is still found in UTC year 2200 before the schedule is exhausted;
+  237 focused Cron test executions pass. The global A+ checkpoint remains
+  open.
+
 - Added twelve behavior cases for recurring message initialization failures
   across endpoint and publish command transports, explicit and topology
   destinations, and all three pipe forms. A failed input property read now
