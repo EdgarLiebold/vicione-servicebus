@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Receive transport startup now reports a terminal fault if retry-policy
+  context creation fails or returns null. Policy decision and terminal callback
+  failures retain their cause; retry delays and callbacks stop with the transport
+  while policy-owned cancellation retains its original token. Throwing Info or
+  Error loggers cannot consume a retry or hide the terminal transport fault.
+
 - Property metadata caches now skip indexers before selecting scalar members.
   Message type metadata also selects case-distinct hidden properties using
   ordinal case-insensitive names, so runtime read and write caches can use the

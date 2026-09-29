@@ -22,6 +22,8 @@ public sealed class ConsumerAgentTests
         consumeLoop.TrySetResult();
 
         await agent.Completed.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        await agent.StopAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Assert.False(agent.GracefulShutdown);
         Assert.True(agent.Stopping.IsCancellationRequested);
         Assert.True(agent.Stopped.IsCancellationRequested);
@@ -77,6 +79,8 @@ public sealed class ConsumerAgentTests
         }
 
         await agent.Completed.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        await agent.StopAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Assert.False(agent.GracefulShutdown);
         Assert.True(agent.Stopped.IsCancellationRequested);
     }

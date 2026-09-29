@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Events.Receiving;
 using ViciOne.ServiceBus.Logging;
@@ -326,6 +328,338 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Equal(["before:1", "terminal:terminal"], retryTrace);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "policy-context-start-failure-is-terminal")]
+    public async Task RetryPolicyContextStartFailure_FaultsEndpointReadinessAndPublishesOneTerminalCauseAsync(bool returnsNull)
+    {
+        var expected = new InvalidOperationException("retry policy failed to initialize");
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        int supervisorCreations = 0;
+        var transport = new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(new FailingContextReceiveRetryPolicy(expected, returnsNull)),
+            context,
+            () =>
+            {
+                supervisorCreations++;
+                return new TestTransportSupervisor(new TestPipeContext());
+            },
+            new ScriptedTransportPipe());
+        var endpoint = new ReceiveEndpoint(transport, context);
+
+        IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+        ReceiveTransportFaulted fault = await observer.TerminalFault.WaitAsync(
+            TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+        await handle.StopAsync(TestContext.Current.CancellationToken);
+
+        if (!returnsNull)
+            Assert.Same(expected, actual);
+        else
+            Assert.Contains("null policy context", actual.Message, StringComparison.Ordinal);
+        Assert.Same(actual, fault.Exception);
+        Assert.True(fault.IsTerminal);
+        Assert.Single(observer.Faults);
+        Assert.Equal(0, supervisorCreations);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "policy-decision-failure-is-terminal")]
+    public async Task RetryDecisionFailure_PreservesPolicyCauseAndStopsAfterTheFirstAttemptAsync()
+    {
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var policyFailure = new InvalidOperationException("retry decision failed");
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var transport = new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(new FailingDecisionReceiveRetryPolicy(policyFailure)),
+            context,
+            () => new TestTransportSupervisor(new TestPipeContext()),
+            pipe);
+        var endpoint = new ReceiveEndpoint(transport, context);
+
+        IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+        await handle.StopAsync(TestContext.Current.CancellationToken);
+
+        Assert.Same(policyFailure, actual);
+        Assert.Collection(observer.Faults,
+            fault =>
+            {
+                Assert.False(fault.IsTerminal);
+                Assert.Same(attemptFailure, fault.Exception);
+            },
+            fault =>
+            {
+                Assert.True(fault.IsTerminal);
+                Assert.Same(policyFailure, fault.Exception);
+            });
+        Assert.Equal(1, pipe.AttemptCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "throwing-error-logger-preserves-terminal-fault")]
+    public async Task ThrowingErrorLogger_DoesNotStrandReadinessOrReplaceTheTransportFailureAsync()
+    {
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var loggerFailure = new InvalidOperationException("logger failed");
+        var logger = new ThrowingErrorLogger(loggerFailure);
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var endpoint = new ReceiveEndpoint(new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(Retry.None), context,
+            () => new TestTransportSupervisor(new TestPipeContext()), pipe), context);
+        ILogContext? previous = LogContext.Current;
+
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+            ConnectionException actual = await Assert.ThrowsAsync<ConnectionException>(
+                () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+            await handle.StopAsync(TestContext.Current.CancellationToken);
+
+            Assert.Same(attemptFailure, actual);
+            Assert.Same(attemptFailure, logger.ObservedFailure);
+            Assert.Equal(1, logger.CallCount);
+            Assert.Collection(observer.Faults,
+                fault => { Assert.False(fault.IsTerminal); Assert.Same(attemptFailure, fault.Exception); },
+                fault => { Assert.True(fault.IsTerminal); Assert.Same(attemptFailure, fault.Exception); });
+            Assert.Equal(1, pipe.AttemptCount);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "throwing-info-logger-does-not-consume-retry")]
+    public async Task ThrowingInfoLogger_DoesNotConsumeTheConfiguredRetryOrReplaceItsFailureAsync()
+    {
+        var firstFailure = new ConnectionException("first attempt failed", isTransient: true);
+        var terminalFailure = new ConnectionException("second attempt failed", isTransient: true);
+        var logger = new ThrowingInfoLogger(new InvalidOperationException("info logger failed"));
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(firstFailure, terminalFailure);
+        var endpoint = new ReceiveEndpoint(new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(Retry.Interval(1, TimeSpan.Zero)), context,
+            () => new TestTransportSupervisor(new TestPipeContext()), pipe), context);
+        ILogContext? previous = LogContext.Current;
+
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+            ConnectionException actual = await Assert.ThrowsAsync<ConnectionException>(
+                () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+            await handle.StopAsync(TestContext.Current.CancellationToken);
+
+            Assert.Same(terminalFailure, actual);
+            Assert.Equal(1, logger.CallCount);
+            Assert.Same(firstFailure, logger.ObservedFailure);
+            Assert.Equal(2, pipe.AttemptCount);
+            Assert.Collection(observer.Faults,
+                fault => { Assert.False(fault.IsTerminal); Assert.Same(firstFailure, fault.Exception); },
+                fault => { Assert.False(fault.IsTerminal); Assert.Same(terminalFailure, fault.Exception); },
+                fault => { Assert.True(fault.IsTerminal); Assert.Same(terminalFailure, fault.Exception); });
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "terminal-policy-callback-failure-keeps-readiness-terminal")]
+    public async Task TerminalRetryCallbackFailure_ReportsItsOwnCauseAfterTheAttemptAsync(bool returnsNullTask)
+    {
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var callbackFailure = new InvalidOperationException("retry fault callback failed");
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var endpoint = new ReceiveEndpoint(new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(new TerminalCallbackReceiveRetryPolicy(callbackFailure, returnsNullTask)),
+            context, () => new TestTransportSupervisor(new TestPipeContext()), pipe), context);
+
+        IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+        await handle.StopAsync(TestContext.Current.CancellationToken);
+
+        if (returnsNullTask)
+            Assert.Contains("null retry-faulted task", actual.Message, StringComparison.Ordinal);
+        else
+            Assert.Same(callbackFailure, actual);
+        Assert.Collection(observer.Faults,
+            fault => { Assert.False(fault.IsTerminal); Assert.Same(attemptFailure, fault.Exception); },
+            fault => { Assert.True(fault.IsTerminal); Assert.Same(actual, fault.Exception); });
+        Assert.Equal(1, pipe.AttemptCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "foreign-policy-cancellation-is-terminal")]
+    public async Task ForeignPolicyCancellation_IsTerminalWithoutAStopRequestAsync()
+    {
+        using var foreignCancellation = new CancellationTokenSource();
+        foreignCancellation.Cancel();
+        var expected = new OperationCanceledException("foreign policy canceled", foreignCancellation.Token);
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var endpoint = new ReceiveEndpoint(new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(new FailingContextReceiveRetryPolicy(expected, returnsNull: false)),
+            context, () => new TestTransportSupervisor(new TestPipeContext()), new ScriptedTransportPipe()), context);
+
+        IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+        await handle.StopAsync(TestContext.Current.CancellationToken);
+
+        Assert.Same(expected, actual);
+        ReceiveTransportFaulted fault = Assert.Single(observer.Faults);
+        Assert.True(fault.IsTerminal);
+        Assert.Same(expected, fault.Exception);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-STOP", "stop-cancels-terminal-policy-callback-silently")]
+    public async Task StopDuringTerminalRetryCallback_DoesNotPublishASecondFaultAsync()
+    {
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var policy = new AwaitingStopReceiveRetryPolicy();
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var transport = new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(policy), context,
+            () => new TestTransportSupervisor(new TestPipeContext()), pipe);
+
+        ReceiveTransportHandle handle = transport.Start();
+        CancellationToken callbackToken = await policy.CallbackEntered.WaitAsync(
+            TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+        await handle.StopAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+
+        Assert.True(callbackToken.CanBeCanceled);
+        Assert.True(callbackToken.IsCancellationRequested);
+        ReceiveTransportFaulted fault = Assert.Single(observer.Faults);
+        Assert.False(fault.IsTerminal);
+        Assert.Same(attemptFailure, fault.Exception);
+        Assert.Equal(1, pipe.AttemptCount);
+        Assert.False(observer.TerminalFault.IsCompleted);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-STOP", "stop-cancels-pre-retry-callback-parameter")]
+    public async Task StopDuringPreRetryCallback_CancelsItsParameterWithoutAnotherAttemptAsync()
+    {
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var policy = new AwaitingStopReceiveRetryPolicy(retryScheduled: true);
+        var context = new TestReceiveEndpointContext();
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var transport = new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(policy), context,
+            () => new TestTransportSupervisor(new TestPipeContext()), pipe);
+
+        ReceiveTransportHandle handle = transport.Start();
+        CancellationToken callbackToken = await policy.CallbackEntered.WaitAsync(
+            TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+        await handle.StopAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+
+        Assert.True(callbackToken.CanBeCanceled);
+        Assert.True(callbackToken.IsCancellationRequested);
+        ReceiveTransportFaulted fault = Assert.Single(observer.Faults);
+        Assert.False(fault.IsTerminal);
+        Assert.Same(attemptFailure, fault.Exception);
+        Assert.Equal(1, pipe.AttemptCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-STOP", "stop-cancels-delay-with-independent-policy-token")]
+    public async Task StopDuringRetryDelay_CancelsEvenWhenThePolicyTokenIsIndependentAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(new DateTimeOffset(2031, 2, 3, 4, 5, 6, TimeSpan.Zero));
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var policy = new AwaitingStopReceiveRetryPolicy(retryScheduled: true, retryDelay: TimeSpan.FromHours(1));
+        var context = new TestReceiveEndpointContext();
+        context.SetTimeProvider(timeProvider);
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var transport = new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(policy), context,
+            () => new TestTransportSupervisor(new TestPipeContext()), pipe);
+
+        ReceiveTransportHandle handle = transport.Start();
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+        await handle.StopAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+
+        ReceiveTransportFaulted fault = Assert.Single(observer.Faults);
+        Assert.False(fault.IsTerminal);
+        Assert.Same(attemptFailure, fault.Exception);
+        Assert.Equal(1, pipe.AttemptCount);
+        Assert.False(policy.CallbackEntered.IsCompleted);
+    }
+
+    [Theory]
+    [InlineData(PolicyCancellationStage.Delay)]
+    [InlineData(PolicyCancellationStage.PreRetry)]
+    [InlineData(PolicyCancellationStage.TerminalCallback)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "policy-cancellation-retains-original-token")]
+    public async Task IndependentPolicyCancellation_ReportsItsOriginalTokenAndDoesNotRetryAsync(PolicyCancellationStage stage)
+    {
+        using var policyCancellation = new CancellationTokenSource();
+        var timeProvider = new ObservableTimeProvider(new DateTimeOffset(2031, 2, 3, 4, 5, 6, TimeSpan.Zero));
+        var attemptFailure = new ConnectionException("transport attempt failed", isTransient: true);
+        var policy = new CancelableReceiveRetryPolicy(policyCancellation.Token, stage);
+        var context = new TestReceiveEndpointContext();
+        context.SetTimeProvider(timeProvider);
+        var observer = new RecordingTransportObserver();
+        using ConnectHandle observerHandle = context.ConnectReceiveTransportObserver(observer);
+        var pipe = new ScriptedTransportPipe(attemptFailure);
+        var endpoint = new ReceiveEndpoint(new ReceiveTransport<TestPipeContext>(
+            new TestHostConfiguration(policy), context,
+            () => new TestTransportSupervisor(new TestPipeContext()), pipe), context);
+
+        IReceiveEndpointHandle handle = endpoint.Start(TestContext.Current.CancellationToken);
+        if (stage == PolicyCancellationStage.Delay)
+            await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+        else
+            await policy.CallbackEntered.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+
+        policyCancellation.Cancel();
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => handle.Ready.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
+        await handle.StopAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(policyCancellation.Token, actual.CancellationToken);
+        Assert.Collection(observer.Faults,
+            fault => { Assert.False(fault.IsTerminal); Assert.Same(attemptFailure, fault.Exception); },
+            fault => { Assert.True(fault.IsTerminal); Assert.Same(actual, fault.Exception); });
+        Assert.Equal(1, pipe.AttemptCount);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-STOP", "stop-cancels-backoff-without-terminal-fault")]
     public async Task StopDuringRetryBackoff_CancelsTheOwnedRunWithoutAnotherAttemptOrTerminalFaultAsync()
@@ -646,6 +980,276 @@ public sealed class ReceiveLifecycleTerminalityTests
 
         public void Probe(ProbeContext context)
         {
+        }
+    }
+
+    private sealed class FailingContextReceiveRetryPolicy(Exception failure, bool returnsNull) : IRetryPolicy
+    {
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext => returnsNull ? null! : throw failure;
+
+        public bool IsHandled(Exception exception) => true;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class FailingDecisionReceiveRetryPolicy(Exception failure) : IRetryPolicy
+    {
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext => new FailingDecisionContext<T>(context, failure);
+
+        public bool IsHandled(Exception exception) => true;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        private sealed class FailingDecisionContext<T>(T context, Exception failure) : RetryPolicyContext<T>
+            where T : class, PipeContext
+        {
+            public T Context => context;
+
+            public bool CanRetry(Exception exception, out RetryContext<T> retryContext) => throw failure;
+
+            public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public void Cancel()
+            {
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+    }
+
+    private sealed class ThrowingErrorLogger(Exception failure) : ILogger
+    {
+        public int CallCount { get; private set; }
+        public Exception? ObservedFailure { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Error;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            CallCount++;
+            ObservedFailure = exception;
+            throw failure;
+        }
+    }
+
+    private sealed class ThrowingInfoLogger(Exception failure) : ILogger
+    {
+        public int CallCount { get; private set; }
+        public Exception? ObservedFailure { get; private set; }
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Information;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            CallCount++;
+            ObservedFailure = exception;
+            throw failure;
+        }
+    }
+
+    private sealed class TerminalCallbackReceiveRetryPolicy(Exception failure, bool returnsNullTask) : IRetryPolicy
+    {
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext => new CallbackPolicyContext<T>(context, failure, returnsNullTask);
+
+        public bool IsHandled(Exception exception) => true;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        private sealed class CallbackPolicyContext<T>(T context, Exception failure, bool returnsNullTask) : RetryPolicyContext<T>
+            where T : class, PipeContext
+        {
+            public T Context => context;
+
+            public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
+            {
+                retryContext = new CallbackRetryContext<T>(context, exception, failure, returnsNullTask);
+                return false;
+            }
+
+            public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public void Cancel()
+            {
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+
+        private sealed class CallbackRetryContext<T>(T context, Exception exception, Exception failure, bool returnsNullTask)
+            : BaseRetryContext<T>(context, exception, 0, CancellationToken.None), RetryContext<T>
+            where T : class, PipeContext
+        {
+            public override Task RetryFaultedAsync(Exception terminalException, CancellationToken cancellationToken = default) =>
+                returnsNullTask ? null! : Task.FromException(failure);
+
+            public bool CanRetry(Exception terminalException, out RetryContext<T> retryContext)
+            {
+                retryContext = this;
+                return false;
+            }
+        }
+    }
+
+    private sealed class AwaitingStopReceiveRetryPolicy(bool retryScheduled = false, TimeSpan? retryDelay = null) : IRetryPolicy
+    {
+        private readonly TaskCompletionSource<CancellationToken> _callbackEntered =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task<CancellationToken> CallbackEntered => _callbackEntered.Task;
+
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext => new StopPolicyContext<T>(context, _callbackEntered, retryScheduled, retryDelay);
+
+        public bool IsHandled(Exception exception) => true;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        private sealed class StopPolicyContext<T>(T context, TaskCompletionSource<CancellationToken> callbackEntered,
+            bool retryScheduled, TimeSpan? retryDelay) : RetryPolicyContext<T>
+            where T : class, PipeContext
+        {
+            public T Context => context;
+
+            public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
+            {
+                retryContext = new StopRetryContext<T>(context, exception, callbackEntered, retryDelay);
+                return retryScheduled;
+            }
+
+            public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public void Cancel()
+            {
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+
+        private sealed class StopRetryContext<T>(T context, Exception exception, TaskCompletionSource<CancellationToken> callbackEntered,
+            TimeSpan? retryDelay)
+            : BaseRetryContext<T>(context, exception, 0, CancellationToken.None), RetryContext<T>
+            where T : class, PipeContext
+        {
+            public override TimeSpan? Delay => retryDelay;
+
+            public override async Task PreRetryAsync(CancellationToken cancellationToken = default)
+            {
+                callbackEntered.TrySetResult(cancellationToken);
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            }
+
+            public override async Task RetryFaultedAsync(Exception terminalException, CancellationToken cancellationToken = default)
+            {
+                callbackEntered.TrySetResult(cancellationToken);
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            }
+
+            public bool CanRetry(Exception terminalException, out RetryContext<T> retryContext)
+            {
+                retryContext = this;
+                return false;
+            }
+        }
+    }
+
+    public enum PolicyCancellationStage
+    {
+        Delay,
+        PreRetry,
+        TerminalCallback,
+    }
+
+    private sealed class CancelableReceiveRetryPolicy(CancellationToken policyToken, PolicyCancellationStage stage) : IRetryPolicy
+    {
+        private readonly TaskCompletionSource _callbackEntered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task CallbackEntered => _callbackEntered.Task;
+
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext => new CancelablePolicyContext<T>(context, policyToken, stage, _callbackEntered);
+
+        public bool IsHandled(Exception exception) => true;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        private sealed class CancelablePolicyContext<T>(T context, CancellationToken policyToken,
+            PolicyCancellationStage stage, TaskCompletionSource callbackEntered) : RetryPolicyContext<T>
+            where T : class, PipeContext
+        {
+            public T Context => context;
+
+            public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
+            {
+                retryContext = new CancelableRetryContext<T>(context, exception, policyToken, stage, callbackEntered);
+                return stage != PolicyCancellationStage.TerminalCallback;
+            }
+
+            public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+            public void Cancel()
+            {
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+
+        private sealed class CancelableRetryContext<T>(T context, Exception exception, CancellationToken policyToken,
+            PolicyCancellationStage stage, TaskCompletionSource callbackEntered)
+            : BaseRetryContext<T>(context, exception, 0, policyToken), RetryContext<T>
+            where T : class, PipeContext
+        {
+            public override TimeSpan? Delay => stage == PolicyCancellationStage.Delay ? TimeSpan.FromHours(1) : null;
+
+            public override async Task PreRetryAsync(CancellationToken cancellationToken = default)
+            {
+                if (stage == PolicyCancellationStage.PreRetry)
+                {
+                    callbackEntered.TrySetResult();
+                    await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+                }
+            }
+
+            public override async Task RetryFaultedAsync(Exception terminalException, CancellationToken cancellationToken = default)
+            {
+                if (stage == PolicyCancellationStage.TerminalCallback)
+                {
+                    callbackEntered.TrySetResult();
+                    await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+                }
+            }
+
+            public bool CanRetry(Exception terminalException, out RetryContext<T> retryContext)
+            {
+                retryContext = null!;
+                return false;
+            }
         }
     }
 

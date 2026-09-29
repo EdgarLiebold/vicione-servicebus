@@ -139,9 +139,25 @@ public sealed class ReceiveTransport<TContext> :
             var stoppingContext = new TransportStoppingContext(Stopping);
             stoppingContext.SetTimeProvider(_context.GetTimeProvider());
 
-            using RetryPolicyContext<TransportStoppingContext> policyContext = _retryPolicy.CreatePolicyContext(stoppingContext)
-                ?? throw new InvalidOperationException("The receive transport retry policy returned a null policy context.");
+            RetryPolicyContext<TransportStoppingContext> policyContext;
+            try
+            {
+                policyContext = _retryPolicy.CreatePolicyContext(stoppingContext)
+                    ?? throw new InvalidOperationException("The receive transport retry policy returned a null policy context.");
+            }
+            catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception exception)
+            {
+                if (!Stopping.IsCancellationRequested)
+                    await NotifyFaultedAsync(exception, true).ConfigureAwait(false);
 
+                return;
+            }
+
+            using RetryPolicyContext<TransportStoppingContext> ownedPolicyContext = policyContext;
             RetryContext<TransportStoppingContext>? retryContext = null;
 
             while (!Stopping.IsCancellationRequested)
@@ -172,20 +188,40 @@ public sealed class ReceiveTransport<TContext> :
             if (retryContext is null)
                 return;
 
-            retryContext.CancellationToken.ThrowIfCancellationRequested();
-            LogContext.Info?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay,
-                retryContext.Exception.Message);
-
-            if (retryContext.Delay.HasValue)
+            using var retryCancellation = CancellationTokenSource.CreateLinkedTokenSource(Stopping, retryContext.CancellationToken);
+            CancellationToken retryToken = retryCancellation.Token;
+            try
             {
-                await Task.Delay(retryContext.Delay.Value, _context.GetTimeProvider(), retryContext.CancellationToken)
-                    .ConfigureAwait(false);
-            }
+                retryToken.ThrowIfCancellationRequested();
 
-            Task preRetryTask = retryContext.PreRetryAsync()
-                ?? throw new InvalidOperationException("The receive transport retry context returned a null pre-retry task.");
-            if (preRetryTask.Status != TaskStatus.RanToCompletion)
-                await preRetryTask.ConfigureAwait(false);
+                try
+                {
+                    LogContext.Info?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay,
+                        retryContext.Exception.Message);
+                }
+                catch
+                {
+                }
+
+                if (retryContext.Delay.HasValue)
+                {
+                    await Task.Delay(retryContext.Delay.Value, _context.GetTimeProvider(), retryToken)
+                        .ConfigureAwait(false);
+                }
+
+                Task preRetryTask = retryContext.PreRetryAsync(retryToken)
+                    ?? throw new InvalidOperationException("The receive transport retry context returned a null pre-retry task.");
+                if (preRetryTask.Status != TaskStatus.RanToCompletion)
+                    await preRetryTask.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
+            {
+                throw new OperationCanceledException(Stopping);
+            }
+            catch (OperationCanceledException) when (retryContext.CancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException(retryContext.CancellationToken);
+            }
         }
 
         async Task ReportUnexpectedCompletionAsync()
@@ -205,22 +241,57 @@ public sealed class ReceiveTransport<TContext> :
             RetryContext<TransportStoppingContext>? retryContext,
             Exception exception)
         {
-            bool canRetry = retryContext is null
-                ? policyContext.CanRetry(exception, out RetryContext<TransportStoppingContext> nextRetryContext)
-                : retryContext.CanRetry(exception, out nextRetryContext);
-            if (canRetry && nextRetryContext is not null)
-                return nextRetryContext;
-
-            if (nextRetryContext is not null && _retryPolicy.IsHandled(exception))
+            Exception terminalCause = exception;
+            try
             {
-                Task retryFaultedTask = nextRetryContext.RetryFaultedAsync(exception)
-                    ?? throw new InvalidOperationException("The receive transport retry context returned a null retry-faulted task.");
-                if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
-                    await retryFaultedTask.ConfigureAwait(false);
+                bool canRetry = retryContext is null
+                    ? policyContext.CanRetry(exception, out RetryContext<TransportStoppingContext> nextRetryContext)
+                    : retryContext.CanRetry(exception, out nextRetryContext);
+                if (canRetry && nextRetryContext is not null)
+                    return nextRetryContext;
+
+                if (nextRetryContext is not null && _retryPolicy.IsHandled(exception))
+                {
+                    using var callbackCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                        Stopping, nextRetryContext.CancellationToken);
+                    try
+                    {
+                        Task retryFaultedTask = nextRetryContext.RetryFaultedAsync(exception, callbackCancellation.Token)
+                            ?? throw new InvalidOperationException("The receive transport retry context returned a null retry-faulted task.");
+                        if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
+                            await retryFaultedTask.ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
+                    {
+                        throw new OperationCanceledException(Stopping);
+                    }
+                    catch (OperationCanceledException) when (nextRetryContext.CancellationToken.IsCancellationRequested)
+                    {
+                        throw new OperationCanceledException(nextRetryContext.CancellationToken);
+                    }
+                }
+            }
+            catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
+            {
+                return null;
+            }
+            catch (Exception policyException)
+            {
+                terminalCause = policyException;
             }
 
-            LogContext.Error?.Log(exception, "ReceiveTransport retry budget exhausted: {InputAddress}", _context.InputAddress);
-            await NotifyFaultedAsync(exception, true).ConfigureAwait(false);
+            if (Stopping.IsCancellationRequested)
+                return null;
+
+            try
+            {
+                LogContext.Error?.Log(terminalCause, "ReceiveTransport terminal fault: {InputAddress}", _context.InputAddress);
+            }
+            catch
+            {
+            }
+
+            await NotifyFaultedAsync(terminalCause, true).ConfigureAwait(false);
             return null;
         }
 

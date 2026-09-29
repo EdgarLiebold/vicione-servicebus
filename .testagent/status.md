@@ -1,5 +1,35 @@
 # A+ remediation test status
 
+## T144 — receive transport retry ownership and terminal readiness — 29 September 2026
+
+Red-first end-to-end tests reproduced indefinite endpoint readiness when retry
+policy context creation threw or returned null, when `CanRetry` threw, and when
+the terminal Error logger threw. A second red-first probe showed an Info logger
+replacing the second transport attempt's cause. Callback-parameter-only stop
+and independently canceled policy-token probes exposed a stop hang and linked
+token identity regression. The receive agent now sends one terminal fault for
+policy infrastructure failures, isolates Info/Error logging from execution,
+and passes a linked stop/policy token to retry delays and both callbacks while
+normalizing cancellation to its original owner. Strong assertions cover exact
+cause/token, fault order and count, retry count, and bounded stop completion.
+The focused receive lifecycle group passes 32/32; the complete Core project
+passes 7,385/7,385. Independent read-only adversarial review is PASS with no
+remaining concrete P1/P2 in this packet.
+
+The broader Unit solution is not green: 12,225/12,231 pass, six fail. Five are
+Architecture gates (product documentation wording, Event Hubs admission shape,
+broker-local wall-clock waits, source-file naming, async API naming); one Quartz
+missing-saga redelivery count failed only in the parallel solution run and
+passed 1/1 in a focused rerun. The five architecture failures point outside
+the T144 diff; the Quartz failure's cause is not established. All six remain
+open A+ gates. A separate complete Core replay exposed a race
+in `ConsumerAgentTests`: `Agent.Completed` can precede `Agent.Stopped`. Both
+tests that assert the stopped token now await the already-started shared stop
+operation after completion. The first correction passed the focused group 5/5
+and the complete Core project 7,385/7,385; both corrections now pass the
+focused group 5/5, and independent read-only review is PASS. Exact-commit
+checks follow.
+
 ## T143 — scalar property metadata and case-distinct hiding — 29 September 2026
 
 Red-first regressions reproduced public property-cache construction failing
