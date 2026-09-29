@@ -340,4 +340,4 @@ updated.
 
 The [Roslyn inventory across the ten sibling repositories](api/roslyn-all-repos-api-2026-09-29.md)
 also records source signatures and their XML comments. Its flagged project diagnostics and
-comment candidates are still open review items; the inventory is not an API quality grade.
+comment candidates still require assessment; the inventory does not assign an API quality grade.

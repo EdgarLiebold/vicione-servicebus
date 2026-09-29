@@ -88,14 +88,14 @@ public class DynamicFilter<TInput> :
             return Task.CompletedTask;
 
         if (outputPipes.Length == 1)
-            return InvokeOutput(outputPipes[0], next);
+            return InvokeOutputAsync(outputPipes[0], next);
 
         async Task SendAsync()
         {
             var outputTasks = new List<Task>(outputPipes.Length);
             for (var i = 0; i < outputPipes.Length; i++)
             {
-                Task outputTask = InvokeOutput(outputPipes[i], _empty);
+                Task outputTask = InvokeOutputAsync(outputPipes[i], _empty);
 
                 if (outputTask.Status == TaskStatus.RanToCompletion)
                     continue;
@@ -107,7 +107,7 @@ public class DynamicFilter<TInput> :
             await next.SendAsync(context).ConfigureAwait(false);
         }
 
-        Task InvokeOutput(IOutputFilter outputPipe, IPipe<TInput> continuation)
+        Task InvokeOutputAsync(IOutputFilter outputPipe, IPipe<TInput> continuation)
         {
             try
             {

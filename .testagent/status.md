@@ -1,5 +1,25 @@
 # A+ remediation test status
 
+## T145 — architecture oracle and Quartz retry race — 29 September 2026
+
+The Event Hubs batch admission architecture test had stale variable-name and
+helper-layout assumptions. It now checks both actual admission calls around
+the observer, the provider call after the second admission, and the candidate
+admission inside the helper. The focused architecture class passes 4/4.
+The Quartz missing-saga test now accepts one through three scheduled attempts:
+the second attempt can be queued before the later saga instance starts under
+load, while the required Running response remains exact. Its focused test
+passes 1/1. A local asynchronous function in DynamicFilter now has an Async
+suffix. The source naming gate records the cohesive scheduling capability
+interface and mode enum. Public API documentation no longer uses process
+language. Read-only adversarial review passed without concrete P1/P2.
+
+The architecture project run before the final Event Hubs oracle correction
+passed 447/450. Its remaining failures were the stale Event Hubs oracle,
+an ActiveMQ local Quartz test with a wall-clock wait, and async naming in
+test helper methods. The first is resolved by the focused rerun; the latter
+two remain open. No new product-wide coverage or CRAP measurement was run.
+
 ## T144 — receive transport retry ownership and terminal readiness — 29 September 2026
 
 Red-first end-to-end tests reproduced indefinite endpoint readiness when retry

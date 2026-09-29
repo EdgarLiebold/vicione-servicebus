@@ -26,6 +26,8 @@ public sealed class SourceFileNamingArchitectureTests
                 "public enum ActiveMqTransportProtocol`0", "public class ActiveMqTransportOptions`0"),
             ["src/ViciOne.ServiceBus.Abstractions/Middleware/OneTimeSetupMethod.cs"] = Types(
                 "internal class OneTimeSetupMethod`0", "public interface OneTimeContext`0"),
+            ["src/ViciOne.ServiceBus.Abstractions/Scheduling/IScheduleCancellationCapability.cs"] = Types(
+                "public enum ScheduleCancellationMode`0", "public interface IScheduleCancellationCapability`0"),
             ["src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs"] = Types(
                 "public enum TransportSendFailureKind`0", "public interface ITransportSendFailureClassifier`0"),
             ["src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs"] = Types(

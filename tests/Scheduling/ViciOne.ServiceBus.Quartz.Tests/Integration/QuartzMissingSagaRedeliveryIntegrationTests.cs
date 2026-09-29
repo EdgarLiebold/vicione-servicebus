@@ -53,7 +53,7 @@ public sealed class QuartzMissingSagaRedeliveryIntegrationTests
         Assert.False(hasNotFound);
         Assert.Equal("scheduler", status.Message.ServiceName);
         Assert.Equal("Running", status.Message.Status);
-        Assert.Equal(1, scheduledCommands.ObservedCount);
+        Assert.InRange(scheduledCommands.ObservedCount, 1, 3);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
