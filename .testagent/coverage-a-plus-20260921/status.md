@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T106 reliable inbox distinct cancellation packet
+
+Both InMemory and EF reliable inbox providers now honor separate delivery
+and operation cancellation through acquisition, waiting and completion,
+including the final EF transaction commit. Focused Core passes 3/3 and EF
+5/5; complete Core passes 7,046/7,046 and EF 376/376 on the final source
+content in `2882773e6`. Final read-only Red Team re-review is PASS.
+See [T106 evidence](t106-reliable-inbox-distinct-cancellation.md). T97
+remains the latest global checkpoint; Line and Branch A+ remain open.
+
 ## Current T105 RabbitMQ quorum configuration packet
 
 Repeated quorum configuration clears an earlier group size, and the broker

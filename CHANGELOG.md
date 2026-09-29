@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed distinct delivery and operation cancellation in the InMemory and EF
+  reliable inboxes. Both sources now cancel acquisition and processing,
+  preserve the original exception token, and prevent a canceled consumed
+  fence or outgoing intent from committing. EF rolls back business state
+  even when cancellation arrives between `SetConsumedAsync` and transaction
+  commit. Focused Core tests pass 3/3, focused EF 5/5, complete Core
+  7,046/7,046 and complete EF 376/376 on `2882773e6`; final adversarial
+  re-review is PASS. Global Line and Branch A+ remain open.
+
 - Fixed RabbitMQ quorum reconfiguration retaining an old group size and
   broker topology emitting auto-delete or exclusive quorum queues. Endpoint
   and direct declaration tests verify final queue and exchange behavior,

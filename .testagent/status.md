@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## T106 — reliable inbox distinct cancellation
+
+InMemory and EF reliable inboxes now honor distinct delivery and operation
+tokens through acquisition, completion, and EF transaction commit. The
+new tests cover original token identity, pre-cancel, Busy wait, no retry or
+quarantine, EF rollback, and disposal of a buffered outgoing send. Focused
+Core passes 3/3, focused EF 5/5, complete Core 7,046/7,046, and complete EF
+376/376 on the final source content in `2882773e6`. Final read-only
+adversarial re-review is PASS. See
+[T106 evidence](coverage-a-plus-20260921/t106-reliable-inbox-distinct-cancellation.md).
+T97 remains the global profile; Line and Branch A+ are still open.
+
 ## T105 — RabbitMQ quorum configuration and broker topology
 
 Repeated quorum configuration now clears a stale group size, and final
