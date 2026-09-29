@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## T152 — DynamoDB mixed saga registration — 30 September 2026
+
+The former static concern about nondefault public DI setters is stale: the
+current `ValidBoundaries_RegisterFrozenOptionsAndCreateContextLazily` matrix
+already checks their immutable registered options. A new mixed versioned/plain
+saga test proves the runtime DynamoDB provider configures only the compatible
+type and resolves its exact context. Removing the `ISagaVersion` guard caused
+the new test to fail at the generic proxy constraint (7/8 filtered class
+cases passed); the product source was restored byte-identically. Complete
+DynamoDB Unit and exact-commit `024a3dc56` receipt passed 45/45. Read-only
+Red Team is PASS without concrete P1/P2. See
+`coverage-a-plus-20260921/t152-dynamodb-mixed-saga.md`. No product source or
+new global Coverage/CRAP figure is claimed.
+
 ## T151 — selected S3 repository startup composition — 30 September 2026
 
 The S3 LocalStack suite now exercises `UseMessageData(selector =>

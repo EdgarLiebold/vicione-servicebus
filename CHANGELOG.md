@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The DynamoDB runtime registration test now mixes versioned and unversioned
+  sagas. It proves that the optional provider configures only compatible saga
+  types; removing the version guard fails the test at the generic proxy bound.
+
 - The S3 LocalStack suite now exercises the public repository selector through
   a real bus start. It proves that bucket and tagged lifecycle reconciliation
   finish during PreStart, while a legacy all-object rule fails startup before

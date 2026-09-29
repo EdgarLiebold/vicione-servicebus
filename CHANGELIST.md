@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11147 |
+| Added | 11148 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -247,6 +247,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t119-saga-request-timeout-admission.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t120-saga-timeout-cancellation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t151-s3-startup-contract.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t152-dynamodb-mixed-saga.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |

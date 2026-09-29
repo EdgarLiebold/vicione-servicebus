@@ -1,0 +1,9 @@
+# T152 — DynamoDB runtime provider with mixed saga types
+
+The historical static DynamoDB API review listed two possible configuration gaps. Current source inspection shows the nondefault public DI setters are already tested in `DynamoDbRegistrationValidationTests.ValidBoundaries_RegisterFrozenOptionsAndCreateContextLazily`: both configuration forms bind nondefault TTL, clock, read/string/date and V1 conversion values to immutable registered options. That earlier concern is stale; this packet does not count it as a new defect or add redundant tests.
+
+Commit `024a3dc56` adds `RuntimeTypeProvider_SkipsRegisteredSagaWithoutVersion`. One public `UseDynamoDbForRegisteredSagas` registration contains both a versioned and a plain saga. The test requires exactly one DynamoDB configuration callback, resolves the exact context factory for the versioned saga, and requires no DynamoDB service registration for the plain saga. It covers the generic constraint boundary that a versionless saga cannot enter the DynamoDB proxy.
+
+The complete DynamoDB Unit project passed 45/45. A temporary mutation that removed the `ISagaVersion` guard failed exactly this new test: the provider tried to construct `Proxy<UnversionedSaga>` and threw a generic-constraint exception (7/8 filtered class cases passed). The product file was restored byte-identically. Independent read-only Red Team review reported no concrete P1/P2 and confirmed the descriptor assertion is supplemental to the callback and factory oracles.
+
+The exact-commit receipt at `artifacts/t152-dynamodb-mixed-saga/receipt.json` (SHA-256 `9bfd24a8cfbcf601710346c1bf42e40d608497543d097c7bd557c61bccd38c5b`) verifies 45/45 tests, eleven unchanged binaries and 1,760 tracked product sources at `024a3dc56`. No DynamoDB product source changed and no new product-wide Coverage/CRAP figure is inferred. Real AWS IAM, TTL deletion and recovery remain external acceptance limits.
