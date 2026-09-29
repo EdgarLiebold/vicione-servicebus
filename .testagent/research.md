@@ -1,5 +1,30 @@
 # A+ remediation research
 
+## T131 dispose and MessagePack exception ownership
+
+`DisposeAsyncExtensions` captured a virtual `GetBaseException()` before
+invoking either public cleanup callback. A throwing or null-returning override
+therefore skipped cleanup or replaced the original failure. Four of six
+red-first callback cases failed. The implementation now falls back to the
+original exception and keeps valid root-cause behavior.
+`MessagePackSerializerContext.TryGetMessage` used a single base exception in
+its cancellation catch filter. A real deserialization callback throwing a
+wrapper around an aggregate with one cancellation and one business failure
+escaped as cancellation; the red-first callback test proved reachability.
+The correction inspects every structural branch and safe base projection;
+only an all-cancellation graph propagates the cancellation, while malformed
+or mixed payloads retain the documented false result.
+Red Team found a cycle in a non-cancellation branch that the first visited-set
+traversal mistakenly accepted; the real callback counterprobe failed red-first.
+The corrected traversal distinguishes active from completed nodes, allowing
+shared pure cancellation leaves without treating a cycle as success. A second
+red-first callback proved that `OperationCanceledException.InnerException` can
+carry a business failure and must be inspected too. Cleanup callback failure
+originally replaced the operation failure; both Task and ValueTask callback
+counterprobes failed red-first. The helper now aggregates captured root cause
+before cleanup cause. Pending and pre-canceled callbacks have separate
+observable ownership checks for both forms.
+
 ## T130 Saga and Courier cancellation ownership
 
 `QuerySagaFilter` and `CorrelatedSagaFilter` each queried virtual

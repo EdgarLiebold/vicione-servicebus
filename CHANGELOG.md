@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Preserved cleanup and cancellation diagnostics in utility and MessagePack
+  boundaries. Both public asynchronous dispose callback forms still invoke
+  cleanup when an exception's base lookup throws or returns null, then rethrow
+  the original failure. If cleanup also fails, both causes remain observable
+  in order. MessagePack distinguishes pure nested cancellation from mixed
+  cancellation and business failures, including cyclic exception graphs and
+  business failures nested inside a cancellation.
+
 - Corrected Saga and Courier cancellation classification for nested pure and
   mixed failures. Unsafe exception base lookups no longer hide Saga fault
   notifications or turn Courier cancellation into a routing-slip failure.

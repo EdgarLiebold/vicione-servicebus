@@ -74,6 +74,53 @@ public sealed class MessagePackSerializerContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "nested-pure-versus-mixed-cancellation-callback")]
+    public void TryGetMessage_PropagatesOnlyPureNestedCancellationFromDeserializationCallbacks()
+    {
+        SerializerContext pure = CreateContextFor(new PureCancellationMessage());
+        SerializerContext mixed = CreateContextFor(new MixedFailureMessage());
+
+        OperationCanceledException cancellation = Assert.ThrowsAny<OperationCanceledException>(() =>
+            pure.TryGetMessage<PureCancellationMessage>(out _));
+        Assert.Equal("first cancellation", cancellation.Message);
+
+        Assert.False(mixed.TryGetMessage<MixedFailureMessage>(out var result));
+        Assert.Null(result);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "cyclic-non-cancellation-branch-is-not-cancellation")]
+    public void TryGetMessage_CyclicBusinessBranchCannotTurnAnAggregateIntoCancellation()
+    {
+        SerializerContext context = CreateContextFor(new CyclicFailureMessage());
+
+        Assert.False(context.TryGetMessage<CyclicFailureMessage>(out var result));
+        Assert.Null(result);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "shared-cancellation-leaf-remains-cancellation")]
+    public void TryGetMessage_SharedCancellationLeafIsNotMistakenForACycle()
+    {
+        SerializerContext context = CreateContextFor(new SharedCancellationMessage());
+
+        OperationCanceledException actual = Assert.ThrowsAny<OperationCanceledException>(() =>
+            context.TryGetMessage<SharedCancellationMessage>(out _));
+
+        Assert.Equal("shared cancellation", actual.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "cancellation-with-business-inner-is-mixed")]
+    public void TryGetMessage_CancellationWithBusinessInnerIsNotPureCancellation()
+    {
+        SerializerContext context = CreateContextFor(new CancellationWithBusinessInnerMessage());
+
+        Assert.False(context.TryGetMessage<CancellationWithBusinessInnerMessage>(out var result));
+        Assert.Null(result);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "non-null-envelope-payload")]
     public void SerializerContext_RejectsEveryMissingOwnedInputAndPayload()
     {
@@ -169,6 +216,16 @@ public sealed class MessagePackSerializerContextTests
         return serializer.Deserialize(new BinaryMessageBody(envelopeBytes), EmptyHeaders.Instance);
     }
 
+    private static SerializerContext CreateContextFor<T>(T message) where T : class
+    {
+        var serializer = new MessagePackMessageSerializer();
+        var sendContext = new MessageSendContext<T>(message);
+        var envelope = new MessagePackEnvelope(sendContext, message);
+        return serializer.Deserialize(
+            new BinaryMessageBody(MessagePackSerializationRuntime.Serialize(envelope)),
+            EmptyHeaders.Instance);
+    }
+
     private sealed class ContextValue
     {
         public int Id { get; set; }
@@ -185,6 +242,74 @@ public sealed class MessagePackSerializerContextTests
         }
 
         public void OnAfterDeserialize() => throw new OperationCanceledException("Deserialization canceled.");
+    }
+
+    private sealed class PureCancellationMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize() => throw new InvalidOperationException("outer", new AggregateException(
+            new OperationCanceledException("first cancellation"), new OperationCanceledException("second cancellation")));
+    }
+
+    private sealed class MixedFailureMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize() => throw new InvalidOperationException("outer", new AggregateException(
+            new OperationCanceledException("first cancellation"), new InvalidOperationException("business failure")));
+    }
+
+    private sealed class CyclicFailureMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize()
+        {
+            var first = new CyclicBaseFailure();
+            var second = new CyclicBaseFailure();
+            first.Base = second;
+            second.Base = first;
+            throw new InvalidOperationException("outer", new AggregateException(
+                new OperationCanceledException("canceled branch"), first));
+        }
+    }
+
+    private sealed class SharedCancellationMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize()
+        {
+            var cancellation = new OperationCanceledException("shared cancellation");
+            throw new InvalidOperationException("outer", new AggregateException(cancellation, cancellation));
+        }
+    }
+
+    private sealed class CancellationWithBusinessInnerMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize() => throw new AggregateException(
+            new OperationCanceledException("first cancellation"),
+            new OperationCanceledException("second cancellation", new InvalidOperationException("business failure")));
+    }
+
+    private sealed class CyclicBaseFailure : Exception
+    {
+        public Exception? Base { get; set; }
+
+        public override Exception GetBaseException() => Base!;
     }
 
     private sealed class ContextNameOverlay

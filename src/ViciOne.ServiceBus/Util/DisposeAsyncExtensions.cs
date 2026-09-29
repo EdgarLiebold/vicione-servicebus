@@ -16,11 +16,21 @@ public static class DisposeAsyncExtensions
     /// <exception cref="ViciOneServiceBusException">Thrown when the operation cannot be completed.</exception>
     public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<Task> disposeCallback, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<T>(cancellationToken); var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+        if (cancellationToken.IsCancellationRequested)
+            return global::System.Threading.Tasks.ValueTask.FromCanceled<T>(cancellationToken);
+
+        var dispatchInfo = CaptureFailure(exception);
 
         async ValueTask<T> FaultedAsync()
         {
-            await disposeCallback().ConfigureAwait(false);
+            try
+            {
+                await disposeCallback().ConfigureAwait(false);
+            }
+            catch (Exception cleanupException)
+            {
+                throw new AggregateException(dispatchInfo.SourceException, cleanupException);
+            }
 
             dispatchInfo.Throw();
 
@@ -39,11 +49,21 @@ public static class DisposeAsyncExtensions
     /// <exception cref="ViciOneServiceBusException">Thrown when the operation cannot be completed.</exception>
     public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<ValueTask> disposeCallback, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<T>(cancellationToken); var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+        if (cancellationToken.IsCancellationRequested)
+            return global::System.Threading.Tasks.ValueTask.FromCanceled<T>(cancellationToken);
+
+        var dispatchInfo = CaptureFailure(exception);
 
         async ValueTask<T> FaultedAsync()
         {
-            await disposeCallback().ConfigureAwait(false);
+            try
+            {
+                await disposeCallback().ConfigureAwait(false);
+            }
+            catch (Exception cleanupException)
+            {
+                throw new AggregateException(dispatchInfo.SourceException, cleanupException);
+            }
 
             dispatchInfo.Throw();
 
@@ -51,5 +71,22 @@ public static class DisposeAsyncExtensions
         }
 
         return FaultedAsync();
+    }
+
+    static ExceptionDispatchInfo CaptureFailure(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+
+        Exception cause = exception;
+        try
+        {
+            cause = exception.GetBaseException() ?? exception;
+        }
+        catch
+        {
+            // Cleanup must still run when exception diagnostics fail.
+        }
+
+        return ExceptionDispatchInfo.Capture(cause);
     }
 }

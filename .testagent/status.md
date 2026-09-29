@@ -1,5 +1,25 @@
 # A+ remediation test status
 
+## T131 — dispose and MessagePack exception ownership — 29 September 2026
+
+Four of six initial Dispose counterprobes failed red-first because unsafe
+base lookup skipped cleanup or replaced the original cause. Both public
+callback forms now run cleanup once, await pending callbacks and rethrow a
+valid root cause or safe original fallback. Callback-failure counterprobes
+failed red-first for both forms; they now preserve captured operation cause
+before cleanup cause. Pre-canceled calls invoke neither callback nor base
+lookup and retain the exact token.
+
+Real MessagePack deserialization callbacks proved red-first that mixed
+aggregate failures were misclassified as cancellation. A cyclic business
+branch and a business failure inside `OperationCanceledException` each failed
+red-first too; active/completed graph traversal now rejects them. A shared
+cancellation leaf remains valid. Complete Core passed 7,335/7,335 and
+MessagePack 122/122, with no failures or skips. Nine new requirement
+variants are mapped. Final independent read-only Red Team review is PASS with
+no concrete P1/P2. The user accepts existing Line/Branch coverage, so no
+global profile was repeated.
+
 ## T130 — Saga and Courier cancellation ownership — 29 September 2026
 
 Eight Saga counterprobes failed red-first: unsafe virtual base lookups hid the

@@ -81,9 +81,9 @@ internal sealed class MessagePackSerializerContext :
 
             return message != default;
         }
-        catch (Exception exception) when (exception.GetBaseException() is OperationCanceledException cancellation)
+        catch (Exception exception) when (TryGetCancellation(exception, out OperationCanceledException? cancellation))
         {
-            ExceptionDispatchInfo.Capture(cancellation).Throw();
+            ExceptionDispatchInfo.Capture(cancellation!).Throw();
             throw;
         }
         catch
@@ -91,6 +91,74 @@ internal sealed class MessagePackSerializerContext :
             message = default;
             return false;
         }
+    }
+
+    static bool TryGetCancellation(Exception exception, out OperationCanceledException? cancellation)
+    {
+        cancellation = null;
+        var pending = new Stack<(Exception Exception, bool Complete)>();
+        var active = new HashSet<Exception>(ReferenceEqualityComparer.Instance);
+        var completed = new HashSet<Exception>(ReferenceEqualityComparer.Instance);
+        pending.Push((exception, false));
+
+        while (pending.Count > 0)
+        {
+            (Exception current, bool complete) = pending.Pop();
+            if (complete)
+            {
+                active.Remove(current);
+                completed.Add(current);
+                continue;
+            }
+
+            if (completed.Contains(current))
+                continue;
+            if (!active.Add(current))
+                return false;
+
+            pending.Push((current, true));
+
+            if (current is AggregateException aggregate)
+            {
+                if (aggregate.InnerExceptions.Count == 0)
+                    return false;
+
+                foreach (Exception inner in aggregate.InnerExceptions)
+                    pending.Push((inner, false));
+
+                continue;
+            }
+
+            if (current is OperationCanceledException operationCanceled)
+            {
+                cancellation ??= operationCanceled;
+                if (current.InnerException is { } cancellationInner)
+                    pending.Push((cancellationInner, false));
+                continue;
+            }
+
+            Exception? innerException = current.InnerException;
+            Exception? baseException;
+            try
+            {
+                baseException = current.GetBaseException();
+            }
+            catch
+            {
+                baseException = null;
+            }
+
+            bool hasBase = baseException is not null && !ReferenceEquals(baseException, current);
+            if (innerException is not null)
+                pending.Push((innerException, false));
+            if (hasBase && !ReferenceEquals(baseException, innerException))
+                pending.Push((baseException!, false));
+
+            if (innerException is null && !hasBase)
+                return false;
+        }
+
+        return cancellation is not null;
     }
 
     /// <summary>Creates a serializer that preserves this envelope while forwarding it.</summary>

@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## T131 dispose and MessagePack exception ownership
+
+1. Red-first test both public dispose callback forms with throwing/null base
+   lookups, exact original failure and one cleanup; keep valid-root controls.
+2. Prove real MessagePack deserialization callbacks with pure versus mixed
+   nested cancellation. Only pure cancellation may escape `TryGetMessage`;
+   mixed failures return false without presenting a partial message.
+3. Run focused and complete affected project suites, requirement projection,
+   read-only Red Team review and exact-commit verification before push.
+4. Add red-first cycle and cancellation-with-business-inner callbacks;
+   preserve shared cancellation leaves in a DAG. Prove pending callback
+   awaiting, pre-cancellation, and root-cause ordering if cleanup also fails.
+
 ## T130 Saga and Courier cancellation ownership
 
 1. Red-first test query and correlated Saga paths with throwing/null base

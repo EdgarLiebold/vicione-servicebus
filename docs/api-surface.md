@@ -93,6 +93,14 @@ owned by the downstream stage. If either reporting callback fails, the thrown
 aggregate retains the original failure followed by each additional failure.
 For an outbox commit failure, fault notification receives the original commit
 exception; if notification also fails, both causes remain observable.
+Both `DisposeAsync<T>` callback forms invoke cleanup before rethrowing the
+original exception when a custom base lookup throws or returns null; a valid
+root cause remains the rethrown exception. A cleanup callback failure produces
+an aggregate with the captured operation cause first and cleanup cause second.
+MessagePack's `TryGetMessage`
+propagates pure nested deserialization cancellation and returns `false` for a
+mixed cancellation/business failure without returning a partial message,
+including a business failure inside a cancellation or a cyclic business branch.
 Saga query and correlated filters report the original repository or downstream
 failure to the consume fault observer. Pure structural cancellation is
 classified as consumer cancellation with the original wrapper as its cause;
