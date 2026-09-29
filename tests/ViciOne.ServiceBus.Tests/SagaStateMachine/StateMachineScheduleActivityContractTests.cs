@@ -173,17 +173,17 @@ public sealed class StateMachineScheduleActivityContractTests
         var trace = new List<string>();
         MessageSchedulerContext scheduler = CapableScheduler((method, args) => method.Name switch
         {
-            "ScheduleSendAsync" => Schedule(),
-            "CancelScheduledSendAsync" => Cancel(args),
+            "ScheduleSendAsync" => ScheduleAsync(),
+            "CancelScheduledSendAsync" => CancelAsync(args),
             _ => throw new NotSupportedException(method.Name),
         }, ScheduleCancellationMode.Unknown);
-        Task<ScheduledMessage<Notice>> Schedule()
+        Task<ScheduledMessage<Notice>> ScheduleAsync()
         {
             Assert.Equal(oldToken, saga.ScheduleId);
             trace.Add("schedule");
             return Task.FromResult<ScheduledMessage<Notice>>(Accepted(notice, newToken));
         }
-        Task Cancel(object?[] args)
+        Task CancelAsync(object?[] args)
         {
             Assert.Equal(InputAddress, args[0]);
             Assert.Equal(oldToken, args[1]);

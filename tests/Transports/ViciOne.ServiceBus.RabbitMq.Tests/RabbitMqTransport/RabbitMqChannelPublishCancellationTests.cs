@@ -12,7 +12,7 @@ public sealed class RabbitMqChannelPublishCancellationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-PUBLISH", "no-ack-shared-token-remains-linked")]
-    public async Task SharedNoAckPublish_RetainsCallerAndOwnerCancellationUntilTheSdkFinishes(bool cancelOwner)
+    public async Task SharedNoAckPublish_RetainsCallerAndOwnerCancellationUntilTheSdkFinishesAsync(bool cancelOwner)
     {
         using var owner = new CancellationTokenSource();
         using var caller = new CancellationTokenSource();
@@ -47,7 +47,7 @@ public sealed class RabbitMqChannelPublishCancellationTests
     [InlineData(1)]
     [InlineData(2)]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-PUBLISH", "no-ack-scope-disposal-preserves-inflight-cancellation")]
-    public async Task ScopedNoAckPublish_AfterScopeDisposalStillObservesTheOriginalCancellation(int canceledSource)
+    public async Task ScopedNoAckPublish_AfterScopeDisposalStillObservesTheOriginalCancellationAsync(int canceledSource)
     {
         using var parent = new CancellationTokenSource();
         using var scopeOwner = new CancellationTokenSource();
@@ -84,7 +84,7 @@ public sealed class RabbitMqChannelPublishCancellationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-PUBLISH", "awaited-publish-retains-provider-failure")]
-    public async Task AwaitedPublish_WaitsAndPropagatesTheOriginalProviderFailure()
+    public async Task AwaitedPublish_WaitsAndPropagatesTheOriginalProviderFailureAsync()
     {
         ChannelContext underlying = DispatchProxy.Create<ChannelContext, PendingPublishContext>();
         var probe = (PendingPublishContext)(object)underlying;
@@ -101,7 +101,7 @@ public sealed class RabbitMqChannelPublishCancellationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-PUBLISH", "concurrent-scope-publishes-retain-parent-link")]
-    public async Task ScopeDisposal_FirstCompletedPublishDoesNotDetachSecondPublish()
+    public async Task ScopeDisposal_FirstCompletedPublishDoesNotDetachSecondPublishAsync()
     {
         using var parent = new CancellationTokenSource();
         using var scopeOwner = new CancellationTokenSource();
@@ -117,7 +117,7 @@ public sealed class RabbitMqChannelPublishCancellationTests
             Assert.True(first.IsCompletedSuccessfully);
             Assert.True(second.IsCompletedSuccessfully);
             Assert.Equal(2, probe.PublishCount);
-            Assert.False(probe.ProviderPublishAt(1).IsCompleted);
+            Assert.False(probe.ProviderPublishAtAsync(1).IsCompleted);
 
             scope.Dispose();
             probe.Complete(0);
@@ -130,14 +130,14 @@ public sealed class RabbitMqChannelPublishCancellationTests
         {
             probe.Complete(0);
             probe.Complete(1);
-            await Task.WhenAll(probe.ProviderPublishAt(0), probe.ProviderPublishAt(1));
+            await Task.WhenAll(probe.ProviderPublishAtAsync(0), probe.ProviderPublishAtAsync(1));
             scope.Dispose();
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-PUBLISH", "completed-no-ack-publish-releases-links")]
-    public async Task CompletedNoAckPublish_ReleasesSharedAndScopeCancellationLinks()
+    public async Task CompletedNoAckPublish_ReleasesSharedAndScopeCancellationLinksAsync()
     {
         using var owner = new CancellationTokenSource();
         using var parent = new CancellationTokenSource();
@@ -168,7 +168,7 @@ public sealed class RabbitMqChannelPublishCancellationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-CHANNEL-PUBLISH", "awaited-scope-failure-releases-links")]
-    public async Task AwaitedScopePublish_PropagatesFailureAndReleasesCancellationLinks()
+    public async Task AwaitedScopePublish_PropagatesFailureAndReleasesCancellationLinksAsync()
     {
         using var parent = new CancellationTokenSource();
         ChannelContext underlying = DispatchProxy.Create<ChannelContext, PendingPublishContext>();
@@ -196,10 +196,10 @@ public sealed class RabbitMqChannelPublishCancellationTests
 
         public CancellationToken OwnerToken { get; set; }
         public CancellationToken ProviderToken => ProviderTokenAt(0);
-        public Task ProviderPublish => ProviderPublishAt(0);
+        public Task ProviderPublish => ProviderPublishAtAsync(0);
         public int PublishCount => _publishes.Count;
         public CancellationToken ProviderTokenAt(int index) => _providerTokens[index];
-        public Task ProviderPublishAt(int index) => _publishes[index].Task;
+        public Task ProviderPublishAtAsync(int index) => _publishes[index].Task;
 
         public void Complete(int index = 0) => _publishes[index].TrySetResult();
         public void Fail(Exception exception) => _publishes[0].TrySetException(exception);
@@ -207,11 +207,11 @@ public sealed class RabbitMqChannelPublishCancellationTests
         protected override object? Invoke(MethodInfo? method, object?[]? args) => method?.Name switch
         {
             "get_CancellationToken" => OwnerToken,
-            "BasicPublishAsync" => Publish(args!),
+            "BasicPublishAsync" => PublishAsync(args!),
             _ => throw new NotSupportedException($"Unexpected channel operation: {method?.Name}"),
         };
 
-        private Task Publish(object?[] args)
+        private Task PublishAsync(object?[] args)
         {
             var publish = new TaskCompletionSource();
             _publishes.Add(publish);

@@ -279,10 +279,10 @@ public sealed class EventHubProducerOutcomeTests
         }
 
         public Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext,
-            CancellationToken cancellationToken = default) where T : class => Submit([sendContext]);
+            CancellationToken cancellationToken = default) where T : class => SubmitAsync([sendContext]);
 
         public Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts,
-            CancellationToken cancellationToken = default) where T : class => Submit(sendContexts);
+            CancellationToken cancellationToken = default) where T : class => SubmitAsync(sendContexts);
 
         public async Task SendAsync(IPipe<ProducerContext> pipe, CancellationToken cancellationToken)
         {
@@ -304,7 +304,7 @@ public sealed class EventHubProducerOutcomeTests
 
         public void Probe(ProbeContext context) { }
 
-        private Task Submit<T>(EventHubSendContext<T>[] contexts) where T : class
+        private Task SubmitAsync<T>(EventHubSendContext<T>[] contexts) where T : class
         {
             ProviderCalls++;
             int[] indices = contexts.Select(context => ((Message)(object)context.Message).Index).ToArray();

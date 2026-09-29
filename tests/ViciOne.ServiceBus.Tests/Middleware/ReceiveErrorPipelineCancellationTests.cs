@@ -27,13 +27,13 @@ public sealed class ReceiveErrorPipelineCancellationTests
         var downstreamCalls = 0;
         ISendEndpoint endpoint = RethrowErrorTransportFilterTests.StrictProxy.Create<ISendEndpoint>((method, args) => method.Name switch
         {
-            "SendAsync" => SendFault(args),
+            "SendAsync" => SendFaultAsync(args),
             _ => throw new NotSupportedException(method.Name),
         });
         IPublishEndpointProvider publisher =
             RethrowErrorTransportFilterTests.StrictProxy.Create<IPublishEndpointProvider>((method, args) => method.Name switch
             {
-                "GetPublishSendEndpointAsync" => ResolveFaultEndpoint(args),
+                "GetPublishSendEndpointAsync" => ResolveFaultEndpointAsync(args),
                 _ => throw new NotSupportedException(method.Name),
             });
         ExceptionReceiveContext context =
@@ -47,7 +47,7 @@ public sealed class ReceiveErrorPipelineCancellationTests
                 "get_ContentType" => new ContentType("application/json"),
                 "get_PublishEndpointProvider" => publisher,
                 "TryGetPayload" => NoPayload(args),
-                "NotifyFaultedAsync" => NotifyFaulted(args),
+                "NotifyFaultedAsync" => NotifyFaultedAsync(args),
                 _ => throw new NotSupportedException(method.Name),
             });
         var filter = new GenerateFaultFilter();
@@ -70,7 +70,7 @@ public sealed class ReceiveErrorPipelineCancellationTests
         Assert.Equal(cancelStage == 0 ? 0 : 1, resolverCalls);
         Assert.Equal(cancelStage == 0 ? 0 : 1, sendCalls);
 
-        Task<ISendEndpoint> ResolveFaultEndpoint(object?[]? args)
+        Task<ISendEndpoint> ResolveFaultEndpointAsync(object?[]? args)
         {
             resolverCalls++;
             Assert.Equal(delivery.Token, Assert.IsType<CancellationToken>(args![0]));
@@ -79,7 +79,7 @@ public sealed class ReceiveErrorPipelineCancellationTests
             return Task.FromResult(endpoint);
         }
 
-        Task SendFault(object?[]? args)
+        Task SendFaultAsync(object?[]? args)
         {
             sendCalls++;
             ReceiveFault fault = Assert.IsAssignableFrom<ReceiveFault>(args![0]);
@@ -89,7 +89,7 @@ public sealed class ReceiveErrorPipelineCancellationTests
             return received.IsCancellationRequested ? Task.FromCanceled(received) : Task.CompletedTask;
         }
 
-        Task NotifyFaulted(object?[]? args)
+        Task NotifyFaultedAsync(object?[]? args)
         {
             notificationCalls++;
             Assert.Same(receiveFailure, args![0]);
@@ -144,7 +144,7 @@ public sealed class ReceiveErrorPipelineCancellationTests
         ExceptionReceiveContext context = null!;
         IErrorTransport transport = RethrowErrorTransportFilterTests.StrictProxy.Create<IErrorTransport>((method, args) => method.Name switch
         {
-            "SendAsync" => Move(args),
+            "SendAsync" => MoveAsync(args),
             _ => throw new NotSupportedException(method.Name),
         });
         context = RethrowErrorTransportFilterTests.StrictProxy.Create<ExceptionReceiveContext>((method, args) => method.Name switch
@@ -170,7 +170,7 @@ public sealed class ReceiveErrorPipelineCancellationTests
         Assert.Equal(cancelStage == 0 ? 0 : 1, lookupCalls);
         Assert.Equal(cancelStage == 0 ? 0 : 1, transportCalls);
 
-        Task Move(object?[]? args)
+        Task MoveAsync(object?[]? args)
         {
             transportCalls++;
             Assert.Same(context, args![0]);

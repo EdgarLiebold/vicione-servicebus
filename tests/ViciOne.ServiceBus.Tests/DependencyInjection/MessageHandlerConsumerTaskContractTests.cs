@@ -89,13 +89,13 @@ public sealed class MessageHandlerConsumerTaskContractTests
         var first = new Dependency("first");
         var second = new Dependency("second");
         var third = new Dependency("third");
-        Task Invoke(ConsumeContext<Message> context, params Dependency[] dependencies)
+        Task InvokeAsync(ConsumeContext<Message> context, params Dependency[] dependencies)
         {
             Assert.Same(expectedContext, context);
             AssertDependencies(count, first, second, third, dependencies);
             return execute();
         }
-        Task InvokeMessage(Message message, params Dependency[] dependencies)
+        Task InvokeMessageAsync(Message message, params Dependency[] dependencies)
         {
             Assert.Same(expectedMessage, message);
             AssertDependencies(count, first, second, third, dependencies);
@@ -105,29 +105,29 @@ public sealed class MessageHandlerConsumerTaskContractTests
         return (count, messageOnly) switch
         {
             (0, false) => new MessageHandlerConsumer<Message>(
-                new MessageHandlerMethod<Message>((ConsumeContext<Message> context) => Invoke(context))),
+                new MessageHandlerMethod<Message>((ConsumeContext<Message> context) => InvokeAsync(context))),
             (0, true) => new MessageHandlerConsumer<Message>(
-                new MessageHandlerMethod<Message>((Message message) => InvokeMessage(message))),
+                new MessageHandlerMethod<Message>((Message message) => InvokeMessageAsync(message))),
             (1, false) => new MessageHandlerConsumer<Message, Dependency>(
                 new MessageHandlerMethod<Message, Dependency>(
-                    (ConsumeContext<Message> context, Dependency arg1) => Invoke(context, arg1)), first),
+                    (ConsumeContext<Message> context, Dependency arg1) => InvokeAsync(context, arg1)), first),
             (1, true) => new MessageHandlerConsumer<Message, Dependency>(
                 new MessageHandlerMethod<Message, Dependency>(
-                    (Message message, Dependency arg1) => InvokeMessage(message, arg1)), first),
+                    (Message message, Dependency arg1) => InvokeMessageAsync(message, arg1)), first),
             (2, false) => new MessageHandlerConsumer<Message, Dependency, Dependency>(
                 new MessageHandlerMethod<Message, Dependency, Dependency>(
-                    (ConsumeContext<Message> context, Dependency arg1, Dependency arg2) => Invoke(context, arg1, arg2)), first, second),
+                    (ConsumeContext<Message> context, Dependency arg1, Dependency arg2) => InvokeAsync(context, arg1, arg2)), first, second),
             (2, true) => new MessageHandlerConsumer<Message, Dependency, Dependency>(
                 new MessageHandlerMethod<Message, Dependency, Dependency>(
-                    (Message message, Dependency arg1, Dependency arg2) => InvokeMessage(message, arg1, arg2)), first, second),
+                    (Message message, Dependency arg1, Dependency arg2) => InvokeMessageAsync(message, arg1, arg2)), first, second),
             (3, false) => new MessageHandlerConsumer<Message, Dependency, Dependency, Dependency>(
                 new MessageHandlerMethod<Message, Dependency, Dependency, Dependency>(
                     (ConsumeContext<Message> context, Dependency arg1, Dependency arg2, Dependency arg3) =>
-                        Invoke(context, arg1, arg2, arg3)), first, second, third),
+                        InvokeAsync(context, arg1, arg2, arg3)), first, second, third),
             (3, true) => new MessageHandlerConsumer<Message, Dependency, Dependency, Dependency>(
                 new MessageHandlerMethod<Message, Dependency, Dependency, Dependency>(
                     (Message message, Dependency arg1, Dependency arg2, Dependency arg3) =>
-                        InvokeMessage(message, arg1, arg2, arg3)), first, second, third),
+                        InvokeMessageAsync(message, arg1, arg2, arg3)), first, second, third),
             _ => throw new ArgumentOutOfRangeException(nameof(count)),
         };
     }

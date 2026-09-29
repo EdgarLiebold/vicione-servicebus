@@ -93,8 +93,8 @@ public sealed class OutboxMessagePipeTests
             "get_IsMessageConsumed" => false,
             "get_ConsumeCompleted" => Task.CompletedTask,
             "get_ReceiveContext" => receive,
-            "SetConsumedAsync" => SetConsumed(),
-            "NotifyFaultedAsync" => NotifyFaulted(args),
+            "SetConsumedAsync" => SetConsumedAsync(),
+            "NotifyFaultedAsync" => NotifyFaultedAsync(args),
             _ => throw new NotSupportedException(method.Name),
         });
         var options = new OutboxConsumeOptions
@@ -127,13 +127,13 @@ public sealed class OutboxMessagePipeTests
         Assert.Equal(1, setConsumedCalls);
         Assert.Equal(1, notifyFaultedCalls);
 
-        Task SetConsumed()
+        Task SetConsumedAsync()
         {
             setConsumedCalls++;
             return Task.FromException(commitFailure);
         }
 
-        Task NotifyFaulted(object?[]? args)
+        Task NotifyFaultedAsync(object?[]? args)
         {
             notifyFaultedCalls++;
             Assert.Same(context, args![0]);

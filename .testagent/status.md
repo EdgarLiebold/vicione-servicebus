@@ -1,5 +1,20 @@
 # A+ remediation test status
 
+## T146 — asynchronous test helper and test identity contract — 29 September 2026
+
+Twenty-five remaining asynchronous naming violations in test methods and
+helpers were corrected manually without changing assertions or task behavior.
+The six renamed RabbitMQ test methods have matching requirement projections.
+The unit solution builds with zero warnings and errors. Focused RabbitMQ,
+Azure Service Bus, Event Hubs deferred, and Event Hubs outcome tests pass
+9/9, 44/44, 16/16, and 12/12; the complete Core, RabbitMQ, and Azure
+Service Bus projects pass 7,385/7,385, 525/525, and 406/406.
+The repository-wide Roslyn async naming test class passes 32/32. Independent
+read-only adversarial review found no concrete P1/P2 and verified the
+requirement mappings and unchanged behavioral assertions. The ActiveMQ local
+Quartz wall-clock wait remains the known architecture failure. No new global
+coverage or CRAP measurement was run in this naming-only packet.
+
 ## T145 — architecture oracle and Quartz retry race — 29 September 2026
 
 The Event Hubs batch admission architecture test had stale variable-name and

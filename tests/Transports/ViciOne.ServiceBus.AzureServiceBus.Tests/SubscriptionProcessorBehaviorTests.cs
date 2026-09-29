@@ -42,7 +42,7 @@ public sealed class SubscriptionProcessorBehaviorTests
         ServiceBusReceivedMessage? seenMessage = null;
         CancellationToken seenToken = default;
         int calls = 0;
-        Task Record(object args, ServiceBusReceivedMessage? message, CancellationToken token)
+        Task RecordAsync(object args, ServiceBusReceivedMessage? message, CancellationToken token)
         {
             seenArgs = args;
             seenMessage = message;
@@ -51,8 +51,8 @@ public sealed class SubscriptionProcessorBehaviorTests
             entered.TrySetResult();
             return release.Task;
         }
-        fixture.Configure(session, (args, message, token) => Record(args, message, token),
-            args => Record(args, null, args.CancellationToken));
+        fixture.Configure(session, (args, message, token) => RecordAsync(args, message, token),
+            args => RecordAsync(args, null, args.CancellationToken));
         ServiceBusReceivedMessage message = ServiceBusModelFactory.ServiceBusReceivedMessage(
             body: BinaryData.FromString("subscription-payload"), messageId: "message-37", sessionId: "session-11");
         object args = error
@@ -331,7 +331,7 @@ public sealed class SubscriptionProcessorBehaviorTests
         public bool Closed { get; set; }
         public ConcurrentQueue<(string Operation, CancellationToken Token)> Calls { get; } = new();
         public Func<string, CancellationToken, Task> Handler { get; set; } = (_, _) => Task.CompletedTask;
-        public Task Invoke(string operation, CancellationToken token)
+        public Task InvokeAsync(string operation, CancellationToken token)
         {
             Calls.Enqueue((operation, token));
             return Handler(operation, token);
@@ -341,9 +341,9 @@ public sealed class SubscriptionProcessorBehaviorTests
     private sealed class RecordingProcessor(ProcessorProbe probe) : ServiceBusProcessor
     {
         public override bool IsClosed => probe.Closed;
-        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke("start", cancellationToken);
-        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke("stop", cancellationToken);
-        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.Invoke("close", cancellationToken);
+        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync("start", cancellationToken);
+        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync("stop", cancellationToken);
+        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync("close", cancellationToken);
         public Task RaiseMessageAsync(ProcessMessageEventArgs args) => OnProcessMessageAsync(args);
         public Task RaiseErrorAsync(ProcessErrorEventArgs args) => OnProcessErrorAsync(args);
     }
@@ -352,9 +352,9 @@ public sealed class SubscriptionProcessorBehaviorTests
         : ServiceBusSessionProcessor(client, "orders", "accounting", new ServiceBusSessionProcessorOptions())
     {
         public override bool IsClosed => probe.Closed;
-        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke("start", cancellationToken);
-        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.Invoke("stop", cancellationToken);
-        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.Invoke("close", cancellationToken);
+        public override Task StartProcessingAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync("start", cancellationToken);
+        public override Task StopProcessingAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync("stop", cancellationToken);
+        public override Task CloseAsync(CancellationToken cancellationToken = default) => probe.InvokeAsync("close", cancellationToken);
         public Task RaiseMessageAsync(ProcessSessionMessageEventArgs args) => OnProcessSessionMessageAsync(args);
         public Task RaiseErrorAsync(ProcessErrorEventArgs args) => OnProcessErrorAsync(args);
     }

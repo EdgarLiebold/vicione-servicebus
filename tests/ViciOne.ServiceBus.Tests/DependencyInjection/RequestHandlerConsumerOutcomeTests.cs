@@ -135,13 +135,13 @@ public sealed class RequestHandlerConsumerOutcomeTests
         var first = new Dependency("first");
         var second = new Dependency("second");
         var third = new Dependency("third");
-        Task<Response> Invoke(ConsumeContext<Request> context, params Dependency[] dependencies)
+        Task<Response> InvokeAsync(ConsumeContext<Request> context, params Dependency[] dependencies)
         {
             Assert.Same(expectedContext, context);
             Assert.Equal(Enumerable.Range(0, count).Select(index => new[] { first, second, third }[index]), dependencies);
             return execute();
         }
-        Task<Response> InvokeMessage(Request message, params Dependency[] dependencies)
+        Task<Response> InvokeMessageAsync(Request message, params Dependency[] dependencies)
         {
             Assert.Same(expectedRequest, message);
             Assert.Equal(Enumerable.Range(0, count).Select(index => new[] { first, second, third }[index]), dependencies);
@@ -151,29 +151,29 @@ public sealed class RequestHandlerConsumerOutcomeTests
         return (count, messageOnly) switch
         {
             (0, false) => new RequestHandlerConsumer<Request, Response>(
-                new RequestHandlerMethod<Request, Response>((ConsumeContext<Request> context) => Invoke(context))),
+                new RequestHandlerMethod<Request, Response>((ConsumeContext<Request> context) => InvokeAsync(context))),
             (0, true) => new RequestHandlerConsumer<Request, Response>(
-                new RequestHandlerMethod<Request, Response>((Request message) => InvokeMessage(message))),
+                new RequestHandlerMethod<Request, Response>((Request message) => InvokeMessageAsync(message))),
             (1, false) => new RequestHandlerConsumer<Request, Dependency, Response>(
                 new RequestHandlerMethod<Request, Dependency, Response>(
-                    (ConsumeContext<Request> context, Dependency arg1) => Invoke(context, arg1)), first),
+                    (ConsumeContext<Request> context, Dependency arg1) => InvokeAsync(context, arg1)), first),
             (1, true) => new RequestHandlerConsumer<Request, Dependency, Response>(
                 new RequestHandlerMethod<Request, Dependency, Response>(
-                    (Request message, Dependency arg1) => InvokeMessage(message, arg1)), first),
+                    (Request message, Dependency arg1) => InvokeMessageAsync(message, arg1)), first),
             (2, false) => new RequestHandlerConsumer<Request, Dependency, Dependency, Response>(
                 new RequestHandlerMethod<Request, Dependency, Dependency, Response>(
-                    (ConsumeContext<Request> context, Dependency arg1, Dependency arg2) => Invoke(context, arg1, arg2)), first, second),
+                    (ConsumeContext<Request> context, Dependency arg1, Dependency arg2) => InvokeAsync(context, arg1, arg2)), first, second),
             (2, true) => new RequestHandlerConsumer<Request, Dependency, Dependency, Response>(
                 new RequestHandlerMethod<Request, Dependency, Dependency, Response>(
-                    (Request message, Dependency arg1, Dependency arg2) => InvokeMessage(message, arg1, arg2)), first, second),
+                    (Request message, Dependency arg1, Dependency arg2) => InvokeMessageAsync(message, arg1, arg2)), first, second),
             (3, false) => new RequestHandlerConsumer<Request, Dependency, Dependency, Dependency, Response>(
                 new RequestHandlerMethod<Request, Dependency, Dependency, Dependency, Response>(
                     (ConsumeContext<Request> context, Dependency arg1, Dependency arg2, Dependency arg3) =>
-                        Invoke(context, arg1, arg2, arg3)), first, second, third),
+                        InvokeAsync(context, arg1, arg2, arg3)), first, second, third),
             (3, true) => new RequestHandlerConsumer<Request, Dependency, Dependency, Dependency, Response>(
                 new RequestHandlerMethod<Request, Dependency, Dependency, Dependency, Response>(
                     (Request message, Dependency arg1, Dependency arg2, Dependency arg3) =>
-                        InvokeMessage(message, arg1, arg2, arg3)), first, second, third),
+                        InvokeMessageAsync(message, arg1, arg2, arg3)), first, second, third),
             _ => throw new ArgumentOutOfRangeException(nameof(count)),
         };
     }

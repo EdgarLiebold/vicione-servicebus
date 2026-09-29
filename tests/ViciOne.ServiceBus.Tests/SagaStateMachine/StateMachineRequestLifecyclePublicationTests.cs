@@ -22,7 +22,7 @@ public sealed class StateMachineRequestLifecyclePublicationTests
                 "get_RequestId" => Guid.NewGuid(),
                 "get_ResponseAddress" or "get_FaultAddress" => new Uri("loopback://request-route"),
                 "get_ExpirationTime" => null,
-                "PublishAsync" => RecordPublication(trace),
+                "PublishAsync" => RecordPublicationAsync(trace),
                 _ => throw new NotSupportedException(method.Name),
             });
         Fault<Request> fault = Proxy<Fault<Request>>((method, _) => method.Name switch
@@ -35,7 +35,7 @@ public sealed class StateMachineRequestLifecyclePublicationTests
             _ => throw new NotSupportedException(method.Name),
         });
         IBehaviorContext<Saga, Fault<Request>> faultedContext = Context(saga, fault, CancellationToken.None,
-            (method, _) => method.Name == "PublishAsync" ? RecordPublication(trace) : throw new NotSupportedException(method.Name));
+            (method, _) => method.Name == "PublishAsync" ? RecordPublicationAsync(trace) : throw new NotSupportedException(method.Name));
         var started = new RequestStartedActivity<Saga, Request>();
         var faulted = new RequestFaultedActivity<Saga, Fault<Request>, Request>();
 
@@ -210,7 +210,7 @@ public sealed class StateMachineRequestLifecyclePublicationTests
         return (T)value;
     }
 
-    private static Task RecordPublication(List<string> trace)
+    private static Task RecordPublicationAsync(List<string> trace)
     {
         trace.Add("publish");
         return Task.CompletedTask;

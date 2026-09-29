@@ -38,7 +38,7 @@ public sealed class EventHubDeferredProducerTests
             context.PartitionKey = "explicit-partition";
             Interlocked.Increment(ref pipeCalls);
         });
-        Task pending = Produce(producer, route, input, pipe, cancellationToken);
+        Task pending = ProduceAsync(producer, route, input, pipe, cancellationToken);
         try
         {
             Assert.False(pending.IsCompleted);
@@ -114,7 +114,7 @@ public sealed class EventHubDeferredProducerTests
         IEventHubProducer producer = await wrapper.GetProducerAsync(new Uri("topic:failed-resolution"), cancellationToken)
             .WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
         int pipeCalls = 0;
-        Task pending = Produce(producer, route, CreateInput(route),
+        Task pending = ProduceAsync(producer, route, CreateInput(route),
             Pipe.Execute<EventHubSendContext<Output>>(_ => Interlocked.Increment(ref pipeCalls)), cancellationToken);
         try
         {
@@ -167,7 +167,7 @@ public sealed class EventHubDeferredProducerTests
         _ => throw new ArgumentOutOfRangeException(nameof(route)),
     };
 
-    private static Task Produce(IEventHubProducer producer, string route, object input,
+    private static Task ProduceAsync(IEventHubProducer producer, string route, object input,
         IPipe<EventHubSendContext<Output>> pipe, CancellationToken token) => route switch
         {
             "single" => producer.ProduceAsync((Output)input, pipe, token),
