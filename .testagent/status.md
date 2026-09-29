@@ -3629,3 +3629,20 @@ The PO's larger-packet direction is recorded in the T110 plan: focused tests
 during edits, complete affected project once on a frozen packet, product-wide
 33-profile measurement after roughly five larger packets or earlier when a
 shared API/provider boundary changes or an A+ claim is due.
+
+## T111 transform-filter operation token — 29 September 2026
+
+The four explicit `TransformFilter<T>` paths previously supplied
+`CancellationToken.None` to message initialization. A recording initializer
+strengthened the existing success/pending/fault matrices; the unchanged
+product failed all 40 stage variants at exact token equality. Four new
+pre-canceled stage variants verify that a token-aware initializer cancels with
+the original token and never invokes downstream. Implementation commit
+`c2a204265` forwards `context.CancellationToken` in each stage. Final
+Transformation 62/62 and exact-commit complete Core 7,075/7,075 pass with no
+failures or skips. Build has zero warnings/errors; 4,391 requirement tuples
+are unique; Git whitespace passes. Read-only adversarial review is PASS with
+no concrete P1/P2. The new assertions check token, context/input identity,
+exception source and downstream side effects; existing matrices still check
+pending completion and exact fault propagation. T97 remains the latest
+product-wide Line/Branch/CRAP checkpoint, so global A+ remains open.

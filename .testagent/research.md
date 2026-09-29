@@ -3997,3 +3997,26 @@ property conversion must preserve its source/metadata and observe a pending
 initializer to completion, including fault identity and invalid null-task
 diagnostics. Tests assert visible callback counts, identity, message value,
 metadata and exact failure class, not just code execution.
+
+# T111 — transform-filter operation-token handoff
+
+Inventory: `src/ViciOne.ServiceBus/Middleware/TransformFilter.cs` and its four
+`IFilter` paths (send, consume, execute, compensate), the corresponding
+`SendTransformContext`/`ConsumeTransformContext`, the `IMessageInitializer`
+contract and implementation, and the existing `ActivityTransformAsyncTests`
+plus pipeline tests. The existing T107 Roslyn pairing and T97 coverage profile
+are reused; no global discovery or measurement is needed during this packet.
+The xUnit v3/MTP fixture already observes the initializer's inherited context,
+pending completion, downstream call count and fault identity, but does not
+record the explicit `InitializeAsync` operation token. All four filter paths
+currently call that overload with its default token; `IMessageInitializer`
+documents that the token cancels initialization. This is a product-level
+handoff gap, distinct from the inherited `PipeContext.CancellationToken`.
+
+Acceptance: each of the four real filter entry paths must pass the exact
+context operation token into `InitializeAsync`; a pre-canceled token must
+prevent downstream delivery and preserve the original cancellation token in
+the failure. A pending accepted initializer must still be awaited, and its
+non-cancellation failure must remain the original failure. Tests must assert
+token identity, input/context identity, downstream count and result/failure;
+coverage-only cases are inadmissible.

@@ -1228,3 +1228,11 @@ focused tests during edits and the complete affected project once per frozen
 packet, and defers the 33-profile global Line/Branch/CRAP aggregate to roughly
 five such packets or an earlier shared-boundary/A+ checkpoint. T97 remains the
 last valid aggregate; no new global A+ claim is made.
+
+T111 closes the four-path `TransformFilter<T>` cancellation handoff on exact
+implementation commit `c2a204265`. The red-first strengthened matrix failed
+40/40 at the missing operation token; final Transformation 62/62 and complete
+Core 7,075/7,075 pass with zero skips. Read-only adversarial review is PASS,
+no concrete P1/P2. See `t111-transform-operation-token.md`. T97 is still
+the last global 33-profile aggregate; this packet does not claim current
+global A+.

@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed cancellation handoff in send, consume, execute and compensate
+  transformation filters. Each path now passes its context token to message
+  initialization. Four pre-canceled regressions prevent downstream delivery
+  and preserve the exact cancellation token; the existing success, pending
+  and fault matrices also verify token forwarding. Transformation tests pass
+  62/62 and complete Core passes 7,075/7,075 on `c2a204265` with no skips;
+  adversarial review is PASS. The next product-wide Line/Branch/CRAP profile
+  remains on the larger-packet cadence.
+
 - Fixed transformation property handling when the source has no input, when
   providers or nested initializers return a null task, and when nested
   conversion starts with a canceled operation or null context. The source

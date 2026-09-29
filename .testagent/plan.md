@@ -5342,3 +5342,21 @@ the two later-business reuse variants; both sources are independently restored b
   an A+ acceptance claim. The aggregate must use the final source/test commit
   and all relevant provider fixtures. Do not reuse a prior profile as a
   current grade.
+
+# T111 — transform-filter operation-token handoff
+
+1. Extend the existing four-stage `ActivityTransformAsyncTests` fixture so it
+   records the token passed to the actual `IMessageInitializer.InitializeAsync`
+   overload. Assert exact caller-token forwarding in the completed, pending
+   and fault paths; add a four-stage pre-canceled regression using a token-aware
+   initializer and assert no downstream delivery.
+2. Run the focused class red-first against unchanged product. Correct the four
+   filter handoffs without changing the inherited owner-context token or the
+   established pending-work completion semantics. Run focused Transformation
+   tests during edits.
+3. Review assertions and plausible mutation survivors under Microsoft
+   test-gap-analysis and assertion-quality guidance. Obtain independent
+   read-only adversarial review, freeze source/tests, then run the complete
+   affected Core project once on the exact implementation commit. Record
+   evidence, changelog, requirements and authorized push. The next global
+   33-profile aggregate remains at the larger-packet checkpoint.
