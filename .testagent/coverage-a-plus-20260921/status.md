@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T116 recurring initializer packet
+
+Twelve cases across both recurring schedulers, send/publish destinations and
+no/typed/untyped pipe forms prove initializer failure isolation and healthy
+retry. A deliberate early endpoint-resolution counterchange failed the
+no-pipe case. Independent Red Team re-review is PASS after closing its P2
+no-pipe coverage finding. Complete Core passes 7,111/7,111 on `d71be83ce`.
+Product source was unchanged. See [T116 evidence](t116-recurring-initializer-failure.md).
+T114 remains the latest full 33-profile checkpoint; global A+ is still open.
+
 ## Current T115 outbox/inbox packet
 
 The EF reliable outbox no longer leaves a rejected send tracked after an EF
