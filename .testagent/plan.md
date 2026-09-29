@@ -1,5 +1,22 @@
 # A+ remediation test plan
 
+## T107 receive-side outbox cancellation ownership
+
+1. Reuse real factory or transport paths to expose classic InMemory and EF
+   cases with distinct delivery and operation tokens. Cancel delivery at
+   completion and immediately before final commit; check the original token,
+   unchanged inbox and outgoing state, no delivery, and healthy retry.
+2. Exercise reliable InMemory and EF outgoing admission after delivery
+   cancellation while a distinct send token remains active. Assert no
+   buffered or durable outgoing message, no retry/quarantine, and exact
+   cancellation origin. Probe pre-cancel and cancellation during the
+   operation where the provider has an asynchronous boundary.
+3. Implement only demonstrated source fixes. Review every new assertion
+   against a plausible one-cause defect; run focused tests while editing,
+   complete affected project suites at the packet boundary, and obtain
+   read-only adversarial review. Preserve the grouped global
+   coverage/CRAP cadence.
+
 ## T106 reliable inbox delivery and operation cancellation
 
 1. Add red-first InMemory and SQLite EF tests with distinct cancellable

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10995 |
+| Added | 10998 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -231,6 +231,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t104-inmemory-outbox-release-admission.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t105-rabbitmq-quorum-configuration.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t106-reliable-inbox-distinct-cancellation.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t107-receive-outbox-cancellation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -15070,6 +15071,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxReliabilityStateTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/ClassicEfOutboxCancellationTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkOutboxOperationsTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkOutboxWriteCoordinatorTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkReliableInboxPipelineTests.cs` | Added |  |
@@ -16281,6 +16283,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/OutboxSendEndpointBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/PersistentOutboxCancellationHandoffTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxCancellationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxConsumerIdentityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs` | Added |  |

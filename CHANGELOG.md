@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed receive-side outbox cancellation ownership across classic InMemory
+  and EF and outgoing admission across reliable InMemory and EF. Distinct
+  delivery and operation tokens now cancel state transitions, serialization,
+  blocked writes and final EF commit with the original source token. SQLite
+  rollback and healthy retry tests guard the consumed fence; durable and
+  external outgoing state remain empty after cancellation. Complete Core
+  tests pass 7,060/7,060 and EF tests 394/394. Global Line and Branch A+
+  remain open. Final adversarial re-review is PASS on `b200c1148`.
+
 - Fixed distinct delivery and operation cancellation in the InMemory and EF
   reliable inboxes. Both sources now cancel acquisition and processing,
   preserve the original exception token, and prevent a canceled consumed

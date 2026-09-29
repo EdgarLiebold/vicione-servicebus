@@ -1,5 +1,27 @@
 # A+ remediation research
 
+## T107 receive-side outbox cancellation ownership
+
+The classic in-memory factory links delivery and explicit operation tokens
+for lock acquisition, but its consume context checks only the token supplied
+to each completion or send operation. The classic EF factory chooses the
+explicit token when present, so a canceled delivery can still reach the
+consumer and transaction commit. The reliable InMemory and EF context
+`AddSendAsync` methods similarly choose the explicit send token and can
+stage an outgoing intent after their delivery token has been canceled.
+Existing T106 coverage establishes the consumed-fence boundary for reliable
+providers, not these adjacent send and classic-outbox boundaries.
+
+Target inventory: four receive-side outbox context implementations and the
+two classic context factories. The Roslyn static pairing map found 4,290
+source files, 1,578 test files, 1,723 unpaired sources; internal EF types
+are not referenced by name from tests, which does not prove that runtime
+coverage is absent. This package uses behavior and mutation risk to select
+targets. Acceptance requires cancellation from either distinct source to
+propagate with its original token, prevent consumed/delivered state and
+outgoing intent from being committed, and leave a healthy subsequent attempt
+possible. Tests must observe exact stored state, not only exceptions.
+
 ## T106 reliable inbox cancellation across in-memory and EF providers
 
 The two reliable-inbox factories choose a cancellable operation token instead

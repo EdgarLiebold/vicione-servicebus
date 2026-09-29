@@ -1,5 +1,16 @@
 # A+ remediation test status
 
+## T107 — receive-side outbox cancellation ownership
+
+Classic InMemory and EF receive outboxes now reject canceled delivery tokens
+through state changes, outgoing admission and EF commit even when an explicit
+operation token remains live. Reliable InMemory and EF outgoing admission
+also observes delivery cancellation during serialization or a blocked write.
+Focused tests and complete Core 7,060/7,060 and EF 394/394 pass. See
+[T107 evidence](coverage-a-plus-20260921/t107-receive-outbox-cancellation.md).
+The final read-only adversarial re-review is PASS on `b200c1148`.
+T97 remains the global profile; Line and Branch A+ remain open.
+
 ## T106 — reliable inbox distinct cancellation
 
 InMemory and EF reliable inboxes now honor distinct delivery and operation

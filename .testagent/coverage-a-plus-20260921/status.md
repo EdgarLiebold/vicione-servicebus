@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T107 receive-side outbox cancellation packet
+
+Classic InMemory and EF receive outboxes preserve delivery cancellation
+across state operations, acquisition and final commit. Reliable outgoing
+admission also rejects cancellation during InMemory serialization or a
+blocked EF write. Complete Core 7,060/7,060 and EF 394/394 pass. See
+[T107 evidence](t107-receive-outbox-cancellation.md). T97 remains the latest
+global checkpoint; Line and Branch A+ remain open. Final read-only adversarial
+re-review is PASS on `b200c1148`.
+
 ## Current T106 reliable inbox distinct cancellation packet
 
 Both InMemory and EF reliable inbox providers now honor separate delivery
