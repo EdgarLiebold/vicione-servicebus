@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed caller cancellation during shared one-time setup. Canceling the
+  initiating caller or a follower now ends only that caller's wait; the
+  shared callback continues for other callers and retains its cache or
+  failure/retry semantics. Four red-first cases cover leader/follower and
+  success/fault outcomes. Focused 10/10, neighboring OneTime 15/15 and
+  complete Abstractions 966/966 pass on `aaa6aa9b4`; adversarial review is
+  PASS. Product-wide Line/Branch/CRAP A+ remains open.
+
 - Fixed recurring schedule and control commands that could reach a transport
   after caller cancellation. Publish scheduling now checks cancellation
   before topology lookup; endpoint scheduling and controls recheck after

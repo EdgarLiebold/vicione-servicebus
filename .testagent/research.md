@@ -4048,3 +4048,27 @@ even when the resolver ignores cancellation. The returned operation must be
 canceled with the caller's exact token; healthy successor commands must still
 reach the transport with the correct destination/identity. Tests observe
 external calls, token identity and recovery, not only exceptions.
+## T113 one-time setup caller wait and shared ownership
+
+The T97 aggregate identifies `TaskExtensions` as a nearby gap; tracing its
+completed-task transfer into `OneTimeSetupMethod` and `OneTimeContextPayload`
+exposed a public contract defect in `PipeExtensions.OneTimeSetupAsync<T>`.
+The method accepts a cancellation token documented to cancel the operation,
+but checks it only before entering the shared one-time setup. A caller whose
+token is canceled while another caller shares the pending setup remains
+blocked until the setup finishes. The callback has independent ownership:
+abandoning one caller's wait must not cancel, evict, or restart the shared
+setup. Provider topology filters use this shared setup, so preserving their
+single-flight behavior matters. Existing `PipeExtensionsTests` cover
+concurrent success, shared fault, retry, eviction, and pre-canceled callback
+tasks, but not cancellation of one wait during an active shared attempt.
+
+Acceptance: cancel either the initiating caller or a follower while the
+callback remains pending; the canceled caller must finish promptly with the
+exact caller token, the other caller must remain pending, and the callback
+must run exactly once. A later successful completion is shared and cached.
+If the callback faults after one caller abandons, the remaining caller must
+receive the original exception and a new caller must be able to retry. The
+tests must assert observable results, ownership and recovery, not just an
+exception. T107 Roslyn pairing and T97 profiles are reused read-only; no new
+global discovery or measurement is needed during this packet.

@@ -1244,3 +1244,10 @@ Independent read-only adversarial re-review is PASS. The topology and endpoint
 resolution counterprobes close both initial P2 findings. See
 `t112-recurring-cancellation-admission.md`. T97 remains the latest global
 33-profile aggregate; this packet does not claim current global A+.
+T113 closes caller-wait cancellation for shared one-time setup on exact
+implementation commit `aaa6aa9b4`. Four red-first cases reproduced the
+defect. Focused 10/10, neighboring OneTime 15/15 and complete Abstractions
+966/966 pass with zero skips; build has zero warnings/errors. Independent
+read-only adversarial review is PASS with no concrete P1/P2. See
+`t113-one-time-caller-wait.md`. The latest global aggregate remains T97;
+Line/Branch A+ remains open.

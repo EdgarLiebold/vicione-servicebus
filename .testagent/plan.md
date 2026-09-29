@@ -5381,3 +5381,20 @@ the two later-business reuse variants; both sources are independently restored b
    on the exact commit, then update requirement mapping, evidence, changelog,
    changelist and push. Defer 33-profile global measurement to the grouped
    checkpoint; no current A+ claim from T97 numbers.
+# T113 — one-time setup caller wait versus shared work
+
+1. Extend `PipeExtensionsTests` with a four-case, red-first matrix: canceled
+   leader/follower × shared success/fault. Keep the setup callback pending
+   while the caller cancels. Verify exact caller OCE token, no completion of
+   the surviving wait, one callback invocation, shared final outcome and
+   success caching or fault recovery.
+2. Correct only the public caller-wait handoff in `OneTimeSetupAsync<T>`;
+   retain the underlying single-flight task and retry/eviction semantics.
+   Run only the focused one-time tests while editing.
+3. Inspect assertion and pseudo-mutation quality under the Microsoft test
+   skills, obtain independent read-only adversarial review, freeze source and
+   tests, run complete Abstractions once on the exact implementation commit,
+   then record requirements, evidence, changelog, changelist and push. Keep
+   the product-wide 33-profile Line/Branch/CRAP aggregate at the grouped
+   checkpoint unless the review finds a cross-provider contract risk that
+   requires it earlier.

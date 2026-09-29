@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11006 |
+| Added | 11007 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -237,6 +237,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t110-transformation-property.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t111-transform-operation-token.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t112-recurring-cancellation-admission.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t113-one-time-caller-wait.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |

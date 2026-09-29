@@ -3657,3 +3657,13 @@ warnings/errors. Requirements contain 4,394 unique tuples. Independent
 read-only adversarial re-review is PASS with no concrete P1/P2. See
 `coverage-a-plus-20260921/t112-recurring-cancellation-admission.md`. The
 product-wide profile remains T97; global A+ remains open.
+## T113 one-time setup caller cancellation — 29 September 2026
+
+Implementation commit `aaa6aa9b4` applies the caller token only to that
+caller's wait over a shared one-time setup. Four red-first leader/follower ×
+success/fault cases failed against unchanged product with timeouts. Final
+focused 10/10, neighboring OneTime 15/15 and exact-commit Abstractions
+966/966 pass, with zero skips and a zero-warning/error build. Requirements
+contain 648 unique tuples; read-only adversarial review is PASS with no
+concrete P1/P2. See `coverage-a-plus-20260921/t113-one-time-caller-wait.md`.
+The product-wide profile remains T97 and global A+ is open.
