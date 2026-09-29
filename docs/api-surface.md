@@ -93,6 +93,10 @@ owned by the downstream stage. If either reporting callback fails, the thrown
 aggregate retains the original failure followed by each additional failure.
 For an outbox commit failure, fault notification receives the original commit
 exception; if notification also fails, both causes remain observable.
+Fault settlement headers used by Azure Service Bus abandon and dead-letter
+operations retain the original exception when a custom base-exception lookup
+throws or returns null. SQL fault settlement still unlocks the delivery with
+the original fault headers under the same condition.
 Receive-fault publication and error-queue movement use the delivery context's
 cancellation token. A canceled delivery cannot continue through a discard
 branch. In rethrow mode the receive dispatcher reports the original failure

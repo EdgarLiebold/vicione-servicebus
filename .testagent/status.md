@@ -1,5 +1,21 @@
 # A+ remediation test status
 
+## T129 — fault settlement diagnostics — 29 September 2026
+
+Red-first tests proved that a throwing base-exception lookup blocked the
+shared fault-header helper and that throwing or null-returning lookups blocked
+SQL `UnlockAsync`. The corrected helper retains original fault headers for
+both unsafe variants and still selects a valid root cause. SQL now unlocks
+once with the original type, message and caller token; a repeated terminal
+call does not settle again. Complete Abstractions 976/976, SQL 245/245 and
+Azure Service Bus 406/406 suites passed with no failures or skips. Three
+requirement variants are mapped. Independent read-only Red Team review of
+this packet is PASS, with no concrete P1/P2. Azure SDK settlement itself is
+not directly mocked; the test proves its shared header builder, and the
+Azure suite is green. Separate Red Team findings in Saga, Courier, Dispose
+and MessagePack remain open for following packets. No global coverage profile
+was repeated, in line with the user's revised priority.
+
 ## T128 — exception selection and fault diagnostics — 29 September 2026
 
 Red-first counterprobes failed for exception-filter structural selection,

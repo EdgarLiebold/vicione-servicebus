@@ -1,5 +1,17 @@
 # A+ remediation test plan
 
+## T129 fault settlement diagnostics
+
+1. Prove red-first that an unsafe base lookup breaks the shared fault-header
+   helper and SQL fault unlock. Require exact original failure headers, one
+   SQL unlock, caller token, and terminal idempotence; retain a valid root
+   cause control.
+2. Fix the two lookup boundaries, run focused and complete affected project
+   suites, validate requirement projection, obtain independent Red Team
+   re-review, and push the exact tested commit.
+3. Continue the Red Team's other open findings in Saga, Courier, Dispose and
+   MessagePack in following code packets.
+
 ## T128 exception selection and fault diagnostics
 
 1. Red-first test that an unsafe custom base-exception lookup cannot prevent

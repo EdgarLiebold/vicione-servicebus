@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Preserved fault settlement when a custom exception's base lookup throws or
+  returns null. Azure Service Bus fault headers retain the original failure,
+  and SQL still unlocks the delivery with its original type and message.
+
 - Hardened exception selection and fault diagnostics. Retry and Rescue can
   still inspect the structural inner failure when a custom base-exception
   lookup throws. Activity exception events fall back to the original failure

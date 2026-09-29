@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11023 |
+| Added | 11024 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -15787,6 +15787,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/TypeCacheTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ActiveRequestSettlementTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ConnectableTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ExceptionUtilFaultHeaderTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/PendingTaskCollectionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |

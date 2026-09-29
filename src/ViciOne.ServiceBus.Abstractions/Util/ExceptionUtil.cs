@@ -73,7 +73,14 @@ public static class ExceptionUtil
     /// <returns>The exception header detail.</returns>
     public static (Dictionary<string, object>, string) GetExceptionHeaderDetail(Exception exception, ITransportSetHeaderAdapter<object> adapter)
     {
-        exception = exception.GetBaseException() ?? exception;
+        try
+        {
+            exception = exception.GetBaseException() ?? exception;
+        }
+        catch
+        {
+            // Fault reporting must preserve the original exception if its base lookup fails.
+        }
 
         var exceptionMessage = GetMessage(exception);
 

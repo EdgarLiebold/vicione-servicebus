@@ -128,7 +128,14 @@ public class SqlReceiveLockContext :
                 throw LockLost("release after a fault");
 
             var headers = _message.GetTransportHeaders();
-            exception = exception.GetBaseException();
+            try
+            {
+                exception = exception.GetBaseException() ?? exception;
+            }
+            catch
+            {
+                // Preserve the original fault so the locked message can still be released.
+            }
 
             var exceptionMessage = ExceptionUtil.GetMessage(exception);
 

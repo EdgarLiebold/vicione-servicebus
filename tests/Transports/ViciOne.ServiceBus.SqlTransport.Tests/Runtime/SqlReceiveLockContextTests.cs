@@ -9,6 +9,34 @@ public sealed class SqlReceiveLockContextTests
 {
     private static readonly Uri InputAddress = new("db://localhost/transport/input");
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SQL-LOCK-TRANSITION", "unsafe-base-lookup-still-unlocks-with-original-failure")]
+    public async Task FaultedAsync_UnsafeBaseLookupStillUnlocksWithTheOriginalFailureAsync(bool nullBase)
+    {
+        var client = Client(unlockResult: true);
+        var proxy = (LockClientContextProxy)(object)client;
+        var context = CreateContext(client);
+        var failure = new UnsafeBaseException(nullBase);
+        CancellationToken token = TestContext.Current.CancellationToken;
+
+        await context.FaultedAsync(failure, token);
+
+        Assert.Equal(1, proxy.UnlockCallCount);
+        Assert.Equal(0, proxy.DeleteCallCount);
+        object?[] arguments = Assert.IsType<object?[]>(proxy.UnlockArguments);
+        Assert.Equal(token, Assert.IsType<CancellationToken>(arguments[^1]));
+        SendHeaders headers = Assert.IsAssignableFrom<SendHeaders>(arguments[3]);
+        Assert.Equal("fault", headers.Get<string>(MessageHeaders.Reason));
+        Assert.Equal("original SQL failure", headers.Get<string>(MessageHeaders.FaultMessage));
+        Assert.EndsWith(nameof(UnsafeBaseException),
+            headers.Get<string>(MessageHeaders.FaultExceptionType), StringComparison.Ordinal);
+
+        await context.FaultedAsync(failure, token);
+        Assert.Equal(1, proxy.UnlockCallCount);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-SQL-LOCK-TRANSITION", "failed-unlock-is-reported-as-lock-loss")]
     public async Task ScheduleRedeliveryAsync_ReportsARejectedUnlockAsLockLossAsync()
@@ -117,6 +145,7 @@ public sealed class SqlReceiveLockContextTests
         public CancellationToken RenewalToken { get; private set; }
         public bool UnlockResult { get; set; }
         public int UnlockCallCount { get; private set; }
+        public object?[]? UnlockArguments { get; private set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -125,7 +154,7 @@ public sealed class SqlReceiveLockContextTests
             return targetMethod.Name switch
             {
                 "get_CancellationToken" => CancellationToken.None,
-                "UnlockAsync" => UnlockAsync(),
+                "UnlockAsync" => UnlockAsync(args),
                 "DeleteMessageAsync" => DeleteMessageAsync(),
                 "RenewLockAsync" => RenewLockAsync(args),
                 _ => throw new NotSupportedException(targetMethod.Name),
@@ -154,9 +183,10 @@ public sealed class SqlReceiveLockContextTests
             return completion.Task;
         }
 
-        private Task<bool> UnlockAsync()
+        private Task<bool> UnlockAsync(object?[]? args)
         {
             UnlockCallCount++;
+            UnlockArguments = args?.ToArray();
             return Task.FromResult(UnlockResult);
         }
     }
@@ -179,5 +209,12 @@ public sealed class SqlReceiveLockContextTests
         public string EntityName => QueueName;
         public int MaintenanceBatchSize => 100;
         public bool DeadLetterExpiredMessages => false;
+    }
+
+    private sealed class UnsafeBaseException(bool nullBase) : Exception("original SQL failure")
+    {
+        public override Exception GetBaseException() => nullBase
+            ? null!
+            : throw new InvalidOperationException("base lookup failed");
     }
 }

@@ -1,5 +1,17 @@
 # A+ remediation research
 
+## T129 fault settlement diagnostics
+
+`ExceptionUtil.GetExceptionHeaderDetail` is called before Azure Service Bus
+abandon and dead-letter SDK operations in both message and session contexts.
+Its unguarded virtual `GetBaseException()` call could prevent those operations.
+`SqlReceiveLockContext.FaultedAsync` had the same lookup before `UnlockAsync`;
+its settlement state was already terminal, so a failed lookup left the
+provider lock to expire. Red-first tests failed at those exact calls. The
+shared helper now retains the original exception if lookup throws or returns
+null, while keeping a valid root cause. SQL now performs its unlock with the
+original failure headers and does not repeat the terminal operation.
+
 ## T128 exception selection and fault diagnostics
 
 Review of the remaining active `GetBaseException()` call sites found three
