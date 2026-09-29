@@ -2,6 +2,8 @@ using global::Amazon.S3;
 using global::Amazon.S3.Model;
 using ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.AmazonS3.MessageData;
+using ViciOne.ServiceBus.Advanced.Observers;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -64,7 +66,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "missing-bucket-created-before-ready")]
-    public async Task PreStart_CreatesMissingBucketAndReportsReadyOnlyAfterSuccessAsync()
+    public async Task EnsureReady_CreatesMissingBucketBeforeCompletingAsync()
     {
         await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("startup");
         var repository = new AmazonS3MessageDataRepository(
@@ -81,6 +83,104 @@ public sealed class AmazonS3MessageDataRepositoryTests
         Assert.True(await global::Amazon.S3.Util.AmazonS3Util
             .DoesS3BucketExistV2Async(fixture.Client, fixture.BucketName)
             .WaitAsync(fixture.OperationTimeout, cancellationToken));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "selected-repository-reconciles-before-bus-ready")]
+    public async Task SelectedRepository_CreatesBucketAndLifecycleRuleBeforeBusStartCompletesAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("selected-startup");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var options = new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14);
+        var phases = new BusStartPhaseObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration =>
+        {
+            configuration.ConnectBusObserver(phases);
+            configuration.UseMessageData(selector => selector.UseAmazonS3(fixture.Client, options));
+        });
+
+        Assert.False(await global::Amazon.S3.Util.AmazonS3Util
+            .DoesS3BucketExistV2Async(fixture.Client, fixture.BucketName)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+        try
+        {
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            Assert.True(await global::Amazon.S3.Util.AmazonS3Util
+                .DoesS3BucketExistV2Async(fixture.Client, fixture.BucketName)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken));
+            GetLifecycleConfigurationResponse response = await fixture.Client
+                .GetLifecycleConfigurationAsync(fixture.BucketName, cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            LifecycleRule owned = Assert.Single(response.Configuration.Rules);
+            Assert.Equal(PersistedRuleId, owned.Id);
+            Assert.Equal(14, owned.Expiration.Days);
+            Tag tag = Assert.IsType<LifecycleTagPredicate>(owned.Filter.LifecycleFilterPredicate).Tag;
+            Assert.Equal(PersistedRuleId, tag.Key);
+            Assert.Equal(AmazonS3MessageDataRepository.LifecycleTagValue, tag.Value);
+            Assert.Equal(1, phases.PreStartCount);
+            Assert.Equal(1, phases.PostStartCount);
+        }
+        finally
+        {
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "legacy-rule-prevents-selected-bus-start")]
+    public async Task SelectedRepository_RejectsLegacyRuleBeforeBusStartCompletesAsync()
+    {
+        await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("selected-legacy");
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await fixture.Client.PutBucketAsync(
+                new PutBucketRequest
+                {
+                    BucketName = fixture.BucketName,
+                    BucketRegionName = fixture.Client.Config.AuthenticationRegion,
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await fixture.Client.PutLifecycleConfigurationAsync(
+                new PutLifecycleConfigurationRequest
+                {
+                    BucketName = fixture.BucketName,
+                    Configuration = new LifecycleConfiguration
+                    {
+                        Rules = [Rule(PersistedRuleId, 14, string.Empty)],
+                    },
+                },
+                cancellationToken)
+            .WaitAsync(fixture.OperationTimeout, cancellationToken);
+        var options = new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14);
+        var phases = new BusStartPhaseObserver();
+        IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration =>
+        {
+            configuration.ConnectBusObserver(phases);
+            configuration.UseMessageData(selector => selector.UseAmazonS3(fixture.Client, options));
+        });
+
+        try
+        {
+            InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken));
+            GetLifecycleConfigurationResponse response = await fixture.Client
+                .GetLifecycleConfigurationAsync(fixture.BucketName, cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            LifecycleRule unchanged = Assert.Single(response.Configuration.Rules);
+
+            Assert.Contains("Migrate existing objects", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(1, phases.PreStartCount);
+            Assert.Equal(0, phases.PostStartCount);
+            Assert.Equal(PersistedRuleId, unchanged.Id);
+            Assert.Equal(string.Empty,
+                Assert.IsType<LifecyclePrefixPredicate>(unchanged.Filter.LifecycleFilterPredicate).Prefix);
+        }
+        finally
+        {
+            await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+        }
     }
 
     [Fact]
@@ -313,6 +413,32 @@ public sealed class AmazonS3MessageDataRepositoryTests
                 cancellationToken: callerCancellation.Token));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(
             () => repository.GetAsync(address, callerCancellation.Token));
+    }
+
+    private sealed class BusStartPhaseObserver : IBusObserver
+    {
+        public int PreStartCount { get; private set; }
+        public int PostStartCount { get; private set; }
+
+        public void PostCreate(IBus bus) { }
+        public void CreateFaulted(Exception exception) { }
+
+        public Task PreStartAsync(IBus bus)
+        {
+            PreStartCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
+        {
+            PostStartCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task StartFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
+        public Task PreStopAsync(IBus bus) => Task.CompletedTask;
+        public Task PostStopAsync(IBus bus) => Task.CompletedTask;
+        public Task StopFaultedAsync(IBus bus, Exception exception) => Task.CompletedTask;
     }
 
     private static LifecycleRule Rule(string id, int expirationDays, string prefix) =>
