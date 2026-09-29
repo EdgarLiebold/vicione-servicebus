@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Keyed routing handles now remove their registration only once. Disconnecting
+  an old handle again cannot remove a replacement route registered under the
+  same key.
+
 - Dynamic dispatch now owns all started output work when a converter throws
   synchronously. Remaining registered routes are still visited, outstanding
   routes finish before the original failure escapes, and the continuation is

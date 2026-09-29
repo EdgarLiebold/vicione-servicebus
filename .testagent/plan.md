@@ -1,5 +1,14 @@
 # A+ remediation test plan
 
+## T136 keyed route registration ownership
+
+1. Red-first prove that disconnecting an old keyed route handle a second time
+   removes a newly registered route under the same key.
+2. Make the handle's removal idempotent, then verify first-route delivery,
+   replacement delivery, stale-handle isolation and replacement disconnection.
+3. Run focused route and requirement tests, independent read-only adversarial
+   review, and the complete Core suite at the exact commit before push.
+
 ## T135 dynamic dispatch owns every started output
 
 1. Red-first route one input to three real output contracts: hold the first

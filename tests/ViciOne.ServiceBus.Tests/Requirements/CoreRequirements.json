@@ -970,6 +970,13 @@
       "variantKey" : "type-key-and-disconnection"
    },
    {
+      "requirementId" : "REQ-VSB-KEYED-DYNAMIC-ROUTING",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "KeyedRouter_StaleHandleCannotDisconnectAReplacementAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.DynamicRoutingTests",
+      "variantKey" : "stale-handle-cannot-remove-replacement"
+   },
+   {
       "requirementId" : "REQ-VSB-DYNAMIC-ROUTING",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "DynamicRouting_RejectsMissingCollaboratorsAndInvalidConverterResultsAsync",

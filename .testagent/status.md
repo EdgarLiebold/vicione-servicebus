@@ -1,5 +1,14 @@
 # A+ remediation test status
 
+## T136 — keyed route registration ownership — 29 September 2026
+
+The router-level stale-handle regression failed red-first because an old
+handle removed a replacement route under the same key. The handle now removes
+at most once. The replacement receives its message, and its own handle still
+disconnects it. Focused DynamicRouting and requirement tests pass 10/10.
+Independent read-only review is PASS with no concrete P1/P2. The exact-commit
+Core gate follows.
+
 ## T135 — dynamic dispatch and diagnostic snapshot ownership — 29 September 2026
 
 A Roslyn static pairing pass selected the dynamic dispatcher for behavioral

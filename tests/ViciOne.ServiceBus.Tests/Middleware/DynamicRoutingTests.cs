@@ -165,6 +165,31 @@ public sealed class DynamicRoutingTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-KEYED-DYNAMIC-ROUTING", "stale-handle-cannot-remove-replacement")]
+    public async Task KeyedRouter_StaleHandleCannotDisconnectAReplacementAsync()
+    {
+        IDynamicRouter<IRouteContext, string> router =
+            new DynamicRouter<IRouteContext, string>(new RouteConverterFactory(), context => context.Key);
+        var firstCalls = 0;
+        var replacementCalls = 0;
+        ConnectHandle first = router.ConnectPipe("east", Pipe.Execute<IRouteContext<RouteA>>(_ => firstCalls++));
+        await router.SendAsync(new RoutedContext<RouteA>("east"));
+
+        first.Disconnect();
+        ConnectHandle replacement = router.ConnectPipe("east",
+            Pipe.Execute<IRouteContext<RouteA>>(_ => replacementCalls++));
+        first.Disconnect();
+
+        await router.SendAsync(new RoutedContext<RouteA>("east"));
+        Assert.Equal(1, firstCalls);
+        Assert.Equal(1, replacementCalls);
+
+        replacement.Disconnect();
+        await router.SendAsync(new RoutedContext<RouteA>("east"));
+        Assert.Equal(1, replacementCalls);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "invalid-collaborator-boundaries")]
     public async Task DynamicRouting_RejectsMissingCollaboratorsAndInvalidConverterResultsAsync()
     {

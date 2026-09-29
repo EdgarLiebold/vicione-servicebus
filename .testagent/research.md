@@ -1,5 +1,13 @@
 # A+ remediation research
 
+## T136 keyed route registration ownership
+
+`KeyFilter<TContext,TKey>.Handle.Disconnect` removed its key on every call.
+After a route was disconnected and replaced under the same key, calling the
+old handle again removed the replacement. The router-level regression failed
+red-first with zero replacement deliveries instead of one. An atomic one-time
+guard on the handle preserves the replacement and keeps `Dispose` idempotent.
+
 ## T135 dynamic dispatch owns every started output
 
 The Microsoft Roslyn static source-to-test pairing scan of this repository

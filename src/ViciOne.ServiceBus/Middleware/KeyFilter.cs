@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
@@ -92,6 +93,7 @@ public class KeyFilter<TContext, TKey> :
     {
         readonly TKey _key;
         readonly Action<TKey> _removeKey;
+        int _disconnected;
 
         public Handle(TKey key, Action<TKey> removeKey)
         {
@@ -101,7 +103,8 @@ public class KeyFilter<TContext, TKey> :
 
         public void Disconnect()
         {
-            _removeKey(_key);
+            if (Interlocked.Exchange(ref _disconnected, 1) == 0)
+                _removeKey(_key);
         }
 
         public void Dispose()
