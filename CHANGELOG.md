@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The S3 LocalStack suite now exercises the public repository selector through
+  a real bus start. It proves that bucket and tagged lifecycle reconciliation
+  finish during PreStart, while a legacy all-object rule fails startup before
+  PostStart. An adversarial PostStart-only implementation fails this test.
+
 - Receive transport startup now reports a terminal fault if retry-policy
   context creation fails or returns null. Policy decision and terminal callback
   failures retain their cause; retry delays and callbacks stop with the transport

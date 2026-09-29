@@ -1,0 +1,11 @@
+# T151 — selected S3 repository during real bus startup
+
+The previously positive S3 startup tests called `EnsureReadyAsync` directly. They did not prove that `UseMessageData(selector => selector.UseAmazonS3(...))` connects the S3 observer or that a legacy all-object lifecycle rule stops the bus in `PreStartAsync`.
+
+Commit `4d84735e8ec22102f4021a4fe0800cf393fdf6a8` adds two LocalStack contract tests. `SelectedRepository_CreatesBucketAndLifecycleRuleBeforeBusStartCompletesAsync` requires a missing bucket after bus construction, then the bucket, correct tag-filtered rule, and one PreStart/PostStart notification after successful `StartAsync`. `SelectedRepository_RejectsLegacyRuleBeforeBusStartCompletesAsync` requires the legacy rule to remain unchanged, the migration error, one PreStart and zero PostStart notifications. Both paths stop the bus in a bounded `finally`, including when an assertion fails. The older direct-readiness test was renamed to describe its actual entry point.
+
+Read-only Red Team first found that a check only after `StartAsync` would let S3 initialization move to `PostStartAsync`. The phase observer closes that gap. An adversarial run with precisely that temporary source mutation passed 10/11 tests and failed the legacy test at `PostStartCount`: expected 0, actual 1. The product source was restored byte-identically before the final runs. A second Red Team review found a missing cleanup path in the negative test; bounded cleanup was added and the final review reported no concrete P1/P2.
+
+The complete S3 LocalIntegration project passed 12/12 against a fresh LocalStack fixture, including requirement projection. The exact-commit receipt at `artifacts/t151-s3-startup/receipt.json` (SHA-256 `08299b46fa00c50b0013e219d0648c2a1f1c6485f828743ffaeef330a2bbb75e`) also verified 12/12, six unchanged binaries and 1,322 tracked product sources. The run-scoped fixture findings are empty (SHA-256 `fb53250d9ee509e77f60602f1f3933e8fab88fcd045adec95a464c3821e60442`).
+
+This verifies startup composition in LocalStack. It does not establish real AWS IAM authorization, delayed lifecycle deletion, or behavior under foreign overlapping bucket rules. No S3 product source changed in this packet, and no new product-wide Coverage/CRAP figure is claimed.

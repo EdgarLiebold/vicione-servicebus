@@ -1,5 +1,20 @@
 # A+ remediation test status
 
+## T151 — selected S3 repository startup composition — 30 September 2026
+
+The S3 LocalStack suite now exercises `UseMessageData(selector =>
+selector.UseAmazonS3(...))` through actual InMemory bus startup. The positive
+test requires bucket and tagged lifecycle rule before successful StartAsync;
+the legacy-rule test requires the migration error, unchanged rule and exactly
+one PreStart with zero PostStart notifications. A temporary PreStart-to-PostStart
+product mutant failed the latter test at expected 0 versus actual 1 PostStart.
+Both paths now stop the bus in a bounded finally, even when assertions fail.
+The complete LocalIntegration project and exact-commit receipt at `4d84735e8`
+passed 12/12 with an isolated LocalStack fixture and no fixture findings.
+Independent read-only Red Team re-review is PASS with no concrete P1/P2.
+See `coverage-a-plus-20260921/t151-s3-startup-contract.md`. No product source
+changed and no new global coverage figure is claimed.
+
 ## T147 — ActiveMQ Quartz causal delivery barrier — 29 September 2026
 
 The ActiveMQ Quartz local integration test removed its 10 ms wall-clock poll
