@@ -1,4 +1,6 @@
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Operations;
+using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -52,6 +54,89 @@ public sealed class DynamicRoutingTests
         await pipe.SendAsync(new RoutedContext<RouteB>("b"));
 
         Assert.Equal(["route:a", "next:a", "next:b"], trace);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "sync-output-failure-awaits-started-outputs-and-visits-remaining-routes")]
+    public async Task SynchronousConverterFailure_AwaitsStartedOutputAndVisitsRemainingRoutesAsync()
+    {
+        TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
+            .GetValidatedOptions().OperationTimeout!.Value;
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var expected = new ExpectedConversionException();
+        var filter = new DynamicFilter<IRouteContext>(new ThrowingRouteConverterFactory(expected));
+        var firstCompleted = 0;
+        var thirdCalls = 0;
+        var continuations = 0;
+        filter.ConnectPipe(Pipe.ExecuteAwaited<IRouteContext<RouteA>>(async _ =>
+        {
+            entered.TrySetResult();
+            await release.Task;
+            Interlocked.Increment(ref firstCompleted);
+        }));
+        filter.ConnectPipe(Pipe.Empty<IRouteContext<RouteB>>());
+        filter.ConnectPipe(Pipe.Execute<IRouteContext<RouteC>>(_ => Interlocked.Increment(ref thirdCalls)));
+
+        Task dispatch = filter.SendAsync(new TripleRoutedContext("all"),
+            Pipe.Execute<IRouteContext>(_ => Interlocked.Increment(ref continuations)));
+        try
+        {
+            await entered.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
+            Assert.False(dispatch.IsCompleted);
+            Assert.Equal(1, thirdCalls);
+            Assert.Equal(0, continuations);
+        }
+        finally
+        {
+            release.TrySetResult();
+        }
+
+        ExpectedConversionException actual = await Assert.ThrowsAsync<ExpectedConversionException>(() =>
+            dispatch.WaitAsync(timeout, TestContext.Current.CancellationToken));
+        Assert.Same(expected, actual);
+        Assert.Equal(1, firstCompleted);
+        Assert.Equal(1, thirdCalls);
+        Assert.Equal(0, continuations);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "probe-uses-stable-registration-snapshot")]
+    public async Task Probe_UsesStableSnapshotWhenAnOutputRegistersAnotherRouteAsync()
+    {
+        var filter = new DynamicFilter<IRouteContext>(new RouteConverterFactory());
+        var probeCalls = 0;
+        var addedRouteCalls = 0;
+        filter.ConnectPipe(new ProbeActionPipe<IRouteContext<RouteA>>(() =>
+        {
+            probeCalls++;
+            filter.ConnectPipe(Pipe.Execute<IRouteContext<RouteB>>(_ => addedRouteCalls++));
+        }));
+
+        IProbeResult result = filter.GetProbeResult(TestContext.Current.CancellationToken);
+        Assert.NotNull(result);
+        Assert.Equal(1, probeCalls);
+
+        await filter.SendAsync(new DualRoutedContext("both"), Pipe.Empty<IRouteContext>());
+        Assert.Equal(1, addedRouteCalls);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "null-output-task-rejected-for-single-and-multiple-routes")]
+    public async Task NullOutputTask_IsRejectedForSingleAndMultipleRoutesAsync(bool multiple)
+    {
+        var filter = new NullTaskDynamicFilter();
+        filter.ConnectPipe(Pipe.Empty<IRouteContext<RouteA>>());
+        if (multiple)
+            filter.ConnectPipe(Pipe.Empty<IRouteContext<RouteB>>());
+
+        Task dispatch = filter.SendAsync(new DualRoutedContext("both"), Pipe.Empty<IRouteContext>());
+        Assert.NotNull(dispatch);
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => dispatch);
+        Assert.Equal("An output filter returned a null task.", actual.Message);
+        Assert.Equal(multiple ? 2 : 1, filter.OutputCalls);
     }
 
     [Fact]
@@ -135,6 +220,12 @@ public sealed class DynamicRoutingTests
         public string Key { get; } = key;
     }
 
+    private sealed class TripleRoutedContext(string key) : BasePipeContext,
+        IRouteContext<RouteA>, IRouteContext<RouteB>, IRouteContext<RouteC>
+    {
+        public string Key { get; } = key;
+    }
+
     private sealed class UnrelatedContext : BasePipeContext;
 
     private sealed class RouteConverterFactory : IPipeContextConverterFactory<IRouteContext>
@@ -156,6 +247,68 @@ public sealed class DynamicRoutingTests
 
             output = null!;
             return false;
+        }
+    }
+
+    private sealed class ThrowingRouteConverterFactory(ExpectedConversionException failure) :
+        IPipeContextConverterFactory<IRouteContext>
+    {
+        public IPipeContextConverter<IRouteContext, TOutput> GetConverter<TOutput>()
+            where TOutput : class, PipeContext => typeof(TOutput) == typeof(IRouteContext<RouteB>)
+                ? new ThrowingRouteConverter<TOutput>(failure)
+                : new CastConverter<TOutput>();
+    }
+
+    private sealed class ThrowingRouteConverter<TOutput>(ExpectedConversionException failure) :
+        IPipeContextConverter<IRouteContext, TOutput>
+        where TOutput : class, PipeContext
+    {
+        public bool TryConvert(IRouteContext input, out TOutput output) => throw failure;
+    }
+
+    private sealed class ProbeActionPipe<TContext>(Action onProbe) : IPipe<TContext>
+        where TContext : class, PipeContext
+    {
+        public void Probe(ProbeContext context)
+        {
+            onProbe();
+            context.CreateScope("probe-action");
+        }
+
+        public Task SendAsync(TContext context) => Task.CompletedTask;
+    }
+
+    private sealed class NullTaskDynamicFilter() : DynamicFilter<IRouteContext>(new RouteConverterFactory())
+    {
+        public int OutputCalls { get; private set; }
+
+        protected override IOutputFilter CreateOutputPipe<TOutput>() => new NullTaskOutputFilter<TOutput>(this);
+
+        private sealed class NullTaskOutputFilter<TOutput>(NullTaskDynamicFilter owner) :
+            IOutputFilter, IPipeConnector<TOutput>
+            where TOutput : class, PipeContext
+        {
+            private readonly ViciOne.ServiceBus.Util.Connectable<IPipe<TOutput>> _connections = new();
+
+            public TResult As<TResult>() where TResult : class => this as TResult
+                ?? throw new InvalidOperationException("The requested connector is unavailable.");
+
+            public ConnectHandle ConnectPipe(IPipe<TOutput> pipe) => _connections.Connect(pipe);
+
+            public ConnectHandle ConnectObserver<TObserved>(IFilterObserver<TObserved> observer)
+                where TObserved : class, PipeContext => throw new NotSupportedException();
+
+            public ConnectHandle ConnectObserver(IFilterObserver observer) => throw new NotSupportedException();
+
+            public void Probe(ProbeContext context)
+            {
+            }
+
+            public Task SendAsync(IRouteContext context, IPipe<IRouteContext> next)
+            {
+                owner.OutputCalls++;
+                return null!;
+            }
         }
     }
 
@@ -184,4 +337,8 @@ public sealed class DynamicRoutingTests
     private sealed class RouteA;
 
     private sealed class RouteB;
+
+    private sealed class RouteC;
+
+    private sealed class ExpectedConversionException : Exception;
 }

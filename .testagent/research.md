@@ -1,5 +1,32 @@
 # A+ remediation research
 
+## T135 dynamic dispatch owns every started output
+
+The Microsoft Roslyn static source-to-test pairing scan of this repository
+indexed 4,294 source and 1,590 test files; `DynamicFilter.cs` was unpaired by
+name because the existing integration tests use `DynamicRouter` and
+`UseDispatch`. This is a selection heuristic, not execution coverage.
+`DynamicFilter.SendAsync` invokes each output before `Task.WhenAll`; a later
+synchronous converter exception abandons earlier asynchronous output work and
+prevents later registrations from being visited. The neighboring
+`Connectable<T>.ForEachAsync` already converts synchronous callback failures
+to tasks and joins every registered callback. Existing `DynamicRoutingTests`
+provide real converter and output-pipeline fixtures for a behavioral probe.
+The three-route probe failed red-first because dispatch completed while the
+first output was still held; the third route was never reached. The corrected
+multi-output path converts a synchronous throw to a faulted task, visits all
+routes, and joins outstanding work before returning the original failure.
+The same class enumerates mutable `_outputPipes.Values` in `Probe` while
+registration updates the dictionary. A connected pipe can legitimately
+register another route during its own diagnostic callback, invalidating that
+enumeration; the already maintained output-array snapshot is the appropriate
+read boundary.
+Both additional paths failed red-first: `Probe` raised `Collection was
+modified` on its next dictionary-enumerator step, and the single-output
+dispatch returned null. The multiple-output null control already produced
+the intended faulted task. A shared safe invocation and volatile snapshot
+publication now close both inconsistent boundaries.
+
 ## T134 public RetryAsync failure and policy cleanup
 
 `PipeRetryExtensions.ExecuteAsync<TResult>` acquires `RetryPolicyContext` in a

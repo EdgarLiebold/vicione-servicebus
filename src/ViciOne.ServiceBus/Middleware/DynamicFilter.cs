@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Observables;
 
@@ -64,7 +65,7 @@ public class DynamicFilter<TInput> :
 
     void IProbeSite.Probe(ProbeContext context)
     {
-        foreach (var pipe in _outputPipes.Values)
+        foreach (IOutputFilter pipe in Volatile.Read(ref _outputPipeArray))
             pipe.Probe(context);
     }
 
@@ -72,25 +73,30 @@ public class DynamicFilter<TInput> :
     /// <param name="context">The input context offered to each output pipeline.</param>
     /// <param name="next">The continuation passed directly to one output, or invoked after multiple outputs succeed.</param>
     /// <returns>A completed task for no outputs, one output's task, or the task awaiting all outputs and the continuation.</returns>
-    /// <remarks>With no registered outputs, dispatch completes without invoking the continuation. Multiple outputs receive an empty continuation.</remarks>
+    /// <remarks>
+    /// With no registered outputs, dispatch completes without invoking the continuation. Multiple outputs receive an
+    /// empty continuation. Every registered output is visited and every started task is awaited before a failure
+    /// escapes; the continuation runs only when all outputs succeed.
+    /// </remarks>
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     public Task SendAsync(TInput context, IPipe<TInput> next)
     {
-        IOutputFilter[] outputPipes = _outputPipeArray;
+        IOutputFilter[] outputPipes = Volatile.Read(ref _outputPipeArray);
 
         if (outputPipes.Length == 0)
             return Task.CompletedTask;
 
         if (outputPipes.Length == 1)
-            return outputPipes[0].SendAsync(context, next);
+            return InvokeOutput(outputPipes[0], next);
 
         async Task SendAsync()
         {
             var outputTasks = new List<Task>(outputPipes.Length);
             for (var i = 0; i < outputPipes.Length; i++)
             {
-                var outputTask = outputPipes[i].SendAsync(context, _empty);
+                Task outputTask = InvokeOutput(outputPipes[i], _empty);
+
                 if (outputTask.Status == TaskStatus.RanToCompletion)
                     continue;
 
@@ -99,6 +105,19 @@ public class DynamicFilter<TInput> :
 
             await Task.WhenAll(outputTasks).ConfigureAwait(false);
             await next.SendAsync(context).ConfigureAwait(false);
+        }
+
+        Task InvokeOutput(IOutputFilter outputPipe, IPipe<TInput> continuation)
+        {
+            try
+            {
+                return outputPipe.SendAsync(context, continuation)
+                    ?? Task.FromException(new InvalidOperationException("An output filter returned a null task."));
+            }
+            catch (Exception exception)
+            {
+                return Task.FromException(exception);
+            }
         }
 
         return SendAsync();
@@ -130,7 +149,7 @@ public class DynamicFilter<TInput> :
 
             _outputPipes.Add(typeof(T), outputPipe);
 
-            _outputPipeArray = _outputPipes.Values.ToArray();
+            Volatile.Write(ref _outputPipeArray, _outputPipes.Values.ToArray());
 
             return outputPipe;
         }

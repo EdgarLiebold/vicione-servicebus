@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## T135 — dynamic dispatch and diagnostic snapshot ownership — 29 September 2026
+
+A Roslyn static pairing pass selected the dynamic dispatcher for behavioral
+review; its unpaired label is only a source-reference heuristic. A real
+three-route test failed red-first because a synchronous converter failure
+let dispatch complete before a started asynchronous route and skipped a later
+route. A separate probe test failed red-first when registration from a probe
+callback invalidated dictionary enumeration. A single-output null-task test
+also failed red-first, while its multi-output control passed. The shared safe
+output invocation and volatile registration snapshot address these paths.
+All nine DynamicRouting/requirement cases pass; independent read-only Red Team
+review is PASS with no concrete P1/P2. The complete Core suite is checked at
+the exact commit before push; no global coverage profile was repeated.
+
 ## T134 — public RetryAsync failure and policy cleanup — 29 September 2026
 
 Six void/result dual-failure counterprobes failed red-first because policy

@@ -1,5 +1,18 @@
 # A+ remediation test plan
 
+## T135 dynamic dispatch owns every started output
+
+1. Red-first route one input to three real output contracts: hold the first
+   output, throw synchronously in the second converter, and observe the third.
+   Require all outputs to be visited, the first to finish before the caller
+   sees failure, and the continuation to remain uncalled.
+2. Convert synchronous output failures to faulted tasks before joining all
+   outputs. Recheck normal multi-output success and exact failure identity.
+3. Red-first let a connected pipe register a new output during `Probe`. Require
+   a stable diagnostic snapshot and successful use of the new output afterward.
+4. Map the requirements, run read-only adversarial review and the exact-commit
+   Core suite, then push the authorized result.
+
 ## T134 public RetryAsync failure and policy cleanup
 
 1. Red-first invoke both void and value overloads with a policy whose

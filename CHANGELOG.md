@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Dynamic dispatch now owns all started output work when a converter throws
+  synchronously. Remaining registered routes are still visited, outstanding
+  routes finish before the original failure escapes, and the continuation is
+  skipped after any route fails. Single and multiple outputs reject a null
+  task consistently. Diagnostic probing uses a stable registration snapshot,
+  so a pipe can register another route during its probe callback.
+
 - Preserved both causes when public `RetryAsync` processing or policy admission
   fails and policy disposal also fails. The execution cause precedes cleanup
   in an aggregate for both task and result overloads; successful processing
