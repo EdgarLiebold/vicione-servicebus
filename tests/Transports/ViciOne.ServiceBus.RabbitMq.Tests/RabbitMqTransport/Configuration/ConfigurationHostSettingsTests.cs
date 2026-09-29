@@ -10,6 +10,74 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration;
 
 public sealed class ConfigurationHostSettingsTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "combined-batch-limit-failures-recover-at-valid-boundaries")]
+    public void BatchValidation_ReportsEveryInvalidLimitAndAcceptsCorrectedBoundaries()
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        var settings = new ConfigurationHostSettings();
+        settings.ConfigureBatch(batch =>
+        {
+            batch.Enabled = true;
+            batch.Timeout = TimeSpan.FromSeconds(1) + TimeSpan.FromTicks(1);
+            batch.MessageLimit = 1;
+            batch.SizeLimit = 1023;
+        });
+        busConfiguration.HostConfiguration.Settings = settings;
+
+        string[] failures = busConfiguration.HostConfiguration.Validate()
+            .Where(result => result.Key is "BatchTimeout" or "BatchMessageLimit" or "BatchSizeLimit")
+            .Select(result => result.Key)
+            .ToArray();
+        Assert.Equal(3, failures.Length);
+        Assert.Contains("BatchTimeout", failures);
+        Assert.Contains("BatchMessageLimit", failures);
+        Assert.Contains("BatchSizeLimit", failures);
+
+        settings.ConfigureBatch(batch =>
+        {
+            batch.Timeout = TimeSpan.FromSeconds(1);
+            batch.MessageLimit = 100;
+            batch.SizeLimit = 256 * 1024;
+        });
+
+        Assert.DoesNotContain(busConfiguration.HostConfiguration.Validate(),
+            result => result.Key is "BatchTimeout" or "BatchMessageLimit" or "BatchSizeLimit");
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-HOST-CONFIGURATION", "built-host-rejects-replacement-and-keeps-endpoint-address")]
+    public void BuiltHost_RejectsSettingsReplacementAndPreservesExistingRoutes()
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        var settings = new ConfigurationHostSettings
+        {
+            Host = "first-broker",
+            VirtualHost = "production",
+            Port = 5672
+        };
+        busConfiguration.HostConfiguration.Settings = settings;
+        IRabbitMqReceiveEndpointConfiguration endpoint =
+            busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("orders");
+        _ = busConfiguration.HostConfiguration.Build();
+        Uri hostAddress = busConfiguration.HostConfiguration.HostAddress;
+        Uri inputAddress = endpoint.InputAddress;
+
+        InvalidOperationException replacementFailure = Assert.Throws<InvalidOperationException>(() =>
+            busConfiguration.HostConfiguration.Settings = new ConfigurationHostSettings
+            {
+                Host = "second-broker",
+                VirtualHost = "other"
+            });
+        Assert.Contains("cannot be replaced", replacementFailure.Message, StringComparison.Ordinal);
+        Assert.Throws<InvalidOperationException>(() => settings.Host = "changed-broker");
+        Assert.Same(settings, busConfiguration.HostConfiguration.Settings);
+        Assert.Equal(hostAddress, busConfiguration.HostConfiguration.HostAddress);
+        Assert.Equal(inputAddress, endpoint.InputAddress);
+    }
+
     [Theory]
     [InlineData(false, 25672, "rabbitmq://broker:25672/production")]
     [InlineData(true, 25671, "rabbitmqs://broker:25671/production")]

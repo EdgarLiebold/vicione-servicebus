@@ -86,6 +86,11 @@ public abstract class BrokerTopologyBuilder
         var isQuorumQueue = queueArguments.TryGetValue(RabbitMQ.Client.Headers.XQueueType, out var queueType) && Equals(queueType, "quorum");
 
         var durableQueue = durable || isQuorumQueue;
+        if (isQuorumQueue)
+        {
+            queueAutoDelete = false;
+            exclusive = false;
+        }
 
         exclusive = exclusive || autoDelete && !durableQueue;
 

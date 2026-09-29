@@ -1,5 +1,42 @@
 # A+ remediation research
 
+## T105 RabbitMQ queue reconfiguration and broker projection
+
+RabbitMQ queue configuration is mutable until the receive endpoint topology
+is built. `SetQuorumQueue(3)` writes `x-quorum-initial-group-size`; a later
+`SetQuorumQueue()` selects quorum again but leaves the earlier group size,
+although the later configuration omitted it. This can start a broker queue
+with a stale replication request. `SingleActiveConsumer` and `Lazy` similarly
+change broker arguments and need to be observed in the final topology rather
+than only in the intermediate settings object. Existing boundary tests cover
+invalid quorum factors, first-time quorum setup, expiration, and duration
+projection, but not replacing an earlier quorum group size or toggling these
+delivery settings before topology construction. The static Roslyn pairing
+finds this source paired to existing RabbitMQ tests; pairing is not evidence
+of branch or behavioral coverage.
+
+Acceptance: later quorum configuration without an initial group size clears
+the stale parameter while preserving quorum type, non-exclusive ownership
+and removal of classic priority settings. Repeated delivery-setting toggles
+must project the final single-active-consumer and queue-mode values into the
+broker topology. Host startup must report each invalid batch limit together
+and then accept corrected limits at their inclusive boundaries. A built host
+must reject replacement of its address settings without changing either the
+host or receive endpoint address. These are declarative startup contracts, so
+no broker fixture is needed.
+
+The first Red Team review found that invalid `SetQuorumQueue(0/-1)` after a
+valid group size also needs a state-preservation oracle. A new regression
+checks both settings and final broker topology after rejected calls. Its
+durability concern was ruled out: `BrokerTopologyBuilder.QueueDeclare` already
+forces a quorum queue's `Durable` flag true even if the source settings are
+false; the exchange remains governed by source settings. The verified broker
+defect is that an auto-delete request without `x-expires` still produced an
+auto-delete quorum queue, and a direct queue declaration could preserve an
+exclusive request. Quorum queues require durable, non-auto-delete,
+non-exclusive broker flags. Tests inspect both endpoint and direct binding
+paths with and without expiration.
+
 ## T104 in-memory outbox release admission race
 
 `InMemoryOutboxConsumeContext.ExecutePendingActionsAsync` marks `ClearToSend`

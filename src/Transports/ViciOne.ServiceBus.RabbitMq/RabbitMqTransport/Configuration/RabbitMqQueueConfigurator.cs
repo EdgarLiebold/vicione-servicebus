@@ -25,7 +25,7 @@ public class RabbitMqQueueConfigurator :
     }
 
     /// <summary>Configures a non-exclusive quorum queue and removes incompatible priority settings.</summary>
-    /// <param name="replicationFactor">The optional initial quorum-group size.</param>
+    /// <param name="replicationFactor">The initial quorum-group size, or <see langword="null"/> to clear a previously configured size.</param>
     public void SetQuorumQueue(int? replicationFactor)
     {
         if (replicationFactor is < 1)
@@ -39,6 +39,10 @@ public class RabbitMqQueueConfigurator :
         if (replicationFactor.HasValue)
         {
             SetQueueArgument(RabbitMQ.Client.Headers.XQuorumInitialGroupSize, replicationFactor.Value);
+        }
+        else
+        {
+            QueueArguments.Remove(RabbitMQ.Client.Headers.XQuorumInitialGroupSize);
         }
     }
 

@@ -7,6 +7,144 @@ namespace ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.Configuration;
 public sealed class RabbitMqQueueConfigurationBoundaryTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-QUEUE-CONFIGURATION", "later-quorum-configuration-clears-stale-group-size")]
+    public void ReconfiguredQuorumQueue_UsesOnlyTheFinalReplicationRequest()
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        RabbitMqReceiveSettings? settings = null;
+        RabbitMqQueueReceiveEndpointContext? context = null;
+
+        _ = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("quorum-reconfigured", endpoint =>
+        {
+            endpoint.Exclusive = true;
+            endpoint.EnablePriority(7);
+            endpoint.SetQuorumQueue(3);
+            endpoint.SetQuorumQueue();
+
+            var configuration = Assert.IsType<RabbitMqReceiveEndpointConfiguration>(endpoint);
+            settings = Assert.IsType<RabbitMqReceiveSettings>(configuration.Settings);
+            context = Assert.IsType<RabbitMqQueueReceiveEndpointContext>(configuration.CreateReceiveEndpointContext());
+        });
+
+        RabbitMqReceiveSettings finalSettings = Assert.IsType<RabbitMqReceiveSettings>(settings);
+        Assert.Equal("quorum", finalSettings.QueueArguments[RabbitMQ.Client.Headers.XQueueType]);
+        Assert.False(finalSettings.Exclusive);
+        Assert.False(finalSettings.QueueArguments.ContainsKey(RabbitMQ.Client.Headers.XMaxPriority));
+        Assert.False(finalSettings.QueueArguments.ContainsKey(RabbitMQ.Client.Headers.XQuorumInitialGroupSize));
+
+        var queue = Assert.Single(Assert.IsType<RabbitMqQueueReceiveEndpointContext>(context).BrokerTopology.Queues);
+        Assert.Equal("quorum-reconfigured", queue.QueueName);
+        Assert.True(queue.Durable);
+        Assert.False(queue.Exclusive);
+        Assert.Equal("quorum", queue.QueueArguments[RabbitMQ.Client.Headers.XQueueType]);
+        Assert.False(queue.QueueArguments.ContainsKey(RabbitMQ.Client.Headers.XMaxPriority));
+        Assert.False(queue.QueueArguments.ContainsKey(RabbitMQ.Client.Headers.XQuorumInitialGroupSize));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-QUEUE-CONFIGURATION", "invalid-repeated-quorum-request-retains-prior-group-size")]
+    public void InvalidRepeatedQuorumRequest_PreservesThePreviousBrokerDeclaration()
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        RabbitMqReceiveSettings? settings = null;
+        RabbitMqQueueReceiveEndpointContext? context = null;
+
+        _ = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("quorum-preserved", endpoint =>
+        {
+            endpoint.SetQuorumQueue(3);
+            settings = Assert.IsType<RabbitMqReceiveSettings>(
+                Assert.IsType<RabbitMqReceiveEndpointConfiguration>(endpoint).Settings);
+
+            foreach (int invalid in new[] { 0, -1 })
+            {
+                ArgumentOutOfRangeException failure = Assert.Throws<ArgumentOutOfRangeException>(() =>
+                    endpoint.SetQuorumQueue(invalid));
+                Assert.Equal("replicationFactor", failure.ParamName);
+                Assert.Equal(3, settings.QueueArguments[RabbitMQ.Client.Headers.XQuorumInitialGroupSize]);
+                Assert.Equal("quorum", settings.QueueArguments[RabbitMQ.Client.Headers.XQueueType]);
+            }
+
+            context = Assert.IsType<RabbitMqQueueReceiveEndpointContext>(
+                Assert.IsType<RabbitMqReceiveEndpointConfiguration>(endpoint).CreateReceiveEndpointContext());
+        });
+
+        var queue = Assert.Single(Assert.IsType<RabbitMqQueueReceiveEndpointContext>(context).BrokerTopology.Queues);
+        Assert.Equal("quorum-preserved", queue.QueueName);
+        Assert.Equal(3, queue.QueueArguments[RabbitMQ.Client.Headers.XQuorumInitialGroupSize]);
+        Assert.Equal("quorum", queue.QueueArguments[RabbitMQ.Client.Headers.XQueueType]);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-QUEUE-CONFIGURATION", "quorum-selection-normalizes-broker-queue-lifetime")]
+    public void QuorumSelection_NormalizesQueueLifetimeWithoutChangingExchange(bool withExpiration)
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        RabbitMqReceiveSettings? settings = null;
+        RabbitMqQueueReceiveEndpointContext? context = null;
+
+        _ = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("quorum-lifetime", endpoint =>
+        {
+            endpoint.Durable = false;
+            endpoint.AutoDelete = true;
+            endpoint.Exclusive = true;
+            if (withExpiration)
+                endpoint.QueueExpiration = TimeSpan.FromMinutes(1);
+            endpoint.SetQuorumQueue();
+            var configuration = Assert.IsType<RabbitMqReceiveEndpointConfiguration>(endpoint);
+            settings = Assert.IsType<RabbitMqReceiveSettings>(configuration.Settings);
+            context = Assert.IsType<RabbitMqQueueReceiveEndpointContext>(configuration.CreateReceiveEndpointContext());
+        });
+
+        RabbitMqReceiveSettings finalSettings = Assert.IsType<RabbitMqReceiveSettings>(settings);
+        Assert.False(finalSettings.Durable);
+        Assert.True(finalSettings.AutoDelete);
+        var brokerTopology = Assert.IsType<RabbitMqQueueReceiveEndpointContext>(context).BrokerTopology;
+        var exchange = Assert.Single(brokerTopology.Exchanges);
+        var queue = Assert.Single(brokerTopology.Queues);
+        Assert.False(exchange.Durable);
+        Assert.True(exchange.AutoDelete);
+        Assert.True(queue.Durable);
+        Assert.False(queue.AutoDelete);
+        Assert.False(queue.Exclusive);
+        Assert.Equal("quorum", queue.QueueArguments[RabbitMQ.Client.Headers.XQueueType]);
+        if (withExpiration)
+            Assert.Equal(60000L, queue.QueueArguments[RabbitMQ.Client.Headers.XExpires]);
+        else
+            Assert.False(queue.QueueArguments.ContainsKey(RabbitMQ.Client.Headers.XExpires));
+        Assert.Equal("quorum-lifetime", Assert.Single(brokerTopology.QueueBindings).Destination.QueueName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-QUEUE-CONFIGURATION", "delivery-mode-toggles-project-final-broker-arguments")]
+    public void DeliveryModeToggles_ProjectOnlyTheFinalBrokerSettings()
+    {
+        var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());
+        var busConfiguration = new RabbitMqBusConfiguration(topology);
+        RabbitMqQueueReceiveEndpointContext? context = null;
+
+        _ = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("delivery-modes", endpoint =>
+        {
+            endpoint.SingleActiveConsumer = true;
+            endpoint.Lazy = true;
+            endpoint.SingleActiveConsumer = false;
+            endpoint.Lazy = false;
+
+            context = Assert.IsType<RabbitMqQueueReceiveEndpointContext>(
+                Assert.IsType<RabbitMqReceiveEndpointConfiguration>(endpoint).CreateReceiveEndpointContext());
+        });
+
+        var queue = Assert.Single(Assert.IsType<RabbitMqQueueReceiveEndpointContext>(context).BrokerTopology.Queues);
+        Assert.Equal("delivery-modes", queue.QueueName);
+        Assert.False(queue.QueueArguments.ContainsKey(RabbitMQ.Client.Headers.XSingleActiveConsumer));
+        Assert.Equal("default", queue.QueueArguments[RabbitMQ.Client.Headers.XQueueMode]);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-QUEUE-CONFIGURATION", "invalid-quorum-factor-preserves-classic-queue")]
     public void InvalidQuorumFactor_PreservesClassicQueueAndAllowsSubsequentValidConfiguration()
     {

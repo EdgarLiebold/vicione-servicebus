@@ -1,5 +1,27 @@
 # A+ remediation test plan
 
+## T105 RabbitMQ queue reconfiguration and broker projection
+
+1. Add red-first tests through `RabbitMqReceiveEndpointConfiguration` for
+   repeated quorum configuration and final broker topology. Assert exact
+   `x-quorum-initial-group-size`, `x-queue-type`, priority and exclusivity.
+2. Exercise two delivery-setting toggles together and inspect the final
+   built queue arguments, including absence of stale single-active-consumer.
+3. Exercise combined batch validation failures and healthy boundary recovery,
+   plus built-host setting replacement with address preservation. These use
+   host configuration without opening a broker connection.
+4. Correct only verified product behavior, run targeted RabbitMQ tests during
+   implementation, use a controlled counterprobe and read-only adversarial
+   review, then run the full RabbitMQ unit project on its exact commit.
+   Update requirements, evidence, changelog and changelist; push. The global
+   33-profile measurement stays on the 20–30 packet interval.
+
+Red Team extension: reject invalid repeat quorum requests without changing a
+previous valid group size. Its durability concern was ruled out by the queue
+builder's existing normalization. Correct the verified auto-delete and
+exclusive broker flags for quorum queues through both endpoint configuration
+and direct queue declaration, including queues with expiration.
+
 ## T104 in-memory outbox release admission race
 
 1. Add deterministic red-first tests for deferred send and scheduler
