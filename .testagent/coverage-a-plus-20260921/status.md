@@ -1,5 +1,14 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T153 Azure Table runtime saga keys
+
+The public runtime provider and caller-supplied repository key formatter now
+have a real Azurite persistence/reload contract. The focused class passes 3/3
+and the exact-commit LocalIntegration receipt passes 45/45 at `80ffead2f`.
+Independent read-only Red Team review is PASS, with no concrete P1/P2.
+This packet found no new product defect and makes no new global Coverage/CRAP
+claim. See [T153 evidence](t153-azure-table-runtime-keys.md).
+
 ## Current T120 Saga timeout cancellation packet
 
 Positive Saga timeouts now schedule and cancel with the same request ID.

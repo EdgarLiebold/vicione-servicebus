@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The Azure Table runtime saga provider now has an Azurite-backed public-path
+  test. It verifies the configured partition and row keys in physical storage
+  and reloads the saga through the public repository factory with that same
+  formatter. The complete integration project passes 45/45.
+
 - The DynamoDB runtime registration test now mixes versioned and unversioned
   sagas. It proves that the optional provider configures only compatible saga
   types; removing the version guard fails the test at the generic proxy bound.
