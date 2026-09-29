@@ -59,6 +59,28 @@ public sealed class StartedActivityTests
         Assert.DoesNotContain(exceptionEvent.Tags, tag => tag.Key == "exception.escaped");
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ACTIVITY-OUTCOME", "unsafe-base-lookup-still-records-original-failure")]
+    public void AddExceptionEvent_UnsafeBaseLookupStillRecordsTheOriginalFailure(bool nullBase)
+    {
+        using var activity = new Activity("failed operation").Start();
+        var started = new StartedActivity(activity, new FakeTimeProvider(ObservationTime));
+        var failure = new UnsafeBaseException(nullBase);
+
+        started.AddExceptionEvent(failure);
+        started.Stop();
+
+        ActivityEvent exceptionEvent = Assert.Single(activity.Events);
+        Assert.Equal(ObservationTime, exceptionEvent.Timestamp);
+        Assert.Equal(typeof(UnsafeBaseException).FullName,
+            Tag(exceptionEvent, ServiceBusTelemetry.Attributes.ExceptionType));
+        Assert.Equal("original failure", Tag(exceptionEvent, ServiceBusTelemetry.Attributes.ExceptionMessage));
+        Assert.Equal(ActivityStatusCode.Error, activity.Status);
+        Assert.Equal("original failure", activity.StatusDescription);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVITY-OUTCOME", "invalid-inputs-fail-at-the-boundary")]
     public void ConstructorAndMutationMethods_RejectInvalidInputs()
@@ -102,6 +124,13 @@ public sealed class StartedActivityTests
         activityEvent.Tags.Single(tag => tag.Key == name).Value;
 
     private sealed record BodyLengthMessage;
+
+    private sealed class UnsafeBaseException(bool nullBase) : Exception("original failure")
+    {
+        public override Exception GetBaseException() => nullBase
+            ? null!
+            : throw new InvalidOperationException("base lookup failed");
+    }
 
     private class BodyLengthSendContextProxy : DispatchProxy
     {

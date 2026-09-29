@@ -105,6 +105,11 @@ base-exception lookup. A supervised pipe context still stops and disposes its
 owned context if diagnostic exception properties throw. Consumer cancellation
 classification continues through the ordinary inner-exception chain when
 base-exception lookup is unsafe.
+Exception selection continues through structural inner exceptions when a
+custom base-exception lookup throws, preserving Retry and Rescue policy
+decisions. Activity fault events and transport fault logging retain the
+original failure when exception diagnostic getters fail; consumer fault
+observers still receive it.
 
 ## Advanced SPI
 

@@ -151,7 +151,17 @@ public static class ReceiveEndpointLoggingExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(exception);
-        if (exception.GetBaseException() is OperationCanceledException && context.CancellationToken.IsCancellationRequested)
+        Exception baseException;
+        try
+        {
+            baseException = exception.GetBaseException() ?? exception;
+        }
+        catch
+        {
+            baseException = exception;
+        }
+
+        if (baseException is OperationCanceledException && context.CancellationToken.IsCancellationRequested)
             return;
 
         _logFault(context.InputAddress, GetMessageId(context), exception);

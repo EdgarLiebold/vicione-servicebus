@@ -237,6 +237,24 @@ public sealed class ExceptionSpecificationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EXCEPTION-FILTER", "unsafe-base-lookup-keeps-structural-handle-and-ignore")]
+    public void UnsafeBaseLookup_DoesNotBlockStructuralHandleOrIgnoreSelection()
+    {
+        var timeout = new TimeoutException("retryable");
+        var wrapper = new UnsafeBaseException(timeout);
+        var handled = new TestExceptionSpecification();
+        handled.Handle<TimeoutException>();
+        var ignored = new TestExceptionSpecification();
+        ignored.Handle<Exception>();
+        ignored.Ignore<TimeoutException>();
+
+        Assert.True(handled.Matches(wrapper));
+        Assert.False(ignored.Matches(wrapper));
+        Assert.True(handled.CreateSnapshot().Match(wrapper));
+        Assert.False(ignored.CreateSnapshot().Match(wrapper));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EXCEPTION-FILTER", "immutable-snapshot")]
     public void Snapshot_IsDetachedFromLaterConfigurationAndCallerOwnedTypeArrays()
     {
@@ -264,5 +282,10 @@ public sealed class ExceptionSpecificationTests
         : Exception("redirected", inner)
     {
         public override Exception GetBaseException() => target;
+    }
+
+    private sealed class UnsafeBaseException(Exception inner) : Exception("unsafe base lookup", inner)
+    {
+        public override Exception GetBaseException() => throw new InvalidOperationException("base lookup failed");
     }
 }

@@ -1,5 +1,22 @@
 # A+ remediation research
 
+## T128 exception selection and fault diagnostics
+
+Review of the remaining active `GetBaseException()` call sites found three
+product-risk boundaries. `ExceptionSpecification.Traverse` looked up a custom
+base before descending the structural inner chain; a throwing override could
+replace a business failure and stop Retry/Rescue selection. `StartedActivity`
+looked up the base before a consumer filter notified its fault observer, and
+`ExceptionUtil.GetStackTrace` could throw while recording the exception event.
+`LogTransportFaulted` performed an unsafe base lookup after InMemory transport
+had already caught the original failure, so the intended fault log lost it.
+All three paths failed red-first. The tests check exact original identity,
+Handle/Ignore decisions, a successful second Retry attempt, observer call,
+Activity error event and completion, and the logger's observed exception.
+`LogContextMetricsExtensions.ErrorType` was inspected but its caller
+`MetricOperation.Complete` isolates that diagnostic failure from message flow;
+it remains a telemetry completeness risk rather than a P1/P2 flow defect.
+
 ## T127 exception diagnostics and lifecycle safety
 
 The three call sites use virtual exception properties while handling another

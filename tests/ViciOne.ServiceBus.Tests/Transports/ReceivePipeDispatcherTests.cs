@@ -16,6 +16,31 @@ namespace ViciOne.ServiceBus.Tests.Transports;
 
 public sealed class ReceivePipeDispatcherTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "unsafe-base-lookup-logs-original-transport-failure")]
+    public void TransportFaultLog_UnsafeBaseLookupPreservesTheOriginalFailure(bool nullBase)
+    {
+        var context = new TestReceiveContext();
+        var failure = new UnsafeBaseException(nullBase);
+        var logger = new RecordingErrorLogger();
+        ILogContext? previous = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+
+        try
+        {
+            context.LogTransportFaulted(failure);
+
+            Assert.Equal(1, logger.CallCount);
+            Assert.Same(failure, logger.ObservedFailure);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-FAULT", "rethrow-notifies-once-and-records-fault-before-settlement")]
     public async Task RethrowFaultedMessage_ReportsOneOriginalFaultAndMarksDeliveryFaultedAsync()
@@ -414,6 +439,27 @@ public sealed class ReceivePipeDispatcherTests
             ObservedFailure = exception;
             throw failure;
         }
+    }
+
+    private sealed class RecordingErrorLogger : ILogger
+    {
+        public int CallCount { get; private set; }
+        public Exception? ObservedFailure { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Error;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            CallCount++;
+            ObservedFailure = exception;
+        }
+    }
+
+    private sealed class UnsafeBaseException(bool nullBase) : Exception("original transport failure")
+    {
+        public override Exception GetBaseException() => nullBase
+            ? null!
+            : throw new InvalidOperationException("base lookup failed");
     }
 
     private sealed class OrderedReceiveLock(List<string> events) : ReceiveLockContext

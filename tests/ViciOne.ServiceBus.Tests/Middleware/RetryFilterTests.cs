@@ -16,6 +16,32 @@ public sealed class RetryFilterTests
         new(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RETRY-COMPOSITION", "unsafe-base-lookup-still-retries-structural-timeout")]
+    public async Task UnsafeBaseLookup_StillRetriesTheStructuralTimeoutOnceAsync()
+    {
+        var timeout = new TimeoutException("transient dependency");
+        var failure = new UnsafeBaseException(timeout);
+        var attempts = 0;
+        IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
+        {
+            configuration.UseRetry(retry =>
+            {
+                retry.Handle<TimeoutException>();
+                retry.Immediate(1);
+            });
+            configuration.UseExecute(_ =>
+            {
+                if (Interlocked.Increment(ref attempts) == 1)
+                    throw failure;
+            });
+        });
+
+        await pipe.SendAsync(new TestPipeContext());
+
+        Assert.Equal(2, attempts);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "exhausted-lifecycle-and-exact-failure")]
     public async Task ExhaustedRetry_EmitsTheExactObserverLifecycleAndRethrowsTheTerminalFailureAsync()
     {
@@ -1638,6 +1664,11 @@ public sealed class RetryFilterTests
 
     private sealed class WrappedRetryFailureException(Exception innerException) :
         Exception("wrapper", innerException);
+
+    private sealed class UnsafeBaseException(Exception innerException) : Exception("wrapper", innerException)
+    {
+        public override Exception GetBaseException() => throw new InvalidOperationException("base lookup failed");
+    }
 
     private sealed class EvenAttemptException : Exception;
 

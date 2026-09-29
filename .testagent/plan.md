@@ -1,5 +1,20 @@
 # A+ remediation test plan
 
+## T128 exception selection and fault diagnostics
+
+1. Red-first test that an unsafe custom base-exception lookup cannot prevent
+   configured Handle/Ignore from seeing a structural inner exception. Prove
+   the same contract through a real Retry pipe that succeeds on its next try.
+2. Red-first test Activity exception events for throwing and null-returning
+   base lookups. Through an active Activity listener, require the Handler
+   ingress to report the exact original failure, notify fault observers and
+   complete its process activity even when StackTrace lookup throws.
+3. Red-first test that transport fault logging retains the original exception
+   when the custom base lookup throws. Verify its logger sees that instance.
+4. Run focused tests, requirement projection and independent read-only Red
+   Team review. Freeze and run complete Core and Abstractions suites once,
+   update API/changelog evidence and push the reviewed commit.
+
 ## T127 exception diagnostics and lifecycle safety
 
 1. Red-first prove that an unsafe base-exception lookup cannot skip a valid

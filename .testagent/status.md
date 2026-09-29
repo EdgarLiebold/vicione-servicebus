@@ -1,5 +1,28 @@
 # A+ remediation test status
 
+## T128 — exception selection and fault diagnostics — 29 September 2026
+
+Red-first counterprobes failed for exception-filter structural selection,
+throwing/null base-exception Activity events, handler fault notification and
+transport fault logging; a null-base transport logging control already passed.
+The corrected exception traversal preserves configured Handle/Ignore behavior
+and successful Retry recovery. Activity fault recording retains the original
+operation exception and reports an empty stack-trace attribute if its getter
+throws. Transport fault logging also retains the original exception.
+
+Focused Abstractions tests passed 16/16, Core neighbors passed 12/12, and the
+strengthened Handler Activity cases passed 3/3. Both requirement projections
+passed. The frozen complete Abstractions suite passed 973/973 and Core passed
+7,295/7,295, with zero failures or skips. Five new requirement variants are
+mapped. Pseudo-mutation review found the dangerous rethrow, skipped inner
+traversal, missing Activity fallback, skipped fault callback and lost log
+identity would each fail the new tests; prior custom-base selection tests
+protect valid overrides. Assertion review found no assertion-free or trivial
+new tests: they check policy decisions, attempt count, exact exception identity,
+observer side effects, Activity fields and logger calls. Independent read-only
+Red Team final review is PASS with no concrete P1/P2 in this packet. The user
+accepts current Line/Branch coverage, so no global profile was repeated.
+
 ## T127 — exception diagnostics and lifecycle safety — 29 September 2026
 
 Red-first tests exposed five failing settlement and agent cases; an independent

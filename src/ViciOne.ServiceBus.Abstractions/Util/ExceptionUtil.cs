@@ -46,7 +46,15 @@ public static class ExceptionUtil
     /// <returns>The stack trace.</returns>
     public static string GetStackTrace(Exception? exception)
     {
-        var stackTrace = exception?.StackTrace;
+        string? stackTrace;
+        try
+        {
+            stackTrace = exception?.StackTrace;
+        }
+        catch
+        {
+            return "";
+        }
         if (string.IsNullOrWhiteSpace(stackTrace))
             return "";
 

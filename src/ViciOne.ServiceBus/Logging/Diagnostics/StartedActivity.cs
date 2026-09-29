@@ -40,7 +40,14 @@ internal sealed class StartedActivity : IDisposable
     public void AddExceptionEvent(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
-        exception = exception.GetBaseException();
+        try
+        {
+            exception = exception.GetBaseException() ?? exception;
+        }
+        catch
+        {
+            // Exception diagnostics cannot replace the operation failure.
+        }
 
         var exceptionMessage = ExceptionUtil.GetMessage(exception);
 

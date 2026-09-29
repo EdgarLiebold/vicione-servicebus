@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Hardened exception selection and fault diagnostics. Retry and Rescue can
+  still inspect the structural inner failure when a custom base-exception
+  lookup throws. Activity exception events fall back to the original failure
+  for throwing or null base lookups; a throwing stack-trace getter no longer
+  prevents consumer fault notification. InMemory transport fault logging keeps
+  the original failure when diagnostic base lookup fails.
+
 - Hardened failure handling during duplicate receive-lock settlement, supervised
   pipe-context shutdown and consumer ingress cancellation. An exception with an
   unsafe base-exception lookup no longer skips a valid settlement fallback,

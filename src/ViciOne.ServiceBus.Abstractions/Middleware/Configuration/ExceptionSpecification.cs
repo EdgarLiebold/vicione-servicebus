@@ -135,7 +135,15 @@ public abstract class ExceptionSpecification :
 
             if ((checkBase || current.InnerException is null) && baseChecked.Add(current))
             {
-                Exception baseException = current.GetBaseException();
+                Exception? baseException;
+                try
+                {
+                    baseException = current.GetBaseException();
+                }
+                catch
+                {
+                    baseException = null;
+                }
                 if (baseException is not null && !ReferenceEquals(baseException, current))
                     pending.Push((baseException, false));
             }

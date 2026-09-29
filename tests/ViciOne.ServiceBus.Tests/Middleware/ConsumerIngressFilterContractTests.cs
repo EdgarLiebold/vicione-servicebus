@@ -92,6 +92,51 @@ public sealed class ConsumerIngressFilterContractTests
     }
 
     [Theory]
+    [InlineData(DiagnosticFault.ThrowBase)]
+    [InlineData(DiagnosticFault.NullBase)]
+    [InlineData(DiagnosticFault.ThrowStackTrace)]
+    [RequirementCoverage("REQ-VSB-CONSUME-FAULT-NOTIFICATION", "unsafe-exception-diagnostics-cannot-suppress-fault-notification")]
+    public async Task HandlerFault_UnsafeExceptionDiagnosticsStillReportTheOriginalFailureAsync(DiagnosticFault diagnosticFault)
+    {
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+        };
+        ActivitySource.AddActivityListener(listener);
+        using var ambient = new Activity("orders receive").Start();
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        var failure = new UnsafeDiagnosticException(diagnosticFault);
+        Activity? process = null;
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(FilterShape.Handler, new TestConsumer(), _ =>
+        {
+            process = Activity.Current;
+            trace.Add("work");
+            return Task.FromException(failure);
+        });
+
+        Exception actual = await Record.ExceptionAsync(() => filter.SendAsync(context,
+            Pipe.Execute<ConsumeContext<TestMessage>>(_ => trace.Add("next"))))
+            ?? throw new Xunit.Sdk.XunitException("The failed handler completed successfully.");
+
+        Assert.Same(failure, actual);
+        Assert.Same(failure, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+        Activity activity = Assert.IsType<Activity>(process);
+        Assert.Equal(ActivityStatusCode.Error, activity.Status);
+        ActivityEvent exceptionEvent = Assert.Single(activity.Events);
+        Assert.Equal("original failure", exceptionEvent.Tags.Single(tag =>
+            tag.Key == ServiceBusTelemetry.Attributes.ExceptionMessage).Value);
+        Assert.Equal(typeof(UnsafeDiagnosticException).FullName, exceptionEvent.Tags.Single(tag =>
+            tag.Key == ServiceBusTelemetry.Attributes.ExceptionType).Value);
+        if (diagnosticFault == DiagnosticFault.ThrowStackTrace)
+            Assert.Equal("", exceptionEvent.Tags.Single(tag =>
+                tag.Key == ServiceBusTelemetry.Attributes.ExceptionStackTrace).Value);
+        Assert.True(activity.Duration > TimeSpan.Zero);
+    }
+
+    [Theory]
     [InlineData(FilterShape.Factory)]
     [InlineData(FilterShape.Handler)]
     [InlineData(FilterShape.Instance)]
@@ -643,6 +688,13 @@ public sealed class ConsumerIngressFilterContractTests
         Instance,
     }
 
+    public enum DiagnosticFault
+    {
+        ThrowBase,
+        NullBase,
+        ThrowStackTrace,
+    }
+
     private sealed class TestConsumer;
 
     public sealed record TestMessage;
@@ -657,6 +709,17 @@ public sealed class ConsumerIngressFilterContractTests
     private sealed class ProjectedBaseException(Exception baseException) : Exception("projected cancellation")
     {
         public override Exception GetBaseException() => baseException;
+    }
+
+    private sealed class UnsafeDiagnosticException(DiagnosticFault fault) : Exception("original failure")
+    {
+        public override Exception GetBaseException() => fault == DiagnosticFault.ThrowBase
+            ? throw new InvalidOperationException("base lookup failed")
+            : fault == DiagnosticFault.NullBase ? null! : this;
+
+        public override string? StackTrace => fault == DiagnosticFault.ThrowStackTrace
+            ? throw new InvalidOperationException("stack trace lookup failed")
+            : base.StackTrace;
     }
 
     private sealed class RecordingScope(
