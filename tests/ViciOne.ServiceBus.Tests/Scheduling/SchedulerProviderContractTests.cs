@@ -26,7 +26,7 @@ public sealed class SchedulerProviderContractTests
             new EndpointScheduleMessageProvider(_ => throw new InvalidOperationException()).CancellationMode);
         Assert.Equal(ScheduleCancellationMode.CallerSpecifiedToken,
             new PublishScheduleMessageProvider(publisher).CancellationMode);
-        Assert.Equal(ScheduleCancellationMode.Unsupported,
+        Assert.Equal(ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation,
             new DelayedScheduleMessageProvider(endpoints).CancellationMode);
     }
 
@@ -42,7 +42,7 @@ public sealed class SchedulerProviderContractTests
 
         Assert.Equal(ScheduleCancellationMode.CallerSpecifiedToken,
             new MessageScheduler(accepted, topology).CancellationMode);
-        Assert.Equal(ScheduleCancellationMode.Unsupported,
+        Assert.Equal(ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation,
             new MessageScheduler(new DelayedScheduleMessageProvider(endpoints), topology).CancellationMode);
         Assert.Equal(ScheduleCancellationMode.Unknown,
             new MessageScheduler(unknown, topology).CancellationMode);

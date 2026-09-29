@@ -3709,3 +3709,31 @@ focused 10/10, neighboring OneTime 15/15 and exact-commit Abstractions
 contain 648 unique tuples; read-only adversarial review is PASS with no
 concrete P1/P2. See `coverage-a-plus-20260921/t113-one-time-caller-wait.md`.
 The product-wide profile remains T97 and global A+ is open.
+
+## T121 Saga schedule replacement and JobService delayed cancellation — 29 September 2026
+
+The user accepts the current Line/Branch coverage level and prioritizes code
+defects. A red-first 8-case replacement test failed on the original product:
+all four normal/faulted and typed/untyped paths entered the message factory
+before rejecting unsafe cancellation. Shared admission now rejects delayed,
+unsupported and provider-assigned replacement before dispatch or Saga mutation.
+Normal Unschedule now honors entry cancellation. Both Unschedule paths reject
+providers that cannot physically cancel before an outbox may falsely acknowledge
+a queued Cancel operation. Azure provider-assigned Unschedule still uses its
+returned broker token and clears the Saga state only after successful Cancel.
+
+The first full Core run exposed three JobService integration failures caused by
+its use of transport delay with generic Unschedule. A distinct appended
+`CallerSpecifiedTokenWithoutCancellation` mode now identifies the built-in
+Delayed provider's delivery-header guarantee. Only the internal JobService
+logically clears its token for this mode. Its new integration test advances
+logical time, observes the stale delivery with no consume exception and proves
+the canceled job stays canceled. Generic `Unsupported` remains fail-closed.
+
+The final focused classes passed: normal Saga 56/56, faulted Saga 55/55,
+JobService 15/15, scheduler provider 9/9, and scheduler wrapper 9/9.
+The complete Core project passed 7,209/7,209 with zero failures or skips.
+Requirement projection and Git whitespace checks passed. Independent read-only
+Red Team re-review is PASS with no remaining concrete P1/P2 in this scope.
+No fresh 33-profile measurement was run for T121 because the user accepts the
+current Line/Branch coverage and requested emphasis on code correctness.

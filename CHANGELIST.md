@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11017 |
+| Added | 11019 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -11898,6 +11898,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.JobService/JobService/JobIdentity.cs` | Added |  |
 | `src/ViciOne.ServiceBus.JobService/JobService/JobProgressBuffer.cs` | Added |  |
 | `src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs` | Added |  |
+| `src/ViciOne.ServiceBus.JobService/JobService/JobScheduleCancellationExtensions.cs` | Added |  |
 | `src/ViciOne.ServiceBus.JobService/JobService/JobService.cs` | Added |  |
 | `src/ViciOne.ServiceBus.JobService/JobService/JobServiceBusObserver.cs` | Added |  |
 | `src/ViciOne.ServiceBus.JobService/JobService/JobServiceCorrelationConventions.cs` | Added |  |
@@ -12215,6 +12216,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestStateMessagePipe.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RespondActivity.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RetryActivity.cs` | Added |  |
+| `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/SagaScheduleReplacementAdmission.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/ScheduleActivity.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/SendActivity.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/SlimActivity.cs` | Added |  |

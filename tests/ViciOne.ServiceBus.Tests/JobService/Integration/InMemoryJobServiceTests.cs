@@ -181,6 +181,43 @@ public sealed class InMemoryJobServiceTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "t121-delayed-cancel-stale-delivery-does-not-restart-job")]
+    public async Task CanceledWaitingJob_IgnoresTheLaterDelayedSlotEventAsync()
+    {
+        var consumer = new BlockingJobConsumer(completeOnRetry: false);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync(
+            consumer,
+            options => options.ConcurrentJobLimit = 1,
+            options => options.SlotWaitTime = TimeSpan.FromSeconds(1));
+        Guid runningJobId = NewId.NextGuid();
+        Guid waitingJobId = NewId.NextGuid();
+
+        await fixture.SubmitAsync(runningJobId, new InMemoryJob("running"));
+        await consumer.NextAttemptAsync(fixture);
+        await fixture.SubmitAsync(waitingJobId, new InMemoryJob("waiting"));
+        await fixture.SentAsync<IJobSlotWaitElapsed>(message => message.JobId == waitingJobId);
+        await fixture.Harness.Bus.CancelJobAsync(waitingJobId, "logical-cancel",
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == waitingJobId);
+
+        fixture.Scheduler.Advance(TimeSpan.FromSeconds(2));
+        IConsumedMessage<IJobSlotWaitElapsed> staleDelivery = await fixture.Harness.Consumed
+            .SelectAsync<IJobSlotWaitElapsed>(message => message.Context.Message.JobId == waitingJobId,
+                TestContext.Current.CancellationToken)
+            .FirstObservedAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(fixture.OperationTimeout, TestContext.Current.CancellationToken);
+        Assert.Null(staleDelivery.Exception);
+        IJobState afterStaleDelivery = await fixture.GetStateAsync(waitingJobId);
+        Assert.Equal(JobLifecycleStatus.Canceled, afterStaleDelivery.Status);
+        Assert.Null(afterStaleDelivery.Started);
+
+        await fixture.Harness.Bus.CancelJobAsync(runningJobId, "fixture-cleanup",
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        await consumer.NextCancellationAsync(fixture);
+        await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == runningJobId);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "cancel-during-allocation-preserves-reason-and-publishes-terminal-event")]
     public async Task CancelDuringSlotAllocation_PublishesCancellationAfterTheOutstandingResponseAsync()
     {

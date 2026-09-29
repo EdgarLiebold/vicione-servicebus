@@ -13,7 +13,10 @@ public enum ScheduleCancellationMode
     CallerSpecifiedToken,
 
     /// <summary>The scheduler assigns a token only after accepting the send.</summary>
-    ProviderAssignedToken
+    ProviderAssignedToken,
+
+    /// <summary>The scheduler cannot cancel, but each delivery carries its caller-selected token.</summary>
+    CallerSpecifiedTokenWithoutCancellation
 }
 
 /// <summary>Exposes the scheduling-token behavior needed by request lifecycles.</summary>

@@ -11,6 +11,163 @@ namespace ViciOne.ServiceBus.Tests.SagaStateMachine;
 
 public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTests
 {
+    [Theory]
+    [InlineData(false, ScheduleCancellationMode.Unsupported, 0)]
+    [InlineData(false, ScheduleCancellationMode.Unsupported, 1)]
+    [InlineData(false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 0)]
+    [InlineData(false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 1)]
+    [InlineData(false, ScheduleCancellationMode.ProviderAssignedToken, 0)]
+    [InlineData(false, ScheduleCancellationMode.ProviderAssignedToken, 1)]
+    [InlineData(false, ScheduleCancellationMode.ProviderAssignedToken, 2)]
+    [InlineData(true, ScheduleCancellationMode.Unsupported, 0)]
+    [InlineData(true, ScheduleCancellationMode.Unsupported, 1)]
+    [InlineData(true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 0)]
+    [InlineData(true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 1)]
+    [InlineData(true, ScheduleCancellationMode.ProviderAssignedToken, 0)]
+    [InlineData(true, ScheduleCancellationMode.ProviderAssignedToken, 1)]
+    [InlineData(true, ScheduleCancellationMode.ProviderAssignedToken, 2)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-faulted-unsafe-replacement-rejects-before-factory-and-dispatch")]
+    public async Task FaultedUnsafeReplacement_RejectsBeforeFactoryDispatchAndSagaMutationAsync(
+        bool typed, ScheduleCancellationMode mode, int headerCase)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        Guid? headerToken = headerCase switch { 1 => Guid.NewGuid(), 2 => oldToken, _ => null };
+        var factoryCalls = 0;
+        MessageSchedulerContext scheduler = NewScheduler((method, _) =>
+            throw new InvalidOperationException($"Scheduler must not run: {method.Name}"), mode);
+
+        if (typed)
+        {
+            var factory = new ContextMessageFactory<IBehaviorExceptionContext<Saga, Data, BaseFault>, Notice>(_ =>
+            {
+                factoryCalls++;
+                throw new InvalidOperationException("Factory must not run.");
+            });
+            IStateMachineActivity<Saga, Data> activity = NewTypedFaultedSchedule(new Schedule(), factory, _ => DueAt);
+            IBehaviorExceptionContext<Saga, Data, DerivedFault> context =
+                NewContext<IBehaviorExceptionContext<Saga, Data, DerivedFault>>(saga, scheduler: scheduler,
+                    scheduledToken: headerToken);
+            var next = new TypedNextBehavior();
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.FaultedAsync(context, next));
+            Assert.Contains("cannot safely replace", error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Empty(next.Seen);
+        }
+        else
+        {
+            var factory = new ContextMessageFactory<IBehaviorExceptionContext<Saga, BaseFault>, Notice>(_ =>
+            {
+                factoryCalls++;
+                throw new InvalidOperationException("Factory must not run.");
+            });
+            IStateMachineActivity<Saga> activity = NewFaultedSchedule(new Schedule(), factory, _ => DueAt);
+            IBehaviorExceptionContext<Saga, DerivedFault> context =
+                NewContext<IBehaviorExceptionContext<Saga, DerivedFault>>(saga, scheduler: scheduler,
+                    scheduledToken: headerToken);
+            var next = new NextBehavior();
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.FaultedAsync(context, next));
+            Assert.Contains("cannot safely replace", error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Empty(next.Seen);
+        }
+
+        Assert.Equal(0, factoryCalls);
+        Assert.Equal(oldToken, saga.ScheduleId);
+    }
+
+    [Theory]
+    [InlineData(false, ScheduleCancellationMode.Unsupported)]
+    [InlineData(false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [InlineData(true, ScheduleCancellationMode.Unsupported)]
+    [InlineData(true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-faulted-unschedule-unsafe-deferred-cancel-rejected")]
+    public async Task FaultedUnschedule_UnsafeDeferredCancellationKeepsTheOldTokenAsync(bool typed, ScheduleCancellationMode mode)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        var cancelCalls = 0;
+        MessageSchedulerContext scheduler = NewScheduler((method, _) =>
+        {
+            Assert.Equal("CancelScheduledSendAsync", method.Name);
+            cancelCalls++;
+            return Task.CompletedTask;
+        }, mode);
+        var activity = new FaultedUnscheduleActivity<Saga>(new Schedule());
+
+        if (typed)
+        {
+            IBehaviorExceptionContext<Saga, Data, BaseFault> context =
+                NewContext<IBehaviorExceptionContext<Saga, Data, BaseFault>>(saga, scheduler: scheduler);
+            var next = new TypedNextBehavior();
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() =>
+                activity.FaultedAsync(context, next));
+            Assert.Contains("cannot safely cancel", error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Empty(next.Seen);
+        }
+        else
+        {
+            IBehaviorExceptionContext<Saga, BaseFault> context =
+                NewContext<IBehaviorExceptionContext<Saga, BaseFault>>(saga, scheduler: scheduler);
+            var next = new NextBehavior();
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() =>
+                activity.FaultedAsync(context, next));
+            Assert.Contains("cannot safely cancel", error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Empty(next.Seen);
+        }
+
+        Assert.Equal(0, cancelCalls);
+        Assert.Equal(oldToken, saga.ScheduleId);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-faulted-provider-assigned-unschedule-accepts-or-rolls-back")]
+    public async Task FaultedProviderAssignedUnschedule_CancelsBrokerTokenBeforeClearingStateAsync(bool typed, bool fail)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        var failure = new InvalidOperationException("broker cancel failed");
+        var cancelCalls = 0;
+        MessageSchedulerContext scheduler = NewScheduler((method, args) =>
+        {
+            Assert.Equal("CancelScheduledSendAsync", method.Name);
+            Assert.Equal(InputAddress, args[0]);
+            Assert.Equal(oldToken, args[1]);
+            Assert.Equal(oldToken, saga.ScheduleId);
+            cancelCalls++;
+            return fail ? Task.FromException(failure) : Task.CompletedTask;
+        }, ScheduleCancellationMode.ProviderAssignedToken);
+        var activity = new FaultedUnscheduleActivity<Saga>(new Schedule());
+
+        if (typed)
+        {
+            IBehaviorExceptionContext<Saga, Data, BaseFault> context =
+                NewContext<IBehaviorExceptionContext<Saga, Data, BaseFault>>(saga, scheduler: scheduler);
+            var next = new TypedNextBehavior();
+            if (fail)
+                Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => activity.FaultedAsync(context, next)));
+            else
+                await activity.FaultedAsync(context, next);
+            Assert.Equal(fail ? 0 : 1, next.Seen.Count);
+        }
+        else
+        {
+            IBehaviorExceptionContext<Saga, BaseFault> context =
+                NewContext<IBehaviorExceptionContext<Saga, BaseFault>>(saga, scheduler: scheduler);
+            var next = new NextBehavior();
+            if (fail)
+                Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => activity.FaultedAsync(context, next)));
+            else
+                await activity.FaultedAsync(context, next);
+            Assert.Equal(fail ? 0 : 1, next.Seen.Count);
+        }
+
+        Assert.Equal(1, cancelCalls);
+        Assert.Equal(fail ? oldToken : null, saga.ScheduleId);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t76-normal-request-invalid-declaration-fails-before-dispatch")]
     public void NormalRequest_RejectsMissingDeclarationDependenciesBeforeTheMachineRuns()
@@ -702,6 +859,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
 
     [Theory]
     [InlineData(ScheduleCancellationMode.Unsupported)]
+    [InlineData(ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
     [InlineData(ScheduleCancellationMode.ProviderAssignedToken)]
     [InlineData(ScheduleCancellationMode.Unknown)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t120-request-timeout-incompatible-scheduler-rejects-before-dispatch")]

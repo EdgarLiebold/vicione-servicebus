@@ -13,6 +13,374 @@ public sealed class StateMachineScheduleActivityContractTests
     private static readonly Uri InputAddress = new("loopback://localhost/saga-schedule-input");
     private static readonly DateTimeOffset DueAt = new(2046, 7, 8, 9, 10, 11, TimeSpan.Zero);
 
+    [Theory]
+    [InlineData(false, ScheduleCancellationMode.Unsupported, 0)]
+    [InlineData(false, ScheduleCancellationMode.Unsupported, 1)]
+    [InlineData(false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 0)]
+    [InlineData(false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 1)]
+    [InlineData(false, ScheduleCancellationMode.ProviderAssignedToken, 0)]
+    [InlineData(false, ScheduleCancellationMode.ProviderAssignedToken, 1)]
+    [InlineData(false, ScheduleCancellationMode.ProviderAssignedToken, 2)]
+    [InlineData(true, ScheduleCancellationMode.Unsupported, 0)]
+    [InlineData(true, ScheduleCancellationMode.Unsupported, 1)]
+    [InlineData(true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 0)]
+    [InlineData(true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation, 1)]
+    [InlineData(true, ScheduleCancellationMode.ProviderAssignedToken, 0)]
+    [InlineData(true, ScheduleCancellationMode.ProviderAssignedToken, 1)]
+    [InlineData(true, ScheduleCancellationMode.ProviderAssignedToken, 2)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-unsafe-replacement-rejects-before-factory-and-dispatch")]
+    public async Task UnsafeReplacement_RejectsBeforeFactoryDispatchAndSagaMutationAsync(
+        bool typed, ScheduleCancellationMode mode, int headerCase)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        Guid? headerToken = headerCase switch { 1 => Guid.NewGuid(), 2 => oldToken, _ => null };
+        var factoryCalls = 0;
+        MessageSchedulerContext scheduler = CapableScheduler((method, _) =>
+            throw new InvalidOperationException($"No scheduler operation is permitted: {method.Name}"), mode);
+
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, CancellationToken.None,
+                headerToken);
+            var activity = new ScheduleActivity<Saga, Notice, Notice>(new Schedule(), _ => DueAt,
+                new ContextMessageFactory<IBehaviorContext<Saga, Notice>, Notice>(_ =>
+                {
+                    factoryCalls++;
+                    throw new InvalidOperationException("Factory must not run.");
+                }));
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+                throw new InvalidOperationException($"Next must not run: {method.Name}"));
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.ExecuteAsync(context, next));
+            Assert.Contains("cannot safely replace", error.Message, StringComparison.OrdinalIgnoreCase);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None,
+                headerToken);
+            var activity = new ScheduleActivity<Saga, Notice>(new Schedule(), _ => DueAt,
+                new ContextMessageFactory<IBehaviorContext<Saga>, Notice>(_ =>
+                {
+                    factoryCalls++;
+                    throw new InvalidOperationException("Factory must not run.");
+                }));
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.ExecuteAsync(context,
+                Next(context, () => throw new InvalidOperationException("Next must not run."))));
+            Assert.Contains("cannot safely replace", error.Message, StringComparison.OrdinalIgnoreCase);
+        }
+
+        Assert.Equal(0, factoryCalls);
+        Assert.Equal(oldToken, saga.ScheduleId);
+    }
+
+    [Theory]
+    [InlineData(false, false, ScheduleCancellationMode.Unsupported)]
+    [InlineData(false, true, ScheduleCancellationMode.Unsupported)]
+    [InlineData(true, false, ScheduleCancellationMode.Unsupported)]
+    [InlineData(true, true, ScheduleCancellationMode.Unsupported)]
+    [InlineData(false, false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [InlineData(false, true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [InlineData(true, false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [InlineData(true, true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-unsupported-first-and-own-delivery-schedules")]
+    public async Task UnsupportedScheduler_AllowsFirstScheduleAndOwnDeliveryAsync(bool typed, bool ownDelivery,
+        ScheduleCancellationMode mode)
+    {
+        Guid oldToken = Guid.NewGuid();
+        Guid newToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = ownDelivery ? oldToken : null };
+        var notice = new Notice("allowed");
+        var trace = new List<string>();
+        MessageSchedulerContext scheduler = CapableScheduler((method, _) =>
+        {
+            Assert.Equal("ScheduleSendAsync", method.Name);
+            trace.Add("schedule");
+            return Task.FromResult<ScheduledMessage<Notice>>(Accepted(notice, newToken));
+        }, mode);
+
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, CancellationToken.None,
+                ownDelivery ? oldToken : null);
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+            {
+                Assert.Equal("ExecuteAsync", method.Name);
+                trace.Add("next");
+                return Task.CompletedTask;
+            });
+            await TypedActivity(notice, Pipe.Empty<SendContext<Notice>>()).ExecuteAsync(context, next);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None,
+                ownDelivery ? oldToken : null);
+            await Activity(notice, Pipe.Empty<SendContext<Notice>>()).ExecuteAsync(context,
+                Next(context, () => trace.Add("next")));
+        }
+
+        Assert.Equal(newToken, saga.ScheduleId);
+        Assert.Equal(["schedule", "next"], trace);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-provider-assigned-first-schedule-is-allowed")]
+    public async Task ProviderAssignedScheduler_AllowsInitialScheduleAsync(bool typed)
+    {
+        var saga = new Saga();
+        var notice = new Notice("initial");
+        Guid acceptedToken = Guid.NewGuid();
+        var scheduleCalls = 0;
+        MessageSchedulerContext scheduler = CapableScheduler((method, _) =>
+        {
+            Assert.Equal("ScheduleSendAsync", method.Name);
+            scheduleCalls++;
+            return Task.FromResult<ScheduledMessage<Notice>>(Accepted(notice, acceptedToken));
+        }, ScheduleCancellationMode.ProviderAssignedToken);
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, CancellationToken.None);
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+            {
+                Assert.Equal("ExecuteAsync", method.Name);
+                Assert.Equal(acceptedToken, saga.ScheduleId);
+                return Task.CompletedTask;
+            });
+            await TypedActivity(notice, Pipe.Empty<SendContext<Notice>>()).ExecuteAsync(context, next);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None);
+            await Activity(notice, Pipe.Empty<SendContext<Notice>>()).ExecuteAsync(context,
+                Next(context, () => Assert.Equal(acceptedToken, saga.ScheduleId)));
+        }
+
+        Assert.Equal(1, scheduleCalls);
+        Assert.Equal(acceptedToken, saga.ScheduleId);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-explicit-unknown-mode-retains-replacement-attempt")]
+    public async Task UnknownMode_AttemptsPreviousCancellationAfterAcceptingReplacementAsync(bool typed)
+    {
+        Guid oldToken = Guid.NewGuid();
+        Guid newToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        var notice = new Notice("unknown-mode");
+        var trace = new List<string>();
+        MessageSchedulerContext scheduler = CapableScheduler((method, args) => method.Name switch
+        {
+            "ScheduleSendAsync" => Schedule(),
+            "CancelScheduledSendAsync" => Cancel(args),
+            _ => throw new NotSupportedException(method.Name),
+        }, ScheduleCancellationMode.Unknown);
+        Task<ScheduledMessage<Notice>> Schedule()
+        {
+            Assert.Equal(oldToken, saga.ScheduleId);
+            trace.Add("schedule");
+            return Task.FromResult<ScheduledMessage<Notice>>(Accepted(notice, newToken));
+        }
+        Task Cancel(object?[] args)
+        {
+            Assert.Equal(InputAddress, args[0]);
+            Assert.Equal(oldToken, args[1]);
+            Assert.Equal(newToken, saga.ScheduleId);
+            trace.Add("cancel");
+            return Task.CompletedTask;
+        }
+
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, CancellationToken.None);
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+            {
+                Assert.Equal("ExecuteAsync", method.Name);
+                trace.Add("next");
+                return Task.CompletedTask;
+            });
+            await TypedActivity(notice, Pipe.Empty<SendContext<Notice>>()).ExecuteAsync(context, next);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None);
+            await Activity(notice, Pipe.Empty<SendContext<Notice>>()).ExecuteAsync(context,
+                Next(context, () => trace.Add("next")));
+        }
+
+        Assert.Equal(newToken, saga.ScheduleId);
+        Assert.Equal(["schedule", "cancel", "next"], trace);
+    }
+
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(false, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 0)]
+    [InlineData(true, 1)]
+    [InlineData(true, 2)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-unschedule-precanceled-state-boundaries")]
+    public async Task Unschedule_PreCanceledContextNeverContinuesOrChangesTheTokenAsync(bool typed, int tokenCase)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = tokenCase == 0 ? null : oldToken };
+        Guid? headerToken = tokenCase switch { 1 => oldToken, 2 => Guid.NewGuid(), _ => null };
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        MessageSchedulerContext scheduler = CapableScheduler((method, _) =>
+            throw new InvalidOperationException($"Scheduler must not run: {method.Name}"), ScheduleCancellationMode.CallerSpecifiedToken);
+        var activity = new UnscheduleActivity<Saga>(new Schedule());
+
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, cancellation.Token,
+                headerToken);
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+                throw new InvalidOperationException($"Next must not run: {method.Name}"));
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                activity.ExecuteAsync(context, next));
+            Assert.Equal(cancellation.Token, actual.CancellationToken);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, cancellation.Token,
+                headerToken);
+            OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                activity.ExecuteAsync(context, Next(context, () => throw new InvalidOperationException("Next must not run."))));
+            Assert.Equal(cancellation.Token, actual.CancellationToken);
+        }
+
+        Assert.Equal(tokenCase == 0 ? null : oldToken, saga.ScheduleId);
+    }
+
+    [Theory]
+    [InlineData(false, ScheduleCancellationMode.Unsupported)]
+    [InlineData(false, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [InlineData(true, ScheduleCancellationMode.Unsupported)]
+    [InlineData(true, ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-unschedule-unsafe-deferred-cancel-rejected")]
+    public async Task Unschedule_UnsafeDeferredCancellationKeepsTheOldTokenAsync(bool typed, ScheduleCancellationMode mode)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        var cancelCalls = 0;
+        MessageSchedulerContext scheduler = CapableScheduler((method, _) =>
+        {
+            Assert.Equal("CancelScheduledSendAsync", method.Name);
+            cancelCalls++;
+            return Task.CompletedTask;
+        }, mode);
+        var activity = new UnscheduleActivity<Saga>(new Schedule());
+
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, CancellationToken.None);
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+                throw new InvalidOperationException($"Next must not run: {method.Name}"));
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() =>
+                activity.ExecuteAsync(context, next));
+            Assert.Contains("cannot safely cancel", error.Message, StringComparison.OrdinalIgnoreCase);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None);
+            ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() =>
+                activity.ExecuteAsync(context, Next(context, () => throw new InvalidOperationException("Next must not run."))));
+            Assert.Contains("cannot safely cancel", error.Message, StringComparison.OrdinalIgnoreCase);
+        }
+
+        Assert.Equal(0, cancelCalls);
+        Assert.Equal(oldToken, saga.ScheduleId);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-provider-assigned-unschedule-accepts-or-rolls-back")]
+    public async Task ProviderAssignedUnschedule_CancelsBrokerTokenBeforeClearingStateAsync(bool typed, bool fail)
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        var failure = new InvalidOperationException("broker cancel failed");
+        var trace = new List<string>();
+        MessageSchedulerContext scheduler = CapableScheduler((method, args) =>
+        {
+            Assert.Equal("CancelScheduledSendAsync", method.Name);
+            Assert.Equal(InputAddress, args[0]);
+            Assert.Equal(oldToken, args[1]);
+            Assert.Equal(oldToken, saga.ScheduleId);
+            trace.Add("cancel");
+            return fail ? Task.FromException(failure) : Task.CompletedTask;
+        }, ScheduleCancellationMode.ProviderAssignedToken);
+        var activity = new UnscheduleActivity<Saga>(new Schedule());
+
+        if (typed)
+        {
+            IBehaviorContext<Saga, Notice> context = TypedContext(saga, scheduler, CancellationToken.None);
+            IBehavior<Saga, Notice> next = Proxy<IBehavior<Saga, Notice>>((method, _) =>
+            {
+                Assert.Equal("ExecuteAsync", method.Name);
+                Assert.Null(saga.ScheduleId);
+                trace.Add("next");
+                return Task.CompletedTask;
+            });
+            if (fail)
+                Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => activity.ExecuteAsync(context, next)));
+            else
+                await activity.ExecuteAsync(context, next);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None);
+            IBehavior<Saga> next = Next(context, () =>
+            {
+                Assert.Null(saga.ScheduleId);
+                trace.Add("next");
+            });
+            if (fail)
+                Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(() => activity.ExecuteAsync(context, next)));
+            else
+                await activity.ExecuteAsync(context, next);
+        }
+
+        Assert.Equal(fail ? oldToken : null, saga.ScheduleId);
+        string[] expectedTrace = fail ? ["cancel"] : ["cancel", "next"];
+        Assert.Equal(expectedTrace, trace);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "t121-unknown-unschedule-attempts-cancellation")]
+    public async Task UnknownMode_UnscheduleAttemptsCancellationAndClearsAfterAcceptanceAsync()
+    {
+        Guid oldToken = Guid.NewGuid();
+        var saga = new Saga { ScheduleId = oldToken };
+        var trace = new List<string>();
+        MessageSchedulerContext scheduler = CapableScheduler((method, args) =>
+        {
+            Assert.Equal("CancelScheduledSendAsync", method.Name);
+            Assert.Equal(InputAddress, args[0]);
+            Assert.Equal(oldToken, args[1]);
+            Assert.Equal(oldToken, saga.ScheduleId);
+            trace.Add("cancel");
+            return Task.CompletedTask;
+        }, ScheduleCancellationMode.Unknown);
+        IBehaviorContext<Saga> context = Context(saga, scheduler, CancellationToken.None);
+
+        await new UnscheduleActivity<Saga>(new Schedule()).ExecuteAsync(context,
+            Next(context, () =>
+            {
+                Assert.Null(saga.ScheduleId);
+                trace.Add("next");
+            }));
+
+        Assert.Null(saga.ScheduleId);
+        Assert.Equal(["cancel", "next"], trace);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "new-activity-schedules-before-continuing-without-old-cancel")]
     public async Task NewSchedule_AcceptsTheTokenBeforeContinuingWithoutCancellationAsync()
@@ -476,6 +844,15 @@ public sealed class StateMachineScheduleActivityContractTests
 
     private static MessageSchedulerContext Scheduler(Func<MethodInfo, object?[], object?> handler) =>
         Proxy<MessageSchedulerContext>(handler);
+
+    public interface CapableMessageSchedulerContext : MessageSchedulerContext, IScheduleCancellationCapability
+    {
+    }
+
+    private static MessageSchedulerContext CapableScheduler(Func<MethodInfo, object?[], object?> handler,
+        ScheduleCancellationMode mode) =>
+        Proxy<CapableMessageSchedulerContext>((method, args) =>
+            method.Name == "get_CancellationMode" ? mode : handler(method, args));
 
     private static IBehaviorContext<Saga> Context(Saga saga, MessageSchedulerContext scheduler,
         CancellationToken cancellationToken, Guid? scheduledToken = null)

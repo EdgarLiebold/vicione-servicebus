@@ -97,6 +97,7 @@ public class FaultedUnscheduleActivity<TSaga> :
         if (previousTokenId.HasValue && previousTokenId != context.GetSchedulingTokenId())
         {
             var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+            SagaScheduleReplacementAdmission.RequireSupportedCancellation(schedulerContext);
 
             await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                 .ConfigureAwait(false);

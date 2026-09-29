@@ -10,7 +10,7 @@ public sealed class DelayedScheduleMessageProvider :
     Advanced.IScheduleCancellationCapability
 {
     /// <inheritdoc />
-    public Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.Unsupported;
+    public Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation;
 
     readonly ISendEndpointProvider _sendEndpointProvider;
     readonly TimeProvider _timeProvider;

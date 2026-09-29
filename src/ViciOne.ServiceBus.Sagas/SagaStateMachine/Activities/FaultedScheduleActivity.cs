@@ -110,6 +110,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TException, TMessage> :
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+        SagaScheduleReplacementAdmission.RequireSafeReplacement(context, schedulerContext, previousTokenId);
 
         ScheduledMessage<TMessage> message = await _messageFactory
             .UseAsync(exceptionContext, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),
@@ -203,6 +204,7 @@ internal sealed class FaultedScheduleActivity<TSaga, TData, TException, TMessage
             Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
             var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+            SagaScheduleReplacementAdmission.RequireSafeReplacement(context, schedulerContext, previousTokenId);
 
             ScheduledMessage<TMessage> message = await _messageFactory
                 .UseAsync(exceptionContext, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),

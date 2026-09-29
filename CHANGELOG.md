@@ -11,6 +11,23 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed Saga schedule replacement on delayed and native Azure scheduling.
+  Replacement now rejects unsupported cancellation or missing delivery identity
+  before constructing or dispatching a new message; the previous Saga token
+  remains intact. Normal and faulted, typed and untyped paths share the guard.
+  Initial schedules, delayed own-delivery schedules and custom schedulers with
+  an undeclared mode retain their supported behavior. Unschedule now honors an
+  already canceled context and rejects cancellation for explicitly unsupported
+  schedulers before either direct or deferred outbox cancellation can clear the
+  Saga token. A separate capability mode now records that the built-in delayed
+  provider carries a caller-selected delivery token without supporting physical
+  cancellation. The internal Job Service clears its token only for that mode,
+  allowing its stale-event filter to discard the eventual delivery. Azure's
+  provider-assigned cancellation continues to use the stored broker token.
+  Focused
+  regression tests cover the provider-mode matrix, header ownership and
+  deferred-cancel success facade.
+
 - Fixed Saga timeout cancellation identity. Expiry scheduling now sets its
   token to the request ID used by response and fault cancellation. Positive
   timeouts reject Azure Service Bus native scheduling, transport-delayed

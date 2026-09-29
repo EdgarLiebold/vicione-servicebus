@@ -343,7 +343,7 @@ internal sealed class JobStateMachine :
     {
         During([WaitingForSlot, WaitingToRetry],
             When(CancelJob)
-                .Unschedule(JobSlotWaitElapsed)
+                .UnscheduleJob(JobSlotWaitElapsed)
                 .ClearNextStartDate()
                 .PublishJobCanceled(context => context.Message.GetCancellationReason())
                 .TransitionTo(Canceled)
@@ -389,11 +389,11 @@ internal sealed class JobStateMachine :
 
         During(WaitingForSlot,
             When(RetryJob)
-                .Unschedule(JobSlotWaitElapsed));
+                .UnscheduleJob(JobSlotWaitElapsed));
 
         During(WaitingToRetry,
             When(RetryJob)
-                .Unschedule(JobRetryDelayElapsed));
+                .UnscheduleJob(JobRetryDelayElapsed));
 
         During(WaitingForSlot, WaitingToRetry, Faulted, Canceled,
             When(RetryJob)
@@ -413,7 +413,7 @@ internal sealed class JobStateMachine :
 
         During(WaitingForSlot,
             When(RunJob)
-                .Unschedule(JobSlotWaitElapsed)
+                .UnscheduleJob(JobSlotWaitElapsed)
                 .RequestJobSlot(this));
 
 

@@ -5537,3 +5537,33 @@ the two later-business reuse variants; both sources are independently restored b
    mutation or dispatch. Test real provider classifications and propagation
    through `MessageScheduler`. Leave the public base class default `Unknown`
    for third-party subclasses, per the adversarial counterexample.
+
+# T121 — Saga schedule replacement and unschedule cancellation
+
+1. Add red-first normal and faulted replacement tests for `Unsupported` and
+   `ProviderAssignedToken`: old token remains, no message factory, schedule,
+   cancellation, Saga mutation or continuation. Cover typed and untyped
+   activities. Preserve explicit controls for first schedule and Delayed
+   own-delivery, plus existing supported/unknown cancellation tests.
+2. Add normal Unschedule pre-cancellation tests with no token, own token and
+   foreign token: exact caller cancellation, unchanged Saga state, no provider
+   call and no continuation. Implement the entry guard.
+3. Share the replacement admission rule across four activity forms, before
+   factory and transport work. Do not suppress cancellation exceptions for
+   admitted providers. Inspect assertion quality and pseudo-mutations, run
+   focused tests, frozen Core test suite and exact-commit receipt at the packet
+   boundary. Obtain read-only adversarial Red Team review, update requirement
+   projections/API docs/changelog/evidence, and push. Defer the next complete
+   33-profile until the source packet is frozen.
+4. Close the Red Team deferred-outbox cancellation finding: both Unschedule
+   variants reject explicit `Unsupported` when a foreign previous token needs
+   cancellation. Prove that a falsely successful Cancel facade is never
+   reached and that token and continuation remain unchanged. Include matching
+   provider-assigned header and explicit `Unknown` controls in the replacement
+   matrix, then request adversarial re-review.
+5. Preserve JobService with a dedicated logical unschedule path only for the
+   built-in delayed scheduler's proven token-header mode; generic Unsupported
+   remains fail-closed. Add delayed stale-delivery integration assertion. Keep
+   Azure provider-assigned physical Unschedule and test exact token,
+   continuation and failure rollback. Repeat focused classes, full Core once
+   on final bytes, and independent Red Team re-review.

@@ -82,6 +82,7 @@ public class UnscheduleActivity<TSaga> :
 
     async Task ExecuteAsync(SagaConsumeContext<TSaga> context)
     {
+        context.CancellationToken.ThrowIfCancellationRequested();
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
         if (previousTokenId.HasValue)
         {
@@ -89,6 +90,7 @@ public class UnscheduleActivity<TSaga> :
             if (!messageTokenId.HasValue || previousTokenId.Value != messageTokenId.Value)
             {
                 var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+                SagaScheduleReplacementAdmission.RequireSupportedCancellation(schedulerContext);
 
                 await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                     .ConfigureAwait(false);

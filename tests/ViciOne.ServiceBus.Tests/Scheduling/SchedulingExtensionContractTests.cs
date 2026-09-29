@@ -18,6 +18,7 @@ public sealed class SchedulingExtensionContractTests
     [Theory]
     [InlineData(ScheduleCancellationMode.Unknown)]
     [InlineData(ScheduleCancellationMode.Unsupported)]
+    [InlineData(ScheduleCancellationMode.CallerSpecifiedTokenWithoutCancellation)]
     [InlineData(ScheduleCancellationMode.CallerSpecifiedToken)]
     [InlineData(ScheduleCancellationMode.ProviderAssignedToken)]
     [RequirementCoverage("REQ-VSB-SCHEDULER-CONTEXT-BOUNDARY", "cancellation-capability-survives-consume-and-outbox-scopes")]

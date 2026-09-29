@@ -30,9 +30,11 @@ through the bus scheduler, consume scope and in-memory outbox. Endpoint and
 publish scheduling declare `CallerSpecifiedToken`. Azure Service Bus native
 scheduling declares `ProviderAssignedToken`: its broker token is available only
 after dispatch, whereas the Saga stores the request ID. Transport-delayed
-scheduling declares `Unsupported` because an accepted delayed message cannot
-be recalled. Unknown custom schedulers must declare the capability to support
-positive Saga timeouts. The Saga rejects these three incompatible modes before
+scheduling declares `CallerSpecifiedTokenWithoutCancellation`: an accepted
+delayed message cannot be recalled, but its delivery carries the selected
+token. `Unsupported` denotes schedulers with no cancellation guarantee and no
+delivery-token guarantee. Unknown custom schedulers must declare the capability to support
+positive Saga timeouts. The Saga rejects these incompatible modes before
 creating a request ID, resolving an endpoint or dispatching the request.
 Requests with no positive timeout remain usable with any scheduler mode.
 The request requires an available scheduler before it is dispatched. A timeout
@@ -40,6 +42,28 @@ that would exceed the supported date range is rejected before dispatch. For an
 accepted request, the timeout interval starts when the send completes.
 If the clock moves to the end of the supported date range during a send,
 the expiry is scheduled at the last representable instant.
+
+Saga schedule replacement is checked before the message factory or scheduler
+dispatch runs. A first schedule works with every scheduler mode. When a stored
+token already exists, `CallerSpecifiedToken` can cancel the previous send;
+an `Unknown` custom scheduler retains the existing cancellation attempt.
+`Unsupported` and `CallerSpecifiedTokenWithoutCancellation` can schedule a
+successor only while handling their own scheduled delivery, identified by a
+matching scheduling-token header. A foreign or headerless delivery cannot
+replace an active schedule with either mode. Native
+Azure Service Bus scheduling (`ProviderAssignedToken`) cannot safely replace
+an active Saga schedule: its broker cancellation token is assigned after send
+and is not a reliable delivery identity. The Saga rejects that replacement
+before scheduling. Explicit Unschedule rejects `Unsupported` and
+`CallerSpecifiedTokenWithoutCancellation` when it would need to cancel a
+previous send, including when cancellation is deferred by the in-memory outbox.
+For `ProviderAssignedToken`, it sends the stored broker cancellation token;
+Azure treats a previously activated schedule as already absent. No-token and
+own-delivery Unschedule paths remain available. The internal Job Service clears
+its own schedule token only for `CallerSpecifiedTokenWithoutCancellation`, so
+the eventual delivery is ignored; schedulers that support cancellation still
+receive a physical Cancel command. Applications needing repeated replacement with native Azure
+scheduling require separate persisted cancellation and delivery identities.
 
 Without a separate request-ID property, a Saga request uses the Saga's correlation
 ID as its outgoing `RequestId`. Default response and fault correlation reads that

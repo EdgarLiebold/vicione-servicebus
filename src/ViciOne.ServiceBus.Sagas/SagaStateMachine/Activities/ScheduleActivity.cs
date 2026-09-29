@@ -95,6 +95,7 @@ public class ScheduleActivity<TSaga, TMessage> :
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+        SagaScheduleReplacementAdmission.RequireSafeReplacement(context, schedulerContext, previousTokenId);
 
         ScheduledMessage<TMessage> message = await _messageFactory
             .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),
@@ -165,6 +166,7 @@ public class ScheduleActivity<TSaga, TMessage, T> :
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+        SagaScheduleReplacementAdmission.RequireSafeReplacement(context, schedulerContext, previousTokenId);
 
         ScheduledMessage<T> message = await _messageFactory
             .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken),

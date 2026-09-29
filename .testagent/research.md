@@ -4263,3 +4263,59 @@ global discovery or measurement is needed during this packet.
 - The bus scheduler and both consume-bound wrappers must forward the capability.
   Saga preflight rejects any mode other than `CallerSpecifiedToken` before
   generating the request ID, resolving an endpoint, or dispatching.
+
+# T121 — Saga schedule replacement and unschedule cancellation
+
+- Manually read the current `ScheduleActivity`, `FaultedScheduleActivity`,
+  `UnscheduleActivity`, `FaultedUnscheduleActivity`, `ISchedule`, schedule
+  dispatch/filter, delayed provider and Azure scheduling transport paths.
+  The Roslyn `find-untested-sources` pass over this repository pairs the normal
+  schedule activity to its direct Core contract tests and identifies only an
+  extension test for normal Unschedule; reflection-only faulted tests are
+  undercounted by this static heuristic.
+- A replacement with a previous foreign token schedules a new message and
+  stores its token before canceling the old one. `DelayedScheduleMessageProvider`
+  always rejects cancellation. Azure Service Bus gives the Saga a broker
+  sequence-derived cancellation token, removes the delivery scheduling-token
+  header before serialization, and gives activated messages a different
+  sequence number. Concurrent activation and cancellation can therefore
+  deliver an old headerless message after replacement; the state machine
+  currently treats headerless delivery as current. Microsoft documents this
+  activation/cancellation race and sequence-number reassignment.
+- `ISchedule.AnyReceived` intentionally sees superseded deliveries. Generic
+  Unschedule must not silently claim physical cancellation when the provider
+  cannot do it. JobService can explicitly clear only its internal token for
+  built-in Delayed because that provider carries the caller-selected token in
+  every delivery; the later message remains observable as `AnyReceived` and is
+  filtered before `Received`. The bounded replacement correction rejects before
+  factory or transport for `Unsupported`, `CallerSpecifiedTokenWithoutCancellation`
+  and `ProviderAssignedToken` when an old token must be superseded. The first
+  two allow an own delivery with a matching header. `CallerSpecifiedToken`
+  continues physical cancellation; undeclared custom schedulers retain their
+  prior attempt for compatibility. New schedules without an old token remain
+  usable with all modes. Azure own delivery has no trustworthy token header,
+  so it cannot prove an exception to the replacement guard.
+- Normal `UnscheduleActivity` lacks the entry cancellation check present in
+  the other schedule activities. A pre-canceled no-token or own-token context
+  currently runs the continuation. Reject cancellation before reading Saga
+  state or invoking the scheduler.
+- Read-only Red Team found a deferred-outbox variant: the outbox accepts a
+  cancellation command before the underlying delayed provider rejects it at
+  commit. Normal and faulted Unschedule must reject explicit `Unsupported`
+  before calling Cancel or clearing Saga state. Test with a scheduler whose
+  Cancel returns success to model the deferred acknowledgment.
+- The first full Core run exposed a real integration regression: JobService
+  internally uses `ConfigureDelayedMessageScheduler` yet unschedules slot and
+  status timers. A generic fail-closed guard correctly rejected this, leaving
+  three JobService integration tests timed out. JobService can logically clear
+  its internal schedule token because its state machine filters old deliveries
+  by the caller-selected token header; the built-in Delayed provider guarantees
+  that header, while generic `Unsupported` does not. Introduce a separate
+  capability mode and restrict JobService logical clearing to it. Advance the
+  delay provider after cancellation to prove stale delivery cannot restart a
+  canceled job.
+- For Azure native scheduling, physical Unschedule remains valid: the returned
+  broker token is a cancellation handle and the transport treats activated or
+  already canceled messages idempotently. Unlike replacement, clearing the
+  stored token after a completed Cancel prevents an old delivery from becoming
+  current. Test success and failure state ordering for normal and faulted paths.

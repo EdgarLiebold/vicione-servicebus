@@ -119,10 +119,10 @@ internal sealed class JobAttemptStateMachine :
 
         During(Starting, Running, CheckingStatus, Suspect,
             When(AttemptCompleted)
-                .Unschedule(StatusCheckRequested)
+                .UnscheduleJob(StatusCheckRequested)
                 .Finalize(),
             When(AttemptCanceled)
-                .Unschedule(StatusCheckRequested)
+                .UnscheduleJob(StatusCheckRequested)
                 .Finalize(),
             When(CancelJobAttempt)
                 .SendCancelJobAttempt(),
@@ -133,7 +133,7 @@ internal sealed class JobAttemptStateMachine :
                     context.Saga.InstanceAddress ??= context.SourceAddress
                         ?? throw new InvalidOperationException("A source address is required when a job attempt faults.");
                 })
-                .Unschedule(StatusCheckRequested)
+                .UnscheduleJob(StatusCheckRequested)
                 .TransitionTo(Faulted));
 
         During(Running,
@@ -154,10 +154,10 @@ internal sealed class JobAttemptStateMachine :
             When(AttemptStatus, context => context.Message.Status == JobAttemptStatusKind.Running)
                 .TransitionTo(Running),
             When(AttemptStatus, context => context.Message.Status == JobAttemptStatusKind.Canceled || context.Message.Status == JobAttemptStatusKind.Completed)
-                .Unschedule(StatusCheckRequested)
+                .UnscheduleJob(StatusCheckRequested)
                 .Finalize(),
             When(AttemptStatus, context => context.Message.Status == JobAttemptStatusKind.Faulted)
-                .Unschedule(StatusCheckRequested)
+                .UnscheduleJob(StatusCheckRequested)
                 .TransitionTo(Faulted));
 
         During(Suspect,
