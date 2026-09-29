@@ -34,13 +34,16 @@ internal sealed class DelegatePropertyProvider<TInput, TProperty> :
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
-        if (!context.TryGetPayload(out TransformContext<TInput>? transformContext))
+        ArgumentNullException.ThrowIfNull(context);
+
+        if (!context.TryGetPayload(out TransformContext<TInput>? transformContext) || !transformContext.HasInput)
             return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
         if (!context.HasInput)
             return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
-        Task<TProperty?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
+        Task<TProperty?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The input property provider returned a null task.");
         if (inputTask.IsCompletedSuccessfully)
             return GetValueAsync(inputTask.Result);
 
@@ -55,7 +58,10 @@ internal sealed class DelegatePropertyProvider<TInput, TProperty> :
         {
             var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputValue);
 
-            return await _valueProvider(propertyContext).ConfigureAwait(false);
+            Task<TProperty> valueTask = _valueProvider(propertyContext)
+                ?? throw new InvalidOperationException("The property transform callback returned a null task.");
+
+            return await valueTask.ConfigureAwait(false);
         }
 
         return GetPropertyAsync();

@@ -35,7 +35,12 @@ internal sealed class TransformPropertyInitializer<TMessage, TInput, TProperty> 
     /// <returns>A task that completes after property resolution and conditional assignment.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
-        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The property provider returned a null task.");
         if (propertyTask.IsCompletedSuccessfully)
         {
             if (_messageProperty.TargetType == context.MessageType)

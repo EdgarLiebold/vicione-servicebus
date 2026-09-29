@@ -29,6 +29,10 @@ internal sealed class TransformPropertyConverter<TProperty> :
     public Task<TProperty?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, TProperty? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        ArgumentNullException.ThrowIfNull(context);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<TProperty?>(cancellationToken);
+
         if (input == null || !context.TryGetPayload(out TransformContext<TMessage>? transformContext) || !transformContext.HasInput)
             return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
@@ -36,7 +40,8 @@ internal sealed class TransformPropertyConverter<TProperty> :
 
         InitializeContext<TProperty> messageContext = _initializer.Create(propertyTransformContext);
 
-        Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
+        Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken)
+            ?? throw new InvalidOperationException("The nested message initializer returned a null task.");
         if (initTask.IsCompletedSuccessfully)
             return Task.FromResult<TProperty?>(initTask.Result.Message);
 
