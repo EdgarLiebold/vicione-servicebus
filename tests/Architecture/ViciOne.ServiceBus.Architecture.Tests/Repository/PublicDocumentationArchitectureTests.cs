@@ -24,6 +24,22 @@ public sealed partial class PublicDocumentationArchitectureTests
         Assert.True(violations.Length == 0, FailureMessage("Exposed declarations without documentation", violations));
     }
 
+    [Theory]
+    [InlineData("public class Owner { private enum Kind { Value } }", false)]
+    [InlineData("public enum Kind { Value }", true)]
+    [InlineData("public class Owner { public enum Kind { Value } }", true)]
+    [InlineData("internal class Owner { public enum Kind { Value } }", false)]
+    [InlineData("public interface IOwner { enum Kind { Value } }", true)]
+    [RequirementCoverage("REQ-VSB-PUBLIC-DOCUMENTATION", "enum-member-visibility-follows-containing-api")]
+    public void EnumMemberVisibility_FollowsTheContainingEnumAndItsOwners(string source, bool expected)
+    {
+        SyntaxNode root = CSharpSyntaxTree.ParseText(source,
+            cancellationToken: TestContext.Current.CancellationToken).GetRoot(TestContext.Current.CancellationToken);
+        EnumMemberDeclarationSyntax member = Assert.Single(root.DescendantNodes().OfType<EnumMemberDeclarationSyntax>());
+
+        Assert.Equal(expected, IsExposedDeclaration(member));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-PUBLIC-DOCUMENTATION", "xml-elements-match-signatures-and-contain-text")]
     public void EveryExposedDeclaration_HasCompleteSignatureAccurateDocumentation()
@@ -401,7 +417,7 @@ public sealed partial class PublicDocumentationArchitectureTests
     private static bool IsExposedDeclaration(SyntaxNode node)
     {
         if (node is EnumMemberDeclarationSyntax)
-            return node.Ancestors().OfType<EnumDeclarationSyntax>().FirstOrDefault() is { } enumeration && IsExternallyVisible(enumeration);
+            return node.Ancestors().OfType<EnumDeclarationSyntax>().FirstOrDefault() is { } enumeration && IsExposedDeclaration(enumeration);
 
         if (node is not MemberDeclarationSyntax member || node is NamespaceDeclarationSyntax or FileScopedNamespaceDeclarationSyntax)
             return false;

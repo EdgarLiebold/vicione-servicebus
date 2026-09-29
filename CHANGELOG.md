@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The Roslyn public-documentation gate now classifies enum members through
+  the visibility of their containing enum. Private receiver-state values no
+  longer appear as missing public API documentation.
+
 - Concurrency-limit management now keeps a committed adjustment and response
   successful if debug logging fails. Failure logging also cannot replace a
   stale-command failure or another original command error.

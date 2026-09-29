@@ -1,5 +1,19 @@
 # A+ remediation test plan
 
+## T139 Roslyn public-documentation enum visibility
+
+1. Run the existing whole-ServiceBus Roslyn documentation gate on the current
+   commit and inspect every reported declaration in its full source context.
+2. Resolve the private nested enum false positive by checking the containing
+   enum's visibility before classifying its members as exposed.
+3. Rerun the documentation gate, obtain independent read-only review, and
+   verify the committed test assembly at the exact commit before push.
+4. Keep the larger all-repository Roslyn API plus comments inventory open;
+   this gate covers ServiceBus source documentation only.
+5. Add explicit private/public/nested/interface enum controls after Red Team
+   finds the all-enum-excluded mutant survives the repository-wide gate;
+   compile and execute that mutant to prove the new positive cases kill it.
+
 ## T138 shared concurrency-limit diagnostic ownership
 
 1. Red-first make debug logging fail after a real limit increase and response;

@@ -1,5 +1,23 @@
 # A+ remediation research
 
+## T139 Roslyn public-documentation enum visibility
+
+The existing Roslyn gate covers exposed declarations and XML documentation in
+ServiceBus `src`. It failed 1/7 on four enum members in Azure Service Bus
+`MessageReceiver.ReceiverKind`. Full-file reading showed `ReceiverKind` is a
+private nested enum used only as a receiver-cache key. The enum-member branch
+checked visible ancestors but omitted the enum's own private modifier. It now
+classifies members through the same `IsExposedDeclaration` decision used for
+all other declarations. The corrected seven-case documentation gate passes.
+`ApiInventory.cs` uses assembly metadata rather than Roslyn source comments;
+the user-requested all-repository API/comment audit remains a separate gate.
+The first independent review found that those seven cases alone would not
+detect a classifier that omitted every enum member. A five-case Roslyn
+truth-table now requires visible top-level, nested-public and interface enum
+members while excluding private and internal-owner members. The compiled
+all-enum-excluded mutant failed all three visible cases and passed the two
+nonpublic controls; it was then removed.
+
 ## T138 shared concurrency-limit diagnostic ownership
 
 `ConcurrencyLimiter.ConsumeAsync` placed debug logging after response inside

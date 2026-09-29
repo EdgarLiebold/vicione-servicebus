@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## T139 — Roslyn public-documentation enum visibility — 29 September 2026
+
+The existing seven-case Roslyn documentation gate failed on four private
+receiver-kind enum values in one Azure Service Bus file. After reading the
+whole receiver, the classifier now checks the enum's own visibility before
+requiring documentation for its members. The gate passes 7/7 with a fresh
+build. Independent review and exact-commit validation follow. This gate is
+limited to ServiceBus sources; all-repository API plus comment review remains
+open.
+The first independent review found a P2 proof gap: the original gate would
+not catch exclusion of every enum value. Five explicit visibility cases now
+pass, and a compiled all-enum-excluded mutant failed all three public cases.
+The mutant was removed before the final test build. The final twelve-case
+documentation and visibility run passes 12/12; independent read-only re-review
+is PASS with no concrete P1/P2. The architecture requirement projection is
+green 1/1. Exact-commit visibility and projection checks follow.
+
 ## T138 — shared concurrency-limit diagnostic ownership — 29 September 2026
 
 Two logger counterprobes failed red-first: success logging converted a
