@@ -177,6 +177,70 @@ public sealed class DiagnosticOutputTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "hostile-start-listener-preserves-caller-and-releases-observer")]
+    public async Task ActivityListener_StartObserverFailureCannotBreakTheHarnessOrLeakItsObserverAsync()
+    {
+        using var parent = new Activity("caller").Start();
+        Activity? startedRoot = null;
+        using var hostile = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ViciOne.ServiceBus.TestHarness",
+            Sample = static (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = activity =>
+            {
+                startedRoot = activity;
+                throw new InvalidOperationException("external observer failed during start");
+            },
+        };
+        ActivitySource.AddActivityListener(hostile);
+        using var writer = new StringWriter();
+
+        var listener = new TestActivityListener(writer, "test root", "Operation", includeDetails: false);
+        Assert.Same(parent, Activity.Current);
+        Assert.True(Assert.IsType<Activity>(startedRoot).IsStopped);
+        using (var laterSource = new ActivitySource("ViciOne.ServiceBus.Tests.AfterHostileStart"))
+        {
+            Activity.Current = null;
+            try
+            {
+                using Activity laterRoot = Assert.IsType<Activity>(laterSource.StartActivity("later root"));
+            }
+            finally
+            {
+                Activity.Current = parent;
+            }
+        }
+        await listener.DisposeAsync();
+
+        Assert.Same(parent, Activity.Current);
+        Assert.Contains("later root", writer.ToString(), StringComparison.Ordinal);
+        using var unrelatedSource = new ActivitySource("ViciOne.ServiceBus.Tests.AfterDiagnosticDisposal");
+        Assert.Null(unrelatedSource.StartActivity("unrelated work"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "hostile-stop-listener-preserves-output-and-releases-observer")]
+    public async Task ActivityListener_StopObserverFailureCannotSkipOutputOrLeakItsObserverAsync()
+    {
+        using var hostile = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ViciOne.ServiceBus.TestHarness",
+            Sample = static (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = _ => throw new InvalidOperationException("external observer failed during stop"),
+        };
+        ActivitySource.AddActivityListener(hostile);
+        using var writer = new StringWriter();
+        var listener = new TestActivityListener(writer, "test root", "Operation", includeDetails: false);
+
+        await listener.DisposeAsync();
+
+        Assert.Null(Activity.Current);
+        Assert.Contains("test root", writer.ToString(), StringComparison.Ordinal);
+        using var unrelatedSource = new ActivitySource("ViciOne.ServiceBus.Tests.AfterDiagnosticDisposal");
+        Assert.Null(unrelatedSource.StartActivity("unrelated work"));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "required-output-destinations")]
     public async Task DiagnosticWriters_RejectMissingOutputDestinationsPreciselyAsync()
     {

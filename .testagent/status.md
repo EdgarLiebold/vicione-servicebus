@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## T142 — test-harness Activity lifecycle ownership — 29 September 2026
+
+Two timeline-diagnostic counterprobes failed red-first: a throwing root-start
+observer broke listener construction, and a throwing root-stop observer skipped
+output and listener cleanup. The harness now uses the shared no-throw Activity
+boundary. A tracked-root stop observer also failed red-first by escaping
+disposal; its completion now uses the same boundary. A reentrant successful
+root-start callback failed red-first by replacing the active tracked trace;
+the tracker now starts through the shared helper, which can return the exact
+original listener failure to this control path. The separate throwing-start
+control already passed before the production change and remains a regression
+for exact exception identity, stopped root and timer/listener release.
+Focused DiagnosticOutput and TrackedActivity groups pass 7/7 and 11/11.
+The complete Core suite passes 7,370/7,370 after the strengthened report
+oracle. Independent read-only review is PASS with no concrete P1/P2 in this
+packet. Exact-commit validation follows.
+
 ## T141 — Activity listener isolation and ambient trace ownership — 29 September 2026
 
 Red-first counterprobes reproduced both listener-start and listener-stop

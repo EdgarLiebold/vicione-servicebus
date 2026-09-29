@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
@@ -47,19 +49,39 @@ sealed class TrackedActivity :
             ActivityStopped = ActivityStopped
         };
 
+        Activity? previousActivity = Activity.Current;
         try
         {
             ActivitySource.AddActivityListener(_listener);
-            _testActivity = _source.CreateActivity($"{methodName ?? "test"} process", ActivityKind.Internal)
-                ?? throw new InvalidOperationException("The test activity could not be started.");
-            _testActivity.Start();
+            try
+            {
+                _testActivity = _source.CreateActivity($"{methodName ?? "test"} process", ActivityKind.Internal)
+                    ?? throw new InvalidOperationException("The test activity could not be started.");
+            }
+            finally
+            {
+                Activity.Current = previousActivity;
+            }
+            if (!ActivityObservation.TryStart(_testActivity, out Exception? listenerFailure))
+            {
+                if (listenerFailure is not null)
+                    ExceptionDispatchInfo.Capture(listenerFailure).Throw();
+                throw new InvalidOperationException("The test activity could not be started.");
+            }
 
             lock (_lock)
                 ScheduleTimer(_timeProvider.GetElapsedTime(_startedTimestamp));
         }
         catch
         {
-            Dispose();
+            try
+            {
+                Dispose();
+            }
+            finally
+            {
+                Activity.Current = previousActivity;
+            }
             throw;
         }
     }
@@ -108,7 +130,8 @@ sealed class TrackedActivity :
 
         try
         {
-            _testActivity?.Dispose();
+            if (_testActivity is { } activity)
+                ActivityObservation.TryDispose(activity);
         }
         finally
         {

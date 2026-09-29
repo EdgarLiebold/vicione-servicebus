@@ -223,6 +223,90 @@ public sealed class TrackedActivityTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "root-start-listener-failure-preserves-cause-and-releases-owners")]
+    public void RootStartListenerFailure_PreservesItsCauseAndRestoresTheCallerWithoutLeakingOwners()
+    {
+        var expected = new InvalidOperationException("external root start failure");
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        Activity? startedRoot = null;
+        int stoppedRoots = 0;
+        using var caller = new Activity("caller").Start();
+        using var hostile = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ViciOne.ServiceBus.Testing.Monitor",
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = activity =>
+            {
+                startedRoot = activity;
+                throw expected;
+            },
+            ActivityStopped = _ => stoppedRoots++,
+        };
+        ActivitySource.AddActivityListener(hostile);
+
+        InvalidOperationException actual = Assert.Throws<InvalidOperationException>(() =>
+            new TrackedActivity(nameof(RootStartListenerFailure_PreservesItsCauseAndRestoresTheCallerWithoutLeakingOwners),
+                MaximumDuration, IdleDuration, timeProvider));
+
+        Assert.Same(expected, actual);
+        Assert.True(Assert.IsType<Activity>(startedRoot).IsStopped);
+        Assert.Equal(1, stoppedRoots);
+        Assert.Same(caller, Activity.Current);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+        using var unrelatedSource = new ActivitySource("ViciOne.ServiceBus.Tests.AfterTrackerStartFailure");
+        Assert.Null(unrelatedSource.StartActivity("unrelated work"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "root-stop-listener-failure-releases-owners")]
+    public void RootStopListenerFailure_CannotBreakDisposalOrLeakOwners()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        using var caller = new Activity("caller").Start();
+        using var hostile = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ViciOne.ServiceBus.Testing.Monitor",
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStopped = _ => throw new InvalidOperationException("external root stop failure"),
+        };
+        ActivitySource.AddActivityListener(hostile);
+        var tracker = new TrackedActivity(nameof(RootStopListenerFailure_CannotBreakDisposalOrLeakOwners),
+            MaximumDuration, IdleDuration, timeProvider);
+
+        tracker.Dispose();
+
+        Assert.Same(caller, Activity.Current);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+        using var unrelatedSource = new ActivitySource("ViciOne.ServiceBus.Tests.AfterTrackerStopFailure");
+        Assert.Null(unrelatedSource.StartActivity("unrelated work"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "reentrant-root-start-keeps-tracked-trace-current")]
+    public void ReentrantRootStartListener_CannotReplaceTheTrackedTrace()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        using var caller = new Activity("caller").Start();
+        using var reentrant = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == "ViciOne.ServiceBus.Testing.Monitor",
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = _ => Activity.Current = caller,
+        };
+        ActivitySource.AddActivityListener(reentrant);
+
+        using (var tracker = new TrackedActivity(nameof(ReentrantRootStartListener_CannotReplaceTheTrackedTrace),
+                   MaximumDuration, IdleDuration, timeProvider))
+        {
+            Assert.NotSame(caller, Activity.Current);
+            Assert.Equal(tracker.TraceId, Assert.IsType<Activity>(Activity.Current).TraceId);
+        }
+
+        Assert.Same(caller, Activity.Current);
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "root-start-callback-child-is-tracked")]
     public async Task ChildCreatedByARootStartListener_RemainsActiveUntilItStopsAndThenBeginsTheExactIdlePeriodAsync()
     {

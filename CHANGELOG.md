@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Completed the test harness's Activity ownership path. Timeline diagnostics
+  now survive hostile start and stop observers without leaking their listener;
+  the idle tracker keeps its root trace current after a reentrant start
+  callback and releases its timer and listener even if stop observation fails.
+
 - Isolated Activity listener and sampler failures from durable-send,
   message-journal, circuit-breaker and message-flow operations. Activity
   completion restores the actual prior ambient scope even for a new trace

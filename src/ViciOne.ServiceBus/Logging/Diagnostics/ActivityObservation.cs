@@ -63,8 +63,12 @@ internal static class ActivityObservation
         }
     }
 
-    public static bool TryStart(Activity activity, bool newRoot = false)
+    public static bool TryStart(Activity activity, bool newRoot = false) =>
+        TryStart(activity, out _, newRoot);
+
+    public static bool TryStart(Activity activity, out Exception? failure, bool newRoot = false)
     {
+        failure = null;
         Activity? previousActivity = Activity.Current;
 
         try
@@ -83,6 +87,7 @@ internal static class ActivityObservation
         }
         catch (Exception exception)
         {
+            failure = exception;
             TryLog(exception, "Activity listener faulted while starting an activity");
             TryDispose(activity);
             Activity.Current = previousActivity;

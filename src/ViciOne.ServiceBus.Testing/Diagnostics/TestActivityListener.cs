@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Util;
 
@@ -45,7 +46,7 @@ sealed class TestActivityListener :
         ActivitySource.AddActivityListener(_listener);
 
         if (methodName != null)
-            _testActivity = _source.StartActivity(methodName);
+            _testActivity = ActivityObservation.TryStartSource(_source, methodName, ActivityKind.Internal);
     }
 
     public ValueTask DisposeAsync()
@@ -53,8 +54,8 @@ sealed class TestActivityListener :
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
             return ValueTask.CompletedTask;
 
-        _testActivity?.Stop();
-        _testActivity?.Dispose();
+        if (_testActivity is { } activity)
+            ActivityObservation.TryDispose(activity);
 
         _listener.Dispose();
 
