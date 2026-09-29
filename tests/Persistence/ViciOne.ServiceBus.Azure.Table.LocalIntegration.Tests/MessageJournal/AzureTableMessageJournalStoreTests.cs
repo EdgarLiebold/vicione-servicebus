@@ -107,6 +107,26 @@ public sealed class AzureTableMessageJournalStoreTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-CONFIGURATION", "journal-configurator-service-client-selects-named-table")]
+    public async Task JournalConfigurator_ServiceClientSelectsTheNamedTableAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("JournalNamedTable", cancellationToken);
+        var configurator = new RecordingJournalConfigurator();
+        IMessageJournalConfigurator result = configurator.UseAzureTable(
+            fixture.Service,
+            fixture.Table.Name,
+            new AzureTableMessageJournalStoreOptions("journal", Limits(maximumEntries: 2)));
+        IMessageJournalStore store = Assert.IsType<AzureTableMessageJournalStore>(configurator.Store);
+        MessageJournalEntry entry = Entry(Guid.CreateVersion7(), new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero));
+
+        await store.AppendAsync(entry, cancellationToken);
+
+        Assert.Same(configurator, result);
+        Assert.Equal(entry.EntryId, Assert.Single(await ReadEntriesAsync(fixture.Table, cancellationToken)).EntryId);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-PERSISTENCE", "sanitized-entry-round-trip-and-collision-free-identity")]
     public async Task Append_PreservesSanitizedFieldsAndSeparatesEntriesAtTheSameTimestampAsync()
     {
@@ -169,6 +189,56 @@ public sealed class AzureTableMessageJournalStoreTests
         Assert.Equal([now.AddHours(-1), now], records.Select(record => record.ObservedAt).Order());
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-BOUNDS", "overfull-partition-with-or-without-lease-rejects-without-storage-effects")]
+    public async Task OverfullPartition_RejectsAppendWithoutChangingTheLeaseOrEntriesAsync(bool existingLease)
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("JournalOverfull", cancellationToken);
+        var store = CreateStore(fixture.Table, Limits(maximumEntries: AzureTableMessageJournalStoreOptions.MaximumJournalEntriesPerPartition));
+        var observedAt = new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        if (existingLease)
+            await store.AppendAsync(Entry(Guid.CreateVersion7(), observedAt.AddMinutes(-1)), cancellationToken);
+
+        int seededRows = AzureTableMessageJournalStoreOptions.MaximumJournalEntriesPerPartition + 1
+            - (existingLease ? 1 : 0);
+        var additions = Enumerable.Range(0, seededRows)
+            .Select(index => new TableTransactionAction(
+                TableTransactionActionType.Add,
+                MessageJournalRecord.FromEntry(
+                    Entry(Guid.CreateVersion7(), observedAt.AddTicks(index)), "journal")))
+            .ToArray();
+        await fixture.Table.SubmitTransactionAsync(additions, cancellationToken);
+        MessageJournalRecord[] before = await ReadEntriesAsync(fixture.Table, cancellationToken);
+        NullableResponse<MessageJournalCapacityLease> leaseBefore = await fixture.Table
+            .GetEntityIfExistsAsync<MessageJournalCapacityLease>(
+                "journal", MessageJournalCapacityLease.RowKeyValue, cancellationToken: cancellationToken);
+        MessageJournalEntry rejected = Entry(Guid.CreateVersion7(), observedAt.AddMinutes(1));
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => store.AppendAsync(rejected, cancellationToken).AsTask());
+
+        MessageJournalRecord[] after = await ReadEntriesAsync(fixture.Table, cancellationToken);
+        NullableResponse<MessageJournalCapacityLease> leaseAfter = await fixture.Table
+            .GetEntityIfExistsAsync<MessageJournalCapacityLease>(
+                "journal", MessageJournalCapacityLease.RowKeyValue, cancellationToken: cancellationToken);
+        Assert.Contains("atomically repairable capacity", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(AzureTableMessageJournalStoreOptions.MaximumJournalEntriesPerPartition + 1, before.Length);
+        Assert.Equal(before.Select(record => record.EntryId).Order(), after.Select(record => record.EntryId).Order());
+        Assert.DoesNotContain(after, record => record.EntryId == rejected.EntryId);
+        Assert.Equal(existingLease, leaseBefore.HasValue);
+        Assert.Equal(leaseBefore.HasValue, leaseAfter.HasValue);
+        if (existingLease)
+        {
+            MessageJournalCapacityLease beforeLease = Assert.IsType<MessageJournalCapacityLease>(leaseBefore.Value);
+            MessageJournalCapacityLease afterLease = Assert.IsType<MessageJournalCapacityLease>(leaseAfter.Value);
+            Assert.Equal(beforeLease.Generation, afterLease.Generation);
+            Assert.Equal(beforeLease.ETag, afterLease.ETag);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-CONCURRENCY", "etag-lease-capacity-never-exceeded")]
     public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacityAsync()
@@ -213,6 +283,48 @@ public sealed class AzureTableMessageJournalStoreTests
             RequestFailedException conflict = Assert.IsAssignableFrom<RequestFailedException>(outcome);
             Assert.Equal(412, conflict.Status);
         });
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-CONCURRENCY", "late-lease-read-cannot-commit-stale-entry-snapshot")]
+    public async Task DelayedLeaseRead_ReloadsEntriesBeforeCommittingAtCapacityAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var barrier = new FirstLeaseReadBarrierPolicy(OperationTimeout());
+        var clientOptions = new TableClientOptions();
+        clientOptions.AddPolicy(barrier, HttpPipelinePosition.PerCall);
+        await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync(
+            "JournalLeaseRead", cancellationToken, clientOptions);
+        var store = CreateStore(fixture.Table, Limits(maximumEntries: 1));
+        var observedAt = new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        MessageJournalEntry first = Entry(Guid.CreateVersion7(), observedAt);
+        MessageJournalEntry second = Entry(Guid.CreateVersion7(), observedAt.AddTicks(1));
+
+        Task firstAppend = store.AppendAsync(first, cancellationToken).AsTask();
+        Exception? orchestrationFailure = null;
+        Exception? firstFailure = null;
+        try
+        {
+            await barrier.WaitUntilBlockedAsync(cancellationToken);
+            await store.AppendAsync(second, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            orchestrationFailure = exception;
+        }
+        finally
+        {
+            barrier.Release();
+            firstFailure = await Record.ExceptionAsync(() =>
+                firstAppend.WaitAsync(OperationTimeout(), CancellationToken.None));
+        }
+
+        Assert.Null(orchestrationFailure);
+        Assert.Null(firstFailure);
+
+        MessageJournalRecord retained = Assert.Single(await ReadEntriesAsync(fixture.Table, cancellationToken));
+        Assert.Equal(first.EntryId, retained.EntryId);
+        Assert.Equal(1, barrier.BlockedReadCount);
     }
 
     [Fact]
@@ -343,6 +455,21 @@ public sealed class AzureTableMessageJournalStoreTests
 
     private sealed record JournalProbe(string Source);
 
+    private sealed class RecordingJournalConfigurator : IMessageJournalConfigurator
+    {
+        public IMessageJournalStore? Store { get; private set; }
+
+        public IMessageJournalConfigurator UseStore(IMessageJournalStore store)
+        {
+            Store = store;
+            return this;
+        }
+
+        public IMessageJournalConfigurator Policy(IMessageJournalPolicy policy) => this;
+
+        public IMessageJournalConfigurator Options(MessageJournalOptions options) => this;
+    }
+
     private sealed class BatchSubmitBarrierPolicy(int expectedArrivals, TimeSpan operationTimeout) :
         HttpPipelinePolicy
     {
@@ -389,6 +516,39 @@ public sealed class AzureTableMessageJournalStoreTests
         {
             _release.TrySetResult();
         }
+    }
+
+    private sealed class FirstLeaseReadBarrierPolicy(TimeSpan operationTimeout) : HttpPipelinePolicy
+    {
+        private readonly TaskCompletionSource _blocked = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _blockedReadCount;
+
+        public int BlockedReadCount => Volatile.Read(ref _blockedReadCount);
+
+        public override void Process(HttpMessage message, ReadOnlyMemory<HttpPipelinePolicy> pipeline) =>
+            throw new InvalidOperationException("The lease-read barrier supports asynchronous requests only.");
+
+        public override async ValueTask ProcessAsync(
+            HttpMessage message,
+            ReadOnlyMemory<HttpPipelinePolicy> pipeline)
+        {
+            string uri = Uri.UnescapeDataString(message.Request.Uri.ToUri().AbsoluteUri);
+            if (message.Request.Method == RequestMethod.Get
+                && uri.Contains(MessageJournalCapacityLease.RowKeyValue, StringComparison.Ordinal)
+                && Interlocked.CompareExchange(ref _blockedReadCount, 1, 0) == 0)
+            {
+                _blocked.TrySetResult();
+                await _release.Task.WaitAsync(operationTimeout, message.CancellationToken).ConfigureAwait(false);
+            }
+
+            await ProcessNextAsync(message, pipeline).ConfigureAwait(false);
+        }
+
+        public Task WaitUntilBlockedAsync(CancellationToken cancellationToken) =>
+            _blocked.Task.WaitAsync(operationTimeout, cancellationToken);
+
+        public void Release() => _release.TrySetResult();
     }
 
 }

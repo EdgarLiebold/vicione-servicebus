@@ -111,6 +111,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
         }
         catch (RequestFailedException exception) when (exception.Status == 404)
         {
+            await LoadBoundedPartitionAsync(cancellationToken).ConfigureAwait(false);
             var lease = new MessageJournalCapacityLease { PartitionKey = _partitionKey };
             try
             {
