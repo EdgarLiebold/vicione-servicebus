@@ -1,5 +1,34 @@
 # A+ remediation research
 
+## T115 outbox/inbox state and admission packet
+
+The T114 exact-commit profile identifies five CRAP > 30 methods in classic EF
+outbox state validation, reliable EF outbox state validation/admission, and
+InMemory/EF reliable inbox dispatch. Existing EF tests exercise SQLite
+commit, tracker loss, capacity, cancellation and recovery, but the reliable
+EF outbox admission catch restores the capacity counters without detaching a
+`DurableSendRecord` if EF starts tracking it and then raises a `Tracked`
+handler exception. A later `SaveChanges` can persist an unowned outgoing
+record. This is a product-contract risk independent of the CRAP score.
+
+The prior Roslyn static pairing in `artifacts/t98-static-pairing.json` pairs
+the two EF outbox files to existing write/transactional tests and the EF
+reliable inbox factory to the pipeline tests. Its source-to-test pairing is a
+syntax heuristic; the T114 runtime profile supplies method coverage and
+CRAP. The acceptance checklist for this packet is: rejected admission
+cannot leave an outgoing record tracked or persisted; previous accepted
+intent and capacity remain exact when selective cleanup succeeds; a healthy retry
+works; state validation rejects corrupt session ownership; reliable inbox
+consumption retains its terminal, retry, quarantine and cancellation
+contracts while complexity is reduced. Each new test needs an observable
+state, exception and/or side-effect oracle that would fail under a plausible
+single-cause defect. Focused tests run during edits; complete Core and EF
+projects run at the frozen packet commit. If a persistently throwing EF
+state-change callback prevents selective detach, the tracker and staged
+session are cleared to prevent an orphan. The exception explicitly reports
+loss of all pending DbContext changes and retains the original admission
+failure as its cause.
+
 ## T107 receive-side outbox cancellation ownership
 
 The classic in-memory factory links delivery and explicit operation tokens

@@ -68,6 +68,31 @@ internal sealed class EntityFrameworkReliableInboxContextFactory<TBus, TDbContex
 
         try
         {
+            await SendUntilSettledAsync(
+                context, options, next, key, deliveryCancellationToken,
+                cancellationToken, operationCancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && operationCancellationToken.IsCancellationRequested
+            && exception.CancellationToken != deliveryCancellationToken
+            && exception.CancellationToken != cancellationToken)
+        {
+            deliveryCancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            throw;
+        }
+    }
+
+    async Task SendUntilSettledAsync<T>(
+        ConsumeContext<T> context,
+        OutboxConsumeOptions options,
+        IPipe<OutboxConsumeContext<T>> next,
+        ReliableInboxKey key,
+        CancellationToken deliveryCancellationToken,
+        CancellationToken cancellationToken,
+        CancellationToken operationCancellationToken)
+        where T : class
+    {
         while (true)
         {
             deliveryCancellationToken.ThrowIfCancellationRequested();
@@ -145,16 +170,6 @@ internal sealed class EntityFrameworkReliableInboxContextFactory<TBus, TDbContex
                 continue;
 
             return;
-        }
-        }
-        catch (OperationCanceledException exception) when (linkedCancellation is not null
-            && operationCancellationToken.IsCancellationRequested
-            && exception.CancellationToken != deliveryCancellationToken
-            && exception.CancellationToken != cancellationToken)
-        {
-            deliveryCancellationToken.ThrowIfCancellationRequested();
-            cancellationToken.ThrowIfCancellationRequested();
-            throw;
         }
     }
 

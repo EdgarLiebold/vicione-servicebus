@@ -225,15 +225,25 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         if (_outboxState is null)
             return;
 
+        EnsureStateOwnedBySession();
+        EnsureDeliveryStateUnchanged();
+        EnsureMessagesOwnedBySession();
+    }
+
+    void EnsureStateOwnedBySession()
+    {
         bool stateTracked = _dbContext.ChangeTracker.Entries<OutboxState>()
-            .Any(entry => ReferenceEquals(entry.Entity, _outboxState.Entity));
-        if (!stateTracked || _outboxState.State != EntityState.Added
+            .Any(entry => ReferenceEquals(entry.Entity, _outboxState!.Entity));
+        if (!stateTracked || _outboxState!.State != EntityState.Added
             || _outboxState.Entity.OutboxId != _outboxId
             || _outboxState.Entity.BusKey != _persistenceIdentity
             || _stagedMessages.Count == 0)
             throw new InvalidOperationException("The transactional outbox has staged state that is no longer pending under this session.");
+    }
 
-        OutboxState state = _outboxState.Entity;
+    void EnsureDeliveryStateUnchanged()
+    {
+        OutboxState state = _outboxState!.Entity;
         if (state.Created != _outboxCreated
             || state.Status != OutboxDeliveryStatus.Pending
             || state.LockId != Guid.Empty
@@ -249,7 +259,10 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
             || state.Delivered is not null
             || state.LastSequenceNumber is not null)
             throw new InvalidOperationException("The transactional outbox delivery state was changed before persistence.");
+    }
 
+    void EnsureMessagesOwnedBySession()
+    {
         var tracked = new HashSet<OutboxMessage>(
             _dbContext.ChangeTracker.Entries<OutboxMessage>().Select(entry => entry.Entity),
             ReferenceEqualityComparer.Instance);

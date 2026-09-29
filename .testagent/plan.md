@@ -1,5 +1,29 @@
 # A+ remediation test plan
 
+## T115 outbox/inbox state and admission packet
+
+1. Use the T114 five-hotspot list and prior Roslyn source/test pairing to
+   inspect the four relevant implementations and their existing behavioral
+   suites. Check concrete branch and side-effect mutations before adding
+   tests; preserve all current runtime contracts.
+2. Red-first: make EF `DurableSendRecord` tracking fail after EF has accepted
+   the entity. Require the exact exception, no orphan record or inflated
+   capacity, preservation of any earlier staged send when selective cleanup
+   succeeds, and successful healthy retry. If an EF callback persistently
+   prevents detach, require explicit fail-closed tracker/session clearing
+   with the original failure retained as the cause. Correct only the proven
+   admission rollback boundary.
+3. Refactor complex state checks into named ownership, delivery-state and
+   capacity invariants. Keep messages and provider semantics stable. Add
+   behavior tests only for a gap with a meaningful failure/side-effect
+   oracle; validate with a targeted counterprobe and independent read-only
+   adversarial review.
+4. Run focused cases while editing, then complete affected Core and EF unit
+   projects at the frozen packet commit. Record exact evidence, Changelog,
+   requirement mapping, and residual risks; push. The next global 33-profile
+   run follows the agreed larger-packet cadence unless this packet changes
+   a shared boundary enough to require an earlier checkpoint.
+
 ## T114 checkpoint and next coherent packet
 
 1. Freeze the four completed packets since T97 at `ee2253fa3` and run all

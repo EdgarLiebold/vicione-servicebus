@@ -54,6 +54,31 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
 
         try
         {
+            await SendWhileAvailableAsync(
+                context, options, next, key, deliveryCancellationToken,
+                cancellationToken, operationCancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && operationCancellationToken.IsCancellationRequested
+            && exception.CancellationToken != deliveryCancellationToken
+            && exception.CancellationToken != cancellationToken)
+        {
+            deliveryCancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            throw;
+        }
+    }
+
+    async Task SendWhileAvailableAsync<TMessage>(
+        ConsumeContext<TMessage> context,
+        OutboxConsumeOptions options,
+        IPipe<OutboxConsumeContext<TMessage>> next,
+        ReliableInboxKey key,
+        CancellationToken deliveryCancellationToken,
+        CancellationToken cancellationToken,
+        CancellationToken operationCancellationToken)
+        where TMessage : class
+    {
         while (true)
         {
             deliveryCancellationToken.ThrowIfCancellationRequested();
@@ -81,68 +106,56 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
 
             ReliableInboxLease lease = acquisition.Lease
                 ?? throw new InvalidOperationException($"Reliable inbox '{key}' was acquired without a lease.");
-            var reliableContext = new InMemoryReliableInboxContext<TBus, TMessage>(
-                context,
-                options,
-                _provider,
-                _store,
-                _contracts,
-                _policy.Limits,
-                key,
-                lease,
-                acquisition.Attempt,
-                _timeProvider);
-            try
+            await SendWithLeaseAsync(
+                context, options, next, key, lease, acquisition.Attempt,
+                operationCancellationToken).ConfigureAwait(false);
+            return;
+        }
+    }
+
+    async Task SendWithLeaseAsync<TMessage>(
+        ConsumeContext<TMessage> context,
+        OutboxConsumeOptions options,
+        IPipe<OutboxConsumeContext<TMessage>> next,
+        ReliableInboxKey key,
+        ReliableInboxLease lease,
+        int attempt,
+        CancellationToken operationCancellationToken)
+        where TMessage : class
+    {
+        var reliableContext = new InMemoryReliableInboxContext<TBus, TMessage>(
+            context, options, _provider, _store, _contracts, _policy.Limits,
+            key, lease, attempt, _timeProvider);
+        try
+        {
+            await next.SendAsync(reliableContext).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (operationCancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            DateTimeOffset failedAt = _timeProvider.GetUtcNow();
+            string failureType = GetFailureTypeName(exception);
+            if (attempt >= _policy.MaximumDeliveryAttempts)
             {
-                await next.SendAsync(reliableContext).ConfigureAwait(false);
-                return;
-            }
-            catch (OperationCanceledException) when (operationCancellationToken.IsCancellationRequested)
-            {
+                bool quarantined = await _store.QuarantineAsync(
+                        key, lease, failureType, failedAt, CancellationToken.None)
+                    .ConfigureAwait(false);
+                if (quarantined)
+                    return;
+
                 throw;
             }
-            catch (Exception exception)
-            {
-                DateTimeOffset failedAt = _timeProvider.GetUtcNow();
-                string failureType = GetFailureTypeName(exception);
-                if (acquisition.Attempt >= _policy.MaximumDeliveryAttempts)
-                {
-                    bool quarantined = await _store.QuarantineAsync(
-                            key,
-                            lease,
-                            failureType,
-                            failedAt,
-                            CancellationToken.None)
-                        .ConfigureAwait(false);
-                    if (quarantined)
-                        return;
 
-                    throw;
-                }
+            DateTimeOffset dueAt = failedAt + CalculateRetryDelay(attempt);
+            bool retained = await _store.ScheduleRetryAsync(
+                key, lease, dueAt, failureType, failedAt, CancellationToken.None).ConfigureAwait(false);
+            if (!retained)
+                throw;
 
-                DateTimeOffset dueAt = failedAt + CalculateRetryDelay(acquisition.Attempt);
-                bool retained = await _store.ScheduleRetryAsync(
-                    key,
-                    lease,
-                    dueAt,
-                    failureType,
-                    failedAt,
-                    CancellationToken.None).ConfigureAwait(false);
-                if (!retained)
-                    throw;
-
-                throw new ReliableInboxRetryRequiredException(exception);
-            }
-        }
-        }
-        catch (OperationCanceledException exception) when (linkedCancellation is not null
-            && operationCancellationToken.IsCancellationRequested
-            && exception.CancellationToken != deliveryCancellationToken
-            && exception.CancellationToken != cancellationToken)
-        {
-            deliveryCancellationToken.ThrowIfCancellationRequested();
-            cancellationToken.ThrowIfCancellationRequested();
-            throw;
+            throw new ReliableInboxRetryRequiredException(exception);
         }
     }
 

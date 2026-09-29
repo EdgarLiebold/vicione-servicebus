@@ -80,6 +80,259 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         Assert.Equal(messages.Sum(x => x.StorageSize), finalCapacity.StoredBytes);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t115-tracking-failure-detaches-rejected-send-and-preserves-session")]
+    public async Task TrackingFailure_DetachesRejectedSendAndPreservesHealthySessionAsync(bool hasEarlierSend)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        Guid earlierId = Guid.NewGuid();
+        Guid rejectedId = Guid.NewGuid();
+        Guid recoveredId = Guid.NewGuid();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        if (hasEarlierSend)
+            await context.AddSendAsync(CreateSendContext(earlierId, 1), token);
+
+        var sentinel = new InvalidOperationException("record tracked callback failed");
+        bool throwOnce = true;
+        fixture.DbContext.ChangeTracker.Tracked += (_, args) =>
+        {
+            if (throwOnce && args.Entry.Entity is DurableSendRecord record && record.Id == rejectedId)
+            {
+                throwOnce = false;
+                throw sentinel;
+            }
+        };
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(rejectedId, 2), token));
+
+        Assert.Same(sentinel, failure);
+        Assert.DoesNotContain(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>(),
+            entry => entry.Entity.Id == rejectedId);
+        Guid[] expectedAfterFailure = hasEarlierSend ? [earlierId] : [];
+        Assert.Equal(expectedAfterFailure,
+            fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>().Select(entry => entry.Entity.Id));
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>()).Entity;
+        Assert.Equal(hasEarlierSend ? 1 : 0, capacity.StoredCount);
+        Assert.Equal(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>().Sum(entry => entry.Entity.StorageSize),
+            capacity.StoredBytes);
+
+        await context.CommitAsync(token);
+        await context.AddSendAsync(CreateSendContext(recoveredId, 3), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord[] messages = await persisted.Set<DurableSendRecord>().AsNoTracking().ToArrayAsync(token);
+        Guid[] expectedPersisted = hasEarlierSend ? [earlierId, recoveredId] : [recoveredId];
+        Assert.Equal(expectedPersisted,
+            messages.Select(record => record.Id));
+        Assert.DoesNotContain(messages, record => record.Id == rejectedId);
+        DurableSendCapacityState storedCapacity = await persisted.Set<DurableSendCapacityState>()
+            .AsNoTracking().SingleAsync(token);
+        Assert.Equal(messages.Length, storedCapacity.StoredCount);
+        Assert.Equal(messages.Sum(record => record.StorageSize), storedCapacity.StoredBytes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t115-detach-callback-failure-preserves-primary-error-and-capacity")]
+    public async Task DetachCallbackFailure_PreservesPrimaryErrorAndAllowsHealthyRetryAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid rejectedId = Guid.NewGuid();
+        Guid recoveredId = Guid.NewGuid();
+        var primary = new InvalidOperationException("record tracking failed");
+        var secondary = new InvalidOperationException("record detach callback failed");
+        bool throwOnTrack = true;
+        bool throwOnDetach = true;
+        fixture.DbContext.ChangeTracker.Tracked += (_, args) =>
+        {
+            if (throwOnTrack && args.Entry.Entity is DurableSendRecord record && record.Id == rejectedId)
+            {
+                throwOnTrack = false;
+                throw primary;
+            }
+        };
+        fixture.DbContext.ChangeTracker.StateChanged += (_, args) =>
+        {
+            if (throwOnDetach && args.Entry.Entity is DurableSendRecord record
+                && record.Id == rejectedId && args.NewState == EntityState.Detached)
+            {
+                throwOnDetach = false;
+                throw secondary;
+            }
+        };
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(rejectedId, 1), token));
+
+        Assert.Same(primary, failure);
+        Assert.False(throwOnDetach);
+        Assert.DoesNotContain(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>(),
+            entry => entry.Entity.Id == rejectedId);
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>()).Entity;
+        Assert.Equal(0, capacity.StoredCount);
+        Assert.Equal(0, capacity.StoredBytes);
+        await context.AddSendAsync(CreateSendContext(recoveredId, 2), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(recoveredId, stored.Id);
+        DurableSendCapacityState storedCapacity = await persisted.Set<DurableSendCapacityState>()
+            .AsNoTracking().SingleAsync(token);
+        Assert.Equal(1, storedCapacity.StoredCount);
+        Assert.Equal(stored.StorageSize, storedCapacity.StoredBytes);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t115-detect-changes-failure-cannot-leave-rejected-send-tracked")]
+    public async Task DetectChangesFailure_CannotLeaveRejectedSendTrackedOrPersistedAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid rejectedId = Guid.NewGuid();
+        Guid recoveredId = Guid.NewGuid();
+        var primary = new InvalidOperationException("record tracking failed");
+        var secondary = new InvalidOperationException("detect changes callback failed");
+        bool trackingFailed = false;
+        fixture.DbContext.ChangeTracker.Tracked += (_, args) =>
+        {
+            if (args.Entry.Entity is DurableSendRecord record && record.Id == rejectedId)
+            {
+                trackingFailed = true;
+                throw primary;
+            }
+        };
+        fixture.DbContext.ChangeTracker.DetectingAllChanges += (_, _) =>
+        {
+            if (trackingFailed)
+                throw secondary;
+        };
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(rejectedId, 1), token));
+
+        fixture.DbContext.ChangeTracker.AutoDetectChangesEnabled = false;
+        Assert.Same(primary, failure);
+        Assert.True(trackingFailed);
+        Assert.DoesNotContain(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>(),
+            entry => entry.Entity.Id == rejectedId);
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>()).Entity;
+        Assert.Equal(0, capacity.StoredCount);
+        Assert.Equal(0, capacity.StoredBytes);
+
+        await context.AddSendAsync(CreateSendContext(recoveredId, 2), token);
+        await context.CommitAsync(token);
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(recoveredId,
+            (await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token)).Id);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t115-pre-detach-callback-failure-cannot-leave-rejected-send-tracked")]
+    public async Task StateChangingFailure_CannotLeaveRejectedSendTrackedOrPersistedAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid rejectedId = Guid.NewGuid();
+        Guid recoveredId = Guid.NewGuid();
+        var primary = new InvalidOperationException("record tracking failed");
+        var secondary = new InvalidOperationException("pre-detach callback failed");
+        bool throwOnTrack = true;
+        bool throwOnDetach = true;
+        fixture.DbContext.ChangeTracker.Tracked += (_, args) =>
+        {
+            if (throwOnTrack && args.Entry.Entity is DurableSendRecord record && record.Id == rejectedId)
+            {
+                throwOnTrack = false;
+                throw primary;
+            }
+        };
+        fixture.DbContext.ChangeTracker.StateChanging += (_, args) =>
+        {
+            if (throwOnDetach && args.Entry.Entity is DurableSendRecord record
+                && record.Id == rejectedId && args.NewState == EntityState.Detached)
+            {
+                throwOnDetach = false;
+                throw secondary;
+            }
+        };
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(rejectedId, 1), token));
+
+        Assert.Same(primary, failure);
+        Assert.False(throwOnDetach);
+        Assert.DoesNotContain(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>(),
+            entry => entry.Entity.Id == rejectedId);
+        DurableSendCapacityState capacity = Assert.Single(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>()).Entity;
+        Assert.Equal(0, capacity.StoredCount);
+        Assert.Equal(0, capacity.StoredBytes);
+        await context.AddSendAsync(CreateSendContext(recoveredId, 2), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        Assert.Equal(recoveredId,
+            (await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token)).Id);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t115-persistent-pre-detach-callback-fails-closed-without-orphan")]
+    public async Task PersistentStateChangingFailure_ClearsRejectedTrackerAndAllowsRetryAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid rejectedId = Guid.NewGuid();
+        Guid recoveredId = Guid.NewGuid();
+        var primary = new InvalidOperationException("record tracking failed");
+        int detachAttempts = 0;
+        var pendingBusiness = new BusinessRecord(Guid.NewGuid(), "must be replayed after tracker failure");
+        fixture.DbContext.Add(pendingBusiness);
+        fixture.DbContext.ChangeTracker.Tracked += (_, args) =>
+        {
+            if (args.Entry.Entity is DurableSendRecord record && record.Id == rejectedId)
+                throw primary;
+        };
+        fixture.DbContext.ChangeTracker.StateChanging += (_, args) =>
+        {
+            if (args.Entry.Entity is DurableSendRecord record
+                && record.Id == rejectedId && args.NewState == EntityState.Detached)
+            {
+                detachAttempts++;
+                throw new InvalidOperationException("detach forbidden");
+            }
+        };
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.AddSendAsync(CreateSendContext(rejectedId, 1), token));
+
+        Assert.Same(primary, failure.InnerException);
+        Assert.Contains("All pending changes in this DbContext were discarded", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(2, detachAttempts);
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>());
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>());
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<BusinessRecord>());
+        await context.AddSendAsync(CreateSendContext(recoveredId, 2), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(recoveredId, stored.Id);
+        DurableSendCapacityState storedCapacity = await persisted.Set<DurableSendCapacityState>()
+            .AsNoTracking().SingleAsync(token);
+        Assert.Equal(1, storedCapacity.StoredCount);
+        Assert.Equal(stored.StorageSize, storedCapacity.StoredBytes);
+        Assert.Empty(await persisted.Set<BusinessRecord>().AsNoTracking().ToArrayAsync(token));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-WRITE-COORDINATOR", "required-actions-fail-at-boundary")]
     public async Task Coordinator_RejectsMissingActionsAsync()

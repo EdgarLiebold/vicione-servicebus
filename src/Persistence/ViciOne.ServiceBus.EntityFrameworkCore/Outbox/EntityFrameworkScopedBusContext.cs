@@ -87,53 +87,8 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             if (_staged.Count > 0)
                 EnsureStagedRecordsPending();
 
-            if (!context.MessageId.HasValue)
-                throw new MessageException(typeof(T), "The SendContext MessageId must be present");
-            Uri destination = context.DestinationAddress
-                ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
-            DateTimeOffset now = _timeProvider.GetUtcNow();
-            PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
-            if (admissionRuntime is null)
-            {
-                throw new ConfigurationException(
-                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-                        "Entity Framework transactional outbox",
-                        typeof(TBus).ToString(),
-                        "The payload-admission runtime is missing.",
-                        "Register payload admission for this bus before using the transactional outbox"));
-            }
-
-            byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();
-            string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
-            if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
-                || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
-                || !proof.MatchesEnvelope(body, contentType))
-                throw new InvalidOperationException("The transactional outbox has no complete payload admission proof for its serialized envelope.");
-
-            byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof).ToArray();
-            Guid id = context.MessageId.Value;
-            if (_staged.ContainsKey(id)
-                || _dbContext.ChangeTracker.Entries<DurableSendRecord>()
-                    .Any(entry => entry.Entity.Id == id && entry.Entity.StoreKey == _persistenceIdentity))
-                throw new InvalidOperationException($"The transactional outbox message '{id}' is already staged in this session.");
-            var record = new DurableSendRecord
-            {
-                StoreKey = _persistenceIdentity,
-                Id = id,
-                GenerationToken = Guid.NewGuid(),
-                ContractIdentity = _contractCatalog.GetIdentity(typeof(T)).ToString(),
-                DestinationAddress = destination.AbsoluteUri,
-                ContentType = contentType,
-                Body = body,
-                Metadata = metadata,
-                MessageId = context.MessageId,
-                CorrelationId = context.CorrelationId,
-                StorageSize = checked(body.LongLength + metadata.LongLength),
-                Status = DurableSendStatus.Pending,
-                EnqueuedAt = now.UtcDateTime,
-                DueAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,
-                NextAttemptAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,
-            };
+            DurableSendRecord record = CreateStagedRecord(context);
+            Guid id = record.Id;
 
             CapacityReservation reservation = await ReserveCapacityAsync(record.StorageSize, cancellationToken).ConfigureAwait(false);
             try
@@ -142,15 +97,113 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
                 EntityEntry<DurableSendRecord> entry = _dbContext.Add(record);
                 _staged.Add(id, new StagedSend(entry, record.StorageSize, record.GenerationToken));
             }
-            catch
+            catch (Exception failure)
             {
-                reservation.Capacity.StoredCount = reservation.PreviousCount;
-                reservation.Capacity.StoredBytes = reservation.PreviousBytes;
-                if (_staged.Count == 0)
-                    _capacityBaseline = null;
+                if (RollbackRejectedAdmission(record, reservation))
+                {
+                    throw new InvalidOperationException(
+                        "The transactional outbox could not detach a rejected send because an EF change-tracker callback failed repeatedly. "
+                        + "All pending changes in this DbContext were discarded to prevent an orphaned send.",
+                        failure);
+                }
                 throw;
             }
         }, cancellationToken);
+    }
+
+    bool RollbackRejectedAdmission(DurableSendRecord record, CapacityReservation reservation)
+    {
+        bool clearedTracker = false;
+        try
+        {
+            EntityEntry<DurableSendRecord> entry = _dbContext.Entry(record);
+            for (int attempt = 0; attempt < 2 && entry.State != EntityState.Detached; attempt++)
+            {
+                try
+                {
+                    entry.State = EntityState.Detached;
+                }
+                catch
+                {
+                    if (entry.State != EntityState.Detached && attempt == 1)
+                        throw;
+                }
+            }
+        }
+        catch
+        {
+            // A persistent EF callback can prevent selective detach; clear the tracker to prevent an orphaned send.
+            try
+            {
+                _dbContext.ChangeTracker.Clear();
+                clearedTracker = true;
+            }
+            catch
+            {
+                // The original admission failure remains authoritative.
+            }
+            _staged.Clear();
+            _capacityBaseline = null;
+        }
+        finally
+        {
+            reservation.Capacity.StoredCount = reservation.PreviousCount;
+            reservation.Capacity.StoredBytes = reservation.PreviousBytes;
+            if (_staged.Count == 0)
+                _capacityBaseline = null;
+        }
+        return clearedTracker;
+    }
+
+    DurableSendRecord CreateStagedRecord<T>(SendContext<T> context) where T : class
+    {
+        if (!context.MessageId.HasValue)
+            throw new MessageException(typeof(T), "The SendContext MessageId must be present");
+        Uri destination = context.DestinationAddress
+            ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
+        DateTimeOffset now = _timeProvider.GetUtcNow();
+        PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
+        if (admissionRuntime is null)
+        {
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Entity Framework transactional outbox",
+                    typeof(TBus).ToString(),
+                    "The payload-admission runtime is missing.",
+                    "Register payload admission for this bus before using the transactional outbox"));
+        }
+
+        byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();
+        string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
+        if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
+            || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
+            || !proof.MatchesEnvelope(body, contentType))
+            throw new InvalidOperationException("The transactional outbox has no complete payload admission proof for its serialized envelope.");
+
+        byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof).ToArray();
+        Guid id = context.MessageId.Value;
+        if (_staged.ContainsKey(id)
+            || _dbContext.ChangeTracker.Entries<DurableSendRecord>()
+                .Any(entry => entry.Entity.Id == id && entry.Entity.StoreKey == _persistenceIdentity))
+            throw new InvalidOperationException($"The transactional outbox message '{id}' is already staged in this session.");
+        return new DurableSendRecord
+        {
+            StoreKey = _persistenceIdentity,
+            Id = id,
+            GenerationToken = Guid.NewGuid(),
+            ContractIdentity = _contractCatalog.GetIdentity(typeof(T)).ToString(),
+            DestinationAddress = destination.AbsoluteUri,
+            ContentType = contentType,
+            Body = body,
+            Metadata = metadata,
+            MessageId = context.MessageId,
+            CorrelationId = context.CorrelationId,
+            StorageSize = checked(body.LongLength + metadata.LongLength),
+            Status = DurableSendStatus.Pending,
+            EnqueuedAt = now.UtcDateTime,
+            DueAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,
+            NextAttemptAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,
+        };
     }
 
     public Task CommitAsync(CancellationToken cancellationToken = default)
@@ -227,6 +280,12 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
 
     void EnsureStagedRecordsPending()
     {
+        EnsureStagedMessagesPending();
+        EnsureCapacityReservationPending();
+    }
+
+    void EnsureStagedMessagesPending()
+    {
         var trackedPending = new HashSet<DurableSendRecord>(ReferenceEqualityComparer.Instance);
         foreach (EntityEntry<DurableSendRecord> entry in _dbContext.ChangeTracker.Entries<DurableSendRecord>())
         {
@@ -247,7 +306,10 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
                     "The transactional outbox has staged records that are no longer pending under this session and cannot be committed.");
             }
         }
+    }
 
+    void EnsureCapacityReservationPending()
+    {
         if (_capacityBaseline is not { } baseline || _staged.Count == 0)
         {
             if (_staged.Count > 0)
