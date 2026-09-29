@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- SignalR backplane registration now rejects remote group timeouts that the
+  .NET system timer cannot schedule. The final supported fractional-millisecond
+  value remains valid; invalid values fail before DI registration. The complete
+  SignalR project passes 101/101.
+
 - Both public Azure Table Job Service repository overloads now have a real
   storage test for their three distinct saga key assignments. Deliberately
   swapped or ignored formatters fail; the complete Azurite integration project

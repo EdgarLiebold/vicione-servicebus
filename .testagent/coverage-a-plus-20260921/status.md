@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T156 SignalR timer boundary
+
+SignalR registration previously accepted remote group timeouts that fail when
+the request pipeline creates its .NET system timer. Red-first cases reproduced
+the defect; a runtime probe and Red Team counterexample refined the exact
+fractional-millisecond boundary. The corrected registration rejects the first
+unsupported duration before DI mutation. The exact-commit SignalR receipt
+passes 101/101 at `be890afef`; final read-only Red Team review is PASS.
+No new product-wide Coverage/CRAP claim is made. See
+[T156 evidence](t156-signalr-timer-boundary.md).
+
 ## Current T155 Azure Table Job Service repository keys
 
 Both public Job Service Azure Table overloads now load all three saga types
