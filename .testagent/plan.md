@@ -1,5 +1,22 @@
 # A+ remediation test plan
 
+## T106 reliable inbox delivery and operation cancellation
+
+1. Add red-first InMemory and SQLite EF tests with distinct cancellable
+   delivery and operation tokens. Cancel delivery after lease acquisition,
+   assert the original exception and no retry/quarantine or committed output.
+   Add the opposite operation-token case as a control. InMemory retains its
+   busy attempt-one lease; EF rolls it back and accepts a healthy first attempt.
+2. Keep cancellation ownership active through factory acquisition, callback,
+   context completion, and provider commit. Correct both providers only where
+   the red tests establish a defect. Cover opposite operation-token
+   cancellation as a control.
+3. Run focused tests while editing, perform a concrete counterprobe, obtain
+   read-only adversarial review, then run complete affected Core and EF unit
+   projects on an exact commit. Document evidence and push. The 33-profile
+   global measurement follows the work-volume cadence, with an earlier run
+   if the cross-provider change invalidates the local picture.
+
 ## T105 RabbitMQ queue reconfiguration and broker projection
 
 1. Add red-first tests through `RabbitMqReceiveEndpointConfiguration` for

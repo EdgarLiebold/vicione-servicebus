@@ -1,9 +1,11 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 using Xunit;
@@ -12,6 +14,158 @@ namespace ViciOne.ServiceBus.Tests.ReliableMessaging;
 
 public sealed class ReliableInMemoryIntegrationTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "delivery-cancellation-discards-buffered-outgoing-intent")]
+    public async Task DeliveryCancellation_AfterBufferingOutgoingIntent_DoesNotCommitItAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        var probe = new DistinctDeliveryCancellationProbe();
+        var observation = new ReliableObservation();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton(probe)
+            .AddSingleton(observation)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration);
+                configuration.AddConsumer<DistinctDeliveryCancellationConsumer>();
+                configuration.AddConsumer<ReliableEventConsumer>();
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: testToken).WaitAsync(timeout, testToken);
+        Guid messageId = NewId.NextGuid();
+        try
+        {
+            await harness.Bus.PublishAsync(new ReliableCommand(messageId, 0),
+                send => send.MessageId = messageId, testToken);
+            Exception? observed = await probe.Completed.Task.WaitAsync(timeout, testToken);
+            OperationCanceledException failure = Assert.IsType<OperationCanceledException>(observed);
+            Assert.Equal(probe.Delivery.Token, failure.CancellationToken);
+            Assert.Equal(1, probe.BufferedMessages);
+            IInboxStore<IBus> inbox = provider.GetRequiredService<IInboxStore<IBus>>();
+            ReliableInboxAcquireResult retained = await inbox.AcquireAsync(
+                new ReliableInboxKey(messageId, probe.ConsumerId), DateTimeOffset.UtcNow,
+                TimeSpan.FromMinutes(1), testToken);
+            Assert.Equal(ReliableInboxAcquireDisposition.Busy, retained.Disposition);
+            Assert.Equal(1, retained.Attempt);
+            Assert.Empty((await inbox.GetQuarantineAsync(new ReliableInboxQuarantineQuery(), testToken)).Entries);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            probe.Delivery.Dispose();
+            probe.Operation.Dispose();
+        }
+        Assert.Empty(observation.Events);
+        Assert.Empty(harness.Consumed.Snapshot<ReliableEvent>());
+        IOutboxStore<IBus> outbox = provider.GetRequiredService<IOutboxStore<IBus>>();
+        DurableSendStoreSnapshot snapshot = await outbox.GetSnapshotAsync(testToken);
+        Assert.Equal((0, 0L), (snapshot.StoredCount, snapshot.StoredBytes));
+        Assert.Empty(await outbox.ClaimDueAsync(DateTimeOffset.UtcNow.AddDays(2), 10,
+            TimeSpan.FromMinutes(1), testToken));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "either-distinct-cancellation-token-retains-lease")]
+    public async Task Cancellation_FromEitherDistinctToken_DoesNotCommitOrScheduleFailureAsync(bool cancelDelivery)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+        using var delivery = new CancellationTokenSource();
+        using var operation = new CancellationTokenSource();
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration);
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: testToken).WaitAsync(timeout, testToken);
+        Guid messageId = NewId.NextGuid();
+        Guid consumerId = NewId.NextGuid();
+        var key = new ReliableInboxKey(messageId, consumerId);
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        try
+        {
+            ConsumeContext<ReliableCommand> input = InMemoryOutboxTestContextFactory.Create(
+                new ReliableCommand(messageId, 0), delivery.Token, messageId: messageId);
+            OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                InMemoryInboxPipelineTestDriver.SendAsync(scope.ServiceProvider, input, consumerId, context =>
+                {
+                    Assert.Equal(messageId, context.MessageId);
+                    if (cancelDelivery)
+                        delivery.Cancel();
+                    else
+                        operation.Cancel();
+                    return Task.CompletedTask;
+                }, operation.Token, completeConsumer: true));
+            Assert.Equal(cancelDelivery ? delivery.Token : operation.Token, actual.CancellationToken);
+            Assert.Equal(cancelDelivery, delivery.IsCancellationRequested);
+            Assert.Equal(!cancelDelivery, operation.IsCancellationRequested);
+
+            IInboxStore<IBus> inbox = provider.GetRequiredService<IInboxStore<IBus>>();
+            ReliableInboxAcquireResult retained = await inbox.AcquireAsync(
+                key, DateTimeOffset.UtcNow, TimeSpan.FromMinutes(1), testToken);
+            Assert.Equal(ReliableInboxAcquireDisposition.Busy, retained.Disposition);
+            Assert.Equal(1, retained.Attempt);
+            Assert.Empty((await inbox.GetQuarantineAsync(new ReliableInboxQuarantineQuery(), testToken)).Entries);
+
+            using var waitingDelivery = new CancellationTokenSource();
+            using var waitingOperation = new CancellationTokenSource();
+            int waitingCallbacks = 0;
+            ConsumeContext<ReliableCommand> waitingInput = InMemoryOutboxTestContextFactory.Create(
+                new ReliableCommand(messageId, 0), waitingDelivery.Token, messageId: messageId);
+            Task waiting = InMemoryInboxPipelineTestDriver.SendAsync(
+                scope.ServiceProvider, waitingInput, consumerId, _ =>
+                {
+                    waitingCallbacks++;
+                    return Task.CompletedTask;
+                }, waitingOperation.Token);
+            await Task.Delay(TimeSpan.FromMilliseconds(30), testToken);
+            Assert.False(waiting.IsCompleted);
+            if (cancelDelivery)
+                waitingDelivery.Cancel();
+            else
+                waitingOperation.Cancel();
+            OperationCanceledException waitFailure = await Assert.ThrowsAsync<OperationCanceledException>(
+                () => waiting.WaitAsync(timeout, testToken));
+            Assert.Equal(cancelDelivery ? waitingDelivery.Token : waitingOperation.Token, waitFailure.CancellationToken);
+            Assert.Equal(0, waitingCallbacks);
+
+            using var preDelivery = new CancellationTokenSource();
+            using var preOperation = new CancellationTokenSource();
+            if (cancelDelivery)
+                preDelivery.Cancel();
+            else
+                preOperation.Cancel();
+            Guid preMessageId = NewId.NextGuid();
+            Guid preConsumerId = NewId.NextGuid();
+            int callbackCount = 0;
+            ConsumeContext<ReliableCommand> preInput = InMemoryOutboxTestContextFactory.Create(
+                new ReliableCommand(preMessageId, 0), preDelivery.Token, messageId: preMessageId);
+            OperationCanceledException preFailure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                InMemoryInboxPipelineTestDriver.SendAsync(scope.ServiceProvider, preInput, preConsumerId, _ =>
+                {
+                    callbackCount++;
+                    return Task.CompletedTask;
+                }, preOperation.Token, completeConsumer: true));
+            Assert.Equal(cancelDelivery ? preDelivery.Token : preOperation.Token, preFailure.CancellationToken);
+            Assert.Equal(0, callbackCount);
+            ReliableInboxAcquireResult fresh = await inbox.AcquireAsync(
+                new ReliableInboxKey(preMessageId, preConsumerId), DateTimeOffset.UtcNow,
+                TimeSpan.FromMinutes(1), testToken);
+            Assert.Equal(ReliableInboxAcquireDisposition.Acquired, fresh.Disposition);
+            Assert.Equal(1, fresh.Attempt);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "admission-rejection-discards-buffered-sends-and-operator-retry-commits")]
     public async Task ConsumerAdmission_RejectionDiscardsBufferedSendsAndOperatorRetryCommitsAsync()
@@ -573,6 +727,13 @@ public sealed class ReliableInMemoryIntegrationTests
         }
     }
 
+    public sealed class DeliveryCancellationContext(
+        ConsumeContext<ReliableCommand> context,
+        CancellationToken cancellationToken) : ConsumeContextProxy<ReliableCommand>(context)
+    {
+        public override CancellationToken CancellationToken => cancellationToken;
+    }
+
     private sealed class FixedInboxClock(DateTimeOffset now) : TimeProvider
     {
         public override DateTimeOffset GetUtcNow() => now;
@@ -669,6 +830,46 @@ public sealed class ReliableInMemoryIntegrationTests
         public int PreparedMessages { get; set; }
         public OperationCanceledException Failure { get; } = new(cancellation.Token);
         public TaskCompletionSource<Exception?> Completed { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    public sealed class DistinctDeliveryCancellationProbe
+    {
+        public CancellationTokenSource Delivery { get; } = new();
+        public CancellationTokenSource Operation { get; } = new();
+        public Guid ConsumerId { get; } = NewId.NextGuid();
+        public Guid OutgoingId { get; } = NewId.NextGuid();
+        public int BufferedMessages { get; set; }
+        public TaskCompletionSource<Exception?> Completed { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    public sealed class DistinctDeliveryCancellationConsumer(
+        IServiceProvider provider,
+        DistinctDeliveryCancellationProbe probe) : IConsumer<ReliableCommand>
+    {
+        public async Task ConsumeAsync(ConsumeContext<ReliableCommand> context)
+        {
+            Exception? observed = null;
+            try
+            {
+                var deliveryContext = new DeliveryCancellationContext(context, probe.Delivery.Token);
+                await InMemoryInboxPipelineTestDriver.SendAsync(provider, deliveryContext, probe.ConsumerId, async inner =>
+                {
+                    await inner.Advanced().PublishAsync(
+                        new ReliableEvent(context.Message.MessageId, "canceled-delivery"), send =>
+                        {
+                            send.MessageId = probe.OutgoingId;
+                            send.Delay = TimeSpan.FromDays(1);
+                        }, probe.Operation.Token);
+                    probe.BufferedMessages++;
+                    probe.Delivery.Cancel();
+                }, probe.Operation.Token, completeConsumer: true);
+            }
+            catch (Exception exception)
+            {
+                observed = exception;
+            }
+            probe.Completed.TrySetResult(observed);
+        }
     }
 
     public sealed class CancellationConsumer(IServiceProvider provider, CancellationProbe probe) : IConsumer<ReliableCommand>

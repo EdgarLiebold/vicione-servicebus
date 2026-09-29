@@ -38,17 +38,26 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(next);
-        CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
-            ? cancellationToken
-            : context.CancellationToken;
-        operationCancellationToken.ThrowIfCancellationRequested();
+        CancellationToken deliveryCancellationToken = context.CancellationToken;
+        using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled
+            && deliveryCancellationToken.CanBeCanceled
+            && cancellationToken != deliveryCancellationToken
+                ? CancellationTokenSource.CreateLinkedTokenSource(deliveryCancellationToken, cancellationToken)
+                : null;
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? (cancellationToken.CanBeCanceled ? cancellationToken : deliveryCancellationToken);
+        deliveryCancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
         Guid messageId = context.GetOriginalMessageId()
             ?? throw new MessageException(typeof(TMessage), "MessageId required to use reliable messaging");
         var key = new ReliableInboxKey(messageId, options.ConsumerId).Validate();
 
+        try
+        {
         while (true)
         {
-            operationCancellationToken.ThrowIfCancellationRequested();
+            deliveryCancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             DateTimeOffset now = _timeProvider.GetUtcNow();
             ReliableInboxAcquireResult acquisition = await _store.AcquireAsync(
                 key,
@@ -124,6 +133,16 @@ internal sealed class InMemoryReliableInboxContextFactory<TBus> :
 
                 throw new ReliableInboxRetryRequiredException(exception);
             }
+        }
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && operationCancellationToken.IsCancellationRequested
+            && exception.CancellationToken != deliveryCancellationToken
+            && exception.CancellationToken != cancellationToken)
+        {
+            deliveryCancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            throw;
         }
     }
 

@@ -1,5 +1,23 @@
 # A+ remediation research
 
+## T106 reliable inbox cancellation across in-memory and EF providers
+
+The two reliable-inbox factories choose a cancellable operation token instead
+of the consume-context token. If both are distinct and the delivery is
+canceled during the consumer callback, the factory can classify that
+`OperationCanceledException` as a business failure and schedule a retry or
+quarantine. The in-memory context also chooses the explicit token for
+`SetConsumedAsync`, so it can commit a canceled delivery. Existing cancellation
+tests use the same token for both sources, leaving this combination unproved.
+
+Acceptance: cancel either token after the inbox is acquired while the other
+remains active. The original cancellation must propagate; no consumed fence
+or outgoing intent may commit, and no retry or quarantine may be recorded.
+The in-memory provider retains its original busy lease at attempt one, whereas
+EF rolls back the uncommitted lease and accepts a fresh healthy delivery at
+attempt one. Exercise both providers through their real factory paths and
+inspect their state.
+
 ## T105 RabbitMQ queue reconfiguration and broker projection
 
 RabbitMQ queue configuration is mutable until the receive endpoint topology

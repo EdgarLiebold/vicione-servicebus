@@ -62,6 +62,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
 
     public override Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
+        CancellationToken.ThrowIfCancellationRequested();
         CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
         SerializedDurableSend[] messages;

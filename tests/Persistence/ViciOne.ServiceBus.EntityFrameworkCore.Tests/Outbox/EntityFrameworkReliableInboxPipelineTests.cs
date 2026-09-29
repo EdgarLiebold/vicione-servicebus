@@ -524,6 +524,136 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
         Assert.Equal("committed", business.Value);
     }
 
+    [Theory]
+    [InlineData(true, true, false)]
+    [InlineData(true, false, false)]
+    [InlineData(false, false, false)]
+    [InlineData(true, false, true)]
+    [InlineData(false, false, true)]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "either-distinct-cancellation-token-rolls-back")]
+    public async Task Cancellation_FromEitherDistinctToken_RollsBackWithoutRetryOrQuarantineAsync(
+        bool cancelDelivery, bool cancelBeforeCompletion, bool returnAfterCancellation)
+    {
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
+        using var delivery = new CancellationTokenSource();
+        using var operation = new CancellationTokenSource();
+        Guid messageId = Guid.NewGuid();
+        Guid outgoingId = Guid.NewGuid();
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        CancellationToken canceledToken = cancelDelivery ? delivery.Token : operation.Token;
+        OperationCanceledException? expected = null;
+
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            IPublishEndpoint publisher = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, delivery.Token, messageId: messageId);
+            OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(async context =>
+                {
+                    Assert.Equal(1, context.ReceiveCount);
+                    db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "canceled" });
+                    await publisher.PublishAsync(new AdmissionRecoveryEvent(command.CorrelationId, "canceled-intent"), send =>
+                    {
+                        send.MessageId = outgoingId;
+                        send.Delay = TimeSpan.FromDays(1);
+                    }, operation.Token);
+                    if (cancelBeforeCompletion)
+                    {
+                        delivery.Cancel();
+                        expected = await Assert.ThrowsAsync<OperationCanceledException>(() => context.SetConsumedAsync(operation.Token));
+                        Assert.Equal(delivery.Token, expected.CancellationToken);
+                        throw expected;
+                    }
+                    await context.SetConsumedAsync(operation.Token);
+                    if (cancelDelivery)
+                        delivery.Cancel();
+                    else
+                        operation.Cancel();
+                    if (returnAfterCancellation)
+                        return;
+                    expected = new OperationCanceledException("inbox canceled", canceledToken);
+                    throw expected;
+                }), operation.Token));
+            if (returnAfterCancellation)
+                Assert.Equal(canceledToken, actual.CancellationToken);
+            else
+                Assert.Same(expected, actual);
+            Assert.Equal(cancelDelivery, delivery.IsCancellationRequested);
+            Assert.Equal(!cancelDelivery, operation.IsCancellationRequested);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+
+        await using (ReliableInboxDbContext verification = fixture.CreateContext())
+        {
+            Assert.False(await verification.BusinessRecords.AnyAsync(row => row.Id == command.CorrelationId, fixture.CancellationToken));
+            Assert.False(await verification.Set<ReliableInboxRecord>().AnyAsync(
+                row => row.MessageId == messageId && row.ConsumerId == options.ConsumerId, fixture.CancellationToken));
+            Assert.False(await verification.Set<DurableSendRecord>().AnyAsync(
+                row => row.Id == outgoingId, fixture.CancellationToken));
+            Assert.Equal(0, fixture.Events.Count);
+        }
+
+        await using (AsyncServiceScope retryScope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = retryScope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            var factory = retryScope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, fixture.CancellationToken, messageId: messageId);
+            await factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(async context =>
+            {
+                Assert.Equal(1, context.ReceiveCount);
+                db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "healthy" });
+                await context.SetConsumedAsync(fixture.CancellationToken);
+            }), fixture.CancellationToken);
+        }
+
+        await using ReliableInboxDbContext final = fixture.CreateContext();
+        ReliableInboxRecord inbox = await final.Set<ReliableInboxRecord>().AsNoTracking().SingleAsync(fixture.CancellationToken);
+        Assert.Equal(ReliableInboxStatus.Consumed, inbox.Status);
+        Assert.Equal(1, inbox.Attempts);
+        Assert.Null(inbox.FailedAt);
+        Assert.Null(inbox.FailureType);
+        Assert.Equal("healthy", (await final.BusinessRecords.AsNoTracking().SingleAsync(fixture.CancellationToken)).Value);
+
+        using var preDelivery = new CancellationTokenSource();
+        using var preOperation = new CancellationTokenSource();
+        if (cancelDelivery)
+            preDelivery.Cancel();
+        else
+            preOperation.Cancel();
+        Guid preMessageId = Guid.NewGuid();
+        int callbackCount = 0;
+        await using (AsyncServiceScope preScope = fixture.Services.CreateAsyncScope())
+        {
+            var factory = preScope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, preDelivery.Token, messageId: preMessageId);
+            OperationCanceledException preFailure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(_ =>
+                {
+                    callbackCount++;
+                    return Task.CompletedTask;
+                }), preOperation.Token));
+            Assert.Equal(cancelDelivery ? preDelivery.Token : preOperation.Token, preFailure.CancellationToken);
+        }
+        Assert.Equal(0, callbackCount);
+        Assert.False(await final.Set<ReliableInboxRecord>().AsNoTracking().AnyAsync(
+            row => row.MessageId == preMessageId && row.ConsumerId == options.ConsumerId, fixture.CancellationToken));
+    }
+
     public sealed record ReliableInboxCommand(Guid CorrelationId, int FailuresBeforeSuccess);
 
     public sealed record ReliableInboxEvent(Guid CorrelationId);

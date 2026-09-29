@@ -48,8 +48,15 @@ internal sealed class EntityFrameworkReliableInboxContext<TBus, TDbContext, TMes
 
     public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
-        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
-        operationCancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled
+            && CancellationToken.CanBeCanceled
+            && cancellationToken != CancellationToken
+                ? CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken)
+                : null;
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? ResolveOperationCancellationToken(cancellationToken);
         _inbox.Status = ReliableInboxStatus.Consumed;
         _inbox.CompletedAt = _timeProvider.GetUtcNow().UtcDateTime;
         _inbox.DueAt = null;
