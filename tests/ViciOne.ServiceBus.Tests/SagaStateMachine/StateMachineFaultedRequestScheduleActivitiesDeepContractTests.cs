@@ -1,6 +1,8 @@
 using System.Reflection;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Initializers;
+using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -568,21 +570,217 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         Assert.Single(next.Seen);
     }
 
-    [Fact]
-    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "iteration-221-faulted-request-timeout-missing-scheduler-partial-state")]
-    public async Task FaultedRequest_MissingTimeoutSchedulerLeavesSentRequestIdButDoesNotContinueAsync()
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "iteration-221-request-timeout-missing-scheduler-rejects-before-dispatch")]
+    public async Task Request_MissingTimeoutSchedulerRejectsBeforeDispatchAsync(bool faulted, bool typed)
     {
-        var saga = new Saga();
-        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out Guid requestId);
-        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((_, _) => Task.CompletedTask);
-        IBehaviorExceptionContext<Saga, BaseFault> context = NewContext<IBehaviorExceptionContext<Saga, BaseFault>>(
-            saga, endpoint: endpoint);
-        var next = new NextBehavior();
-        var activity = new FaultedRequestActivity<Saga, BaseFault, Request, Response>(request, NewRequestFactory());
+        var previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var trace = new List<string>();
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out _, trace);
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((_, _) =>
+        {
+            trace.Add("send");
+            return Task.CompletedTask;
+        });
 
-        await Assert.ThrowsAsync<ConfigurationException>(() => activity.FaultedAsync(context, next));
+        ConfigurationException error;
+        if (faulted && typed)
+        {
+            IBehaviorExceptionContext<Saga, Data, BaseFault> context = NewContext<IBehaviorExceptionContext<Saga, Data, BaseFault>>(
+                saga, endpoint: endpoint, endpointAddress: _ => trace.Add("endpoint"));
+            var next = new TypedNextBehavior(trace: trace);
+            var activity = new FaultedRequestActivity<Saga, Data, BaseFault, Request, Response>(request, NewTypedRequestFactory());
+            error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.FaultedAsync(context, next));
+            Assert.Empty(next.Seen);
+        }
+        else if (faulted)
+        {
+            IBehaviorExceptionContext<Saga, BaseFault> context = NewContext<IBehaviorExceptionContext<Saga, BaseFault>>(
+                saga, endpoint: endpoint, endpointAddress: _ => trace.Add("endpoint"));
+            var next = new NextBehavior(trace);
+            var activity = new FaultedRequestActivity<Saga, BaseFault, Request, Response>(request, NewRequestFactory());
+            error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.FaultedAsync(context, next));
+            Assert.Empty(next.Seen);
+        }
+        else if (typed)
+        {
+            IBehaviorContext<Saga, Data> context = NewContext<IBehaviorContext<Saga, Data>>(
+                saga, endpoint: endpoint, endpointAddress: _ => trace.Add("endpoint"));
+            var next = new TypedNextBehavior(trace: trace);
+            var factory = new ContextMessageFactory<IBehaviorContext<Saga, Data>, Request>(
+                _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+            var activity = new RequestActivity<Saga, Data, Request, Response>(request, factory);
+            error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.ExecuteAsync(context, next));
+            Assert.Empty(next.Seen);
+        }
+        else
+        {
+            IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(
+                saga, endpoint: endpoint, endpointAddress: _ => trace.Add("endpoint"));
+            var next = new NextBehavior(trace);
+            var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+                _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+            var activity = new RequestActivity<Saga, Request, Response>(request, factory);
+            error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.ExecuteAsync(context, next));
+            Assert.Empty(next.Seen);
+        }
+
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(trace);
+        Assert.Contains("request timeout", error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("message scheduler", error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t119-request-timeout-scheduler-accepts-send-and-expiry")]
+    public async Task Request_WithTimeoutSchedulerSendsAndSchedulesMatchingExpiryAsync()
+    {
+        var trace = new List<string>();
+        var saga = new Saga();
+        var message = new Request();
+        var now = new DateTimeOffset(2041, 4, 5, 6, 7, 8, TimeSpan.Zero);
+        var sendCompletedAt = now + TimeSpan.FromSeconds(90);
+        var timeProvider = new FakeTimeProvider(now);
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out Guid requestId, trace);
+        using var cancellation = new CancellationTokenSource();
+        var sendGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, args) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            Assert.Same(message, args[0]);
+            Assert.Equal(cancellation.Token, args[2]);
+            trace.Add("send");
+            return sendGate.Task;
+        });
+        MessageSchedulerContext scheduler = NewScheduler((method, args) =>
+        {
+            Assert.Equal("ScheduleSendAsync", method.Name);
+            Assert.Equal(typeof(IRequestTimeoutExpired<Request>), Assert.Single(method.GetGenericArguments()));
+            Assert.Equal(cancellation.Token, args[2]);
+            var expiry = Assert.IsAssignableFrom<IRequestTimeoutExpired<Request>>(args[1]);
+            Assert.Equal(requestId, expiry.RequestId);
+            Assert.Equal(saga.CorrelationId, expiry.CorrelationId);
+            Assert.Same(message, expiry.Message);
+            Assert.Equal(sendCompletedAt, expiry.Timestamp);
+            Assert.Equal(sendCompletedAt + TimeSpan.FromMinutes(1), expiry.ExpirationTime);
+            Assert.Equal(sendCompletedAt + TimeSpan.FromMinutes(1), Assert.IsType<DateTimeOffset>(args[0]));
+            Assert.Equal(requestId, saga.RequestId);
+            trace.Add("schedule");
+            ScheduledMessage<IRequestTimeoutExpired<Request>> scheduled =
+                Proxy<ScheduledMessage<IRequestTimeoutExpired<Request>>>((_, _) => throw new NotSupportedException());
+            return Task.FromResult(scheduled);
+        });
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            scheduler: scheduler, endpoint: endpoint,
+            endpointAddress: address =>
+            {
+                Assert.Equal(ConfiguredAddress, address);
+                trace.Add("endpoint");
+            }, cancellationToken: cancellation.Token, timeProvider: timeProvider);
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(message)));
+        var next = new NextBehavior(trace);
+        var activity = new RequestActivity<Saga, Request, Response>(request, factory);
+
+        Task pending = activity.ExecuteAsync(context, next);
+        Assert.False(pending.IsCompleted);
+        Assert.Null(saga.RequestId);
+        Assert.Equal(["generate", "endpoint", "send"], trace);
+        timeProvider.Advance(TimeSpan.FromSeconds(90));
+        sendGate.SetResult();
+        await pending;
+
         Assert.Equal(requestId, saga.RequestId);
+        Assert.Same(context, Assert.Single(next.Seen));
+        Assert.Equal(["generate", "endpoint", "send", "persist", "schedule", "next"], trace);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t119-request-unrepresentable-timeout-rejects-before-dispatch")]
+    public async Task Request_UnrepresentableTimeoutRejectsBeforeDispatchAsync()
+    {
+        var trace = new List<string>();
+        var previousId = Guid.NewGuid();
+        var saga = new Saga { RequestId = previousId };
+        var request = NewRequest(TimeSpan.MaxValue, ConfiguredAddress, out _, trace);
+        var timeProvider = new FakeTimeProvider(new DateTimeOffset(2041, 4, 5, 6, 7, 8, TimeSpan.Zero));
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((_, _) =>
+        {
+            trace.Add("send");
+            return Task.CompletedTask;
+        });
+        MessageSchedulerContext scheduler = NewScheduler((_, _) =>
+        {
+            trace.Add("schedule");
+            throw new InvalidOperationException("An invalid deadline cannot be scheduled.");
+        });
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            scheduler: scheduler, endpoint: endpoint, timeProvider: timeProvider,
+            endpointAddress: _ => trace.Add("endpoint"));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var next = new NextBehavior(trace);
+        var activity = new RequestActivity<Saga, Request, Response>(request, factory);
+
+        ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() => activity.ExecuteAsync(context, next));
+
+        Assert.Contains("request timeout", error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("supported date range", error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(previousId, saga.RequestId);
+        Assert.Empty(trace);
         Assert.Empty(next.Seen);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t119-request-clock-advance-at-date-limit-still-schedules")]
+    public async Task Request_ClockAdvancesToDateLimitDuringSendStillSchedulesAsync()
+    {
+        var start = DateTimeOffset.MaxValue - TimeSpan.FromSeconds(2);
+        var timeProvider = new FakeTimeProvider(start);
+        var trace = new List<string>();
+        var saga = new Saga();
+        var request = NewRequest(TimeSpan.FromSeconds(2), ConfiguredAddress, out Guid requestId, trace);
+        var sendGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, _) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            trace.Add("send");
+            return sendGate.Task;
+        });
+        MessageSchedulerContext scheduler = NewScheduler((method, args) =>
+        {
+            Assert.Equal("ScheduleSendAsync", method.Name);
+            var expiry = Assert.IsAssignableFrom<IRequestTimeoutExpired<Request>>(args[1]);
+            Assert.Equal(requestId, expiry.RequestId);
+            Assert.Equal(DateTimeOffset.MaxValue - TimeSpan.FromSeconds(1), expiry.Timestamp);
+            Assert.Equal(DateTimeOffset.MaxValue, expiry.ExpirationTime);
+            Assert.Equal(DateTimeOffset.MaxValue, Assert.IsType<DateTimeOffset>(args[0]));
+            trace.Add("schedule");
+            return Task.FromResult(Proxy<ScheduledMessage<IRequestTimeoutExpired<Request>>>(
+                (_, _) => throw new NotSupportedException()));
+        });
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            scheduler: scheduler, endpoint: endpoint, timeProvider: timeProvider);
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var next = new NextBehavior(trace);
+        var activity = new RequestActivity<Saga, Request, Response>(request, factory);
+
+        Task pending = activity.ExecuteAsync(context, next);
+        Assert.False(pending.IsCompleted);
+        Assert.Null(saga.RequestId);
+        timeProvider.Advance(TimeSpan.FromSeconds(1));
+        sendGate.SetResult();
+        await pending;
+
+        Assert.Equal(requestId, saga.RequestId);
+        Assert.Same(context, Assert.Single(next.Seen));
+        Assert.Equal(["generate", "send", "persist", "schedule", "next"], trace);
     }
 
     [Fact]
@@ -1265,7 +1463,8 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         IAdvancedSendEndpoint? endpoint = null, Action<Uri>? endpointAddress = null,
         CancellationToken? cancellationToken = null, Guid? scheduledToken = null,
         ISendEndpointProvider? sendEndpointProvider = null,
-        Action<CancellationToken>? endpointCancellation = null) where T : class
+        Action<CancellationToken>? endpointCancellation = null,
+        TimeProvider? timeProvider = null) where T : class
     {
         Headers headers = Proxy<Headers>((method, args) => method.Name switch
         {
@@ -1284,17 +1483,22 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
             "get_CancellationToken" => cancellationToken ?? TestContext.Current.CancellationToken,
             "get_Headers" => headers,
             "get_ReceiveContext" => receive,
-            "TryGetPayload" => SetPayload(method, args, scheduler),
+            "TryGetPayload" => SetPayload(method, args, scheduler, timeProvider),
             "GetSendEndpointAsync" => GetEndpointAsync(args, endpoint, endpointAddress, endpointCancellation),
             _ => throw new NotSupportedException(method.Name)
         });
     }
 
-    static bool SetPayload(MethodInfo method, object?[] args, MessageSchedulerContext? scheduler)
+    static bool SetPayload(MethodInfo method, object?[] args, MessageSchedulerContext? scheduler, TimeProvider? timeProvider)
     {
         if (scheduler is not null && method.GetGenericArguments()[0] == typeof(MessageSchedulerContext))
         {
             args[0] = scheduler;
+            return true;
+        }
+        if (timeProvider is not null && method.GetGenericArguments()[0] == typeof(TimeProvider))
+        {
+            args[0] = timeProvider;
             return true;
         }
         args[0] = null;

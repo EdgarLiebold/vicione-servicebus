@@ -4192,3 +4192,36 @@ global discovery or measurement is needed during this packet.
   constructor already links it to the proposed parent. Direct, nested and
   named tests assert exact rejection and both directed hierarchy memberships
   after the throw, ruling out a phantom parent added before validation.
+
+# T119 — saga request timeout admission
+
+- The user now accepts the existing Line/Branch rates as A+ and wants code,
+  architecture and API correctness. Coverage percentage alone is no longer a
+  reason to add tests. T114 remains the last product-wide CRAP profile; T115
+  directly reduced its five known outbox/inbox hotspots below 30.
+- `RequestActivityImpl.SendRequestAsync` sends the request, writes its saga
+  request ID, then checks for a required scheduler when `Timeout > 0`. With
+  no scheduler, it throws after an externally visible request was accepted.
+  The existing faulted-request test asserts this partial state, but the API
+  documentation describes a positive timeout as a scheduled expiry that is
+  canceled on response/fault. Missing scheduler is known before transport
+  dispatch and should fail before the send and request-ID mutation.
+- The shared implementation serves normal untyped/typed and faulted
+  untyped/typed activities. Existing tests cover send ordering, fault
+  covariance, pre-cancellation and one faulted partial-state case. A focused
+  four-form matrix with a positive scheduler control can prove the desired
+  boundary without a coverage-only overload matrix or public API changes.
+- Microsoft `code-testing-agent` is the mandatory Research → Plan → Implement
+  entry point. Use `test-gap-analysis` and `assertion-quality` to challenge
+  the no-dispatch and recovery assertions, `run-tests` for SDK 10/MTP,
+  and `coverage-analysis` for the later exact-commit CRAP checkpoint. Reuse
+  the existing T98 Roslyn source/test pairing as a location aid.
+- Read-only Red Team review exposed a second pre-dispatch defect: a positive
+  `TimeSpan.MaxValue` cannot produce a valid expiry but was sent before date
+  arithmetic failed. Preflight must reject it with a configuration diagnosis.
+  Preserve the original post-send timeout origin; advancing a fixed clock
+  while send is blocked distinguishes this from an early deadline. If the
+  clock advances into the terminal date range during the send, clamp the
+  scheduled deadline to the final representable UTC instant to avoid a
+  partial state after a successful transport send. The terminal test also
+  caught an implicit local-offset conversion of `DateTime.MaxValue`.

@@ -32,6 +32,18 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         ArgumentNullException.ThrowIfNull(context);
         context.CancellationToken.ThrowIfCancellationRequested();
 
+        var timeout = _request.Settings.Timeout;
+        MessageSchedulerContext? schedulerContext = null;
+        if (timeout > TimeSpan.Zero && !context.TryGetPayload(out schedulerContext))
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A request timeout was specified but no message scheduler was specified or available", "Correct the named configuration before starting the host"));
+
+        if (timeout > TimeSpan.Zero)
+        {
+            var admissionTime = context.GetTimeProvider().GetUtcNow().UtcDateTime;
+            if (timeout > DateTime.MaxValue - admissionTime)
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "The request timeout exceeds the supported date range", "Correct the named configuration before starting the host"));
+        }
+
         var requestId = _request.GenerateRequestId(context.Saga);
 
         var pipe = new SendRequestPipe(_request, context.ReceiveContext.InputAddress, requestId, sendTuple.Pipe);
@@ -44,18 +56,16 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
 
         _request.SetRequestId(context.Saga, requestId);
 
-        if (_request.Settings.Timeout > TimeSpan.Zero)
+        if (timeout > TimeSpan.Zero)
         {
             var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
-            var expirationTime = now + _request.Settings.Timeout;
-
+            var expirationTime = timeout > DateTime.MaxValue - now
+                ? DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc)
+                : now + timeout;
             IRequestTimeoutExpired<TRequest> message =
                 new TimeoutExpired<TRequest>(now, expirationTime, context.Saga.CorrelationId, pipe.RequestId, sendTuple.Message);
 
-            if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
-                await schedulerContext.ScheduleSendAsync(expirationTime, message, context.CancellationToken).ConfigureAwait(false);
-            else
-                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A request timeout was specified but no message scheduler was specified or available", "Correct the named configuration before starting the host"));
+            await schedulerContext!.ScheduleSendAsync(expirationTime, message, context.CancellationToken).ConfigureAwait(false);
         }
     }
 

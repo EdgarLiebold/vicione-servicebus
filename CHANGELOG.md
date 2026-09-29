@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed saga requests with a positive timeout dispatching and changing their
+  request ID before discovering that no scheduler is available. Timeouts that
+  exceed the supported date range now fail before dispatch as configuration
+  errors. Normal and faulted, typed and untyped request tests protect the
+  admission boundary; a blocked-send test confirms that an accepted request's
+  timeout still begins when its send completes. If the clock reaches the end
+  of the date range during the send, the expiry uses the last representable
+  instant so the accepted request still receives a schedule.
+
 - Fixed saga state re-declaration after a property receives a same-name state
   from another machine. All four direct/nested state and substate declarations
   restore the registered state and its transition-event identity. Reparenting

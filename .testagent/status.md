@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## T119 — saga request timeout admission
+
+The four public normal/faulted and typed/untyped request forms now reject a
+missing scheduler before transport dispatch or request-ID mutation. A
+positive-timeout request with a scheduler retains its post-send deadline.
+An unrepresentable configured timeout fails before dispatch; if time moves
+to the terminal date range during a successful send, its expiry is scheduled
+at the last UTC instant. Red-first runs reproduced the original partial-state
+behavior, the early-deadline regression, the overflow diagnosis and the
+terminal date failure. Complete Core 7,132/7,132 passed on final current
+source/test bytes. See [T119 evidence](coverage-a-plus-20260921/t119-saga-request-timeout-admission.md).
+
 ## T115 — EF outbox cleanup and four-source complexity packet
 
 Five new behavior tests (six variants) exposed an orphaned EF reliable send

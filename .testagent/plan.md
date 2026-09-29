@@ -5493,3 +5493,25 @@ the two later-business reuse variants; both sources are independently restored b
    descendant before constructing a replacement. Verify exact parameter,
    property/cache/event identity and both directions of parent membership
    after rejection.
+
+# T119 — saga request timeout admission
+
+1. Replace the old faulted-request partial-state expectation with a red-first
+   four-form test: normal/faulted and untyped/typed positive-timeout requests
+   lacking a scheduler must throw the precise configuration error before
+   transport send, ID generation/storage or continuation. Preserve an older
+   request ID. Include a real scheduler-positive control that sends, stores
+   the generated ID and schedules exactly once with the same ID and token.
+2. Move the shared scheduler availability check in `RequestActivityImpl`
+   before transport dispatch. Keep the existing post-send deadline semantics
+   and public shape. Review pseudo-mutations and assertion strength; obtain
+   independent read-only Red Team review and correct concrete findings.
+3. Freeze source/tests, run the affected Core suite once, validate requirement
+   mapping and API shape, then run the planned fresh 33-profile product-wide
+   CRAP/Line/Branch checkpoint. Document measured limitations, changelog,
+   generated CHANGELIST and push the accepted result.
+4. Incorporate Red Team's terminal-date counterexample. A configured timeout
+   beyond the date range fails before dispatch; a clock that advances into
+   the terminal range during a blocked send schedules at the last UTC instant.
+   A blocked-send FakeTimeProvider test must also preserve the existing
+   timeout origin at successful send completion.

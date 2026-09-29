@@ -28,6 +28,11 @@ workflow. `ConfigureDelayedMessageScheduler()` uses transport delivery delay;
 it cannot recall an accepted message. Its cancellation API throws
 `NotSupportedException`, which also fails Saga response/fault processing when
 that processing attempts to cancel a positive timeout.
+The request requires an available scheduler before it is dispatched. A timeout
+that would exceed the supported date range is rejected before dispatch. For an
+accepted request, the timeout interval starts when the send completes.
+If the clock moves to the end of the supported date range during a send,
+the expiry is scheduled at the last representable instant.
 
 Without a separate request-ID property, a Saga request uses the Saga's correlation
 ID as its outgoing `RequestId`. Default response and fault correlation reads that

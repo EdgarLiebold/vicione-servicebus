@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T119 saga request timeout admission packet
+
+Positive-timeout requests now require a scheduler and a representable
+deadline before dispatch. A blocked send preserves the post-send timeout
+origin; a clock advancing into the terminal date range yields the final UTC
+instant instead of a partial request. The complete Core suite passed
+7,132/7,132 with no failures or skips on the current source/test bytes.
+See [T119 evidence](t119-saga-request-timeout-admission.md). The user accepts
+T114's Line and Branch coverage as A+; a new product-wide CRAP measurement
+remains to be completed after this packet.
+
 ## Current T118 saga declaration ownership packet
 
 Four red-first cases reproduced cross-machine same-name state ownership;
