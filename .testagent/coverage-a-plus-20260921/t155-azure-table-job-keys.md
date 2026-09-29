@@ -1,0 +1,9 @@
+# T155 — Azure Table Job Service repository key assignment
+
+The Azure Table API review identified a gap in both public `IJobServiceConfigurator.UseAzureTable` overloads. Existing tests asserted that three repositories were assigned, while the LocalIntegration job lifecycle used a different DI entry point. A swapped formatter or wrong default partition in the public overloads could survive.
+
+Commit `9469c7c9d` adds `PublicOverloads_LoadEachJobSagaFromItsOwnPartitionAsync` with two variants. It seeds real Azurite rows for `JobTypeSaga`, `JobSaga` and `JobAttemptSaga` in three distinct expected partitions, then loads each through the corresponding repository assigned by either the explicit-formatter overload or the default overload. Separate saga IDs and persisted markers prove identity and content. The fixture uses the provider's converter for saga fields but sets partition and canonical row keys independently of the formatter under test.
+
+Two temporary product mutants failed both variants (0/2 each): swapping JobSaga and JobAttemptSaga formatter assignments, and making `FixedPartitionSagaKeyFormatter.Format` ignore its configured partition. Both mutants were restored byte-identically. The focused class passed 2/2; the complete Azure Table LocalIntegration project passed 51/51. Independent read-only Red Team final review is PASS with no concrete P1/P2. No product source changed in this packet; the work closes an unverified public API behavior gap, not a confirmed product defect.
+
+The exact-commit receipt `artifacts/t155-azure-table-job-keys/receipt.json` (SHA-256 `54b5329bb39b32d8255022746ac488c02c5c12963761c22746d0323c9b1e4977`) verifies 51/51 tests, 14 unchanged binaries and 1,928 tracked product sources at `9469c7c9d`. It does not establish a new product-wide Coverage/CRAP result. Real Azure service behavior and job-service runtime configuration beyond these repository assignments remain separate acceptance scopes.

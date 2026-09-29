@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T155 Azure Table Job Service repository keys
+
+Both public Job Service Azure Table overloads now load all three saga types
+from independently seeded, distinct physical partitions. Swapped and ignored
+formatter mutants failed both variants. The exact-commit Azure Table
+LocalIntegration receipt passes 51/51 at `9469c7c9d`; independent read-only
+Red Team review is PASS. No product defect was found in this packet and no
+new product-wide Coverage/CRAP claim is made. See
+[T155 evidence](t155-azure-table-job-keys.md).
+
 ## Current T154 Azure Table journal boundary and lease ordering
 
 Adversarial review found an overfull-journal defect: when the capacity lease

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11150 |
+| Added | 11152 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -250,6 +250,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t152-dynamodb-mixed-saga.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t153-azure-table-runtime-keys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t154-azure-table-journal-boundary.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t155-azure-table-job-keys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -15131,6 +15132,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Futures/AzureTableFuturePersistenceTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Infrastructure/AzureTableTestTable.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/JobService/AzureTableJobServiceIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/JobService/AzureTableJobServiceRepositoryConfigurationTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableLocalIntegrationRequirements.json` | Added |  |
 | `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |

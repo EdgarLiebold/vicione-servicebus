@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Both public Azure Table Job Service repository overloads now have a real
+  storage test for their three distinct saga key assignments. Deliberately
+  swapped or ignored formatters fail; the complete Azurite integration project
+  passes 51/51.
+
 - Fixed Azure Table journal rejection of an already overfull partition when
   its capacity lease is absent: the store now checks the bounded partition
   before creating the lease, then reads the authoritative entry snapshot after
