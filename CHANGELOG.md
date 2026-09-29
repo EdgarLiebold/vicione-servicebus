@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed observer and outbox failure ownership. An observer callback or consumed
+  notification failure now retains its original cause even when fault
+  notification or the observer error callback also fails; each reporting path
+  is attempted independently. A later pipeline failure remains downstream and
+  does not report a second observer fault. If an outbox `SetConsumedAsync`
+  failure is followed by a fault-notification failure, both causes remain
+  observable in their original order.
+
 - Fixed unexpected consumer cancellation diagnostics in factory, handler and
   instance ingress. `ConsumerCanceledException.InnerException` now retains the
   exact failure already reported to the consume context, including a single

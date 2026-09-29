@@ -87,6 +87,12 @@ as consumer cancellation. If fault notification also fails, the ingress filter
 reports both the operation and notification failures in that order.
 Already classified consumer cancellations retain their identity; ordinary
 wrappers do not hide business failures in an aggregate branch.
+An observer filter reports failures from its own callback or consumed
+notification to its fault and error callbacks; a later pipeline failure remains
+owned by the downstream stage. If either reporting callback fails, the thrown
+aggregate retains the original failure followed by each additional failure.
+For an outbox commit failure, fault notification receives the original commit
+exception; if notification also fails, both causes remain observable.
 
 ## Advanced SPI
 

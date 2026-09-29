@@ -54,7 +54,8 @@ public class OutboxMessagePipe<TMessage> :
             catch (Exception exception)
             {
                 if (!context.ReceiveContext.IsFaulted)
-                    await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TMessage>.ShortName, exception).ConfigureAwait(false);
+                    await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt), TypeCache<TMessage>.ShortName,
+                        exception, exception).ConfigureAwait(false);
 
                 throw;
             }

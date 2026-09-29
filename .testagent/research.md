@@ -1,5 +1,19 @@
 # A+ remediation research
 
+## T125 observer and outbox fault ownership
+
+Manual review of `ObserverMessageFilter`, `OutboxMessagePipe`, their context
+contracts and neighboring tests found two causal gaps. Observer fault and error
+callbacks could hide the original observer failure; the broad catch also treated
+a downstream pipe failure as an observer failure. In the outbox, failure of
+`NotifyFaultedAsync` after a rejected `SetConsumedAsync` hid the commit failure.
+The red-first matrix failed for three observer secondary-failure variants, the
+downstream stage boundary and the outbox notification-failure variant. A
+consumed-notification failure and successful fault notification are controls.
+Exact exception identities, callback order and absence of downstream work are
+the test oracles. Read-only Red Team re-review found no concrete P1/P2 in the
+corrected packet.
+
 ## T115 outbox/inbox state and admission packet
 
 The T114 exact-commit profile identifies five CRAP > 30 methods in classic EF

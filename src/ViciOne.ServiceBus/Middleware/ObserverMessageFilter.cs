@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -43,15 +44,34 @@ public class ObserverMessageFilter<TMessage> :
 
             await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), _observerType).ConfigureAwait(false);
 
-            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), _observerType, ex).ConfigureAwait(false);
+            var failures = new List<Exception> { ex };
+            try
+            {
+                await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), _observerType, ex).ConfigureAwait(false);
+            }
+            catch (Exception notificationFailure)
+            {
+                failures.Add(notificationFailure);
+            }
 
-            _observer.OnError(ex);
+            try
+            {
+                _observer.OnError(ex);
+            }
+            catch (Exception observerFailure)
+            {
+                failures.Add(observerFailure);
+            }
+
+            if (failures.Count > 1)
+                throw new AggregateException(failures);
 
             throw;
         }
+
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }

@@ -1,5 +1,17 @@
 # A+ remediation test plan
 
+## T125 observer and outbox fault ownership
+
+1. Red-first test independent fault and observer-error callbacks, including
+   original exception identity, ordered secondary causes and downstream absence.
+2. Test that a completed observer does not own a later pipe failure; keep
+   consumed-notification failure within the observer stage. Narrow the catch.
+3. Red-first test `SetConsumedAsync` failure with successful and failing fault
+   notification; preserve both causes through the shared ingress helper.
+4. Run focused tests, independent read-only adversarial review and the complete
+   Core suite once after freezing the packet. Record the requirement projection,
+   changelog and API semantics, then commit and push.
+
 ## T115 outbox/inbox state and admission packet
 
 1. Use the T114 five-hotspot list and prior Roslyn source/test pairing to

@@ -69,6 +69,85 @@ public sealed class OutboxMessagePipeTests
         }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-OUTBOX-RECOVERY", "set-consumed-and-fault-notification-failures-remain-observable")]
+    public async Task SetConsumedFailure_RetainsTheCommitCauseWhenFaultNotificationFailsAsync(bool notificationFails)
+    {
+        var commitFailure = new InvalidOperationException("commit failed");
+        var notificationFailure = new ApplicationException("fault notification failed");
+        var nextCalls = 0;
+        var setConsumedCalls = 0;
+        var notifyFaultedCalls = 0;
+        Exception? reported = null;
+        ReceiveContext receive = StrictProxy.Create<ReceiveContext>((method, _) => method.Name switch
+        {
+            "get_IsFaulted" => false,
+            _ => throw new NotSupportedException(method.Name),
+        });
+        OutboxConsumeContext<Input> context = null!;
+        context = StrictProxy.Create<OutboxConsumeContext<Input>>((method, args) => method.Name switch
+        {
+            "TryGetPayload" => NoPayload(args),
+            "get_IsMessageConsumed" => false,
+            "get_ConsumeCompleted" => Task.CompletedTask,
+            "get_ReceiveContext" => receive,
+            "SetConsumedAsync" => SetConsumed(),
+            "NotifyFaultedAsync" => NotifyFaulted(args),
+            _ => throw new NotSupportedException(method.Name),
+        });
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.Parse("36d4ebd6-14cf-4e79-b268-0ae945eaaf03"),
+            ConsumerType = nameof(Input),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromSeconds(5),
+        };
+        var pipe = new OutboxMessagePipe<Input>(options, new Scope(context),
+            ViciOne.ServiceBus.Advanced.Middleware.Pipe.Execute<ConsumeContext<Input>>(received =>
+            {
+                Assert.Same(context, received);
+                nextCalls++;
+            }));
+
+        Exception actual = await Record.ExceptionAsync(() => pipe.SendAsync(context))
+            ?? throw new Xunit.Sdk.XunitException("The rejected outbox commit completed successfully.");
+
+        if (notificationFails)
+        {
+            Assert.Collection(Assert.IsType<AggregateException>(actual).InnerExceptions,
+                first => Assert.Same(commitFailure, first),
+                second => Assert.Same(notificationFailure, second));
+        }
+        else
+            Assert.Same(commitFailure, actual);
+        Assert.Same(commitFailure, reported);
+        Assert.Equal(1, nextCalls);
+        Assert.Equal(1, setConsumedCalls);
+        Assert.Equal(1, notifyFaultedCalls);
+
+        Task SetConsumed()
+        {
+            setConsumedCalls++;
+            return Task.FromException(commitFailure);
+        }
+
+        Task NotifyFaulted(object?[]? args)
+        {
+            notifyFaultedCalls++;
+            Assert.Same(context, args![0]);
+            reported = Assert.IsType<InvalidOperationException>(args[3]);
+            return notificationFails ? Task.FromException(notificationFailure) : Task.CompletedTask;
+        }
+
+        static bool NoPayload(object?[]? args)
+        {
+            args![0] = null;
+            return false;
+        }
+    }
+
     public sealed record Input(Guid Id);
 
     private sealed class DeliveryState

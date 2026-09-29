@@ -1,5 +1,18 @@
 # A+ remediation test status
 
+## T125 — observer and outbox fault ownership — 29 September 2026
+
+The observer previously let fault notification or `OnError` hide the original
+callback failure and misreported a later downstream failure as its own. The
+outbox could lose a failed `SetConsumedAsync` cause when fault notification also
+failed. Red-first tests exposed both boundaries. The observer now attempts both
+error callbacks independently and leaves the downstream pipe outside its catch;
+the outbox retains the commit and notification causes in order. Focused tests
+passed 11/11; the complete Core suite passed 7,251/7,251 with zero failures or
+skips. Independent read-only Red Team re-review is PASS with no concrete P1/P2
+in this packet. The user accepts current Line/Branch coverage, so no global
+coverage profile was repeated here.
+
 ## T124 — consumer ingress cancellation and fault notification — 29 September 2026
 
 Factory, handler and instance ingress previously threw

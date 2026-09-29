@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11020 |
+| Added | 11021 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -16294,6 +16294,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/SupervisorAgentCreationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ObserverMessageFilterFailureTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxAttemptIsolationTests.cs` | Added |  |
