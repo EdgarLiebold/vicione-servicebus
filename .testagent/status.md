@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## T141 — Activity listener isolation and ambient trace ownership — 29 September 2026
+
+Red-first counterprobes reproduced both listener-start and listener-stop
+exceptions changing `Activity.Current` in durable-send, message-journal and
+circuit-breaker operations. A hostile sampler and a reentrant start callback
+also corrupted the message-flow ambient scope. The shared observation helper
+now keeps the exact prior ambient Activity through creation, start and stop.
+A receive configured for a new trace also creates and starts independently of
+an unrelated ambient caller, then restores that caller on completion. The
+first focused MessageActivity group passed 8/8. An independent review then
+found that a listener can stop or dispose its Activity within the start
+callback. Both forms now return no scope and restore the caller; the stop
+variant failed red-first. The first complete Core run passed 7,362 of 7,363
+tests; only the new test's missing requirement-projection row failed. Both
+new rows are now present. Final review and exact-commit verification follow.
+The complete Core suite now passes 7,365/7,365 after the correction.
+
 ## T140 — all-repository Roslyn API and comment inventory — 29 September 2026
 
 The read-only source tool and compressed complete snapshot now cover 69

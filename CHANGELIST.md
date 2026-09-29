@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11030 |
+| Added | 11145 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -684,6 +684,87 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `README.md` | Modified | `README.md` |
 | `SECURITY.md` | Modified | `SECURITY.md` |
 | `TODO.md` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-72/core-transports-after-risk-remediation.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-72/core-transports-final-2559.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-72/core-transports-final.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-72/core-transports.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-72/transport-coverage-analysis.json` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-73/serialization-final-2.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-73/serialization-final-3.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-73/serialization-final.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-73/serialization-remediated.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-74/context-final.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-75/batching-final-2.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-75/batching-final-3.cobertura.xml` | Added |  |
+| `TestResults/TestResults/coverage-analysis/iteration-75/batching-final.cobertura.xml` | Added |  |
+| `TestResults/TestResults/iteration-81/core.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-active-mq-broker-fixed/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-active-mq-final/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-active-mq-redteam-fixed/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-active-mq/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sql-host-parser/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sql-host-validation-reviewed/results/TestResults/artifacts/coverage-a-plus-20260921-sql-host-validation-reviewed/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sql-topology-final/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sql-topology-reviewed/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sql-topology/raw/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sqs-final` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sqs-final-v2` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sqs-final-v3` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sqs-final-v4` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260921-sqs-reviewed` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-a95505227/raw/portability/ViciOne.ServiceBus.Abstractions.NoAvx2.Tests/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-asb-retry/azure-servicebus-unit-final.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-current/raw/local/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-sqs-subscription-final-8` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-sqs-subscription-v1` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-sqs-topology` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-sqs-topology-final` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260922-sqs-topology-final-14` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260923-b6ffcfbdf/raw/no-avx2/ViciOne.ServiceBus.Abstractions.Tests/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-a-plus-20260924-d415d2cbf/raw/added-unit/ViciOne.ServiceBus.Tests/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-asb-receiver-classification-20260924/raw/final3/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-consumer-commit-20260925/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/coverage-sns-subscription-20260923-61f7e4705/coverage.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t115-core-direct.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t115-ef-direct.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/analyze_messagepack_coverage.rb` | Added |  |
+| `TestResults/coverage-analysis/combined.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/coverage-analysis.md` | Added |  |
+| `TestResults/coverage-analysis/file-coverage-gaps.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/coverage-analysis-data.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/coverage-analysis.md` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-2/coverage-analysis-data.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-2/unit-final.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-3/coverage-analysis-data.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-3/unit-final.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-4/coverage-analysis-data.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-4/unit-final.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-5/coverage-analysis-data.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final-5/unit-final.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final/coverage-analysis-data.json` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/final/unit-final.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/raw/TestResults/coverage-analysis/iteration-70/raw/unit.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-70/raw/unit.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-74-final/context-final.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/iteration-78-coverage-analysis.md` | Added |  |
+| `TestResults/coverage-analysis/method-coverage-gaps.json` | Added |  |
+| `TestResults/coverage-analysis/raw/azure-servicebus-local-integration.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/raw/local-integration.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/raw/rabbitmq-local-integration.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/raw/sqlserver-local-integration.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/raw/unit-strict.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/raw/unit.cobertura.xml` | Added |  |
+| `TestResults/coverage-analysis/risk-hotspots.json` | Added |  |
+| `TestResults/coverage-analysis/src-only.settings.xml` | Added |  |
+| `TestResults/coverage-analysis/unit-normalized.cobertura.xml` | Added |  |
+| `TestResults/iteration-54-messagepack/messagepack-complete.cobertura.xml` | Added |  |
+| `TestResults/iteration-54-messagepack/messagepack-final.cobertura.xml` | Added |  |
+| `TestResults/iteration-54-messagepack/messagepack.cobertura.xml` | Added |  |
+| `TestResults/iteration-71-fabric-2.cobertura.xml` | Added |  |
+| `TestResults/iteration-71-fabric-final.cobertura.xml` | Added |  |
+| `TestResults/iteration-71-fabric-final2.cobertura.xml` | Added |  |
+| `TestResults/iteration-71-fabric-final3.cobertura.xml` | Added |  |
+| `TestResults/iteration-71-fabric.cobertura.xml` | Added |  |
 | `ViciOne.ServiceBus.Engineering.slnx` | Added |  |
 | `ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx` | Added |  |
 | `ViciOne.ServiceBus.Tests.LocalIntegration.slnx` | Added |  |
@@ -5843,6 +5924,40 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/native-tests/type-relationships-and-properties/PRODUCT_PATH_ANALYSIS.md` | Added |  |
 | `global.json` | Added |  |
 | `mt-logo-small.png` | Deleted | `mt-logo-small.png` |
+| `review/00_START/HOW_TO_GET_AND_USE_THE_GIT.md` | Added |  |
+| `review/00_START/START_HERE.md` | Added |  |
+| `review/00_START/START_HERE_PREVIOUS.md` | Added |  |
+| `review/00_START/WHICH_DONORS_ARE_NEEDED.md` | Added |  |
+| `review/01_V4_A_PLUS_DONOR/EXPECTED_SHA256.txt` | Added |  |
+| `review/01_V4_A_PLUS_DONOR/README.md` | Added |  |
+| `review/01_V4_A_PLUS_DONOR/ViciOne_ServiceBus_APlus_FINAL.bundle` | Added |  |
+| `review/02_V5_FROZEN_OVERLAY/EXPECTED_SHA256.txt` | Added |  |
+| `review/02_V5_FROZEN_OVERLAY/README.md` | Added |  |
+| `review/02_V5_FROZEN_OVERLAY/ViciOne_ServiceBus_V5.bundle` | Added |  |
+| `review/02_V5_FROZEN_OVERLAY/ViciOne_ServiceBus_V5_CUMULATIVE.patch` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_DELTA_FROM_V5.patch` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_FINAL_STATIC_GATE.txt` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_FINDINGS_CLOSURE.md` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_HANDOFF.zip` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_HANDOFF.zip.sha256` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_PATCH_MANIFEST.md` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_PATCH_SERIES.zip` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_RELEASE_README.md` | Added |  |
+| `review/03_V5_1_HARDENING/ViciOne_ServiceBus_V5_1_SHA256.txt` | Added |  |
+| `review/03_V5_1_HARDENING/apply_v5_1_delta.sh` | Added |  |
+| `review/04_TEAM_INTEGRATION/REQUIRED_HANDOFF_ARTIFACTS.md` | Added |  |
+| `review/04_TEAM_INTEGRATION/ViciOne_ServiceBus_TEAM_HANDOVER_V5_1.md` | Added |  |
+| `review/04_TEAM_INTEGRATION/ViciOne_ServiceBus_TEAM_INTEGRATION_PROMPT.md` | Added |  |
+| `review/05_TOOLS/Build-Complete-Handover.ps1` | Added |  |
+| `review/05_TOOLS/build-complete-handover.sh` | Added |  |
+| `review/10_V5_API_Review/ChatGPT-API Usability Review-20260903-0838.md` | Added |  |
+| `review/11_A_PLUS_API_PROGRAMM/AUFTRAG_A_PLUS_API_PROGRAMM.md` | Added |  |
+| `review/99_Previous version/A_PLUS_ARCHITECTURE.md` | Added |  |
+| `review/99_Previous version/A_PLUS_MASTER_MATRIX.md` | Added |  |
+| `review/99_Previous version/A_PLUS_RUNTIME_GATES.md` | Added |  |
+| `review/99_Previous version/A_PLUS_TEST_ARCHITECTURE.md` | Added |  |
+| `review/99_Previous version/ViciOne_ServiceBus_APlus_Review_2026-09-01.md` | Added |  |
+| `review/PACKAGE_SHA256.txt` | Added |  |
 | `samples/DeveloperJourneys/Journey01MinimalRabbitMq.cs` | Added |  |
 | `samples/DeveloperJourneys/Journey02Send.cs` | Added |  |
 | `samples/DeveloperJourneys/Journey03Publish.cs` | Added |  |

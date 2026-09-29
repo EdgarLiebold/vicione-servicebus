@@ -5,6 +5,7 @@ using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.CircuitBreaker;
+using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
@@ -760,7 +761,7 @@ public sealed class CircuitBreakerFilterTests
             await AssertCircuitSemanticsSurviveTelemetryObserverAsync();
         }
 
-        using var activityListener = new ActivityListener
+        using (var activityListener = new ActivityListener
         {
             ShouldListenTo = source => source.Name == "ViciOne.ServiceBus",
             Sample = static (ref ActivityCreationOptions<ActivityContext> options) =>
@@ -770,10 +771,91 @@ public sealed class CircuitBreakerFilterTests
 
                 return ActivitySamplingResult.None;
             },
-        };
-        ActivitySource.AddActivityListener(activityListener);
+        })
+        {
+            ActivitySource.AddActivityListener(activityListener);
+            await AssertCircuitSemanticsSurviveTelemetryObserverAsync();
+        }
 
-        await AssertCircuitSemanticsSurviveTelemetryObserverAsync();
+        using (var stopParent = new Activity("circuit stop parent").Start())
+        using (var stoppingListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<ActivityContext> options) =>
+                options.Name.StartsWith("ViciOne.ServiceBus.CircuitBreaker.", StringComparison.Ordinal)
+                    ? ActivitySamplingResult.AllData
+                    : ActivitySamplingResult.None,
+            ActivityStopped = static _ => throw new TelemetryObserverException(),
+        })
+        {
+            ActivitySource.AddActivityListener(stoppingListener);
+            try
+            {
+                await AssertCircuitSemanticsSurviveTelemetryObserverAsync();
+                CircuitBreakerTelemetry.StateTransition("closed", "open");
+                Assert.Same(stopParent, Activity.Current);
+            }
+            finally
+            {
+                Activity.Current = stopParent;
+            }
+        }
+
+        using var parent = new Activity("circuit business parent").Start();
+        var started = new ConcurrentQueue<string>();
+        using var startingListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<ActivityContext> options) =>
+                options.Name.StartsWith("ViciOne.ServiceBus.CircuitBreaker.", StringComparison.Ordinal)
+                    ? ActivitySamplingResult.AllData
+                    : ActivitySamplingResult.None,
+            ActivityStarted = activity =>
+            {
+                started.Enqueue(activity.OperationName);
+                throw new TelemetryObserverException();
+            },
+        };
+        ActivitySource.AddActivityListener(startingListener);
+        var time = new ObservableTimeProvider(StartTime);
+        var expected = new ExpectedFailureException("resource unavailable");
+        var fail = true;
+        var protectedCalls = 0;
+        IPipe<TestPipeContext> pipe = CreatePipe(time, _ =>
+        {
+            protectedCalls++;
+            Assert.Same(parent, Activity.Current);
+            return fail ? Task.FromException(expected) : Task.CompletedTask;
+        });
+
+        try
+        {
+            ExpectedFailureException observed = await Assert.ThrowsAsync<ExpectedFailureException>(
+                () => pipe.SendAsync(new TestPipeContext()));
+            Assert.Same(expected, observed);
+            Assert.Same(parent, Activity.Current);
+            CircuitBreakerOpenException rejected = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
+                () => pipe.SendAsync(new TestPipeContext()));
+            Assert.Same(expected, rejected.InnerException);
+            Assert.Same(parent, Activity.Current);
+            fail = false;
+            time.Advance(TimeSpan.FromSeconds(1));
+            await pipe.SendAsync(new TestPipeContext());
+            Assert.Same(parent, Activity.Current);
+            Assert.Equal(2, protectedCalls);
+            Assert.Equal(
+                [
+                    "ViciOne.ServiceBus.CircuitBreaker.StateTransition",
+                    "ViciOne.ServiceBus.CircuitBreaker.Rejected",
+                    "ViciOne.ServiceBus.CircuitBreaker.StateTransition",
+                    "ViciOne.ServiceBus.CircuitBreaker.Probe",
+                    "ViciOne.ServiceBus.CircuitBreaker.StateTransition",
+                ], started);
+        }
+        finally
+        {
+            Activity.Current = parent;
+        }
     }
 
     private static IPipe<TestPipeContext> CreatePipe(

@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Isolated Activity listener and sampler failures from durable-send,
+  message-journal, circuit-breaker and message-flow operations. Activity
+  completion restores the actual prior ambient scope even for a new trace
+  root; receive `New` and `Link` modes now start independently of an
+  unrelated ambient trace.
+
 - Added a rerunnable Roslyn inventory of the externally visible C# API and
   source XML comments across the ten sibling repositories. The snapshot records
   project diagnostics and comment candidates without claiming that the full

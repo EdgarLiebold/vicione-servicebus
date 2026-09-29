@@ -303,6 +303,7 @@ public sealed class ServiceBusInstrumentationTests
         Assert.Equal(1, sampleCallCount);
 
         var stopCallCount = 0;
+        using (var stopParent = new Activity("durable stop parent").Start())
         using (var stoppingListener = new ActivityListener
         {
             ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
@@ -318,10 +319,66 @@ public sealed class ServiceBusInstrumentationTests
             ActivitySource.AddActivityListener(stoppingListener);
             using var stoppingBoundary = new ServiceBusInstrumentation<IBus>(throwingMeterFactory);
             SafeActivityScope scope = stoppingBoundary.StartDurableAdmission(CreateMessage());
-            scope.Dispose();
-            scope.Dispose();
+            try
+            {
+                scope.Dispose();
+                scope.Dispose();
+                Assert.Same(stopParent, Activity.Current);
+            }
+            finally
+            {
+                Activity.Current = stopParent;
+            }
         }
         Assert.Equal(1, stopCallCount);
+
+        var startedActivities = new ConcurrentQueue<Activity>();
+        var stoppedActivities = new ConcurrentQueue<Activity>();
+        using (var parent = new Activity("durable reentrant parent").Start())
+        using (var startingListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) =>
+                ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = activity =>
+            {
+                if (activity.OperationName.StartsWith("durable send ", StringComparison.Ordinal))
+                {
+                    startedActivities.Enqueue(activity);
+                    Activity.Current = parent;
+                    throw new HostileTelemetryException();
+                }
+            },
+            ActivityStopped = activity => stoppedActivities.Enqueue(activity),
+        })
+        {
+            ActivitySource.AddActivityListener(startingListener);
+            using var startingBoundary = new ServiceBusInstrumentation<IBus>(throwingMeterFactory);
+            SerializedDurableSend message = CreateMessage();
+            var delivery = new DurableSendDelivery
+            {
+                Message = message,
+                GenerationToken = Guid.NewGuid(),
+                EnqueuedAt = Epoch,
+                DeliveryAttempts = 1,
+                Status = DurableSendStatus.Pending,
+                Lease = new DurableSendLease(Guid.NewGuid(), Epoch.AddMinutes(1)),
+            };
+
+            try
+            {
+                Assert.Same(SafeActivityScope.None, startingBoundary.StartDurableAdmission(message));
+                Assert.Same(parent, Activity.Current);
+                Assert.Same(SafeActivityScope.None, startingBoundary.StartDurableDelivery(delivery));
+                Assert.Same(parent, Activity.Current);
+                Assert.Equal(2, startedActivities.Count);
+                Assert.Equal(startedActivities, stoppedActivities);
+            }
+            finally
+            {
+                Activity.Current = parent;
+            }
+        }
 
         using ServiceProvider provider = new ServiceCollection().AddMetrics().BuildServiceProvider();
         IMeterFactory meterFactory = provider.GetRequiredService<IMeterFactory>();

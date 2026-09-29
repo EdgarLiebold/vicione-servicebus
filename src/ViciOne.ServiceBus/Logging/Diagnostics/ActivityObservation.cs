@@ -8,12 +8,48 @@ namespace ViciOne.ServiceBus.Logging.Diagnostics;
 /// <summary>Isolates message processing from failures while creating, mutating, or completing diagnostic activities.</summary>
 internal static class ActivityObservation
 {
-    public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,
-        System.Diagnostics.ActivityContext parentContext = default,
-        IEnumerable<ActivityLink>? links = null)
+    const string PreviousActivityProperty = "ViciOne.ServiceBus.ActivityObservation.PreviousActivity";
+
+    sealed class AmbientActivity(Activity? value)
     {
+        public Activity? Value { get; } = value;
+    }
+
+    public static Activity? TryStartSource(ActivitySource source, string name, ActivityKind kind,
+        System.Diagnostics.ActivityContext? parentContext = null,
+        IEnumerable<KeyValuePair<string, object?>>? tags = null)
+    {
+        Activity? previousActivity = Activity.Current;
+        Activity? activity;
         try
         {
+            activity = parentContext is { } parent
+                ? source.CreateActivity(name, kind, parent, tags)
+                : source.CreateActivity(name, kind);
+        }
+        catch (Exception exception)
+        {
+            TryLog(exception, "Activity listener faulted while creating an activity");
+            activity = null;
+        }
+        finally
+        {
+            Activity.Current = previousActivity;
+        }
+
+        return activity is not null && TryStart(activity) ? activity : null;
+    }
+
+    public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,
+        System.Diagnostics.ActivityContext parentContext = default,
+        IEnumerable<ActivityLink>? links = null,
+        bool newRoot = false)
+    {
+        Activity? previousActivity = Activity.Current;
+        try
+        {
+            if (newRoot)
+                Activity.Current = null;
             return source.Value.CreateActivity(name, kind, parentContext, links: links);
         }
         catch (Exception exception)
@@ -21,15 +57,28 @@ internal static class ActivityObservation
             TryLog(exception, "Activity listener faulted while creating an activity");
             return null;
         }
+        finally
+        {
+            Activity.Current = previousActivity;
+        }
     }
 
-    public static bool TryStart(Activity activity)
+    public static bool TryStart(Activity activity, bool newRoot = false)
     {
         Activity? previousActivity = Activity.Current;
 
         try
         {
+            activity.SetCustomProperty(PreviousActivityProperty, new AmbientActivity(previousActivity));
+            if (newRoot)
+                Activity.Current = null;
             activity.Start();
+            if (activity.IsStopped)
+            {
+                Activity.Current = previousActivity;
+                return false;
+            }
+            Activity.Current = activity;
             return true;
         }
         catch (Exception exception)
@@ -91,6 +140,16 @@ internal static class ActivityObservation
 
     public static void TryDispose(Activity activity)
     {
+        Activity? previousActivity = Activity.Current;
+        var capturedAmbient = activity.GetCustomProperty(PreviousActivityProperty) as AmbientActivity;
+        Activity? expectedActivity = ReferenceEquals(previousActivity, activity)
+            ? capturedAmbient is null ? activity.Parent : capturedAmbient.Value
+            : previousActivity;
+        TryDispose(activity, expectedActivity);
+    }
+
+    public static void TryDispose(Activity activity, Activity? expectedActivity)
+    {
         try
         {
             activity.Dispose();
@@ -98,6 +157,10 @@ internal static class ActivityObservation
         catch (Exception exception)
         {
             TryLog(exception, "Activity listener faulted while stopping an activity");
+        }
+        finally
+        {
+            Activity.Current = expectedActivity;
         }
     }
 

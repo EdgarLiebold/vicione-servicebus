@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 
 namespace ViciOne.ServiceBus.Monitoring.Telemetry;
 
@@ -59,13 +60,6 @@ internal sealed class SafeActivityScope : IDisposable
         if (activity is null)
             return;
 
-        try
-        {
-            activity.Dispose();
-        }
-        catch
-        {
-            // Activity disposal cannot change the operation being observed.
-        }
+        ActivityObservation.TryDispose(activity);
     }
 }

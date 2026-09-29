@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Threading;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 
@@ -10,6 +11,8 @@ namespace ViciOne.ServiceBus.MessageJournal;
 
 internal static class MessageJournalTelemetry
 {
+    internal readonly record struct Scope(Activity? Activity, Activity? Parent);
+
     private const string FailedResult = "failed";
     private const string FilteredResult = "filtered";
     private const string StoredResult = "stored";
@@ -18,62 +21,65 @@ internal static class MessageJournalTelemetry
         static () => new Instrumentation(),
         LazyThreadSafetyMode.ExecutionAndPublication);
 
-    public static Activity? StartActivity(
+    public static Scope StartActivity(
         MessageJournalOperation operation,
         MessageJournalOutcome outcome)
     {
+        Activity? parent = Activity.Current;
         try
         {
             TagList tags = CreateTags(operation, outcome, result: null);
-            System.Diagnostics.ActivityContext parentContext = Activity.Current?.Context ?? default;
-            return Instruments.Value.ActivitySource.StartActivity(
+            System.Diagnostics.ActivityContext parentContext = parent?.Context ?? default;
+            Activity? activity = ActivityObservation.TryStartSource(Instruments.Value.ActivitySource,
                 ServiceBusTelemetry.Activities.MessageJournalObserve,
                 ActivityKind.Internal,
                 parentContext,
                 tags);
+            return new Scope(activity, parent);
         }
         catch (Exception)
         {
-            return null;
+            return new Scope(null, parent);
         }
     }
 
     public static void Stored(
-        Activity? activity,
+        Scope scope,
         MessageJournalOperation operation,
         MessageJournalOutcome outcome,
         TimeSpan duration)
     {
-        Complete(activity, operation, outcome, StoredResult, failureReason: null, duration);
+        Complete(scope, operation, outcome, StoredResult, failureReason: null, duration);
     }
 
     public static void Filtered(
-        Activity? activity,
+        Scope scope,
         MessageJournalOperation operation,
         MessageJournalOutcome outcome,
         TimeSpan duration)
     {
-        Complete(activity, operation, outcome, FilteredResult, failureReason: null, duration);
+        Complete(scope, operation, outcome, FilteredResult, failureReason: null, duration);
     }
 
     public static void Failed(
-        Activity? activity,
+        Scope scope,
         MessageJournalOperation operation,
         MessageJournalOutcome outcome,
         string reason,
         TimeSpan duration)
     {
-        Complete(activity, operation, outcome, FailedResult, reason, duration);
+        Complete(scope, operation, outcome, FailedResult, reason, duration);
     }
 
     private static void Complete(
-        Activity? activity,
+        Scope scope,
         MessageJournalOperation operation,
         MessageJournalOutcome outcome,
         string result,
         string? failureReason,
         TimeSpan duration)
     {
+        Activity? activity = scope.Activity;
         try
         {
             TagList tags = CreateTags(operation, outcome, result);
@@ -91,14 +97,8 @@ internal static class MessageJournalTelemetry
         }
         finally
         {
-            try
-            {
-                activity?.Dispose();
-            }
-            catch (Exception)
-            {
-                // Telemetry observers never own message or journal semantics.
-            }
+            if (activity is not null)
+                ActivityObservation.TryDispose(activity, scope.Parent);
         }
     }
 

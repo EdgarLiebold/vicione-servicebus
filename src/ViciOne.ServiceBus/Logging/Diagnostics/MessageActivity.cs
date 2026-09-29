@@ -91,14 +91,16 @@ internal static class MessageActivity
         ReceiveContext context)
     {
         var parentActivityContext = GetParentActivityContext(context.TransportHeaders, true);
+        bool newRoot = context.TransportHeaders.TryGetHeader(DiagnosticPropagationHeaders.ParentMode, out var parentMode)
+            && parentMode is "Link" or "New";
 
         var activity = context.TransportHeaders.TryGetHeader(DiagnosticPropagationHeaders.ParentMode, out var linkTypeValue) switch
         {
             true => linkTypeValue switch
             {
                 "Link" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, default,
-                    [new ActivityLink(parentActivityContext)]),
-                "New" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer),
+                    [new ActivityLink(parentActivityContext)], newRoot: true),
+                "New" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, newRoot: true),
                 _ => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)
             },
             false => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)
@@ -124,7 +126,7 @@ internal static class MessageActivity
                 ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, text);
         }
 
-        if (!ActivityObservation.TryStart(activity))
+        if (!ActivityObservation.TryStart(activity, newRoot))
             return null;
 
         return new StartedActivity(activity, context.GetTimeProvider());

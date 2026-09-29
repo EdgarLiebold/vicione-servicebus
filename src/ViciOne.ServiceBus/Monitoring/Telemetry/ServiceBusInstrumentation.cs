@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Threading;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
@@ -65,7 +66,8 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
 
         try
         {
-            Activity? activity = _activitySource.StartActivity("durable send admit", ActivityKind.Internal);
+            Activity? activity = ActivityObservation.TryStartSource(
+                _activitySource, "durable send admit", ActivityKind.Internal);
             if (activity is null)
                 return SafeActivityScope.None;
 
@@ -94,7 +96,8 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
 
         try
         {
-            Activity? activity = _activitySource.StartActivity("durable send deliver", ActivityKind.Internal);
+            Activity? activity = ActivityObservation.TryStartSource(
+                _activitySource, "durable send deliver", ActivityKind.Internal);
             if (activity is null)
                 return SafeActivityScope.None;
 

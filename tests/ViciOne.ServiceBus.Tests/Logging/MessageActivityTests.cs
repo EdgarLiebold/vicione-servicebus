@@ -44,16 +44,85 @@ public sealed class MessageActivityTests
             Assert.True(activity.IsAllDataRequested);
         }
 
-        using var hostileListener = new ActivityListener
+        using (var hostileListener = new ActivityListener
         {
             ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
             Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStarted = _ => throw new InvalidOperationException("application listener failure"),
-        };
-        ActivitySource.AddActivityListener(hostileListener);
+        })
+        {
+            ActivitySource.AddActivityListener(hostileListener);
 
-        Assert.Null(MessageActivity.TryStart("fault-isolated operation"));
-        Assert.Null(Activity.Current);
+            Assert.Null(MessageActivity.TryStart("fault-isolated operation"));
+            Assert.Null(Activity.Current);
+        }
+
+        using var parent = new Activity("sampler business parent").Start();
+        using (var hostileSampler = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = (ref ActivityCreationOptions<DiagnosticActivityContext> _) =>
+            {
+                Activity.Current = null;
+                throw new InvalidOperationException("application sampler failure");
+            },
+        })
+        {
+            ActivitySource.AddActivityListener(hostileSampler);
+            try
+            {
+                Assert.Null(MessageActivity.TryStart("sampler fault"));
+                Assert.Same(parent, Activity.Current);
+            }
+            finally
+            {
+                Activity.Current = parent;
+            }
+        }
+
+        using var reentrantListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) =>
+                ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = _ => Activity.Current = parent,
+        };
+        ActivitySource.AddActivityListener(reentrantListener);
+        try
+        {
+            using StartedActivity started = Assert.IsType<StartedActivity>(MessageActivity.TryStart("reentrant start"));
+            Assert.Same(started.Activity, Activity.Current);
+        }
+        finally
+        {
+            Activity.Current = parent;
+        }
+        Assert.Same(parent, Activity.Current);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "listener-stops-activity-during-start")]
+    public void TryStart_RejectsAnActivityStoppedByItsStartObserver(bool dispose)
+    {
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+            ActivityStarted = activity =>
+            {
+                if (dispose)
+                    activity.Dispose();
+                else
+                    activity.Stop();
+            },
+        };
+        ActivitySource.AddActivityListener(listener);
+        using var parent = new Activity("business parent").Start();
+
+        Assert.Null(MessageActivity.TryStart("observer stopped operation"));
+        Assert.Same(parent, Activity.Current);
     }
 
     [Fact]
@@ -203,6 +272,30 @@ public sealed class MessageActivityTests
                 Assert.Equal(carrierContext.SpanId, activity.ParentSpanId);
                 break;
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "new-trace-receive-restores-existing-ambient-activity")]
+    public void ReceiveWithNewTrace_RestoresTheAmbientCallerAfterStop()
+    {
+        var headers = new DictionarySendHeaders();
+        headers.Set(DiagnosticPropagationHeaders.ParentMode, "New");
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+        };
+        ActivitySource.AddActivityListener(listener);
+        using var caller = new Activity("ambient caller").Start();
+
+        StartedActivity started = Assert.IsType<StartedActivity>(MessageActivity.TryStartReceive(
+            "orders receive", "loopback://localhost/orders", "orders", new ParentModeReceiveContext(headers)));
+        Assert.Same(started.Activity, Activity.Current);
+        Assert.Null(started.Activity.Parent);
+
+        started.Stop();
+
+        Assert.Same(caller, Activity.Current);
     }
 
     private static string? Operation(Activity activity) =>

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +31,7 @@ internal sealed class MessageJournalWriter
     {
         ArgumentNullException.ThrowIfNull(captureFactory);
 
-        Activity? activity = MessageJournalTelemetry.StartActivity(operation, outcome);
+        MessageJournalTelemetry.Scope activity = MessageJournalTelemetry.StartActivity(operation, outcome);
         long startedAt = 0;
         var hasStartTimestamp = false;
         CancellationTokenSource? timeoutSource = null;

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Threading;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 
@@ -22,11 +23,19 @@ internal static class CircuitBreakerTelemetry
             tags.Add("circuit_breaker.state.to", to);
             _instruments.Value.StateTransitions.Add(1, tags);
 
-            using Activity? activity = _instruments.Value.ActivitySource.StartActivity(
+            Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,
                 "ViciOne.ServiceBus.CircuitBreaker.StateTransition",
                 ActivityKind.Internal);
-            activity?.SetTag("circuit_breaker.state.from", from);
-            activity?.SetTag("circuit_breaker.state.to", to);
+            try
+            {
+                activity?.SetTag("circuit_breaker.state.from", from);
+                activity?.SetTag("circuit_breaker.state.to", to);
+            }
+            finally
+            {
+                if (activity is not null)
+                    ActivityObservation.TryDispose(activity);
+            }
         }
         catch (Exception)
         {
@@ -39,10 +48,18 @@ internal static class CircuitBreakerTelemetry
         try
         {
             _instruments.Value.Probes.Add(1);
-            using Activity? activity = _instruments.Value.ActivitySource.StartActivity(
+            Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,
                 "ViciOne.ServiceBus.CircuitBreaker.Probe",
                 ActivityKind.Internal);
-            activity?.SetTag("circuit_breaker.probe.result", "acquired");
+            try
+            {
+                activity?.SetTag("circuit_breaker.probe.result", "acquired");
+            }
+            finally
+            {
+                if (activity is not null)
+                    ActivityObservation.TryDispose(activity);
+            }
         }
         catch (Exception)
         {
@@ -59,10 +76,18 @@ internal static class CircuitBreakerTelemetry
             tags.Add("circuit_breaker.rejection.reason", reason);
             _instruments.Value.Rejections.Add(1, tags);
 
-            using Activity? activity = _instruments.Value.ActivitySource.StartActivity(
+            Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,
                 "ViciOne.ServiceBus.CircuitBreaker.Rejected",
                 ActivityKind.Internal);
-            activity?.SetTag("circuit_breaker.rejection.reason", reason);
+            try
+            {
+                activity?.SetTag("circuit_breaker.rejection.reason", reason);
+            }
+            finally
+            {
+                if (activity is not null)
+                    ActivityObservation.TryDispose(activity);
+            }
         }
         catch (Exception)
         {

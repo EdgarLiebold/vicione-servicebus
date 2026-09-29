@@ -342,6 +342,43 @@ public sealed class MessageJournalTelemetryTests
                 cancellationToken: TestContext.Current.CancellationToken);
         }
 
+        using (var parent = new Activity("journal business parent").Start())
+        using (var startingListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<ActivityContext> options) =>
+                options.Name == ServiceBusTelemetry.Activities.MessageJournalObserve
+                    ? ActivitySamplingResult.AllData
+                    : ActivitySamplingResult.None,
+            ActivityStarted = activity =>
+            {
+                if (activity.OperationName == ServiceBusTelemetry.Activities.MessageJournalObserve)
+                    throw new TelemetryObserverException();
+            },
+        })
+        {
+            ActivitySource.AddActivityListener(startingListener);
+            Activity? observedAtStore = null;
+            var startingStore = new RecordingStore(onAppend: () => observedAtStore = Activity.Current);
+            try
+            {
+                await CreateDriver(startingStore, PassThroughPolicy()).ObserveAsync(
+                    MessageJournalOperation.Send,
+                    MessageJournalOutcome.Succeeded,
+                    "stored-after-start-failure"u8.ToArray(),
+                    cancellationToken: TestContext.Current.CancellationToken);
+
+                Assert.Single(startingStore.Entries);
+                Assert.Same(parent, observedAtStore);
+                Assert.Same(parent, Activity.Current);
+            }
+            finally
+            {
+                Activity.Current = parent;
+            }
+        }
+
+        using var stopParent = new Activity("journal stop parent").Start();
         using var stoppingListener = new ActivityListener
         {
             ShouldListenTo = source => source.Name == "ViciOne.ServiceBus",
@@ -353,13 +390,26 @@ public sealed class MessageJournalTelemetryTests
         };
         ActivitySource.AddActivityListener(stoppingListener);
 
-        await CreateDriver(store, PassThroughPolicy()).ObserveAsync(
-            MessageJournalOperation.Consume,
-            MessageJournalOutcome.Succeeded,
-            "stored-after-stop-failure"u8.ToArray(),
-            cancellationToken: TestContext.Current.CancellationToken);
+        try
+        {
+            await CreateDriver(store, PassThroughPolicy()).ObserveAsync(
+                MessageJournalOperation.Consume,
+                MessageJournalOutcome.Succeeded,
+                "stored-after-stop-failure"u8.ToArray(),
+                cancellationToken: TestContext.Current.CancellationToken);
 
-        Assert.Equal(3, store.Entries.Count);
+            Assert.Equal(3, store.Entries.Count);
+            MessageJournalTelemetry.Scope stoppedActivity = MessageJournalTelemetry.StartActivity(
+                MessageJournalOperation.Send, MessageJournalOutcome.Succeeded);
+            Assert.NotNull(stoppedActivity.Activity);
+            MessageJournalTelemetry.Stored(
+                stoppedActivity, MessageJournalOperation.Send, MessageJournalOutcome.Succeeded, TimeSpan.Zero);
+            Assert.Same(stopParent, Activity.Current);
+        }
+        finally
+        {
+            Activity.Current = stopParent;
+        }
     }
 
     private static MessageJournalWriterTestDriver CreateDriver(
