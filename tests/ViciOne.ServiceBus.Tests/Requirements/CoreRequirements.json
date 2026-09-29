@@ -741,7 +741,7 @@
    {
       "requirementId" : "REQ-VSB-RESCUE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
-      "testMethod" : "Rescue_MatchesAnAggregateByItsBaseFailureButPreservesTheFullAggregateForDiagnosticsAsync",
+      "testMethod" : "Rescue_MatchesAnAggregateInnerButPreservesTheFullAggregateForDiagnosticsAsync",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests",
       "variantKey" : "aggregate-match-preserves-full-failure"
    },
@@ -5729,6 +5729,10 @@
   ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"context-pipe-preserves-the-rescue-projection","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"ContextPipe_PreservesTheRescueProjectionAcrossTheSplitBoundaryAsync"}
   ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"context-pipe-rejects-null-specification","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"ContextPipe_RejectsANullSpecificationAtRegistration"}
   ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"context-pipe-forwards-inner-validation-failures","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"ContextPipe_RejectsInnerValidationFailuresBeforeApplyingTheSpecification"}
+  ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"nested-aggregate-leaf-selects-rescue-with-original-failure","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"Rescue_SelectsANestedAggregateLeafAndPreservesTheOriginalFailureAsync"}
+  ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"nested-aggregate-leaf-vetoes-broad-rescue","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"Rescue_NestedIgnoredLeafVetoesBroadHandleAndRethrowsOriginalAsync"}
+  ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"aggregate-type-predicate-sees-original-exception","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"Rescue_AggregatePredicateSeesTheOriginalExceptionOnceAsync"}
+  ,{"requirementId":"REQ-VSB-RESCUE","variantKey":"single-inner-aggregate-ignore-vetoes-rescue","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RescueFilterTests","testMethod":"Rescue_IgnoringTheOuterAggregateVetoesBroadHandleAsync"}
   ,{"requirementId":"REQ-VSB-RETRY-OBSERVERS","variantKey":"creation-observer-failure-does-not-start-business-work","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests","testMethod":"CreationObserverFailure_PropagatesWithoutExecutingBusinessWorkAsync"}
   ,{"requirementId":"REQ-VSB-RETRY-OBSERVERS","variantKey":"completion-observer-failure-does-not-replay-success","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests","testMethod":"CompletionObserverFailure_DoesNotReplayASuccessfulOperationAsync"}
   ,{"requirementId":"REQ-VSB-RETRY-OBSERVERS","variantKey":"pending-observer-failure-is-awaited-without-business-replay","testAssembly":"ViciOne.ServiceBus.Tests","testType":"ViciOne.ServiceBus.Tests.Middleware.RetryFilterTests","testMethod":"PendingObserverFailure_IsAwaitedWithoutStartingOrReplayingBusinessWorkAsync"}

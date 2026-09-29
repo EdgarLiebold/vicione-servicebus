@@ -46,16 +46,6 @@ internal sealed class RescueFilter<TContext, TRescueContext> :
         {
             await next.SendAsync(context).ConfigureAwait(false);
         }
-        catch (AggregateException ex)
-        {
-            if (!_exceptionFilter.Match(ex.GetBaseException()))
-                throw;
-
-            var rescueContext = _rescueContextFactory(context, ex)
-                ?? throw new InvalidOperationException("The rescue context factory returned null.");
-
-            await _rescuePipe.SendAsync(rescueContext).ConfigureAwait(false);
-        }
         catch (Exception ex)
         {
             if (!_exceptionFilter.Match(ex))

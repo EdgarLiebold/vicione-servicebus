@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed Rescue selection for an `AggregateException` with one inner failure.
+  Rescue now evaluates the original exception, so `Handle<AggregateException>`
+  can select it and `Ignore<AggregateException>` can veto a broader Handle.
+  The rescue context still receives the original exception. Regression tests
+  also cover nested aggregate leaves and exclusion behavior.
+
 - Fixed exception selection for nested `AggregateException` trees. Handle and
   Ignore now inspect every distinct inner exception in a stable order, so
   retry, rescue, circuit-breaker and kill-switch policies see a configured

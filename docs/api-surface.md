@@ -77,6 +77,8 @@ message's `RequestId`. Explicit correlation callbacks may override these default
 ordinary inner-exception chains and all branches of nested `AggregateException`
 trees. An `Ignore` match vetoes a broader `Handle` match. Typed predicates see
 each distinct exception instance at most once, in outer-to-inner order.
+Rescue applies that selection to the original failure, including an outer
+`AggregateException`, and passes the original failure to the rescue context.
 
 ## Advanced SPI
 

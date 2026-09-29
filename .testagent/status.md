@@ -1,5 +1,19 @@
 # A+ remediation test status
 
+## T123 — Rescue aggregate selection — 29 September 2026
+
+The rescue filter previously called `GetBaseException()` before applying its
+configured exception filter. A single-inner `AggregateException` therefore
+lost its outer type: `Handle<AggregateException>` could not select it and
+`Ignore<AggregateException>` could not veto a broad Handle. Both regressions
+failed red-first. Rescue now selects against the original exception and still
+passes that same instance to the rescue context. Two further tests protect
+nested aggregate Handle/Ignore behavior. The focused class passed 13/13 and
+the complete Core project passed 7,213/7,213, with zero failures or skips.
+Independent read-only Red Team review is PASS with no concrete P1/P2 in the
+bounded diff. No new global coverage profile was run because the user accepts
+the current Line/Branch level and prioritizes product correctness.
+
 ## T119 — saga request timeout admission
 
 The four public normal/faulted and typed/untyped request forms now reject a

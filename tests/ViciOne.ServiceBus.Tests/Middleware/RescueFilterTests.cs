@@ -58,7 +58,7 @@ public sealed class RescueFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "aggregate-match-preserves-full-failure")]
-    public async Task Rescue_MatchesAnAggregateByItsBaseFailureButPreservesTheFullAggregateForDiagnosticsAsync()
+    public async Task Rescue_MatchesAnAggregateInnerButPreservesTheFullAggregateForDiagnosticsAsync()
     {
         var root = new HandledException("root");
         var expected = new AggregateException("aggregate", root);
@@ -78,6 +78,111 @@ public sealed class RescueFilterTests
         await pipe.SendAsync(new TestPipeContext());
 
         Assert.Same(expected, rescuedFailure);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "nested-aggregate-leaf-selects-rescue-with-original-failure")]
+    public async Task Rescue_SelectsANestedAggregateLeafAndPreservesTheOriginalFailureAsync()
+    {
+        var target = new HandledException("target");
+        var failure = new AggregateException(
+            new AggregateException(new InvalidOperationException("other"), target),
+            new ApplicationException("sibling"));
+        Exception? projected = null;
+        IPipe<ITestPipeContext> pipe = Pipe.New<ITestPipeContext>(configuration =>
+        {
+            configuration.UseRescue<ITestPipeContext, RescueContext>(
+                (context, exception) => new RescueContext(context, exception), rescue =>
+                {
+                    rescue.Handle<HandledException>();
+                    rescue.UseExecute(context => projected = context.Exception);
+                });
+            configuration.UseExecute(_ => throw failure);
+        });
+
+        await pipe.SendAsync(new TestPipeContext());
+
+        Assert.Same(failure, projected);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "nested-aggregate-leaf-vetoes-broad-rescue")]
+    public async Task Rescue_NestedIgnoredLeafVetoesBroadHandleAndRethrowsOriginalAsync()
+    {
+        var failure = new AggregateException(
+            new AggregateException(new InvalidOperationException("other"), new HandledException("excluded")),
+            new ApplicationException("sibling"));
+        var rescueCount = 0;
+        IPipe<ITestPipeContext> pipe = Pipe.New<ITestPipeContext>(configuration =>
+        {
+            configuration.UseRescue<ITestPipeContext, RescueContext>(
+                (context, exception) => new RescueContext(context, exception), rescue =>
+                {
+                    rescue.Handle<Exception>();
+                    rescue.Ignore<HandledException>();
+                    rescue.UseExecute(_ => rescueCount++);
+                });
+            configuration.UseExecute(_ => throw failure);
+        });
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() =>
+            pipe.SendAsync(new TestPipeContext()));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(0, rescueCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "aggregate-type-predicate-sees-original-exception")]
+    public async Task Rescue_AggregatePredicateSeesTheOriginalExceptionOnceAsync()
+    {
+        var failure = new AggregateException(new InvalidOperationException("inner"));
+        var examined = new List<AggregateException>();
+        Exception? projected = null;
+        IPipe<ITestPipeContext> pipe = Pipe.New<ITestPipeContext>(configuration =>
+        {
+            configuration.UseRescue<ITestPipeContext, RescueContext>(
+                (context, exception) => new RescueContext(context, exception), rescue =>
+                {
+                    rescue.Handle<AggregateException>(exception =>
+                    {
+                        examined.Add(exception);
+                        return ReferenceEquals(exception, failure);
+                    });
+                    rescue.UseExecute(context => projected = context.Exception);
+                });
+            configuration.UseExecute(_ => throw failure);
+        });
+
+        await pipe.SendAsync(new TestPipeContext());
+
+        Assert.Same(failure, projected);
+        Assert.Same(failure, Assert.Single(examined));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RESCUE", "single-inner-aggregate-ignore-vetoes-rescue")]
+    public async Task Rescue_IgnoringTheOuterAggregateVetoesBroadHandleAsync()
+    {
+        var failure = new AggregateException(new InvalidOperationException("inner"));
+        var rescueCount = 0;
+        IPipe<ITestPipeContext> pipe = Pipe.New<ITestPipeContext>(configuration =>
+        {
+            configuration.UseRescue<ITestPipeContext, RescueContext>(
+                (context, exception) => new RescueContext(context, exception), rescue =>
+                {
+                    rescue.Handle<Exception>();
+                    rescue.Ignore<AggregateException>();
+                    rescue.UseExecute(_ => rescueCount++);
+                });
+            configuration.UseExecute(_ => throw failure);
+        });
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() =>
+            pipe.SendAsync(new TestPipeContext()));
+
+        Assert.Same(failure, actual);
+        Assert.Equal(0, rescueCount);
     }
 
     [Fact]
