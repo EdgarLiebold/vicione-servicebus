@@ -3951,3 +3951,24 @@ Friend assemblies remain trusted internals; the current repository has one
 production constructor call in `RequestRateAlgorithm.BeginRequestAsync`. The
 packed API baseline must reflect that deliberate
 pre-release public-surface correction.
+# T109 — adaptive request-count transaction
+
+Bounded target inventory: `RequestRateAlgorithm.cs`, its options and
+`ActiveRequest.cs`, plus the existing `RequestRateAlgorithmTests.cs`. The
+Roslyn source/test pairing from T107 already pairs the algorithm with the
+existing suite. xUnit v3/MTP tests use bounded `WaitAsync`,
+`TestContext.Current.CancellationToken`, visible `RequestCount` and
+`ActiveRequestCount`, and requirement tuples. Microsoft code-testing-agent,
+test-gap-analysis, assertion-quality and run-tests guidance was read before
+test editing.
+
+Reviewing the complete adaptive-count path finds a real candidate: a full
+batch grows request parallelism to four; one empty completion publishes two
+as the desired count, then waits to drain two permits. If its caller cancels
+after one drain, the current code leaves the published count at two while
+the physical semaphore capacity remains three. A later third request can be
+admitted above the reported limit. Acceptance requires canceled adjustment
+to keep the published count and permit capacity consistent, existing leases
+to settle exactly once, and healthy later admission at the correct boundary.
+Also check concurrent completions while a shrink waits, since adjustment
+ownership must be serial, and disposal while the adjustment is pending.

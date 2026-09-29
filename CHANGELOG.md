@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed adaptive request parallelism after a canceled downward adjustment.
+  The published request count now follows a completed permit drain; partial
+  drains are refunded and overlapping adjustments are serialized. Four
+  regressions cover cancellation, concurrent empty completions, disposal and
+  a pre-canceled completion whose limit stays unchanged. Two cases failed
+  red-first; focused tests pass 39/39 and complete Abstractions 962/962 on
+  `8142f0b29`, with no skips. Final adversarial review is PASS. T97 remains
+  the product-wide Line/Branch/CRAP checkpoint; global A+ remains open.
+
 - Fixed request lease settlement so duplicate completion, completion after
   disposal, and concurrent completion/disposal cannot release the owner's
   request permit or pending capacity twice. The `ActiveRequest` constructor is

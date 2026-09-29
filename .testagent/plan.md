@@ -5288,3 +5288,18 @@ the two later-business reuse variants; both sources are independently restored b
    constructor internal, update the package API contract from fresh packages,
    and repeat the full Abstractions host and read-only review. State the exact
    external-caller guarantee: friend assemblies retain internal access.
+# T109 — adaptive request-count transaction
+
+1. Add a red-first cancellation test using four real acquired leases. Make
+   one empty completion wait during a 4→2 shrink, cancel it, settle the
+   other leases, and assert the reported limit equals the actual admission
+   boundary. Map it to a requirement tuple.
+2. Add a second test for overlapping completions/shrink ownership if the
+   red case confirms the candidate. Assert no deadlock, no oversubscription,
+   and healthy recovery. Only keep tests with a clear behavioral oracle.
+3. Correct adaptive count adjustment so physical permit changes and the
+   published request count commit together; rollback any partial drain on
+   cancellation. Run focused tests during editing and the full Abstractions
+   project once on final source. Apply mutation and assertion review,
+   independent read-only Red Team review, then changelog/evidence and push.
+   Product-wide coverage remains on the grouped cadence.

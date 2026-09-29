@@ -1,5 +1,23 @@
 # A+ remediation test status
 
+## T109 — adaptive request-count transaction
+
+The original request-count code published a 4→2 shrink before draining two
+physical permits. Cancellation after one drain left the published count at
+two while three permits could later be admitted. The new red-first test
+failed 1/1 on the unchanged product. Serialized adjustment now publishes
+only after the drain and refunds partial drains on cancellation. Three
+additional tests prove overlapping shrink, algorithm disposal and the
+pre-canceled no-change completion contract; the latter failed red-first
+against the first correction and prevented a regression. Microsoft test-gap
+and assertion-quality review confirms the tests check both reported and
+physical capacity, exceptions, owner counts and recovery, rather than only
+touching branches. Focused RequestRateAlgorithm tests pass 39/39 and the
+complete Abstractions project passes 962/962 without skips on `8142f0b29`.
+Final read-only adversarial review is PASS with no concrete P1/P2. See
+[T109 evidence](coverage-a-plus-20260921/t109-adaptive-request-count.md).
+T97 remains the latest global profile; Line and Branch A+ remain open.
+
 ## T108 — ActiveRequest settlement ownership
 
 Three red-first request lifecycle tests exposed duplicate release, completion

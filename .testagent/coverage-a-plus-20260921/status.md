@@ -1,5 +1,17 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T109 adaptive request-count transaction packet
+
+A canceled 4→2 shrink no longer leaves three physical permits behind a
+reported limit of two. Adjustment is serialized, partial drains are
+refunded, and no-change completion preserves its existing canceled-token
+behavior. Four product-behavior tests include two red-first counterexamples.
+Focused RequestRateAlgorithm passes 39/39 and complete Abstractions passes
+962/962 without skips on `8142f0b29`. Final read-only Red Team review is
+PASS, with no concrete P1/P2. See
+[T109 evidence](t109-adaptive-request-count.md). T97 remains the latest
+product-wide checkpoint; Line and Branch A+ remain open.
+
 ## Current T108 ActiveRequest settlement ownership packet
 
 Three red-first cases exposed duplicate completion, completion after disposal,
