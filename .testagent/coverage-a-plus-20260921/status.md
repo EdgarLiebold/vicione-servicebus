@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T117 cron terminal-year packet
+
+`GetTimeAfter` now returns null at the maximum representable instant, and
+`IsSatisfiedBy` returns false at the minimum UTC instant. Both defects were
+reproduced red-first. Five new variants also prove the first 1970 occurrence
+and the last local 2199 second at UTC-10/UTC-14. Focused Cron 237/237 and
+complete Core 7,116/7,116 pass on `f45b7d846`; final read-only Red Team
+review is PASS. See [T117 evidence](t117-cron-terminal-year.md). T114 remains
+the latest full 33-profile checkpoint; global A+ is still open.
+
 ## Current T116 recurring initializer packet
 
 Twelve cases across both recurring schedulers, send/publish destinations and
