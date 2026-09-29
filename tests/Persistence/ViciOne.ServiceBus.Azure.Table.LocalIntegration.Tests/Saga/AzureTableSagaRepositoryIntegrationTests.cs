@@ -1,3 +1,4 @@
+using global::Azure.Data.Tables;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Advanced;
@@ -15,6 +16,62 @@ namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Saga;
 
 public sealed class AzureTableSagaRepositoryIntegrationTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-REGISTRATION", "runtime-provider-and-custom-keys-persist-and-load-through-public-api")]
+    public async Task RuntimeProvider_PersistsWithCustomKeysAndPublicRepositoryReloadsAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        TimeSpan timeout = OperationTimeout();
+        await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("SagaRuntimeKeys", cancellationToken);
+        var formatter = new FixedRowSagaKeyFormatter("state");
+        int configurationCount = 0;
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.UseAzureTableForRegisteredSagas(repository =>
+                {
+                    configurationCount++;
+                    repository.UseTableClientFactory(() => fixture.Table);
+                    repository.UseKeyFormatter(formatter);
+                });
+                configuration.AddSaga<PersistentSaga, PersistentSagaDefinition>();
+            })
+            .BuildServiceProvider(validateScopes: true);
+        Assert.Equal(1, configurationCount);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: cancellationToken)
+            .WaitAsync(timeout, cancellationToken);
+
+        try
+        {
+            Guid sagaId = Guid.NewGuid();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(cancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(sagaId, "runtime-provider"), cancellationToken);
+            await harness.Published.SelectAsync<PersistentSagaStarted>(
+                    observed => observed.Context.Message.CorrelationId == sagaId,
+                    cancellationToken)
+                .FirstObservedAsync(cancellationToken: cancellationToken);
+
+            TableEntity stored = (await fixture.Table.GetEntityAsync<TableEntity>(
+                sagaId.ToString("D"), "state", cancellationToken: cancellationToken)).Value;
+            var repository = (ILoadSagaRepository<PersistentSaga>)AzureTableSagaRepository
+                .Create<PersistentSaga>(() => fixture.Table, formatter);
+            PersistentSaga reloaded = Assert.IsType<PersistentSaga>(
+                await repository.LoadAsync(sagaId, cancellationToken));
+
+            Assert.Equal(sagaId.ToString("D"), stored.PartitionKey);
+            Assert.Equal("state", stored.RowKey);
+            Assert.Equal(sagaId, reloaded.CorrelationId);
+            Assert.Equal("runtime-provider", reloaded.Value);
+            Assert.Equal(1, reloaded.Revision);
+            Assert.Equal(PersistentSagaStage.Started, reloaded.Stage);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-LIFECYCLE", "initiate-correlate-update-and-reload-on-real-table-api")]
     public async Task Repository_PersistsAndReloadsTheCorrelatedSagaLifecycleAsync()
