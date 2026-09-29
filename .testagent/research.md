@@ -1,5 +1,15 @@
 # A+ remediation research
 
+## T138 shared concurrency-limit diagnostic ownership
+
+`ConcurrencyLimiter.ConsumeAsync` placed debug logging after response inside
+the main `try`; a throwing logger entered the error branch and converted a
+committed, answered adjustment into a failure. Its error logger could then
+replace a real stale-command exception. Both tests failed red-first with the
+secondary logger exception. The adjustment, rollback and timestamp logic were
+already covered by neighboring tests; this packet isolates diagnostics and
+checks exact command outcomes, response count and available permits.
+
 ## T137 pre-send observer fault notification
 
 `OutputPipeFilter<TInput,TOutput>.SendToOutputAsync` called typed and untyped

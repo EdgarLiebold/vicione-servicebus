@@ -1,5 +1,16 @@
 # A+ remediation test plan
 
+## T138 shared concurrency-limit diagnostic ownership
+
+1. Red-first make debug logging fail after a real limit increase and response;
+   require the committed limit, available permits, one response and successful
+   command completion.
+2. Red-first make error logging fail for a stale timestamped command; require
+   the exact stale-command type and timestamps, unchanged limit and no response.
+3. Contain diagnostic logging without changing adjustment semantics, run the
+   neighboring Rate/Concurrency and requirement tests, obtain independent
+   read-only adversarial review, then run Core at the exact commit and push.
+
 ## T137 pre-send observer fault notification
 
 1. Red-first fail typed and untyped pre-send callbacks through the public

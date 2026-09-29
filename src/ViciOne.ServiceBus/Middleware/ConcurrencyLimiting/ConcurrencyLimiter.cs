@@ -104,11 +104,25 @@ internal sealed class ConcurrencyLimiter :
                 command.ConcurrencyLimit
             }).ConfigureAwait(false);
 
-            LogContext.Debug?.Log("Set Consumer Limit: {ConcurrencyLimit} ({LimiterId})", command.ConcurrencyLimit, _id);
+            try
+            {
+                LogContext.Debug?.Log("Set Consumer Limit: {ConcurrencyLimit} ({LimiterId})", command.ConcurrencyLimit, _id);
+            }
+            catch
+            {
+                // A committed adjustment and response must not become a failed command because diagnostics failed.
+            }
         }
         catch (Exception exception)
         {
-            LogContext.Error?.Log(exception, "Set Consumer Limit failed: {ConcurrencyLimit} ({LimiterId})", command.ConcurrencyLimit, _id);
+            try
+            {
+                LogContext.Error?.Log(exception, "Set Consumer Limit failed: {ConcurrencyLimit} ({LimiterId})", command.ConcurrencyLimit, _id);
+            }
+            catch
+            {
+                // A diagnostic failure must not replace the command failure.
+            }
 
             throw;
         }

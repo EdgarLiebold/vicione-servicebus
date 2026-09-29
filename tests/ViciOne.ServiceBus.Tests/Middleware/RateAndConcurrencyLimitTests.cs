@@ -509,6 +509,72 @@ public sealed class RateAndConcurrencyLimitTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "diagnostic-logger-cannot-turn-committed-change-into-failure")]
+    public async Task SharedConcurrencyLimiter_ThrowingSuccessLoggerCannotFailACommittedChangeAsync()
+    {
+        var limiter = new ConcurrencyLimiter(2);
+        IConcurrencyLimiter state = limiter;
+        LimitConsumeContext command = CreateLimitConsumeContext(
+            new ExternalConcurrencyLimitCommand(4, StartTime, null),
+            StartTime,
+            TestContext.Current.CancellationToken);
+        ILogContext? previous = LogContext.Current;
+        var logger = new ThrowingLogger();
+
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            await limiter.ConsumeAsync(command);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+
+        Assert.Equal(1, logger.CallCount);
+        Assert.Equal(4, state.Limit);
+        Assert.Equal(4, state.Available);
+        Assert.Equal(1, ((LimitConsumeContextProxy)(object)command).ResponseCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "diagnostic-logger-cannot-replace-stale-command-failure")]
+    public async Task SharedConcurrencyLimiter_ThrowingErrorLoggerPreservesTheStaleCommandFailureAsync()
+    {
+        var limiter = new ConcurrencyLimiter(2);
+        IConcurrencyLimiter state = limiter;
+        LimitConsumeContext newest = CreateLimitConsumeContext(
+            new ExternalConcurrencyLimitCommand(3, StartTime.AddMinutes(2), null),
+            StartTime.AddMinutes(2),
+            TestContext.Current.CancellationToken);
+        await limiter.ConsumeAsync(newest);
+        LimitConsumeContext stale = CreateLimitConsumeContext(
+            new ExternalConcurrencyLimitCommand(4, StartTime.AddMinutes(1), null),
+            StartTime.AddMinutes(1),
+            TestContext.Current.CancellationToken);
+        ILogContext? previous = LogContext.Current;
+        var logger = new ThrowingLogger();
+
+        try
+        {
+            LogContext.ConfigureCurrentLogContext(logger);
+            StaleConcurrencyLimitCommandException actual =
+                await Assert.ThrowsAsync<StaleConcurrencyLimitCommandException>(() => limiter.ConsumeAsync(stale));
+            Assert.Equal(StartTime.AddMinutes(1), actual.CommandTimestamp);
+            Assert.Equal(StartTime.AddMinutes(2), actual.LastAppliedTimestamp);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+
+        Assert.Equal(1, logger.CallCount);
+        Assert.Equal(3, state.Limit);
+        Assert.Equal(3, state.Available);
+        Assert.Equal(0, ((LimitConsumeContextProxy)(object)stale).ResponseCount);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "serialized-timestamped-updates")]
     public async Task SharedConcurrencyLimiter_SerializesConcurrentChangesWithoutPermitOrTimestampCorruptionAsync()
     {

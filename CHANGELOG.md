@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Concurrency-limit management now keeps a committed adjustment and response
+  successful if debug logging fails. Failure logging also cannot replace a
+  stale-command failure or another original command error.
+
 - Filter observers now receive the original failure when a typed or untyped
   pre-send observer fails, whether it throws synchronously or returns a failed
   task. Dispatch and post-send notification remain skipped in that case.

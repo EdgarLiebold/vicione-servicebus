@@ -1,5 +1,15 @@
 # A+ remediation test status
 
+## T138 — shared concurrency-limit diagnostic ownership — 29 September 2026
+
+Two logger counterprobes failed red-first: success logging converted a
+committed, answered limit increase into failure, and error logging replaced
+the stale-command exception. Diagnostic calls are now contained; the tests
+verify committed state, permit balance, response count and exact stale
+timestamps. Neighboring Rate/Concurrency and requirement tests pass 23/23.
+Independent read-only review is PASS with no concrete P1/P2 in the patch or
+adjacent permit paths. The exact-commit Core gate follows.
+
 ## T137 — pre-send observer fault notification — 29 September 2026
 
 Typed and untyped pre-send fault counterprobes both failed red-first: the
