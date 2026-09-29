@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## T114 — fresh product-wide checkpoint
+
+The strict 33-receipt aggregate on `ee2253fa3` contains all 32 product
+assemblies and 13,783 passed executions. Line coverage is 87,071/94,328
+(92.30663%); conservative branch coverage is 31,583/37,199 (84.90282%).
+Five of 26,142 method identities exceed CRAP 30, in EF outbox and reliable
+inbox code. All twelve current local fixture runs have empty teardown
+findings. See [T114 evidence](coverage-a-plus-20260921/product-wide-profile-ee2253fa3.md).
+Global Line, Branch and CRAP A+ remain open. The next packet addresses the
+coherent outbox/inbox risk area with targeted tests during edits and complete
+affected-project suites at the packet boundary.
+
 ## T109 — adaptive request-count transaction
 
 The original request-count code published a 4→2 shrink before draining two

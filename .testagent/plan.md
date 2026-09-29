@@ -1,5 +1,21 @@
 # A+ remediation test plan
 
+## T114 checkpoint and next coherent packet
+
+1. Freeze the four completed packets since T97 at `ee2253fa3` and run all
+   33 required unit, architecture, local integration and fallback profiles.
+   Require one exact source/test revision and a strict complete aggregate.
+2. Record Line, conservative Branch and CRAP rates, fixture findings,
+   measured limits and the independent read-only review. The five CRAP > 30
+   methods define the next outbox/inbox investigation; A+ remains open.
+3. In the next packet, read the related EF outbox and InMemory/EF reliable
+   inbox source and existing tests together. Derive real contract cases,
+   capture a failing regression where a defect exists, and simplify excessive
+   branches without changing behavior. Run focused tests while editing and
+   complete affected projects on the frozen packet commit. Repeat the
+   33-profile measurement after roughly five such larger packets, or sooner
+   for a shared runtime or measurement-boundary change.
+
 ## T107 receive-side outbox cancellation ownership
 
 1. Reuse real factory or transport paths to expose classic InMemory and EF

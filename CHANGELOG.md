@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Ran a fresh strict product-wide Line/Branch/CRAP checkpoint on `ee2253fa3`:
+  33 exact-commit profiles, all 32 product assemblies and 13,783 passed test
+  executions. Line coverage is 87,071/94,328 (92.30663%) and conservative
+  branch coverage is 31,583/37,199 (84.90282%). Five methods exceed CRAP 30,
+  concentrated in EF outbox and reliable inbox code. The checkpoint records
+  this regression from T97's zero and keeps global A+ open.
+
 - Fixed caller cancellation during shared one-time setup. Canceling the
   initiating caller or a follower now ends only that caller's wait; the
   shared callback continues for other callers and retains its cache or

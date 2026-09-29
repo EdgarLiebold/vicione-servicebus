@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T114 product-wide checkpoint
+
+The strict 33-receipt profile on `ee2253fa3` has all 32 product assemblies
+and 13,783 passed executions. Physical lines are 87,071/94,328
+(92.30663%); conservatively covered branches are 31,583/37,199
+(84.90282%). Five of 26,142 methods exceed CRAP 30. All twelve current
+fixture runs have empty teardown findings. The full
+[T114 report](product-wide-profile-ee2253fa3.md) records comparison,
+hotspots and measurement limits. Global Line, Branch and CRAP A+ remain open.
+
 ## Current T109 adaptive request-count transaction packet
 
 A canceled 4→2 shrink no longer leaves three physical permits behind a
