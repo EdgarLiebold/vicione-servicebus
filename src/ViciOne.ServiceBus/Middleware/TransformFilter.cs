@@ -27,7 +27,8 @@ public class TransformFilter<T> :
     {
         var transformContext = new ConsumeTransformContext<T>(context, context.Log);
 
-        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Log);
+        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Log,
+            context.CancellationToken);
         if (initializeTask.Status == TaskStatus.RanToCompletion)
         {
             var log = initializeTask.Result.Message;
@@ -58,7 +59,8 @@ public class TransformFilter<T> :
     {
         var transformContext = new ConsumeTransformContext<T>(context.Advanced(), context.Message);
 
-        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Message);
+        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Message,
+            context.CancellationToken);
         if (initializeTask.Status == TaskStatus.RanToCompletion)
         {
             var message = initializeTask.Result.Message;
@@ -84,7 +86,8 @@ public class TransformFilter<T> :
     {
         var transformContext = new ConsumeTransformContext<T>(context, context.Arguments);
 
-        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Arguments);
+        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Arguments,
+            context.CancellationToken);
         if (initializeTask.Status == TaskStatus.RanToCompletion)
         {
             var arguments = initializeTask.Result.Message;
@@ -110,7 +113,8 @@ public class TransformFilter<T> :
     {
         var transformContext = new SendTransformContext<T>(context);
 
-        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Message);
+        Task<InitializeContext<T>> initializeTask = _initializer.InitializeAsync(_initializer.Create(transformContext), context.Message,
+            context.CancellationToken);
         if (initializeTask.Status == TaskStatus.RanToCompletion)
         {
             var message = initializeTask.Result.Message;

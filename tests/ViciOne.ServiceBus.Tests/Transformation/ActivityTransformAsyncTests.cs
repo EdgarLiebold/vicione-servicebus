@@ -87,6 +87,22 @@ public sealed class ActivityTransformAsyncTests
     public Task PendingInitializationFailure_PreservesTheCauseWithoutInvokingTheNextStageAsync(bool compensate) =>
         compensate ? CheckFailureAsync<CompensateContext<Data>>() : CheckFailureAsync<ExecuteContext<Data>>();
 
+    [Theory]
+    [InlineData("execute")]
+    [InlineData("compensate")]
+    [InlineData("consume")]
+    [InlineData("send")]
+    [RequirementCoverage("REQ-VSB-TRANSFORM-OPERATION-CANCELLATION", "pre-canceled-operation-suppresses-all-four-downstream-stages")]
+    public Task PreCanceledTransform_PreservesTheOperationTokenAndSuppressesDownstreamAsync(string stage) =>
+        stage switch
+        {
+            "execute" => CheckPreCanceledAsync<ExecuteContext<Data>>(),
+            "compensate" => CheckPreCanceledAsync<CompensateContext<Data>>(),
+            "consume" => CheckPreCanceledAsync<ConsumeContext<Data>>(),
+            "send" => CheckPreCanceledAsync<SendContext<Data>>(),
+            _ => throw new ArgumentOutOfRangeException(nameof(stage)),
+        };
+
     private static async Task CheckSuccessAsync<TContext>(bool replace, bool downstreamFails, Func<TContext, Data> getData,
         bool initializationCompleted = false)
         where TContext : class, PipeContext
@@ -115,6 +131,7 @@ public sealed class ActivityTransformAsyncTests
         Assert.Same(fixture.Original, fixture.Input);
         Assert.Same(fixture.Seed, fixture.InitializationContext);
         Assert.Equal(owner.Token, fixture.InheritedContext!.CancellationToken);
+        Assert.Equal(owner.Token, fixture.OperationToken);
         if (!initializationCompleted)
             fixture.Completion.SetResult(initialized);
         TContext forwarded = await next.Entered.Task.WaitAsync(Timeout(), TestContext.Current.CancellationToken);
@@ -182,6 +199,29 @@ public sealed class ActivityTransformAsyncTests
         Assert.Equal(0, next.Calls);
         Assert.False(next.Entered.Task.IsCompleted);
         Assert.Same(fixture.Original, fixture.Input);
+        Assert.Equal(owner.Token, fixture.OperationToken);
+    }
+
+    private static async Task CheckPreCanceledAsync<TContext>() where TContext : class, PipeContext
+    {
+        using var owner = new CancellationTokenSource();
+        var fixture = new Fixture(owner.Token);
+        TContext original = fixture.CreateContext<TContext>();
+        var next = new RecordingPipe<TContext>();
+        var filter = (IFilter<TContext>)(object)new TransformFilter<Data>(fixture.Initializer);
+        owner.Cancel();
+
+        Task operation = filter.SendAsync(original, next);
+
+        Assert.Equal(owner.Token, fixture.OperationToken);
+        Assert.Same(fixture.Original, fixture.Input);
+        Assert.Same(fixture.Seed, fixture.InitializationContext);
+        Assert.Equal(1, fixture.InitializeCalls);
+        OperationCanceledException failure = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            operation.WaitAsync(Timeout(), TestContext.Current.CancellationToken));
+        Assert.Equal(owner.Token, failure.CancellationToken);
+        Assert.Equal(0, next.Calls);
+        Assert.False(next.Entered.Task.IsCompleted);
     }
 
     private static TimeSpan Timeout() => TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
@@ -209,9 +249,13 @@ public sealed class ActivityTransformAsyncTests
                 }
                 if (method.Name == "InitializeAsync" && args!.Length == 3)
                 {
+                    InitializeCalls++;
                     InitializationContext = args[0];
                     Input = args[1];
-                    return Completion.Task;
+                    OperationToken = (CancellationToken)args[2]!;
+                    return OperationToken.IsCancellationRequested
+                        ? Task.FromCanceled<InitializeContext<Data>>(OperationToken)
+                        : Completion.Task;
                 }
                 throw new InvalidOperationException(method.Name);
             });
@@ -224,6 +268,8 @@ public sealed class ActivityTransformAsyncTests
         public PipeContext? InheritedContext { get; private set; }
         public object? InitializationContext { get; private set; }
         public object? Input { get; private set; }
+        public CancellationToken OperationToken { get; private set; }
+        public int InitializeCalls { get; private set; }
         public TaskCompletionSource<InitializeContext<Data>> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public TContext CreateContext<TContext>() where TContext : class
