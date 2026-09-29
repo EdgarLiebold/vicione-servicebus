@@ -7,7 +7,8 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Coordinates scheduled sends and publications through a scheduling provider.</summary>
 public sealed class MessageScheduler :
-    Advanced.IAdvancedMessageScheduler
+    Advanced.IAdvancedMessageScheduler,
+    Advanced.IScheduleCancellationCapability
 {
     readonly IBusTopology _busTopology;
     readonly IScheduleMessageProvider _provider;
@@ -25,6 +26,11 @@ public sealed class MessageScheduler :
 
     /// <inheritdoc />
     public TimeProvider TimeProvider { get; }
+
+    /// <inheritdoc />
+    public Advanced.ScheduleCancellationMode CancellationMode =>
+        (_provider as Advanced.IScheduleCancellationCapability)?.CancellationMode
+        ?? Advanced.ScheduleCancellationMode.Unknown;
 
     /// <inheritdoc />
     public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,

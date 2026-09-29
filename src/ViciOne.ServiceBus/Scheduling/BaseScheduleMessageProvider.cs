@@ -6,8 +6,12 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Builds scheduler commands and delegates their transport-specific dispatch.</summary>
 public abstract class BaseScheduleMessageProvider :
-    IScheduleMessageProvider
+    IScheduleMessageProvider,
+    Advanced.IScheduleCancellationCapability
 {
+    /// <inheritdoc />
+    public virtual Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.Unknown;
+
     /// <inheritdoc />
     public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)

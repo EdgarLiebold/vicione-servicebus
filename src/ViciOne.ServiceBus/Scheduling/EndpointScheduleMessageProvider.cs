@@ -8,6 +8,9 @@ namespace ViciOne.ServiceBus.Scheduling;
 public sealed class EndpointScheduleMessageProvider :
     BaseScheduleMessageProvider
 {
+    /// <inheritdoc />
+    public override Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.CallerSpecifiedToken;
+
     readonly Func<CancellationToken, Task<ISendEndpoint>> _schedulerEndpoint;
     readonly TimeProvider _timeProvider;
 

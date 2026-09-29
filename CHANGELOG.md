@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed Saga timeout cancellation identity. Expiry scheduling now sets its
+  token to the request ID used by response and fault cancellation. Positive
+  timeouts reject Azure Service Bus native scheduling, transport-delayed
+  scheduling and undeclared custom schedulers before request dispatch because
+  those providers cannot cancel with that caller-selected token. Endpoint,
+  publish and SQL scheduling declare their supported mode; the bus scheduler,
+  consume scope and in-memory outbox preserve it. Behavior tests verify the
+  schedule/cancel sequence, early rejection, real provider classifications
+  and all four modes through both wrappers. Core 7,140/7,140 passed before
+  the final test-strengthening edit; the changed focused tests and all three
+  requirement projections passed afterward. Red Team final review is PASS.
+
 - Fixed saga requests with a positive timeout dispatching and changing their
   request ID before discovering that no scheduler is available. Timeouts that
   exceed the supported date range now fail before dispatch as configuration

@@ -6,7 +6,8 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Adapts a message scheduler to the destination and lifetime of a consume context.</summary>
 internal sealed class ConsumeMessageSchedulerContext :
-    MessageSchedulerContext
+    MessageSchedulerContext,
+    Advanced.IScheduleCancellationCapability
 {
     readonly Uri _inputAddress;
     readonly Lazy<IMessageScheduler> _scheduler;
@@ -32,6 +33,11 @@ internal sealed class ConsumeMessageSchedulerContext :
 
     /// <inheritdoc />
     public TimeProvider TimeProvider => _scheduler.Value.Advanced().TimeProvider;
+
+    /// <inheritdoc />
+    public Advanced.ScheduleCancellationMode CancellationMode =>
+        (_scheduler.Value as Advanced.IScheduleCancellationCapability)?.CancellationMode
+        ?? Advanced.ScheduleCancellationMode.Unknown;
 
     /// <inheritdoc />
     public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,

@@ -7,8 +7,12 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Schedules messages by setting the native Azure Service Bus enqueue time.</summary>
 public class ServiceBusScheduleMessageProvider :
-    IScheduleMessageProvider
+    IScheduleMessageProvider,
+    Advanced.IScheduleCancellationCapability
 {
+    /// <inheritdoc />
+    public Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.ProviderAssignedToken;
+
     readonly ISendEndpointProvider _sendEndpointProvider;
 
     /// <summary>Creates a scheduler using the supplied endpoint provider.</summary>

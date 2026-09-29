@@ -1,5 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T120 Saga timeout cancellation packet
+
+Positive Saga timeouts now schedule and cancel with the same request ID.
+Scheduler capability is explicit and propagated through the bus scheduler,
+consume scope and in-memory outbox. Non-cancellable or undeclared schedulers
+fail before request-ID generation or dispatch. Core 7,140/7,140 passed after
+the product correction; the subsequently strengthened four-mode wrapper test
+passed 8/8, and Core, SQL and Azure requirement projections passed. SQL and
+Azure focused provider tests passed. Independent Red Team final review is
+PASS. See [T120 evidence](t120-saga-timeout-cancellation.md). T114 remains
+the latest global Line/Branch/CRAP checkpoint; the user accepts its Line and
+Branch coverage as A+.
+
 ## Current T119 saga request timeout admission packet
 
 Positive-timeout requests now require a scheduler and a representable

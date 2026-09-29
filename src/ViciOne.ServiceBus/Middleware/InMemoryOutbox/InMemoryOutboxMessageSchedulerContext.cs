@@ -8,7 +8,8 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 /// <summary>Tracks scheduled messages so an in-memory outbox can cancel them when consumption fails.</summary>
 internal sealed class InMemoryOutboxMessageSchedulerContext :
-    MessageSchedulerContext
+    MessageSchedulerContext,
+    Advanced.IScheduleCancellationCapability
 {
     readonly InMemoryOutboxDeferredMethodCollection _cancelMessages;
     readonly Task _clearToSend;
@@ -44,6 +45,11 @@ internal sealed class InMemoryOutboxMessageSchedulerContext :
 
     /// <summary>Gets the clock exposed by the resolved message scheduler.</summary>
     public TimeProvider TimeProvider => _scheduler.Value.Advanced().TimeProvider;
+
+    /// <inheritdoc />
+    public Advanced.ScheduleCancellationMode CancellationMode =>
+        (_scheduler.Value as Advanced.IScheduleCancellationCapability)?.CancellationMode
+        ?? Advanced.ScheduleCancellationMode.Unknown;
 
     internal readonly record struct Checkpoint(int ScheduledMessageCount, int CancelMessageCount);
 

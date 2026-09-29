@@ -9,8 +9,12 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Schedules and cancels messages through the SQL transport's enqueue-time support.</summary>
 public class SqlScheduleMessageProvider :
-    IScheduleMessageProvider
+    IScheduleMessageProvider,
+    Advanced.IScheduleCancellationCapability
 {
+    /// <inheritdoc />
+    public Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.CallerSpecifiedToken;
+
     readonly Func<Func<ClientContext, Task>, CancellationToken, Task> _cancel;
     readonly ConsumeContext? _context;
     readonly ISqlHostConfiguration? _hostConfiguration;

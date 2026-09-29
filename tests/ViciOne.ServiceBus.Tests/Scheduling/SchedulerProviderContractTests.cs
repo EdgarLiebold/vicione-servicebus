@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Net.Mime;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.InMemoryTransport.Runtime;
 using ViciOne.ServiceBus.Scheduling;
@@ -13,6 +14,41 @@ public sealed class SchedulerProviderContractTests
 {
     private static readonly Uri Destination = new("loopback://localhost/scheduler-provider-boundary");
     private static readonly DateTimeOffset DueAt = new(2039, 1, 2, 3, 4, 5, TimeSpan.Zero);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULER-PROVIDER-BOUNDARY", "cancellation-capability-matches-real-providers")]
+    public void CancellationCapability_ReflectsRealProviderBehavior()
+    {
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, UnexpectedInvocationProxy>();
+        IPublishEndpoint publisher = DispatchProxy.Create<IPublishEndpoint, UnexpectedInvocationProxy>();
+
+        Assert.Equal(ScheduleCancellationMode.CallerSpecifiedToken,
+            new EndpointScheduleMessageProvider(_ => throw new InvalidOperationException()).CancellationMode);
+        Assert.Equal(ScheduleCancellationMode.CallerSpecifiedToken,
+            new PublishScheduleMessageProvider(publisher).CancellationMode);
+        Assert.Equal(ScheduleCancellationMode.Unsupported,
+            new DelayedScheduleMessageProvider(endpoints).CancellationMode);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULER-PROVIDER-BOUNDARY", "scheduler-preserves-provider-cancellation-capability")]
+    public void MessageScheduler_PreservesProviderCancellationCapability()
+    {
+        IBusTopology topology = DispatchProxy.Create<IBusTopology, UnexpectedInvocationProxy>();
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, UnexpectedInvocationProxy>();
+        var accepted = new EndpointScheduleMessageProvider(_ =>
+            throw new InvalidOperationException("Scheduling was unexpected."));
+        IScheduleMessageProvider unknown = DispatchProxy.Create<IScheduleMessageProvider, UnexpectedInvocationProxy>();
+
+        Assert.Equal(ScheduleCancellationMode.CallerSpecifiedToken,
+            new MessageScheduler(accepted, topology).CancellationMode);
+        Assert.Equal(ScheduleCancellationMode.Unsupported,
+            new MessageScheduler(new DelayedScheduleMessageProvider(endpoints), topology).CancellationMode);
+        Assert.Equal(ScheduleCancellationMode.Unknown,
+            new MessageScheduler(unknown, topology).CancellationMode);
+        Assert.Equal(ScheduleCancellationMode.Unknown,
+            new RecordingProvider((_, _, _) => Task.CompletedTask).CancellationMode);
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-PROVIDER-BOUNDARY", "constructors-reject-missing-collaborators")]

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11014 |
+| Added | 11017 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -244,6 +244,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t117-cron-terminal-year.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t118-saga-state-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t119-saga-request-timeout-admission.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t120-saga-timeout-cancellation.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -11469,6 +11470,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs` | Modified | `src/MassTransit.Abstractions/Scheduling/ConsumeContextSelfSchedulerExtensions.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Scheduling/IMessageScheduler.cs` | Modified | `src/MassTransit.Abstractions/Scheduling/IMessageScheduler.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Scheduling/IRecurringMessageScheduler.cs` | Modified | `src/MassTransit.Abstractions/Scheduling/IRecurringMessageScheduler.cs` |
+| `src/ViciOne.ServiceBus.Abstractions/Scheduling/IScheduleCancellationCapability.cs` | Added |  |
 | `src/ViciOne.ServiceBus.Abstractions/Scheduling/IScheduleMessageProvider.cs` | Modified | `src/MassTransit.Abstractions/Scheduling/IScheduleMessageProvider.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageRedeliveryContext.cs` | Modified | `src/MassTransit.Abstractions/Scheduling/MessageRedeliveryContext.cs` |
 | `src/ViciOne.ServiceBus.Abstractions/Scheduling/MessageSchedulerContext.cs` | Modified | `src/MassTransit.Abstractions/Scheduling/MessageSchedulerContext.cs` |
@@ -15430,6 +15432,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusQueueOptionsTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiveTransportPropertiesTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverErrorCallbackTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusScheduleCancellationCapabilityTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSendFailureClassifierTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSessionSagaProbeTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusSettlementCancellationTests.cs` | Added |  |

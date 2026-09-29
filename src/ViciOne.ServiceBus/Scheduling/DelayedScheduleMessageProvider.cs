@@ -6,8 +6,12 @@ namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>Schedules messages by applying a transport delivery delay.</summary>
 public sealed class DelayedScheduleMessageProvider :
-    IScheduleMessageProvider
+    IScheduleMessageProvider,
+    Advanced.IScheduleCancellationCapability
 {
+    /// <inheritdoc />
+    public Advanced.ScheduleCancellationMode CancellationMode => Advanced.ScheduleCancellationMode.Unsupported;
+
     readonly ISendEndpointProvider _sendEndpointProvider;
     readonly TimeProvider _timeProvider;
 

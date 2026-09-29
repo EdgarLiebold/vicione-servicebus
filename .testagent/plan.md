@@ -5515,3 +5515,25 @@ the two later-business reuse variants; both sources are independently restored b
    the terminal range during a blocked send schedules at the last UTC instant.
    A blocked-send FakeTimeProvider test must also preserve the existing
    timeout origin at successful send completion.
+
+# T120 — saga timeout cancellation token ownership
+
+1. Red-first: run a real RequestActivity, execute the scheduler's outgoing
+   token pipe, then run CancelRequestTimeoutActivity for the accepted response.
+   Require the scheduler token and cancel token to equal the Saga request ID,
+   one schedule/cancel each, no leftover ID, and exact continuation order.
+2. Set the scheduled timeout's `ScheduledMessageId` from the request ID in
+   the shared RequestActivityImpl path. Preserve payload, correlation, due
+   time, cancellation token and all four request forms. Review the actual
+   Base/Delayed provider token contracts and obtain independent Red Team
+   review.
+3. Run focused tests during edits, full Core at the frozen packet boundary,
+   update requirement mapping, API documentation, changelog and evidence,
+   then push. Defer another exact-commit 33-profile until the next grouped
+   checkpoint; T119 already has targeted Core/EF receipts.
+4. Admit positive Saga timeouts only when the resolved scheduler declares a
+   caller-specified cancellation token. Test unsupported, provider-assigned and
+   unknown modes plus an undeclared provider for rejection before any Saga
+   mutation or dispatch. Test real provider classifications and propagation
+   through `MessageScheduler`. Leave the public base class default `Unknown`
+   for third-party subclasses, per the adversarial counterexample.

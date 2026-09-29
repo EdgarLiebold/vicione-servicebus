@@ -23,11 +23,18 @@ incomplete capability configuration, and unsupported durable transport combinati
 
 A Saga request with a positive `Timeout` schedules an expiry message and cancels
 that schedule when any accepted response or request fault arrives. Select a
-scheduler that supports cancellation, such as the Quartz integration, for this
-workflow. `ConfigureDelayedMessageScheduler()` uses transport delivery delay;
-it cannot recall an accepted message. Its cancellation API throws
-`NotSupportedException`, which also fails Saga response/fault processing when
-that processing attempts to cancel a positive timeout.
+scheduler that accepts a caller-specified scheduling token and cancels by that
+token, such as the Quartz or SQL integration. The scheduling capability is
+exposed through `IScheduleCancellationCapability.CancellationMode` and forwarded
+through the bus scheduler, consume scope and in-memory outbox. Endpoint and
+publish scheduling declare `CallerSpecifiedToken`. Azure Service Bus native
+scheduling declares `ProviderAssignedToken`: its broker token is available only
+after dispatch, whereas the Saga stores the request ID. Transport-delayed
+scheduling declares `Unsupported` because an accepted delayed message cannot
+be recalled. Unknown custom schedulers must declare the capability to support
+positive Saga timeouts. The Saga rejects these three incompatible modes before
+creating a request ID, resolving an endpoint or dispatching the request.
+Requests with no positive timeout remain usable with any scheduler mode.
 The request requires an available scheduler before it is dispatched. A timeout
 that would exceed the supported date range is rejected before dispatch. For an
 accepted request, the timeout interval starts when the send completes.

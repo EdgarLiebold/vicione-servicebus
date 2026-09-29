@@ -4225,3 +4225,41 @@ global discovery or measurement is needed during this packet.
   scheduled deadline to the final representable UTC instant to avoid a
   partial state after a successful transport send. The terminal test also
   caught an implicit local-offset conversion of `DateTime.MaxValue`.
+
+# T120 — saga timeout cancellation token ownership
+
+- `RequestActivityImpl` schedules `IRequestTimeoutExpired<TRequest>` without
+  an outgoing pipe and ignores the `ScheduledMessage.TokenId`.
+  `CancelRequestTimeoutActivity` instead cancels using
+  `_request.GetRequestId(saga)`. The normal `StateMachineRequestExtensions`
+  path registers `ScheduleTokenId.UseTokenId<IRequestTimeoutExpired<T>>` to
+  select the request ID, so Base/SQL usually align. A directly constructed
+  activity or previously materialized selector cache does not. Azure Service
+  Bus overrides even an explicitly requested token with its native broker
+  sequence token; delayed scheduling cannot cancel at all. These provider
+  distinctions require a separate correction beyond the caller-token pipe.
+- `BaseScheduleMessageProvider` applies a caller pipe to a send proxy and
+  accepts `ScheduledMessageId` as the final token; `DelayedScheduleMessageProvider`
+  also permits the pipe to override the token on the send context. Existing
+  `SchedulerProviderContractTests.AcceptedCommand_UsesConfiguredTokenAcrossWireMetadataAndHandleAsync`
+  proves the provider side. Test the Saga's schedule-and-cancel sequence with
+  one request ID, a scheduler proxy that executes the supplied pipe, and
+  exact token, destination, request state and continuation assertions.
+- Microsoft `code-testing-agent` inline Research → Plan → Implement remains
+  mandatory for this behavioral test; use `test-gap-analysis`,
+  `assertion-quality` and `run-tests` for the focused verification.
+
+### T120 provider admission addendum
+
+- Positive Saga timeouts also require cancellation using the same caller-selected
+  token. Azure Service Bus native scheduling assigns a broker token only after
+  dispatch; transport delay cannot cancel. Unknown third-party providers cannot
+  safely be assumed to support the contract.
+- `BaseScheduleMessageProvider` is publicly subclassable. Its default capability
+  must remain `Unknown`; only the concrete Endpoint and Publish providers may
+  declare `CallerSpecifiedToken`. SQL declares the same capability, Azure
+  Service Bus declares `ProviderAssignedToken`, and Delayed declares
+  `Unsupported`.
+- The bus scheduler and both consume-bound wrappers must forward the capability.
+  Saga preflight rejects any mode other than `CallerSpecifiedToken` before
+  generating the request ID, resolving an endpoint, or dispatching.

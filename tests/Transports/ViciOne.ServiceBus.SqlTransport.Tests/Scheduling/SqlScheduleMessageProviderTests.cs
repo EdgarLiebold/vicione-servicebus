@@ -1,4 +1,5 @@
 using System.Reflection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
@@ -10,6 +11,17 @@ namespace ViciOne.ServiceBus.SqlTransport.Tests.Scheduling;
 
 public sealed class SqlScheduleMessageProviderTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SQL-SCHEDULE-TOKEN", "cancellation-capability-uses-caller-token")]
+    public void CancellationCapability_UsesCallerSpecifiedToken()
+    {
+        ISendEndpointProvider endpoints = DispatchProxy.Create<ISendEndpointProvider, UnsupportedProxy>();
+        ISqlHostConfiguration hostConfiguration = DispatchProxy.Create<ISqlHostConfiguration, UnsupportedProxy>();
+
+        Assert.Equal(ScheduleCancellationMode.CallerSpecifiedToken,
+            new SqlScheduleMessageProvider(hostConfiguration, endpoints).CancellationMode);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-SQL-SCHEDULE-TOKEN", "generated-token-is-persisted-and-returned")]
     public async Task ScheduleSendAsync_PersistsAndReturnsTheSameGeneratedTokenAsync()

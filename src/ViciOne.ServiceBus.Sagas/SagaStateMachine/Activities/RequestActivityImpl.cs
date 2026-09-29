@@ -37,6 +37,10 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         if (timeout > TimeSpan.Zero && !context.TryGetPayload(out schedulerContext))
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A request timeout was specified but no message scheduler was specified or available", "Correct the named configuration before starting the host"));
 
+        if (timeout > TimeSpan.Zero && schedulerContext is not global::ViciOne.ServiceBus.Advanced.IScheduleCancellationCapability
+            { CancellationMode: global::ViciOne.ServiceBus.Advanced.ScheduleCancellationMode.CallerSpecifiedToken })
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A request timeout requires a message scheduler that can cancel using the caller-specified scheduling token", "Configure a cancellable scheduler before starting the host"));
+
         if (timeout > TimeSpan.Zero)
         {
             var admissionTime = context.GetTimeProvider().GetUtcNow().UtcDateTime;
@@ -65,7 +69,10 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
             IRequestTimeoutExpired<TRequest> message =
                 new TimeoutExpired<TRequest>(now, expirationTime, context.Saga.CorrelationId, pipe.RequestId, sendTuple.Message);
 
-            await schedulerContext!.ScheduleSendAsync(expirationTime, message, context.CancellationToken).ConfigureAwait(false);
+            IPipe<SendContext<IRequestTimeoutExpired<TRequest>>> schedulePipe =
+                Pipe.Execute<SendContext<IRequestTimeoutExpired<TRequest>>>(sendContext => sendContext.ScheduledMessageId = requestId);
+            await schedulerContext!.ScheduleSendAsync(expirationTime, message, schedulePipe, context.CancellationToken)
+                .ConfigureAwait(false);
         }
     }
 

@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -13,6 +14,55 @@ public sealed class SchedulingExtensionContractTests
     private static readonly Uri InputAddress = new("loopback://localhost/scheduler-input");
     private static readonly Uri ExplicitDestination = new("loopback://localhost/scheduler-destination");
     private static readonly DateTimeOffset DueAt = new(2041, 2, 3, 4, 5, 6, TimeSpan.Zero);
+
+    [Theory]
+    [InlineData(ScheduleCancellationMode.Unknown)]
+    [InlineData(ScheduleCancellationMode.Unsupported)]
+    [InlineData(ScheduleCancellationMode.CallerSpecifiedToken)]
+    [InlineData(ScheduleCancellationMode.ProviderAssignedToken)]
+    [RequirementCoverage("REQ-VSB-SCHEDULER-CONTEXT-BOUNDARY", "cancellation-capability-survives-consume-and-outbox-scopes")]
+    public void CancellationCapability_SurvivesConsumeAndOutboxScopes(ScheduleCancellationMode mode)
+    {
+        ReceiveContext receive = DispatchProxy.Create<ReceiveContext, SchedulerReceiveContextProxy>();
+        ((SchedulerReceiveContextProxy)(object)receive).InputAddress = InputAddress;
+        ConsumeContext consume = DispatchProxy.Create<ConsumeContext, SchedulerConsumeContextProxy>();
+        ((SchedulerConsumeContextProxy)(object)consume).ReceiveContext = receive;
+        IBusTopology topology = DispatchProxy.Create<IBusTopology, UnexpectedInvocationProxy>();
+        var provider = DispatchProxy.Create<ModeScheduleProvider, ModeProviderProxy>();
+        ((ModeProviderProxy)(object)provider).Mode = mode;
+        var resolved = new MessageScheduler(provider, topology);
+        var resolutions = 0;
+        MessageSchedulerFactory factory = _ =>
+        {
+            resolutions++;
+            return resolved;
+        };
+
+        var scoped = new ConsumeMessageSchedulerContext(consume, factory);
+        var outbox = new InMemoryOutboxMessageSchedulerContext(consume, factory, Task.CompletedTask);
+
+        Assert.Equal(mode,
+            ((IScheduleCancellationCapability)scoped).CancellationMode);
+        Assert.Equal(mode,
+            ((IScheduleCancellationCapability)outbox).CancellationMode);
+        Assert.Equal(2, resolutions);
+        Assert.Equal(mode,
+            ((IScheduleCancellationCapability)scoped).CancellationMode);
+        Assert.Equal(2, resolutions);
+    }
+
+    public interface ModeScheduleProvider : IScheduleMessageProvider, IScheduleCancellationCapability
+    {
+    }
+
+    public class ModeProviderProxy : DispatchProxy
+    {
+        public ScheduleCancellationMode Mode { get; set; }
+
+        protected override object? Invoke(MethodInfo? method, object?[]? arguments) =>
+            method?.Name == "get_CancellationMode" ? Mode
+            : throw new InvalidOperationException($"Scheduling was unexpected: {method?.Name}");
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ADVANCED-SCHEDULER-BOUNDARY", "every-extension-rejects-null-scheduler")]

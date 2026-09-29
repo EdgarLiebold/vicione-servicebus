@@ -661,7 +661,7 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         {
             Assert.Equal("ScheduleSendAsync", method.Name);
             Assert.Equal(typeof(IRequestTimeoutExpired<Request>), Assert.Single(method.GetGenericArguments()));
-            Assert.Equal(cancellation.Token, args[2]);
+            Assert.Equal(cancellation.Token, args[3]);
             var expiry = Assert.IsAssignableFrom<IRequestTimeoutExpired<Request>>(args[1]);
             Assert.Equal(requestId, expiry.RequestId);
             Assert.Equal(saga.CorrelationId, expiry.CorrelationId);
@@ -698,6 +698,68 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         Assert.Equal(requestId, saga.RequestId);
         Assert.Same(context, Assert.Single(next.Seen));
         Assert.Equal(["generate", "endpoint", "send", "persist", "schedule", "next"], trace);
+    }
+
+    [Theory]
+    [InlineData(ScheduleCancellationMode.Unsupported)]
+    [InlineData(ScheduleCancellationMode.ProviderAssignedToken)]
+    [InlineData(ScheduleCancellationMode.Unknown)]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t120-request-timeout-incompatible-scheduler-rejects-before-dispatch")]
+    public async Task Request_IncompatibleSchedulerRejectsBeforeDispatchAsync(ScheduleCancellationMode mode)
+    {
+        var trace = new List<string>();
+        var priorId = Guid.NewGuid();
+        var saga = new Saga { RequestId = priorId };
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out _, trace);
+        MessageSchedulerContext scheduler = NewScheduler((method, _) =>
+        {
+            trace.Add(method.Name);
+            throw new InvalidOperationException("The scheduler must not be used.");
+        }, mode);
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, _) =>
+        {
+            trace.Add(method.Name);
+            throw new InvalidOperationException("The endpoint must not be used.");
+        });
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            scheduler: scheduler, endpoint: endpoint, endpointAddress: _ => trace.Add("endpoint"));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var next = new NextBehavior(trace);
+
+        ConfigurationException error = await Assert.ThrowsAsync<ConfigurationException>(() =>
+            new RequestActivity<Saga, Request, Response>(request, factory).ExecuteAsync(context, next));
+
+        Assert.Contains("caller-specified scheduling token", error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(priorId, saga.RequestId);
+        Assert.Empty(trace);
+        Assert.Empty(next.Seen);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t120-request-timeout-undeclared-scheduler-rejects-before-dispatch")]
+    public async Task Request_UndeclaredSchedulerRejectsBeforeDispatchAsync()
+    {
+        var trace = new List<string>();
+        var saga = new Saga();
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out _, trace);
+        MessageSchedulerContext scheduler = Proxy<MessageSchedulerContext>((method, _) =>
+        {
+            trace.Add(method.Name);
+            throw new InvalidOperationException("The scheduler must not be used.");
+        });
+        IBehaviorContext<Saga> context = NewContext<IBehaviorContext<Saga>>(saga,
+            scheduler: scheduler, endpointAddress: _ => trace.Add("endpoint"));
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var next = new NextBehavior(trace);
+
+        await Assert.ThrowsAsync<ConfigurationException>(() =>
+            new RequestActivity<Saga, Request, Response>(request, factory).ExecuteAsync(context, next));
+
+        Assert.Null(saga.RequestId);
+        Assert.Empty(trace);
+        Assert.Empty(next.Seen);
     }
 
     [Fact]
@@ -781,6 +843,88 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
         Assert.Equal(requestId, saga.RequestId);
         Assert.Same(context, Assert.Single(next.Seen));
         Assert.Equal(["generate", "send", "persist", "schedule", "next"], trace);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "t120-request-timeout-schedule-and-cancel-share-token")]
+    public async Task RequestTimeout_ScheduleAndCancelUseTheSameRequestTokenAsync()
+    {
+        var trace = new List<string>();
+        var saga = new Saga();
+        var request = NewRequest(TimeSpan.FromMinutes(1), ConfiguredAddress, out Guid requestId, trace);
+        Guid? configuredToken = null;
+        var scheduleCount = 0;
+        var cancelCount = 0;
+        MessageSchedulerContext scheduler = NewScheduler((method, args) =>
+        {
+            if (method.Name == "ScheduleSendAsync")
+            {
+                scheduleCount++;
+                Assert.Equal(4, args.Length);
+                var pipe = Assert.IsAssignableFrom<IPipe<SendContext<IRequestTimeoutExpired<Request>>>>(args[2]);
+                var sendContext = Proxy<SendContext<IRequestTimeoutExpired<Request>>>((member, values) => member.Name switch
+                {
+                    "set_ScheduledMessageId" => SetToken(values),
+                    "get_ScheduledMessageId" => configuredToken,
+                    _ => throw new NotSupportedException(member.Name)
+                });
+                return AcceptAsync(pipe, sendContext);
+            }
+
+            Assert.Equal("CancelScheduledSendAsync", method.Name);
+            Assert.Equal(InputAddress, args[0]);
+            Assert.Equal(requestId, args[1]);
+            Assert.Equal(configuredToken, args[1]);
+            cancelCount++;
+            trace.Add("cancel");
+            return Task.CompletedTask;
+        });
+        IAdvancedSendEndpoint endpoint = Proxy<IAdvancedSendEndpoint>((method, _) =>
+        {
+            Assert.Equal("SendAsync", method.Name);
+            trace.Add("send");
+            return Task.CompletedTask;
+        });
+        IBehaviorContext<Saga> sendContext = NewContext<IBehaviorContext<Saga>>(saga,
+            scheduler: scheduler, endpoint: endpoint);
+        var factory = new ContextMessageFactory<IBehaviorContext<Saga>, Request>(
+            _ => Task.FromResult(new InitializedMessage<Request>(new Request())));
+        var sendNext = new NextBehavior(trace);
+
+        await new RequestActivity<Saga, Request, Response>(request, factory).ExecuteAsync(sendContext, sendNext);
+        Assert.Equal(requestId, saga.RequestId);
+
+        IBehaviorContext<Saga, Data> responseContext = NewContext<IBehaviorContext<Saga, Data>>(saga, scheduler: scheduler);
+        var cancelNext = new TypedNextBehavior(trace: trace);
+        await new CancelRequestTimeoutActivity<Saga, Data, Request, Response>(request, completed: true)
+            .ExecuteAsync(responseContext, cancelNext);
+
+        Assert.Equal(1, scheduleCount);
+        Assert.Equal(1, cancelCount);
+        Assert.Equal(requestId, configuredToken);
+        Assert.Null(saga.RequestId);
+        Assert.Same(sendContext, Assert.Single(sendNext.Seen));
+        Assert.Same(responseContext, Assert.Single(cancelNext.Seen));
+        Assert.Equal(["generate", "send", "persist", "schedule", "next", "cancel", "persist", "next"], trace);
+
+        object? SetToken(object?[] values)
+        {
+            configuredToken = Assert.IsType<Guid>(values[0]);
+            return null;
+        }
+
+        async Task<ScheduledMessage<IRequestTimeoutExpired<Request>>> AcceptAsync(
+            IPipe<SendContext<IRequestTimeoutExpired<Request>>> pipe,
+            SendContext<IRequestTimeoutExpired<Request>> outgoing)
+        {
+            await pipe.SendAsync(outgoing);
+            trace.Add("schedule");
+            return Proxy<ScheduledMessage<IRequestTimeoutExpired<Request>>>((member, _) => member.Name switch
+            {
+                "get_TokenId" => configuredToken,
+                _ => throw new NotSupportedException(member.Name)
+            });
+        }
     }
 
     [Fact]
@@ -1382,12 +1526,14 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
             {
                 "get_ServiceAddress" => address,
                 "get_Timeout" => timeout,
+                "get_ClearRequestIdOnFaulted" => false,
                 _ => throw new NotSupportedException(method.Name)
             });
         return Proxy<IRequest<Saga, Request, Response>>((method, args) => method.Name switch
         {
             "get_Settings" => settings,
             "GenerateRequestId" => Generate(),
+            "GetRequestId" => Assert.IsType<Saga>(args[0]).RequestId,
             "SetRequestId" => Persist(args),
             _ => throw new NotSupportedException(method.Name)
         });
@@ -1456,8 +1602,14 @@ public sealed class StateMachineFaultedRequestScheduleActivitiesDeepContractTest
             _ => throw new NotSupportedException(method.Name)
         });
 
-    static MessageSchedulerContext NewScheduler(Func<MethodInfo, object?[], object?> handler) =>
-        Proxy<MessageSchedulerContext>(handler);
+    public interface CapableMessageSchedulerContext : MessageSchedulerContext, IScheduleCancellationCapability
+    {
+    }
+
+    static MessageSchedulerContext NewScheduler(Func<MethodInfo, object?[], object?> handler,
+        ScheduleCancellationMode mode = ScheduleCancellationMode.CallerSpecifiedToken) =>
+        Proxy<CapableMessageSchedulerContext>((method, args) =>
+            method.Name == "get_CancellationMode" ? mode : handler(method, args));
 
     static T NewContext<T>(Saga saga, MessageSchedulerContext? scheduler = null,
         IAdvancedSendEndpoint? endpoint = null, Action<Uri>? endpointAddress = null,
