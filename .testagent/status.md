@@ -1,5 +1,16 @@
 # A+ remediation test status
 
+## T137 — pre-send observer fault notification — 29 September 2026
+
+Typed and untyped pre-send fault counterprobes both failed red-first: the
+failure propagated but neither fault observer ran. The corrected boundary
+notifies both fault observers with the exact original failure while skipping
+dispatch and post-send. Four synchronous/faulted-task variants plus the
+neighboring observer and requirement tests pass 17/17. Independent read-only
+review is PASS with no concrete P1/P2; the existing filter-level post-send
+fault semantics were checked and remain consistent with its awaited operation.
+The exact-commit Core gate follows.
+
 ## T136 — keyed route registration ownership — 29 September 2026
 
 The router-level stale-handle regression failed red-first because an old

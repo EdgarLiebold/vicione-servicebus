@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Filter observers now receive the original failure when a typed or untyped
+  pre-send observer fails, whether it throws synchronously or returns a failed
+  task. Dispatch and post-send notification remain skipped in that case.
+
 - Keyed routing handles now remove their registration only once. Disconnecting
   an old handle again cannot remove a replacement route registered under the
   same key.

@@ -67,6 +67,46 @@ public sealed class FilterObserverTests
     }
 
     [Theory]
+    [InlineData("typed-pre", false)]
+    [InlineData("typed-pre", true)]
+    [InlineData("untyped-pre", false)]
+    [InlineData("untyped-pre", true)]
+    [RequirementCoverage("REQ-VSB-FILTER-OBSERVERS", "pre-send-failure-reports-fault-without-dispatch")]
+    public async Task FailingPreSendObserver_ReportsTheOriginalFaultWithoutDispatchAsync(string failingStage, bool synchronous)
+    {
+        var trace = new List<string>();
+        var expected = new DispatchException("pre-send observer failed");
+        Task FailAtStageAsync(string stage)
+        {
+            if (stage != failingStage)
+                return Task.CompletedTask;
+
+            if (synchronous)
+                throw expected;
+
+            return Task.FromException(expected);
+        }
+        var router = new PipeRouter();
+        router.ConnectPipe(Pipe.Execute<CommandContext<SetConcurrencyLimit>>(_ => trace.Add("body")));
+        var typed = new TypedObserver(trace, FailAtStageAsync);
+        var untyped = new UntypedObserver(trace, FailAtStageAsync);
+        var connector = (IFilterObserverConnector)router;
+        using ConnectHandle typedHandle = connector.ConnectObserver(typed);
+        using ConnectHandle untypedHandle = connector.ConnectObserver(untyped);
+
+        DispatchException actual = await Assert.ThrowsAsync<DispatchException>(() =>
+            router.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken));
+
+        Assert.Same(expected, actual);
+        Assert.Equal(failingStage == "typed-pre"
+            ? ["typed-pre", "typed-fault", "untyped-fault"]
+            : ["typed-pre", "untyped-pre", "typed-fault", "untyped-fault"], trace);
+        Assert.Same(expected, typed.Failure);
+        Assert.Same(expected, untyped.Failure);
+        Assert.Same(typed.Context, untyped.Context);
+    }
+
+    [Theory]
     [InlineData("typed-pre")]
     [InlineData("untyped-pre")]
     [InlineData("typed-post")]
@@ -263,7 +303,10 @@ public sealed class FilterObserverTests
         public Task SendFaultAsync<T>(T context, Exception exception)
             where T : class, PipeContext
         {
-            Assert.Same(Context, context);
+            if (Context == null)
+                Context = Assert.IsAssignableFrom<CommandContext>(context);
+            else
+                Assert.Same(Context, context);
             Failure = exception;
             trace.Add("untyped-fault");
             return waitAtStage?.Invoke("untyped-fault") ?? Task.CompletedTask;

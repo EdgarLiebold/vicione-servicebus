@@ -63,22 +63,22 @@ public class OutputPipeFilter<TInput, TOutput> :
 
     async Task SendToOutputAsync(IPipe<TInput> next, TOutput pipeContext)
     {
-        if (_observers.Count > 0)
-        {
-            var preSendTask = _observers.PreSendAsync(pipeContext);
-            if (preSendTask.Status != TaskStatus.RanToCompletion)
-                await preSendTask.ConfigureAwait(false);
-        }
-
-        if (_outerObservers.Count > 0)
-        {
-            var preSendTask = _outerObservers.PreSendAsync(pipeContext);
-            if (preSendTask.Status != TaskStatus.RanToCompletion)
-                await preSendTask.ConfigureAwait(false);
-        }
-
         try
         {
+            if (_observers.Count > 0)
+            {
+                var preSendTask = _observers.PreSendAsync(pipeContext);
+                if (preSendTask.Status != TaskStatus.RanToCompletion)
+                    await preSendTask.ConfigureAwait(false);
+            }
+
+            if (_outerObservers.Count > 0)
+            {
+                var preSendTask = _outerObservers.PreSendAsync(pipeContext);
+                if (preSendTask.Status != TaskStatus.RanToCompletion)
+                    await preSendTask.ConfigureAwait(false);
+            }
+
             await _output.SendAsync(pipeContext, next).ConfigureAwait(false);
 
             if (_observers.Count > 0)

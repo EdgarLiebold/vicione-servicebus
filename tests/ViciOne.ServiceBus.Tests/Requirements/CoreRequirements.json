@@ -713,6 +713,13 @@
    {
       "requirementId" : "REQ-VSB-FILTER-OBSERVERS",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "FailingPreSendObserver_ReportsTheOriginalFaultWithoutDispatchAsync",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests",
+      "variantKey" : "pre-send-failure-reports-fault-without-dispatch"
+   },
+   {
+      "requirementId" : "REQ-VSB-FILTER-OBSERVERS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "DelayedObserver_HoldsThePipelineAtItsStageAndPreservesTheOriginalOutcomeAsync",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.FilterObserverTests",
       "variantKey" : "asynchronous-observers-preserve-order-and-original-fault"

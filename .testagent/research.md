@@ -1,5 +1,17 @@
 # A+ remediation research
 
+## T137 pre-send observer fault notification
+
+`OutputPipeFilter<TInput,TOutput>.SendToOutputAsync` called typed and untyped
+`PreSendAsync` outside its dispatch `try/catch`, so a pre-send failure escaped
+without `SendFaultAsync`. The corresponding send-transport boundary already
+reports pre-send failures as faults. Router-level tests for both observer types
+failed red-first with no fault callbacks. Moving the pre-send calls into the
+existing fault boundary preserves the original exception and skips the body.
+The four final cases distinguish synchronous throws from faulted tasks. Their
+trace, exact exception identity and context assertions would reject missing
+fault notification, accidental dispatch, post-send, or changed observer order.
+
 ## T136 keyed route registration ownership
 
 `KeyFilter<TContext,TKey>.Handle.Disconnect` removed its key on every call.

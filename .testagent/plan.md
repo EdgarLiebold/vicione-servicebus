@@ -1,5 +1,16 @@
 # A+ remediation test plan
 
+## T137 pre-send observer fault notification
+
+1. Red-first fail typed and untyped pre-send callbacks through the public
+   router; require the exact failure, typed and untyped fault notification,
+   and no dispatch or post-send notification.
+2. Keep synchronous throws and faulted-task callbacks distinct, move pre-send
+   into the dispatch fault boundary, and rerun the focused observer suite.
+3. Review the neighboring observer contracts and assertions, obtain an
+   independent read-only adversarial review, then run the complete Core suite
+   at the exact commit before push.
+
 ## T136 keyed route registration ownership
 
 1. Red-first prove that disconnecting an old keyed route handle a second time
