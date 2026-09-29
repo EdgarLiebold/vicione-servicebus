@@ -23,8 +23,22 @@ UTC instant. The scheduler remains responsible for accepting that date.
 
 ## Verification and limits
 
+- Exact source/test commit: `40082466516f51113405d4b989a8d935b6822c09`;
+  source tree `3c75afd38f51` and test tree `a1076869d9f7`. Two fresh
+  hash-bound Release receipts at `artifacts/t119-profile-00/receipt.json`
+  and `artifacts/t119-profile-13/receipt.json` passed 7,132 Core and 400 EF
+  tests on those same trees. The Core receipt observed 1,923 tracked product
+  sources; the EF receipt observed 1,953. The changed Saga request async
+  method has 26/26 measured lines, complexity 14 and CRAP 14.
+- Across the two receipts, the four T115 affected sources have no method
+  above CRAP 30. Their maxima are 28.000 for classic EF scoped outbox,
+  27.981 for reliable EF scoped outbox, 18.015 for InMemory reliable inbox
+  factory and 22.003 for EF reliable inbox factory. This closes the five
+  specific T114 hotspots on exact current bytes. The strict partial aggregate
+  is `artifacts/t119-core-ef-partial.json`; its 75 other apparent hotspots
+  cannot be interpreted as product-wide because 31 receipts are absent.
 - The full Core project passed 7,132/7,132 on the final source/test bytes, zero failures or skips; `dotnet test --project tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj --no-restore -v quiet`.
 - `git diff --check` and requirement JSON parsing passed. Independent read-only Red Team review returned PASS after its scheduler-diagnosis, fixed-clock, date-overflow and deadline-origin counterexamples were closed.
 - Microsoft `code-testing-agent` Research → Plan → Implement, `test-gap-analysis`, `assertion-quality` and `run-tests` were applied. The tests assert externally visible dispatch, saga ownership, schedule payload and time rather than coverage alone.
 - The positive-timeout flow still cannot guarantee atomic transport send plus scheduler acceptance if an external scheduler fails after the transport accepts the request. This existing distributed-operation limit is separate from the deterministic configuration failures corrected here.
-- T114 is the latest complete 33-profile CRAP measurement. The user accepts its Line and Branch rates as A+; a fresh product-wide CRAP checkpoint on these bytes is still pending.
+- T114 is the latest complete 33-profile CRAP measurement. The user accepts its Line and Branch rates as A+; a fresh product-wide CRAP checkpoint on these bytes is still pending. The two-receipt partial aggregate is not comparable to the complete profile.

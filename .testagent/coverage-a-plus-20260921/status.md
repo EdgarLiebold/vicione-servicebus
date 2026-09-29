@@ -6,7 +6,11 @@ Positive-timeout requests now require a scheduler and a representable
 deadline before dispatch. A blocked send preserves the post-send timeout
 origin; a clock advancing into the terminal date range yields the final UTC
 instant instead of a partial request. The complete Core suite passed
-7,132/7,132 with no failures or skips on the current source/test bytes.
+7,132/7,132 with no failures or skips on `400824665`; the fresh Core and EF
+Release receipts passed 7,132 and 400 tests on that exact commit. Their
+targeted method merge shows no CRAP > 30 in the four formerly affected T115
+sources and CRAP 14 in the changed Saga request method. Red Team final review
+is PASS.
 See [T119 evidence](t119-saga-request-timeout-admission.md). The user accepts
 T114's Line and Branch coverage as A+; a new product-wide CRAP measurement
 remains to be completed after this packet.
