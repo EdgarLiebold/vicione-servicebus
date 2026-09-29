@@ -1,5 +1,21 @@
 # A+ remediation test status
 
+## T147 — ActiveMQ Quartz causal delivery barrier — 29 September 2026
+
+The ActiveMQ Quartz local integration test removed its 10 ms wall-clock poll
+of internal trigger-store housekeeping. Quartz 4.0.1 notifies TriggerFinalized
+before TriggeredJobComplete removes the one-shot trigger, so that poll was not
+a causal completion barrier. The test still binds the returned schedule token
+to the finalized trigger, requires three receive completions, one delivery,
+and exact input, scheduler, and delivery broker queue statistics after bus
+stop. The existing isolated ActiveMQ fixture passes both OpenWire and AMQP
+variants 2/2, including fixture cleanup. The architecture platform test class
+passes 18/18, and the complete architecture project passes 450/450.
+Independent read-only review is PASS with no concrete P1/P2;
+physical store cleanup would require a separate Quartz store-level contract
+and an after-TriggeredJobComplete observation hook. The Unit solution gate
+still requires replay at the final commit.
+
 ## T146 — asynchronous test helper and test identity contract — 29 September 2026
 
 Twenty-five remaining asynchronous naming violations in test methods and
