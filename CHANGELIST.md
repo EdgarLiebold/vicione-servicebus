@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11019 |
+| Added | 11020 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -13321,6 +13321,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Middleware/ConsumeContextOutputMessageTypeFilter.cs` | Modified | `src/MassTransit/Middleware/ConsumeContextOutputMessageTypeFilter.cs` |
 | `src/ViciOne.ServiceBus/Middleware/ConsumePipe.cs` | Modified | `src/MassTransit/Middleware/ConsumePipe.cs` |
 | `src/ViciOne.ServiceBus/Middleware/ConsumerConcurrencyFilter.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Middleware/ConsumerMergePipe.cs` | Modified | `src/MassTransit/Middleware/ConsumerMergePipe.cs` |
 | `src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs` | Modified | `src/MassTransit/Middleware/ConsumerMessageFilter.cs` |
 | `src/ViciOne.ServiceBus/Middleware/ConsumerMessageMergePipe.cs` | Modified | `src/MassTransit/Middleware/ConsumerMessageMergePipe.cs` |

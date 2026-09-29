@@ -49,25 +49,26 @@ public class HandlerMessageFilter<TMessage> :
             Interlocked.Increment(ref _completed);
 
         }
-        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                          && !context.CancellationToken.IsCancellationRequested)
+        catch (Exception exception) when (ConsumerIngressFailure.IsUnexpectedCancellation(exception, context.CancellationToken))
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<MessageHandler<TMessage>>.ShortName, exception).ConfigureAwait(false);
-
+            var canceled = new ConsumerCanceledException(
+                $"The operation was canceled by the consumer: {TypeCache<MessageHandler<TMessage>>.ShortName}", exception);
             activity?.AddExceptionEvent(exception);
-
             instrument?.RecordException(exception);
 
-            throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<MessageHandler<TMessage>>.ShortName}");
+            await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt),
+                TypeCache<MessageHandler<TMessage>>.ShortName, exception, canceled).ConfigureAwait(false);
+
+            throw canceled;
         }
         catch (Exception ex)
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<MessageHandler<TMessage>>.ShortName, ex).ConfigureAwait(false);
-
             activity?.AddExceptionEvent(ex);
             instrument?.RecordException(ex);
-
             Interlocked.Increment(ref _faulted);
+
+            await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt),
+                TypeCache<MessageHandler<TMessage>>.ShortName, ex, ex).ConfigureAwait(false);
             throw;
         }
         finally

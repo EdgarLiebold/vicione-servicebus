@@ -79,6 +79,14 @@ trees. An `Ignore` match vetoes a broader `Handle` match. Typed predicates see
 each distinct exception instance at most once, in outer-to-inner order.
 Rescue applies that selection to the original failure, including an outer
 `AggregateException`, and passes the original failure to the rescue context.
+When consumer work cancels without cancellation of the delivery token, the
+ingress filters report `ConsumerCanceledException` with the original failure
+as `InnerException`. A mixed cancellation and business-failure aggregate
+remains an aggregate; an aggregate made entirely of cancellations is classified
+as consumer cancellation. If fault notification also fails, the ingress filter
+reports both the operation and notification failures in that order.
+Already classified consumer cancellations retain their identity; ordinary
+wrappers do not hide business failures in an aggregate branch.
 
 ## Advanced SPI
 

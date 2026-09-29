@@ -53,22 +53,25 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
             await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName).ConfigureAwait(false);
 
         }
-        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                          && !context.CancellationToken.IsCancellationRequested)
+        catch (Exception exception) when (ConsumerIngressFailure.IsUnexpectedCancellation(exception, context.CancellationToken))
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
-
+            var canceled = new ConsumerCanceledException(
+                $"The operation was canceled by the consumer: {TypeCache<TConsumer>.ShortName}", exception);
             activity?.AddExceptionEvent(exception);
             instrument?.RecordException(exception);
 
-            throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<TConsumer>.ShortName}");
+            await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt),
+                TypeCache<TConsumer>.ShortName, exception, canceled).ConfigureAwait(false);
+
+            throw canceled;
         }
         catch (Exception exception)
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
-
             activity?.AddExceptionEvent(exception);
             instrument?.RecordException(exception);
+
+            await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt),
+                TypeCache<TConsumer>.ShortName, exception, exception).ConfigureAwait(false);
 
             throw;
         }

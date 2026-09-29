@@ -11,6 +11,19 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed unexpected consumer cancellation diagnostics in factory, handler and
+  instance ingress. `ConsumerCanceledException.InnerException` now retains the
+  exact failure already reported to the consume context, including a single
+  cancellation wrapped by `AggregateException`. Mixed cancellation and business
+  failures retain their original aggregate type and identity. Nested aggregates
+  made entirely of cancellations are classified as consumer cancellation,
+  while an already classified cancellation keeps its identity, even inside an
+  aggregate. Ordinary wrappers inspect every aggregate branch, so a business
+  failure cannot be hidden by an earlier cancellation. If fault notification
+  also fails, both the operation and notification failure remain observable in
+  a two-cause aggregate; Activity, metrics and the Handler fault counter still
+  record the operation failure.
+
 - Fixed Rescue selection for an `AggregateException` with one inner failure.
   Rescue now evaluates the original exception, so `Handle<AggregateException>`
   can select it and `Ignore<AggregateException>` can veto a broader Handle.

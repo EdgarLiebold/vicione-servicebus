@@ -4346,3 +4346,36 @@ global discovery or measurement is needed during this packet.
   exact shared-reference graph failed red-first. Separate structural-visit and
   base-probe sets now allow that one deferred virtual probe while still
   evaluating each predicate once; Red Team final re-review is PASS.
+
+# T124 — consumer ingress cancellation cause
+
+- Manually read the three consumer ingress filters, their common contract
+  tests, the public `ConsumerCanceledException`, TimeoutFilter's cause-preserving
+  path and nearby saga ingress cancellation tests. All three consumer filters
+  report the original failure to the context but throw a new
+  `ConsumerCanceledException` without it, losing the causal chain seen by an
+  upstream retry/error handler. The public exception exposes a cause-taking
+  constructor, which TimeoutFilter already uses.
+- Strengthen the existing factory/handler/instance × caller-ownership matrix
+  to assert exact InnerException identity. Add a matching one-cancellation
+  versus mixed cancellation/business AggregateException matrix. On the
+  unchanged source, the six unexpected-cancellation cases failed; the mixed
+  controls and caller-owned cases remained green. Preserve the original
+  aggregate as the wrapped cause, and leave mixed failures unclassified.
+- Red Team found two further P2 boundaries: nested aggregates containing only
+  cancellations were not classified, and a failing fault notification hid the
+  operation's failure. A red-first 3-shape matrix also exposed double-wrapping
+  of an already classified `ConsumerCanceledException`. Twelve new cases failed
+  before the second fix. A shared ingress helper now classifies all leaves,
+  preserves mixed failures and combines operation/notification failures in the
+  same order as saga ingress. The focused class passes 46/46 after correction.
+- A second adversarial pass found three P2 counterexamples: an outer ordinary
+  wrapper could let GetBaseException skip aggregate siblings and hide a
+  business failure depending on order; an aggregate around a preclassified
+  cancellation was double-wrapped; and notification failure skipped the
+  original failure's Activity/metrics plus the Handler fault counter. The
+  traversal now expands the ordinary wrapper's inner and virtual base paths
+  separately and checks every aggregate sibling. Already-classified leaves
+  stop a new classification. Diagnostics and the Handler counter are recorded
+  before the notification call. The wrapper-order, nested-classification,
+  notification-Activity and Probe counter tests pass in the 58-case fixture.

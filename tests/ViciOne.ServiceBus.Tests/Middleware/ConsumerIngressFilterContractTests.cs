@@ -7,6 +7,7 @@ using ViciOne.ServiceBus.Middleware.CircuitBreaker;
 using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
 using DiagnosticActivityContext = System.Diagnostics.ActivityContext;
@@ -236,6 +237,7 @@ public sealed class ConsumerIngressFilterContractTests
     [InlineData(FilterShape.Factory, true)]
     [InlineData(FilterShape.Handler, true)]
     [InlineData(FilterShape.Instance, true)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "three-ingress-shapes-preserve-cancellation-cause-and-caller-ownership")]
     public async Task Cancellation_ReportsTheOriginalFailureAndPreservesCallerOwnershipAsync(
         FilterShape shape, bool callerRequestedCancellation)
     {
@@ -263,9 +265,227 @@ public sealed class ConsumerIngressFilterContractTests
         if (callerRequestedCancellation)
             Assert.Same(expected, Assert.IsType<OperationCanceledException>(actual));
         else
-            Assert.IsType<ConsumerCanceledException>(actual);
+            Assert.Same(expected, Assert.IsType<ConsumerCanceledException>(actual).InnerException);
         Assert.Equal(["work", "faulted"], trace);
         Assert.Same(expected, ((RecordingScope)context).Fault);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory, false)]
+    [InlineData(FilterShape.Handler, false)]
+    [InlineData(FilterShape.Instance, false)]
+    [InlineData(FilterShape.Factory, true)]
+    [InlineData(FilterShape.Handler, true)]
+    [InlineData(FilterShape.Instance, true)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "aggregate-cause-retained-without-mixed-failure-reclassification")]
+    public async Task AggregateConsumerCancellation_PreservesTheFullCauseWithoutHidingMixedFailuresAsync(
+        FilterShape shape, bool mixedFailure)
+    {
+        using var dependency = new CancellationTokenSource();
+        dependency.Cancel();
+        var cancellation = new OperationCanceledException("dependency canceled", dependency.Token);
+        var businessFailure = new ExpectedBusinessException();
+        var aggregate = mixedFailure
+            ? new AggregateException(cancellation, businessFailure)
+            : new AggregateException(cancellation);
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(aggregate);
+        });
+        IPipe<ConsumeContext<TestMessage>> next = Pipe.Execute<ConsumeContext<TestMessage>>(_ => trace.Add("next"));
+
+        Exception actual = await Record.ExceptionAsync(() => filter.SendAsync(context, next))
+            ?? throw new Xunit.Sdk.XunitException("The failed consumer completed successfully.");
+
+        if (mixedFailure)
+            Assert.Same(aggregate, Assert.IsType<AggregateException>(actual));
+        else
+            Assert.Same(aggregate, Assert.IsType<ConsumerCanceledException>(actual).InnerException);
+        Assert.Same(aggregate, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory)]
+    [InlineData(FilterShape.Handler)]
+    [InlineData(FilterShape.Instance)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "nested-multiple-cancellations-remain-consumer-cancellation")]
+    public async Task MultipleNestedCancellations_AreClassifiedWithoutLosingTheAggregateAsync(FilterShape shape)
+    {
+        using var dependency = new CancellationTokenSource();
+        dependency.Cancel();
+        var aggregate = new AggregateException(
+            new OperationCanceledException("first", dependency.Token),
+            new AggregateException(new OperationCanceledException("second", dependency.Token)));
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(aggregate);
+        });
+        IPipe<ConsumeContext<TestMessage>> next = Pipe.Execute<ConsumeContext<TestMessage>>(_ => trace.Add("next"));
+
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(() =>
+            filter.SendAsync(context, next));
+
+        Assert.Same(aggregate, actual.InnerException);
+        Assert.Same(aggregate, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory, false, false)]
+    [InlineData(FilterShape.Handler, false, false)]
+    [InlineData(FilterShape.Instance, false, false)]
+    [InlineData(FilterShape.Factory, true, false)]
+    [InlineData(FilterShape.Handler, true, false)]
+    [InlineData(FilterShape.Instance, true, false)]
+    [InlineData(FilterShape.Factory, true, true)]
+    [InlineData(FilterShape.Handler, true, true)]
+    [InlineData(FilterShape.Instance, true, true)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "wrapper-around-aggregate-preserves-pure-or-mixed-classification")]
+    public async Task WrapperAroundAggregate_PreservesPureOrMixedCancellationClassificationAsync(
+        FilterShape shape, bool mixedFailure, bool businessFirst)
+    {
+        var aggregate = mixedFailure
+            ? businessFirst
+                ? new AggregateException(new ExpectedBusinessException(), new OperationCanceledException("canceled"))
+                : new AggregateException(new OperationCanceledException("canceled"), new ExpectedBusinessException())
+            : new AggregateException(new OperationCanceledException("first"), new OperationCanceledException("second"));
+        var wrapper = new InvalidOperationException("wrapper", aggregate);
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(wrapper);
+        });
+
+        Exception actual = await Record.ExceptionAsync(() =>
+            filter.SendAsync(context, Pipe.Empty<ConsumeContext<TestMessage>>()))
+            ?? throw new Xunit.Sdk.XunitException("The failed consumer completed successfully.");
+
+        if (mixedFailure)
+            Assert.Same(wrapper, Assert.IsType<InvalidOperationException>(actual));
+        else
+            Assert.Same(wrapper, Assert.IsType<ConsumerCanceledException>(actual).InnerException);
+        Assert.Same(wrapper, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory)]
+    [InlineData(FilterShape.Handler)]
+    [InlineData(FilterShape.Instance)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "preclassified-consumer-cancellation-keeps-identity")]
+    public async Task PreclassifiedConsumerCancellation_IsNotWrappedAgainAsync(FilterShape shape)
+    {
+        var expected = new ConsumerCanceledException("already classified",
+            new OperationCanceledException("dependency canceled"));
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(expected);
+        });
+
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(() =>
+            filter.SendAsync(context, Pipe.Empty<ConsumeContext<TestMessage>>()));
+
+        Assert.Same(expected, actual);
+        Assert.Same(expected, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory)]
+    [InlineData(FilterShape.Handler)]
+    [InlineData(FilterShape.Instance)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "aggregate-around-preclassified-cancellation-keeps-identity")]
+    public async Task AggregateAroundPreclassifiedCancellation_IsNotWrappedAgainAsync(FilterShape shape)
+    {
+        var aggregate = new AggregateException(new ConsumerCanceledException("already classified",
+            new OperationCanceledException("dependency canceled")));
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(aggregate);
+        });
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() =>
+            filter.SendAsync(context, Pipe.Empty<ConsumeContext<TestMessage>>()));
+
+        Assert.Same(aggregate, actual);
+        Assert.Same(aggregate, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory, false)]
+    [InlineData(FilterShape.Handler, false)]
+    [InlineData(FilterShape.Instance, false)]
+    [InlineData(FilterShape.Factory, true)]
+    [InlineData(FilterShape.Handler, true)]
+    [InlineData(FilterShape.Instance, true)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "notification-failure-preserves-operation-and-observer-causes")]
+    public async Task FaultNotificationFailure_PreservesBothOperationAndObserverCausesAsync(
+        FilterShape shape, bool businessFailure)
+    {
+        using var listener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ServiceBusTelemetry.ActivitySourceName,
+            Sample = static (ref ActivityCreationOptions<DiagnosticActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
+        };
+        ActivitySource.AddActivityListener(listener);
+        using var ambient = new Activity("orders receive");
+        ambient.Start();
+
+        Exception original = businessFailure
+            ? new ExpectedBusinessException()
+            : new OperationCanceledException("dependency canceled");
+        var observerFailure = new InvalidOperationException("fault observer failed");
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace,
+            faultNotificationFailure: observerFailure);
+        Activity? consumerActivity = null;
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            consumerActivity = Activity.Current;
+            trace.Add("work");
+            return Task.FromException(original);
+        });
+        IPipe<ConsumeContext<TestMessage>> next = Pipe.Execute<ConsumeContext<TestMessage>>(_ => trace.Add("next"));
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() => filter.SendAsync(context, next));
+
+        Assert.Collection(actual.InnerExceptions,
+            operation =>
+            {
+                if (businessFailure)
+                    Assert.Same(original, operation);
+                else
+                    Assert.Same(original, Assert.IsType<ConsumerCanceledException>(operation).InnerException);
+            },
+            notification => Assert.Same(observerFailure, notification));
+        Assert.Same(original, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+        Activity recorded = Assert.IsType<Activity>(consumerActivity);
+        Assert.Equal(ActivityStatusCode.Error, recorded.Status);
+        Assert.Contains(recorded.Events, activityEvent => activityEvent.Name == ServiceBusTelemetry.Events.Exception);
+        if (shape == FilterShape.Handler && businessFailure)
+        {
+            IProbeResult probe = filter.GetProbeResult(TestContext.Current.CancellationToken);
+            IReadOnlyDictionary<string, object> scope = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
+                Assert.Contains("filters", probe.Results));
+            Assert.Equal(1L, Assert.Contains("faulted", scope));
+        }
     }
 
     [Fact]
@@ -360,11 +580,12 @@ public sealed class ConsumerIngressFilterContractTests
         CancellationToken cancellationToken,
         List<string> trace,
         TaskCompletionSource? notificationEntered = null,
-        Task? notificationCompletion = null)
+        Task? notificationCompletion = null,
+        Exception? faultNotificationFailure = null)
     {
         return new RecordingScope(
             InMemoryOutboxTestContextFactory.Create(new TestMessage(), cancellationToken),
-            trace, notificationEntered, notificationCompletion);
+            trace, notificationEntered, notificationCompletion, faultNotificationFailure);
     }
 
     public enum FilterShape
@@ -384,7 +605,8 @@ public sealed class ConsumerIngressFilterContractTests
         ConsumeContext<TestMessage> context,
         List<string> trace,
         TaskCompletionSource? notificationEntered,
-        Task? notificationCompletion) : ConsumeContextScope<TestMessage>(context)
+        Task? notificationCompletion,
+        Exception? faultNotificationFailure) : ConsumeContextScope<TestMessage>(context)
     {
         public Exception? Fault { get; private set; }
 
@@ -410,7 +632,7 @@ public sealed class ConsumerIngressFilterContractTests
             Assert.False(string.IsNullOrWhiteSpace(consumerType));
             Fault = exception;
             trace.Add("faulted");
-            return Task.CompletedTask;
+            return faultNotificationFailure is null ? Task.CompletedTask : Task.FromException(faultNotificationFailure);
         }
     }
 }

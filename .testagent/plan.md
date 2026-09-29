@@ -5589,3 +5589,29 @@ the two later-business reuse variants; both sources are independently restored b
    when later reached as a direct AggregateException child. Red-first test the
    shared graph; track structural visits and base probes independently. Freeze
    and run the affected Abstractions and Core suites, then seek final re-review.
+
+# T124 — consumer ingress cancellation cause
+
+1. Use the established three-filter contract fixture to prove that an
+   unexpected direct or single-inner aggregate cancellation retains its exact
+   cause in the thrown `ConsumerCanceledException`. Keep caller-owned
+   cancellation unchanged and preserve mixed aggregate failures exactly.
+2. Pass the caught exception into the existing public cause-taking constructor
+   in all three ingress filters. Re-run the focused class, inspect assertions
+   for weak or self-referential checks, obtain read-only adversarial Red Team
+   review and run the complete Core project once on frozen source/tests.
+3. Update requirement projection, changelog, evidence and change list; commit
+   and push the tested packet. Defer the product-wide profile to the grouped
+   checkpoint because current Line/Branch coverage is accepted by the user.
+4. Close Red Team P2 findings with red-first three-shape tests for nested
+   cancellation-only aggregates, operation plus fault-notification failure,
+   and an already-classified cancellation. Consolidate the shared
+   classification and failure-preservation rule; prove mixed aggregates and
+   caller-owned cancellation retain their existing result. Re-review the
+   complete diff before the final Core run.
+5. Close the second Red Team wrapper/aggregate-order, nested preclassification
+   and notification diagnostics findings. Test pure and mixed aggregate
+   siblings in both orders behind an ordinary wrapper, preserve the original
+   aggregate around a preclassified cancellation, and inspect Activity events
+   plus Handler Probe count when notification fails. Re-review the frozen diff
+   and run the final Core project only after the focused matrix is green.

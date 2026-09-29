@@ -1,5 +1,29 @@
 # A+ remediation test status
 
+## T124 — consumer ingress cancellation and fault notification — 29 September 2026
+
+Factory, handler and instance ingress previously threw
+`ConsumerCanceledException` without the original consumer failure as its
+cause. Six direct/single-inner cases failed red-first. Adversarial review
+found that nested all-cancellation aggregates were misclassified, an already
+classified cancellation could be wrapped again, and a failing fault
+notification hid the operation failure. Twelve further cases failed on the
+intermediate implementation. A second review found that an ordinary wrapper
+could make a mixed aggregate's classification depend on sibling order and
+that notification failure skipped Activity/metrics and the Handler fault
+counter. The wrapper/mixed counterprobe failed in all three ingress shapes.
+
+A common ingress helper now inspects every aggregate branch, retains caller
+ownership and existing classification, and preserves both operation and
+notification failures. The original failure remains the reported consume
+fault; Activity, metrics and Handler count are recorded before notification.
+Focused ConsumerIngress tests passed 58/58; the complete Core project passed
+7,243/7,243 with zero failures or skips. Requirements JSON parses and Git
+whitespace passes. Final independent read-only Red Team review is PASS with
+no concrete P1/P2 in this bounded packet. No new global coverage profile was
+run because the user accepts current Line/Branch coverage and prioritizes
+code correctness.
+
 ## T123 — Rescue aggregate selection — 29 September 2026
 
 The rescue filter previously called `GetBaseException()` before applying its
