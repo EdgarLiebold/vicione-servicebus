@@ -1,5 +1,21 @@
 # A+ remediation test status
 
+## T115 — EF outbox cleanup and four-source complexity packet
+
+Five new behavior tests (six variants) exposed an orphaned EF reliable send
+after tracking failure and three distinct cleanup callback hazards. Red-first
+counterexamples failed for the original orphan, post-change callback,
+DetectChanges callback and pre-change callback paths. The final code detaches
+the rejected record, restores capacity, preserves earlier sends when
+selective cleanup succeeds, and fails closed with an explicit all-pending-
+changes loss when a callback persistently blocks detach. The complete Core
+project passes 7,099/7,099 and EF passes 400/400 on `78f0f17b7`; five new
+test methods pass six variants. Direct affected-project Cobertura shows no
+CRAP > 30 in any of the four changed source files. Final read-only Red Team
+product/test review is PASS. See [T115 evidence](coverage-a-plus-20260921/t115-outbox-inbox-state-admission.md).
+T114 remains the latest strict global profile; global Line/Branch/CRAP A+
+remains open until the next 33-profile checkpoint.
+
 ## T114 — fresh product-wide checkpoint
 
 The strict 33-receipt aggregate on `ee2253fa3` contains all 32 product

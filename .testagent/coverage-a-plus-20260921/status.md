@@ -1,5 +1,18 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T115 outbox/inbox packet
+
+The EF reliable outbox no longer leaves a rejected send tracked after an EF
+tracking callback throws. Four further callback cases distinguish selective
+cleanup from explicit fail-closed clearing when detach is persistently
+blocked. Five behavior tests have six variants, including red-first
+counterexamples. Complete Core 7,099/7,099 and EF 400/400 pass on exact
+implementation commit `78f0f17b7`. Direct affected-source CRAP has zero
+methods above 30 across the four changed files; this is not a global A+
+measurement. Red Team product/test review is PASS. See
+[T115 evidence](t115-outbox-inbox-state-admission.md). T114 remains the
+latest complete 33-profile checkpoint.
+
 ## Current T114 product-wide checkpoint
 
 The strict 33-receipt profile on `ee2253fa3` has all 32 product assemblies

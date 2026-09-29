@@ -11,6 +11,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed EF reliable outbox admission after change-tracker callback failure:
+  rejected sends are detached before they can be saved without a session,
+  capacity is restored, and earlier accepted sends remain intact when
+  selective cleanup succeeds. The cleanup also handles post-change,
+  pre-change and DetectChanges callback failures. If a callback persistently
+  forbids detach, the tracker and staged session are cleared to prevent an
+  orphan, with explicit notice that all pending DbContext changes must be
+  replayed. Five strong behavior tests cover six variants, including four
+  red-first failures. Five related outbox/inbox methods were split along
+  ownership and processing boundaries; the four changed source files now
+  have no method above CRAP 30 in direct affected-project coverage. Complete
+  Core 7,099/7,099 and EF 400/400 pass on `78f0f17b7`; global A+ remains
+  open until the next strict 33-profile checkpoint.
+
 - Ran a fresh strict product-wide Line/Branch/CRAP checkpoint on `ee2253fa3`:
   33 exact-commit profiles, all 32 product assemblies and 13,783 passed test
   executions. Line coverage is 87,071/94,328 (92.30663%) and conservative
