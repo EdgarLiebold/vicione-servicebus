@@ -4,6 +4,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Logging.Monitoring;
+using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Courier;
 
@@ -52,27 +53,29 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
 
             await next.SendAsync(context).ConfigureAwait(false);
         }
-        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                          && !context.CancellationToken.IsCancellationRequested)
+        catch (Exception exception) when (!context.CancellationToken.IsCancellationRequested
+                                          && ConsumerIngressFailure.IsCancellation(exception))
         {
             var cancellation = new ConsumerCanceledException(
                 $"The operation was canceled by the activity: {TypeCache<TActivity>.ShortName}", exception);
 
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, cancellation).ConfigureAwait(false);
-
             activity?.AddExceptionEvent(exception);
 
             instrument?.RecordException(exception);
+
+            await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt),
+                TypeCache<TActivity>.ShortName, cancellation, cancellation).ConfigureAwait(false);
 
             throw cancellation;
         }
         catch (Exception exception)
         {
-            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
-
             activity?.AddExceptionEvent(exception);
 
             instrument?.RecordException(exception);
+
+            await ConsumerIngressFailure.NotifyFaultedAsync(context, timeProvider.GetElapsedTime(startedAt),
+                TypeCache<TActivity>.ShortName, exception, exception).ConfigureAwait(false);
 
             throw;
         }
@@ -137,6 +140,6 @@ internal sealed class ExecuteActivityHost<TActivity, TArguments> :
 
     static bool IsCancellation(Exception exception)
     {
-        return exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException;
+        return ConsumerIngressFailure.IsCancellation(exception);
     }
 }

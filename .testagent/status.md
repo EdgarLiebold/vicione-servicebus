@@ -1,5 +1,29 @@
 # A+ remediation test status
 
+## T130 — Saga and Courier cancellation ownership — 29 September 2026
+
+Eight Saga counterprobes failed red-first: unsafe virtual base lookups hid the
+original fault or its notification, and nested pure/mixed aggregates were
+misclassified. Six of eight initial Courier cases failed red-first; already
+classified nested cancellation and observer failure were subsequently added
+from adversarial review. Four observer counterprobes failed red-first because
+only the observer exception escaped. The correction reuses the structural
+all-branches classifier, preserving Saga delivery-token ownership and
+Courier's activity-specific cancellation boundary. Mixed failures dispatch
+the exact two routing-slip failure contracts. Fault-observer failure retains
+the activity cause first and observer cause second. The existing Courier
+timeout/outbox integration cases pass.
+
+The first broad Core run exposed an unrelated race in a request-client timer
+test: creation was observed before disposal. The test clock now signals actual
+disposal, and the test awaits it with a finite timeout. The freshly built
+complete Core suite then passed 7,321/7,321 with no failures or skips, including
+four new requirement variants. Red Team first found and then verified the
+Courier host-boundary semantics against the existing timeout integration
+contract. Its final re-review is PASS with no concrete P1/P2 after both timer
+waits were bounded. The final timer test passed 1/1 with a fresh build. No
+global coverage profile was repeated under the user's revised priority.
+
 ## T129 — fault settlement diagnostics — 29 September 2026
 
 Red-first tests proved that a throwing base-exception lookup blocked the

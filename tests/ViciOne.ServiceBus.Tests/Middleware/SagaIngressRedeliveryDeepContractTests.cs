@@ -365,6 +365,100 @@ public sealed class SagaIngressRedeliveryDeepContractTests
     }
 
     [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 0)]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    [InlineData(false, 3)]
+    [InlineData(true, 3)]
+    [RequirementCoverage("REQ-VSB-SAGA-INGRESS-REDELIVERY", "nested-and-unsafe-cancellation-preserves-fault-observation")]
+    public async Task SagaFailure_ClassifiesOnlyPureCancellationAndAlwaysReportsTheOriginalFaultAsync(bool queried, int kind)
+    {
+        Exception failure = kind switch
+        {
+            0 => new UnsafeBaseFailure(false, new OperationCanceledException("dependency canceled")),
+            1 => new UnsafeBaseFailure(true, new OperationCanceledException("dependency canceled")),
+            2 => new InvalidOperationException("outer", new AggregateException(
+                new OperationCanceledException("first"), new OperationCanceledException("second"))),
+            _ => new InvalidOperationException("outer", new AggregateException(
+                new OperationCanceledException("first"), new InvalidOperationException("business failure")))
+        };
+        var events = new List<string>();
+        var repository = new RecordingSagaRepository(events)
+        {
+            CorrelatedTask = Task.FromException(failure),
+            QueryTask = Task.FromException(failure)
+        };
+        FilterContext fixture = CreateFilterContext(events);
+        var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream");
+
+        Task OperationAsync() => queried
+            ? new QuerySagaFilter<IngressSaga, IngressMessage>(
+                    repository,
+                    new RecordingSagaPolicy(),
+                    new RecordingQueryFactory(events, true, new SagaQuery<IngressSaga>(_ => true)),
+                    new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
+                .SendAsync(fixture.Context, next)
+            : new CorrelatedSagaFilter<IngressSaga, IngressMessage>(
+                    repository,
+                    new RecordingSagaPolicy(),
+                    new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
+                .SendAsync(fixture.Context, next);
+
+        Exception actual = await Assert.ThrowsAnyAsync<Exception>(OperationAsync);
+
+        if (kind == 3)
+            Assert.Same(failure, actual);
+        else
+            Assert.Same(failure, Assert.IsType<ConsumerCanceledException>(actual).InnerException);
+        Assert.Same(failure, Assert.Single(fixture.Proxy.Faults));
+        Assert.Equal(0, fixture.Proxy.ConsumedCalls);
+        Assert.Equal(0, next.SendCalls);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SAGA-INGRESS-REDELIVERY", "canceled-delivery-preserves-nested-original-fault")]
+    public async Task SagaFailure_CanceledDeliveryDoesNotReclassifyNestedDependencyCancellationAsync(bool queried)
+    {
+        using var delivery = new CancellationTokenSource();
+        delivery.Cancel();
+        var failure = new InvalidOperationException("outer", new AggregateException(
+            new OperationCanceledException("first"), new OperationCanceledException("second")));
+        var events = new List<string>();
+        var repository = new RecordingSagaRepository(events)
+        {
+            CorrelatedTask = Task.FromException(failure),
+            QueryTask = Task.FromException(failure)
+        };
+        FilterContext fixture = CreateFilterContextWithCancellation(delivery.Token, events);
+        var next = new RecordingPipe<ConsumeContext<IngressMessage>>(events, "downstream");
+
+        Task OperationAsync() => queried
+            ? new QuerySagaFilter<IngressSaga, IngressMessage>(
+                    repository,
+                    new RecordingSagaPolicy(),
+                    new RecordingQueryFactory(events, true, new SagaQuery<IngressSaga>(_ => true)),
+                    new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
+                .SendAsync(fixture.Context, next)
+            : new CorrelatedSagaFilter<IngressSaga, IngressMessage>(
+                    repository,
+                    new RecordingSagaPolicy(),
+                    new RecordingPipe<SagaConsumeContext<IngressSaga, IngressMessage>>(events, "saga-pipe"))
+                .SendAsync(fixture.Context, next);
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(OperationAsync);
+
+        Assert.Same(failure, actual);
+        Assert.Same(failure, Assert.Single(fixture.Proxy.Faults));
+        Assert.Equal(0, fixture.Proxy.ConsumedCalls);
+        Assert.Equal(0, next.SendCalls);
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-SAGA-INGRESS-REDELIVERY", "classified-consumer-cancellation-preserves-identity")]
@@ -1285,6 +1379,13 @@ public sealed class SagaIngressRedeliveryDeepContractTests
     }
 
     public sealed record IngressMessage;
+
+    private sealed class UnsafeBaseFailure(bool nullBase, Exception inner) : Exception("outer", inner)
+    {
+        public override Exception GetBaseException() => nullBase
+            ? null!
+            : throw new InvalidOperationException("base lookup failed");
+    }
 
     private sealed class IngressFailureException(string message) : Exception(message);
 }

@@ -63,8 +63,8 @@ public class CorrelatedSagaFilter<TSaga, TMessage> :
         {
             Exception operationException = exception is ConsumerCanceledException
                 ? exception
-                : TryGetDependencyCancellation(context, exception, out OperationCanceledException? cancellation)
-                ? new ConsumerCanceledException($"The operation was canceled by the saga: {TypeCache<TSaga>.ShortName}", cancellation!)
+                : ConsumerIngressFailure.IsUnexpectedCancellation(exception, context.CancellationToken)
+                ? new ConsumerCanceledException($"The operation was canceled by the saga: {TypeCache<TSaga>.ShortName}", exception)
                 : exception;
 
             try
@@ -83,10 +83,4 @@ public class CorrelatedSagaFilter<TSaga, TMessage> :
         await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TSaga>.ShortName).ConfigureAwait(false);
     }
 
-    static bool TryGetDependencyCancellation(ConsumeContext<TMessage> context, Exception exception,
-        out OperationCanceledException? cancellation)
-    {
-        cancellation = exception as OperationCanceledException ?? exception.GetBaseException() as OperationCanceledException;
-        return cancellation is not null && !context.CancellationToken.IsCancellationRequested;
-    }
 }

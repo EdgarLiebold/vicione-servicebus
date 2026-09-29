@@ -404,6 +404,135 @@ public sealed class CourierHostPipelineContractTests
         Assert.Empty(observation.Outgoing.Messages);
     }
 
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 0)]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    [InlineData(false, 3)]
+    [InlineData(true, 3)]
+    [InlineData(false, 4)]
+    [InlineData(true, 4)]
+    [InlineData(false, 5)]
+    [InlineData(true, 5)]
+    [RequirementCoverage("REQ-VSB-COURIER-CANCELLATION", "nested-and-unsafe-activity-cancellation-keeps-settlement-ownership")]
+    public async Task Hosts_ClassifyPureNestedCancellationWithoutDispatchingAFailureResultAsync(bool compensate, int kind)
+    {
+        Exception failure = kind switch
+        {
+            0 => new UnsafeBaseFailure(false, new OperationCanceledException("activity canceled")),
+            1 => new UnsafeBaseFailure(true, new OperationCanceledException("activity canceled")),
+            2 => new InvalidOperationException("outer", new AggregateException(
+                new OperationCanceledException("first"), new OperationCanceledException("second"))),
+            3 => new InvalidOperationException("outer", new AggregateException(
+                new OperationCanceledException("first"), new InvalidOperationException("business failure"))),
+            4 => new InvalidOperationException("outer", new AggregateException(
+                new ConsumerCanceledException("already classified"))),
+            _ => new InvalidOperationException("outer", new AggregateException(
+                new ConsumerCanceledException("already classified"), new InvalidOperationException("business failure")))
+        };
+        var trace = new List<string>();
+        HostContextObservation observation = compensate
+            ? CreateCompensateObservation(trace, TestContext.Current.CancellationToken)
+            : CreateExecuteObservation(trace, TestContext.Current.CancellationToken);
+
+        Task OperationAsync() => compensate
+            ? new CompensateActivityHost<TestActivity, ActivityLog>(
+                    new DelegatePipe<CompensateContext<ActivityLog>>(_ => Task.FromException(failure)))
+                .SendAsync(observation.Context, Next(trace))
+            : new ExecuteActivityHost<TestActivity, ActivityArguments>(
+                    new DelegatePipe<ExecuteContext<ActivityArguments>>(_ => Task.FromException(failure)), null)
+                .SendAsync(observation.Context, Next(trace));
+
+        if (kind is 3 or 5)
+        {
+            await OperationAsync();
+            Assert.Null(observation.Fault);
+            Assert.Equal(["consumed", "next"], trace);
+            Assert.Collection(observation.Outgoing.Messages,
+                message =>
+                {
+                    ExceptionInfo projected = compensate
+                        ? Assert.IsAssignableFrom<IRoutingSlipActivityCompensationFailed>(message).ExceptionInfo
+                        : Assert.IsAssignableFrom<IRoutingSlipActivityFaulted>(message).ExceptionInfo;
+                    Assert.Equal(TypeCache<InvalidOperationException>.ShortName, projected.ExceptionType);
+                    Assert.Equal("outer", projected.Message);
+                },
+                message =>
+                {
+                    if (compensate)
+                        Assert.IsAssignableFrom<IRoutingSlipCompensationFailed>(message);
+                    else
+                        Assert.IsAssignableFrom<IRoutingSlipFaulted>(message);
+                });
+        }
+        else
+        {
+            ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(OperationAsync);
+            Assert.Same(failure, actual.InnerException);
+            Assert.Same(actual, observation.Fault);
+            Assert.Equal(["faulted"], trace);
+            Assert.Empty(observation.Outgoing.Messages);
+        }
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-COURIER-CANCELLATION", "fault-observer-failure-retains-activity-cause")]
+    public async Task Hosts_ObserverFailureRetainsTheActivityFailureBeforeTheObserverFailureAsync(bool compensate, bool cancellation)
+    {
+        var trace = new List<string>();
+        HostContextObservation observation = compensate
+            ? CreateCompensateObservation(trace, TestContext.Current.CancellationToken)
+            : CreateExecuteObservation(trace, TestContext.Current.CancellationToken);
+        Exception primary = cancellation
+            ? new OperationCanceledException("activity canceled")
+            : new InvalidOperationException("activity dispatch failed");
+        var observer = new InvalidOperationException("fault observer failed");
+        observation.Proxy.FaultNotificationFailure = observer;
+
+        Task OperationAsync() => compensate
+            ? new CompensateActivityHost<TestActivity, ActivityLog>(
+                    new DelegatePipe<CompensateContext<ActivityLog>>(context =>
+                    {
+                        if (cancellation)
+                            return Task.FromException(primary);
+                        context.Result = new RecordingCompensationResult(trace, evaluationFailure: primary);
+                        return Task.CompletedTask;
+                    }))
+                .SendAsync(observation.Context, Next(trace))
+            : new ExecuteActivityHost<TestActivity, ActivityArguments>(
+                    new DelegatePipe<ExecuteContext<ActivityArguments>>(context =>
+                    {
+                        if (cancellation)
+                            return Task.FromException(primary);
+                        context.Result = new RecordingExecutionResult(trace, evaluationFailure: primary);
+                        return Task.CompletedTask;
+                    }), null)
+                .SendAsync(observation.Context, Next(trace));
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(OperationAsync);
+
+        Assert.Collection(actual.InnerExceptions,
+            failure =>
+            {
+                if (cancellation)
+                    Assert.Same(primary, Assert.IsType<ConsumerCanceledException>(failure).InnerException);
+                else
+                    Assert.Same(primary, failure);
+                Assert.Same(failure, observation.Fault);
+            },
+            failure => Assert.Same(observer, failure));
+        Assert.Equal(1, trace.Count(entry => entry == "faulted"));
+        Assert.DoesNotContain("next", trace);
+        Assert.Empty(observation.Outgoing.Messages);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-DISPATCH", "execute-dispatcher-configures-the-exact-activity-contract")]
     public void ExecuteDispatcher_UsesTheFormattedQueueAndConfiguresTheExactActivityContract()
@@ -501,6 +630,7 @@ public sealed class CourierHostPipelineContractTests
     private class HostConsumeContextProxy : DispatchProxy
     {
         public Exception? Fault { get; private set; }
+        public Exception? FaultNotificationFailure { get; set; }
         public ConsumeContext<IRoutingSlip> Inner { get; set; } = null!;
         public List<string> Trace { get; set; } = null!;
 
@@ -516,7 +646,9 @@ public sealed class CourierHostPipelineContractTests
                 case "NotifyFaultedAsync":
                     Trace.Add("faulted");
                     Fault = (Exception)args![3]!;
-                    return Task.CompletedTask;
+                    return FaultNotificationFailure is null
+                        ? Task.CompletedTask
+                        : Task.FromException(FaultNotificationFailure);
                 default:
                     try
                     {
@@ -644,6 +776,13 @@ public sealed class CourierHostPipelineContractTests
 
             throw new NotSupportedException($"Unexpected registration member: {targetMethod?.Name}");
         }
+    }
+
+    private sealed class UnsafeBaseFailure(bool nullBase, Exception inner) : Exception("outer", inner)
+    {
+        public override Exception GetBaseException() => nullBase
+            ? null!
+            : throw new InvalidOperationException("base lookup failed");
     }
 
     private class UnsupportedProxy : DispatchProxy

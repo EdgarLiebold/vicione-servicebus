@@ -13,10 +13,12 @@ internal sealed class ObservableTimeProvider(
     private readonly object _lock = new();
     private readonly Dictionary<int, TaskCompletionSource<bool>> _changeWaiters = [];
     private readonly Dictionary<int, TaskCompletionSource<bool>> _timerWaiters = [];
+    private readonly Dictionary<int, TaskCompletionSource<bool>> _timerDisposalWaiters = [];
     private readonly Dictionary<(TimeSpan DueTime, int MinimumChangeCount), TaskCompletionSource<bool>> _dueTimeWaiters = [];
     private int _activeTimerCount;
     private int _changeCount;
     private int _timerCount;
+    private int _timerDisposalCount;
     private TimeSpan? _lastDueTime;
 
     public int ActiveTimerCount => Volatile.Read(ref _activeTimerCount);
@@ -112,6 +114,25 @@ internal sealed class ObservableTimeProvider(
         }
     }
 
+    public Task WaitForTimerDisposalCountAsync(int count)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+
+        lock (_lock)
+        {
+            if (_timerDisposalCount >= count)
+                return Task.CompletedTask;
+
+            if (!_timerDisposalWaiters.TryGetValue(count, out TaskCompletionSource<bool>? waiter))
+            {
+                waiter = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _timerDisposalWaiters.Add(count, waiter);
+            }
+
+            return waiter.Task;
+        }
+    }
+
     public Task WaitForChangeCountAsync(int count)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
@@ -151,7 +172,26 @@ internal sealed class ObservableTimeProvider(
         }
     }
 
-    private void TimerDisposed() => Interlocked.Decrement(ref _activeTimerCount);
+    private void TimerDisposed()
+    {
+        Interlocked.Decrement(ref _activeTimerCount);
+
+        TaskCompletionSource<bool>[] completedWaiters;
+        lock (_lock)
+        {
+            _timerDisposalCount++;
+            completedWaiters = _timerDisposalWaiters
+                .Where(waiter => waiter.Key <= _timerDisposalCount)
+                .Select(waiter => waiter.Value)
+                .ToArray();
+
+            foreach (int completedCount in _timerDisposalWaiters.Keys.Where(count => count <= _timerDisposalCount).ToArray())
+                _timerDisposalWaiters.Remove(completedCount);
+        }
+
+        foreach (TaskCompletionSource<bool> waiter in completedWaiters)
+            waiter.TrySetResult(true);
+    }
 
     private void TimerChanged(TimeSpan dueTime)
     {

@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected Saga and Courier cancellation classification for nested pure and
+  mixed failures. Unsafe exception base lookups no longer hide Saga fault
+  notifications or turn Courier cancellation into a routing-slip failure.
+  Mixed business failures keep their original route and exception identity.
+  Courier fault-observer failures now preserve the activity failure before the
+  observer failure. The request-client timer regression test waits for actual
+  disposal rather than racing the timer's creation.
+
 - Preserved fault settlement when a custom exception's base lookup throws or
   returns null. Azure Service Bus fault headers retain the original failure,
   and SQL still unlocks the delivery with its original type and message.

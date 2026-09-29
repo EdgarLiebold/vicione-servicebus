@@ -1,5 +1,29 @@
 # A+ remediation research
 
+## T130 Saga and Courier cancellation ownership
+
+`QuerySagaFilter` and `CorrelatedSagaFilter` each queried virtual
+`GetBaseException()` before fault notification. A throwing override replaced
+the repository failure and skipped the observer; a null override missed a
+structural cancellation. Ordinary wrappers around multi-error aggregates
+could select just one cancellation and misclassify a mixed business failure.
+The same base lookup in Execute and Compensate host catch filters could turn
+an activity cancellation into a routing-slip failure or an unclassified
+delivery fault. Eight Saga counterprobes all failed red-first; six of eight
+Courier counterprobes failed red-first. The correction reuses the existing
+structural classifier that checks all aggregate branches and tolerates unsafe
+base lookups. It retains the original exception as the classified cause.
+Adversarial review found that the inner Courier gate also needs to recognize
+already-classified cancellation inside a wrapper or aggregate. The activity
+host adds its own `ConsumerCanceledException` boundary, as the existing
+timeout/outbox integration test requires; this differs from the outer generic
+consumer ingress rule. A separate observer counterprobe confirmed that a
+throwing fault observer had hidden the activity failure; the host now records
+diagnostics first and aggregates both failures in order. An unrelated Core
+suite failure exposed a test race: the request-client assertion observed a
+timer's creation before asynchronous disposal completed. The test clock now
+signals disposal, so the assertion checks the terminal state deterministically.
+
 ## T129 fault settlement diagnostics
 
 `ExceptionUtil.GetExceptionHeaderDetail` is called before Azure Service Bus

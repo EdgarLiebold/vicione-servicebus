@@ -93,6 +93,16 @@ owned by the downstream stage. If either reporting callback fails, the thrown
 aggregate retains the original failure followed by each additional failure.
 For an outbox commit failure, fault notification receives the original commit
 exception; if notification also fails, both causes remain observable.
+Saga query and correlated filters report the original repository or downstream
+failure to the consume fault observer. Pure structural cancellation is
+classified as consumer cancellation with the original wrapper as its cause;
+mixed cancellation and business failures keep their original identity.
+Courier Execute and Compensate hosts use the same classification before they
+dispatch routing-slip results, so pure activity cancellation reports a host
+fault without a failure result. The host adds its activity-specific
+cancellation boundary around an existing timeout classification. If the fault
+observer also fails, the outward aggregate retains the activity cause first
+and the observer cause second.
 Fault settlement headers used by Azure Service Bus abandon and dead-letter
 operations retain the original exception when a custom base-exception lookup
 throws or returns null. SQL fault settlement still unlocks the delivery with

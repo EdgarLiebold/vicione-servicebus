@@ -1,5 +1,22 @@
 # A+ remediation test plan
 
+## T130 Saga and Courier cancellation ownership
+
+1. Red-first test query and correlated Saga paths with throwing/null base
+   lookup, pure nested aggregate cancellation, and mixed aggregate failure.
+   Require original fault observation, correct outward identity, no consumed
+   notification and no downstream call.
+2. Red-first test Execute and Compensate hosts with the same failures. Pure
+   cancellation must report one host fault and send no routing-slip result;
+   mixed business failure must dispatch its result and continue once.
+3. Reuse the Core structural cancellation classifier, run focused tests,
+   independent Red Team review, one complete Core suite, exact-commit check,
+   then push the reviewed packet.
+4. Cover already-classified nested activity cancellations, canceled Saga
+   delivery tokens, and observer-failure aggregation. Keep the Courier timeout
+   integration contract's activity-specific outer exception. Stabilize the
+   unrelated request-client timer assertion by awaiting observed disposal.
+
 ## T129 fault settlement diagnostics
 
 1. Prove red-first that an unsafe base lookup breaks the shared fault-header

@@ -12,6 +12,13 @@ internal static class ConsumerIngressFailure
         if (deliveryToken.IsCancellationRequested || exception is ConsumerCanceledException)
             return false;
 
+        return IsCancellation(exception, false);
+    }
+
+    public static bool IsCancellation(Exception exception) => IsCancellation(exception, true);
+
+    static bool IsCancellation(Exception exception, bool includeClassified)
+    {
         var pending = new Stack<Exception>();
         var visited = new HashSet<Exception>(ReferenceEqualityComparer.Instance);
         bool foundCancellation = false;
@@ -35,7 +42,13 @@ internal static class ConsumerIngressFailure
             }
 
             if (current is ConsumerCanceledException)
-                return false;
+            {
+                if (!includeClassified)
+                    return false;
+
+                foundCancellation = true;
+                continue;
+            }
 
             if (current is OperationCanceledException)
             {

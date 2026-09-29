@@ -291,7 +291,8 @@ public sealed class RequestClientLifecycleTests
         {
             releasePipe.TrySetResult();
         }
-        await timeProvider.WaitForTimerCountAsync(1);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerDisposalCountAsync(1).WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, timeProvider.TimerCount);
         Assert.Equal(0, timeProvider.ActiveTimerCount);
