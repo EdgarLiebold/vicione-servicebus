@@ -337,3 +337,7 @@ its complete public and protected surface. `docs/api/packed-public-api.txt` is t
 contract for those package assemblies: additions, removals, visibility changes, signatures,
 parameter defaults, and inheritance changes fail the gate unless the contract is deliberately
 updated.
+
+The [Roslyn inventory across the ten sibling repositories](api/roslyn-all-repos-api-2026-09-29.md)
+also records source signatures and their XML comments. Its flagged project diagnostics and
+comment candidates are still open review items; the inventory is not an API quality grade.

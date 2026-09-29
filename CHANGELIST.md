@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11025 |
+| Added | 11030 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -796,6 +796,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `docs/api-surface.md` | Added |  |
 | `docs/api/application-api.txt` | Added |  |
 | `docs/api/packed-public-api.txt` | Added |  |
+| `docs/api/roslyn-all-repos-api-2026-09-29.md` | Added |  |
+| `docs/api/roslyn-all-repos-api-2026-09-29.tar.gz` | Added |  |
 | `docs/build.md` | Added |  |
 | `docs/migrations/README.md` | Added |  |
 | `docs/migrations/reliable-messaging-postgresql.sql` | Added |  |
@@ -16664,8 +16666,11 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/api-conventions/RenameAsync.cs` | Added |  |
 | `tools/api-conventions/RenameAsync.packages.lock.json` | Added |  |
 | `tools/api-conventions/RenameTaskLikeMethods.cs` | Added |  |
+| `tools/api-conventions/RoslynApiCommentInventory.cs` | Added |  |
+| `tools/api-conventions/RoslynApiCommentInventory.packages.lock.json` | Added |  |
 | `tools/api-conventions/SynchronizeAsyncTestReferences.cs` | Added |  |
 | `tools/api-conventions/packages.lock.json` | Added |  |
+| `tools/api-conventions/roslyn-api-projects.txt` | Added |  |
 | `tools/ci/aggregate_coverage_receipts.py` | Added |  |
 | `tools/ci/coverage.settings.xml` | Added |  |
 | `tools/ci/coverage_receipt.py` | Added |  |

@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added a rerunnable Roslyn inventory of the externally visible C# API and
+  source XML comments across the ten sibling repositories. The snapshot records
+  project diagnostics and comment candidates without claiming that the full
+  cross-repository API review is complete.
+
 - The Roslyn public-documentation gate now classifies enum members through
   the visibility of their containing enum. Private receiver-state values no
   longer appear as missing public API documentation.

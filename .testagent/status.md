@@ -1,5 +1,27 @@
 # A+ remediation test status
 
+## T140 — all-repository Roslyn API and comment inventory — 29 September 2026
+
+The read-only source tool and compressed complete snapshot now cover 69
+projects in ten repositories: 5,824 Roslyn documents and 30,339 visible
+symbols. Fifty projects have no compiler/workspace findings; their 1,322
+explicit symbols without an own XML comment are candidates for semantic
+review, including record properties and enum members. Nineteen projects are
+flagged, among them one ServiceBus CodeFixes workspace reference warning with
+zero compiler errors. The other 32 ServiceBus project compilations have no
+diagnostics and no visible explicit symbol missing its own XML comment. The
+inventory is not a code-correctness or API A+ certification. Details and
+limitations are in `docs/api/roslyn-all-repos-api-2026-09-29.md`.
+The focused temporary-project process counterprobes passed. They are manual
+tool evidence, not a nonnative product test suite. The change-list identity
+check passes with 16,681 entries. Independent read-only review
+identified and drove closure of empty-scope success, same-basename output
+overwrites, stale-output reuse, and inaccessible protected members of sealed
+types. Exact-commit review remains the final gate.
+The native `LegacyVerificationCapabilities_ArePathCompleteTerminalAndLeaveOneNativeVerdict`
+architecture test passes 1/1. Independent final read-only re-review is PASS
+with no concrete P1/P2 in this explicitly provisional inventory scope.
+
 ## T139 — Roslyn public-documentation enum visibility — 29 September 2026
 
 The existing seven-case Roslyn documentation gate failed on four private
