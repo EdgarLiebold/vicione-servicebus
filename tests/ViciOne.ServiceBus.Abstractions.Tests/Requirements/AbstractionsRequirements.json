@@ -1281,6 +1281,13 @@
       "variantKey" : "cancellation-and-invalid-callback"
    },
    {
+      "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "OneTimeSetup_CancelingOneCallerLeavesSharedWorkAndOtherCallersIntactAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
+      "variantKey" : "caller-cancellation-does-not-own-shared-setup"
+   },
+   {
       "requirementId" : "REQ-VSB-TASK-OR-CANCELED",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "OrCanceled_ReturnsTheOriginalTaskWhenCancellationCannotWinAsync",

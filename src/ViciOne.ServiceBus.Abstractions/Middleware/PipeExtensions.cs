@@ -80,7 +80,8 @@ public static class PipeExtensions
 
         OneTimeContextPayload<T> oneTimeContext = context.GetOrAddPayload(() => new OneTimeContextPayload<T>());
 
-        await oneTimeContext.RunOneTimeAsync(() => new OneTimeSetupMethod(setupMethod)).ConfigureAwait(false);
+        await oneTimeContext.RunOneTimeAsync(() => new OneTimeSetupMethod(setupMethod))
+            .WaitAsync(cancellationToken).ConfigureAwait(false);
 
         return oneTimeContext;
     }

@@ -176,6 +176,87 @@ public sealed class PipeExtensionsTests
         Assert.NotNull(result);
     }
 
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, false)]
+    [InlineData(true, true)]
+    [InlineData(false, true)]
+    [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "caller-cancellation-does-not-own-shared-setup")]
+    public async Task OneTimeSetup_CancelingOneCallerLeavesSharedWorkAndOtherCallersIntactAsync(
+        bool cancelLeader, bool callbackFaults)
+    {
+        var context = new TestPipeContext();
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var failure = new SetupException("shared setup failed");
+        using var caller = new CancellationTokenSource();
+        int attempts = 0;
+        CancellationToken testToken = TestContext.Current.CancellationToken;
+
+        Task<OneTimeContext<SetupMarker>> leader = context.OneTimeSetupAsync<SetupMarker>(() =>
+        {
+            Interlocked.Increment(ref attempts);
+            entered.SetResult();
+            return release.Task;
+        }, cancelLeader ? caller.Token : CancellationToken.None);
+
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10), testToken);
+        Task<OneTimeContext<SetupMarker>> follower = context.OneTimeSetupAsync<SetupMarker>(() =>
+        {
+            Interlocked.Increment(ref attempts);
+            throw new SetupException("a follower must not start setup");
+        }, cancelLeader ? CancellationToken.None : caller.Token);
+        Task<OneTimeContext<SetupMarker>> canceledWait = cancelLeader ? leader : follower;
+        Task<OneTimeContext<SetupMarker>> survivingWait = cancelLeader ? follower : leader;
+
+        try
+        {
+            Assert.False(canceledWait.IsCompleted);
+            Assert.False(survivingWait.IsCompleted);
+            caller.Cancel();
+
+            OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                canceledWait.WaitAsync(TimeSpan.FromSeconds(2), testToken));
+
+            Assert.Equal(caller.Token, canceled.CancellationToken);
+            Assert.False(survivingWait.IsCompleted);
+            Assert.Equal(1, Volatile.Read(ref attempts));
+
+            if (callbackFaults)
+            {
+                release.SetException(failure);
+                SetupException actual = await Assert.ThrowsAsync<SetupException>(() =>
+                    survivingWait.WaitAsync(TimeSpan.FromSeconds(10), testToken));
+                Assert.Same(failure, actual);
+
+                OneTimeContext<SetupMarker> recovered = await context.OneTimeSetupAsync<SetupMarker>(() =>
+                {
+                    Interlocked.Increment(ref attempts);
+                    return Task.CompletedTask;
+                }, testToken).WaitAsync(TimeSpan.FromSeconds(10), testToken);
+                OneTimeContext<SetupMarker> cached = await context.OneTimeSetupAsync<SetupMarker>(() =>
+                    throw new SetupException("a cached setup must not run"), testToken);
+
+                Assert.Same(recovered, cached);
+                Assert.Equal(2, Volatile.Read(ref attempts));
+            }
+            else
+            {
+                release.SetResult();
+                OneTimeContext<SetupMarker> result = await survivingWait.WaitAsync(TimeSpan.FromSeconds(10), testToken);
+                OneTimeContext<SetupMarker> cached = await context.OneTimeSetupAsync<SetupMarker>(() =>
+                    throw new SetupException("a cached setup must not run"), testToken);
+
+                Assert.Same(result, cached);
+                Assert.Equal(1, Volatile.Read(ref attempts));
+            }
+        }
+        finally
+        {
+            release.TrySetResult();
+        }
+    }
+
     private sealed class TestPipeContext : BasePipeContext
     {
     }
