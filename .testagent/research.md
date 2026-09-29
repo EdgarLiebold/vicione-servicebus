@@ -1,5 +1,15 @@
 # A+ remediation research
 
+## T132 outbox fault metric diagnostics
+
+`MetricOperation.Complete` isolated a throwing exception diagnostic getter
+from product message flow, but its outbox completion callback abandoned the
+faulted metric before recording it. A real `MetricObservationSession` test
+failed red-first for a throwing base lookup; the null-base control passed.
+`ErrorType` now falls back to the original exception type on both unsafe
+variants while preserving a valid root cause. The operation still completes
+once and does not expose telemetry callbacks to the message flow.
+
 ## T131 dispose and MessagePack exception ownership
 
 `DisposeAsyncExtensions` captured a virtual `GetBaseException()` before

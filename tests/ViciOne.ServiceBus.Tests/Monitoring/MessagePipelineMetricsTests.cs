@@ -834,6 +834,46 @@ public sealed class MessagePipelineMetricsTests
         }
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-OBSERVABILITY-OUTBOX", "unsafe-base-fallback-and-valid-root-emit-fault-metric")]
+    public async Task OutboxFaultMetric_UnsafeLookupFallsBackAndValidLookupSelectsRootAsync(int kind)
+    {
+        TimeSpan timeout = OperationTimeout();
+        var entered = new TaskCompletionSource<ILogContext>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using ServiceProvider provider = CreateProvider<ObservedMessage>(_ =>
+        {
+            entered.TrySetResult(LogContext.Current
+                ?? throw new Xunit.Sdk.XunitException("Expected the consumer log context to be available."));
+            return Task.CompletedTask;
+        }, timeout);
+        using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestCancellationToken)
+            .WaitAsync(timeout, TestCancellationToken);
+
+        try
+        {
+            await harness.Bus.PublishAsync(new ObservedMessage("unsafe-metric"), TestCancellationToken);
+            ILogContext logContext = await entered.Task.WaitAsync(timeout, TestCancellationToken);
+            Exception failure = kind == 2
+                ? new InvalidOperationException("outer", new ExpectedHandlerException())
+                : new UnsafeBaseMetricException(kind == 1);
+            OutboxTelemetryTestDriver.RecordDeliveryTwice(logContext, failure, new ExpectedRetryException());
+
+            MetricMeasurement delivery = Assert.Single(observations.Measurements,
+                measurement => measurement.Name == ServiceBusTelemetry.Metrics.OutboxMessages);
+            Assert.Equal("faulted", delivery.Tag(ServiceBusTelemetry.Attributes.Outcome));
+            Assert.Equal((kind == 2 ? typeof(ExpectedHandlerException) : typeof(UnsafeBaseMetricException)).FullName,
+                delivery.Tag(ServiceBusTelemetry.Attributes.ErrorType));
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-OUTBOX", "enqueue-and-deliver-have-distinct-bounded-outcomes")]
     public async Task InMemoryOutbox_EmitsDistinctEnqueueAndDeliveryOutcomesAsync()
@@ -1004,6 +1044,13 @@ public sealed class MessagePipelineMetricsTests
 
     private sealed class ExpectedHandlerException : Exception
     {
+    }
+
+    private sealed class UnsafeBaseMetricException(bool nullBase) : Exception("metric failure")
+    {
+        public override Exception GetBaseException() => nullBase
+            ? null!
+            : throw new InvalidOperationException("base lookup failed");
     }
 
     private sealed class ExpectedRetryException : Exception

@@ -1,5 +1,13 @@
 # A+ remediation test plan
 
+## T132 outbox fault metric diagnostics
+
+1. Red-first run a real outbox metric operation with throwing and null-returning
+   `GetBaseException()` overrides; require one faulted measurement and the
+   original type tag. Keep the valid first-failure control.
+2. Guard diagnostic base lookup, map the requirement, run read-only adversarial
+   review and one complete Core suite at the exact commit before push.
+
 ## T131 dispose and MessagePack exception ownership
 
 1. Red-first test both public dispose callback forms with throwing/null base

@@ -11,6 +11,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Retained faulted outbox measurements when a custom exception's base lookup
+  throws. The metric records the original exception type and still completes
+  once; a null base result also falls back to the original type.
+
 - Preserved cleanup and cancellation diagnostics in utility and MessagePack
   boundaries. Both public asynchronous dispose callback forms still invoke
   cleanup when an exception's base lookup throws or returns null, then rethrow

@@ -372,7 +372,17 @@ internal static class LogContextMetricsExtensions
 
     private static string ErrorType(Exception exception)
     {
-        Type type = (exception.GetBaseException() ?? exception).GetType();
+        Exception cause = exception;
+        try
+        {
+            cause = exception.GetBaseException() ?? exception;
+        }
+        catch
+        {
+            // Fault metrics still identify the original exception if diagnostics fail.
+        }
+
+        Type type = cause.GetType();
         return type.FullName ?? type.Name;
     }
 

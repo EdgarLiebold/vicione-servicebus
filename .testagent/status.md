@@ -1,5 +1,16 @@
 # A+ remediation test status
 
+## T132 — outbox fault metric diagnostics — 29 September 2026
+
+A real outbox metric operation failed red-first when a custom exception's
+base lookup threw: its faulted measurement was lost. The null-returning
+control already passed. The shared metric type lookup now falls back to the
+original exception when diagnostics fail and still selects a valid inner
+root cause. The final three-case operation test, first-failure control and
+requirement mapping passed 5/5. Independent read-only Red Team review is
+PASS with no concrete P1/P2. The complete Core suite will be checked at the
+exact commit before push; no global coverage profile was repeated.
+
 ## T131 — dispose and MessagePack exception ownership — 29 September 2026
 
 Four of six initial Dispose counterprobes failed red-first because unsafe

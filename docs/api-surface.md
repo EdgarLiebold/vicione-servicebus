@@ -93,6 +93,9 @@ owned by the downstream stage. If either reporting callback fails, the thrown
 aggregate retains the original failure followed by each additional failure.
 For an outbox commit failure, fault notification receives the original commit
 exception; if notification also fails, both causes remain observable.
+Outbox fault metrics keep the original exception type when its custom base
+lookup throws or returns null, so a diagnostic failure cannot erase the
+faulted measurement.
 Both `DisposeAsync<T>` callback forms invoke cleanup before rethrowing the
 original exception when a custom base lookup throws or returns null; a valid
 root cause remains the rethrown exception. A cleanup callback failure produces
