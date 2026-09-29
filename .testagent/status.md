@@ -4188,3 +4188,28 @@ whitespace passed. Independent read-only Red Team re-review is PASS with no
 remaining concrete P1/P2 in this scope. No new global Line/Branch/CRAP
 measurement was run; the user accepts the current Line/Branch level and
 prioritizes correctness.
+
+## T148–T150 exact profile, Artemis synchronization and MessagePack cancellation — 30 September 2026
+
+The complete exact-commit `7c8a93e05` profile passed 33/33 receipts and
+14,122/14,122 tests across 32 product assemblies. It measured 92.37368%
+Line and conservative 85.12118% Branch, with one CRAP>30 method among
+26,192. The user accepts the current coverage levels and prioritizes product
+correctness. See `coverage-a-plus-20260921/product-wide-profile-7c8a93e05.md`.
+
+One initial Artemis scheduling assertion observed a transient in-delivery
+broker statistic. An isolated full retry passed 106/106. Read-only Red Team
+found a P2 test synchronization defect, not a demonstrated product defect:
+the existing `PostReceive`/`StopAsync` sequence is not a broker acknowledgement
+counter fence. Commit `29cb9982d` uses stable Artemis broker accounting while
+retaining the exact Classic assertion. The scheduling class passed 11/11
+against isolated ActiveMQ and Artemis fixtures.
+
+Two new MessagePack tests exercise mixed cancellation with an empty aggregate
+or a throwing base-exception override. Full MessagePack passed 124/124 and
+Architecture 450/450. Commit `6bad502ae` extracts the cause-edge discovery
+without changing traversal semantics; independent Red Team review is PASS with
+no concrete P1/P2. The exact-commit MessagePack receipt passed 124/124 and
+measures `TryGetCancellation` at 100% Line/Branch with CRAP 22, and its new
+helper at 100% Line/Branch with CRAP 8. No new 33-profile aggregate is claimed
+for the later commit.
