@@ -3972,3 +3972,28 @@ to keep the published count and permit capacity consistent, existing leases
 to settle exactly once, and healthy later admission at the correct boundary.
 Also check concurrent completions while a shrink waits, since adjustment
 ownership must be serial, and disposal while the adjustment is pending.
+# T110 — transformation property and nested context contracts
+
+Target inventory: all ten C# files in `src/ViciOne.ServiceBus/Transformation`,
+the public `TransformSpecification` and `TransformFilter` entry points, and
+the two existing `Transformation` test files. They were read in full before
+editing. The existing T97 strict profile has 90 uncovered of 173 observed
+physical lines in the nine executable transformation files, mostly envelope
+forwarding getters. The T107 Microsoft Roslyn pairing map pairs only
+`PropertyTransformContext` directly; the other internal classes are reached
+through pipeline composition, so static unpairing is not proof of no runtime
+coverage. Relevant Microsoft code-testing-agent, coverage-analysis and
+find-untested-sources guidance has been read; the existing pairing inventory
+is reused without rerunning project-wide discovery.
+
+Behavioral acceptance: (1) an input-bearing initializer whose inherited
+`TransformContext` says `HasInput=false` must not invoke a source-property
+provider or user transform callback; (2) a present source, including an
+explicit null property value, must pass the exact source input, metadata,
+`HasValue` and cancellation token to the callback; (3) raw transform
+initialization must reject a null provider task with a clear diagnostic and
+must reject pre-cancellation before invoking the provider; (4) nested
+property conversion must preserve its source/metadata and observe a pending
+initializer to completion, including fault identity and invalid null-task
+diagnostics. Tests assert visible callback counts, identity, message value,
+metadata and exact failure class, not just code execution.

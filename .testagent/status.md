@@ -3603,3 +3603,29 @@ reviews explicitly release; no external product acceptance or source/test/commen
 generator. Foundation contract boundaries close, while broader subclass/source,
 retry/provider/saga/rolling-timer architecture and wider119 gates remain explicit.
 The original autonomous A+ goal stays active through this validated checkpoint.
+
+## T110 transformation property contracts — 29 September 2026
+
+Implementation commit `f34880737` changes the complete connected Transformation
+property path. Eleven new cases in ten manually written test methods verify
+absent source input, present-null property metadata, distinct owner/operation
+tokens, null provider/callback/initializer tasks, pending and faulted work,
+pre-cancellation, and null context. On the unchanged product the first nine
+cases were 3 pass/6 fail; the Red Team's null-context counterprobe also failed
+with a NullReferenceException and its pre-canceled nested counterprobe entered
+the initializer and waited indefinitely. Both Red Team P2 findings are closed;
+final independent read-only re-review is PASS with no remaining concrete P1/P2.
+
+The final source/test build has zero warnings/errors. Transformation tests pass
+58/58; the exact implementation commit passes the complete Core project
+7,071/7,071 with zero failures/skips. The requirements JSON parses and Git
+whitespace is clean. Microsoft code-testing-agent, test-gap-analysis,
+assertion-quality, run-tests, coverage-analysis and find-untested-sources
+guidance was applied; the T107 Roslyn pairing and T97 profile were reused for
+selection, not rerun as a fresh global grade. The prior T97 33-profile
+product-wide checkpoint remains 86,639/93,963 lines (92.20544%),
+31,312/36,927 branches (84.79432%), and zero CRAP>30; global A+ remains open.
+The PO's larger-packet direction is recorded in the T110 plan: focused tests
+during edits, complete affected project once on a frozen packet, product-wide
+33-profile measurement after roughly five larger packets or earlier when a
+shared API/provider boundary changes or an A+ claim is due.

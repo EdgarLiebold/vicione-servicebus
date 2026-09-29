@@ -5303,3 +5303,42 @@ the two later-business reuse variants; both sources are independently restored b
    project once on final source. Apply mutation and assertion review,
    independent read-only Red Team review, then changelog/evidence and push.
    Product-wide coverage remains on the grouped cadence.
+# T110 — transformation property and nested context contracts
+
+1. Add red-first focused tests for `DelegatePropertyProvider` with a real
+   scoped initialization context and a source `TransformContext` whose input
+   is absent. Assert no source read or callback. Add present/null-value
+   control tests with full envelope metadata and exact token forwarding.
+2. Add red-first raw `TransformPropertyInitializer` tests for a null provider
+   task and pre-canceled token; include completed, pending and faulted source
+   controls that assert message mutation/identity and original failure.
+3. Exercise `TransformPropertyConverter` through a recording nested message
+   initializer for source metadata, pending completion, fault identity and
+   invalid null-task rejection. Make only demonstrated product corrections.
+4. Review assertion strength and mutation sensitivity under the Microsoft
+   test-gap-analysis and assertion-quality guidance. Run focused Core tests
+   while editing, one complete Core project run on the frozen implementation
+   commit, independent read-only adversarial Red Team review, evidence,
+   changelog and authorized push. Keep the product-wide 33-profile aggregate
+   on the agreed grouped cadence.
+5. Close Red Team findings with red-first cases: a pre-canceled nested
+   conversion must call neither Create nor InitializeAsync, null context must
+   fail at the converter boundary, and both envelope tests must compare the
+   inherited owner token separately from the operation token.
+
+## Larger-packet verification cadence from the PO's 29 September direction
+
+- Group subsequent work by a complete, connected product behavior across its
+  source, provider boundary and existing tests. Include multiple related
+  methods and failure modes per packet; do not split simply to obtain a new
+  measurement receipt.
+- During editing, build and run only the changed test class and directly
+  affected neighboring classes. Retain red-first evidence and independent
+  adversarial review for each packet. On a frozen packet, run the complete
+  affected project once, with broader projects only when a shared contract
+  or cross-project behavior changed.
+- Run the 33-profile product-wide Line/Branch/CRAP aggregate after roughly
+  five larger packets, or earlier after a cross-provider/API change or before
+  an A+ acceptance claim. The aggregate must use the final source/test commit
+  and all relevant provider fixtures. Do not reuse a prior profile as a
+  current grade.

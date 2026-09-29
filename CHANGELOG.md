@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed transformation property handling when the source has no input, when
+  providers or nested initializers return a null task, and when nested
+  conversion starts with a canceled operation or null context. The source
+  envelope, its owner token, and the separate operation token are checked by
+  behavioral regressions. The Transformation suite passes 58/58 and complete
+  Core passes 7,071/7,071 on `f34880737`; adversarial re-review is PASS.
+  Product-wide Line/Branch/CRAP A+ remains open; its next measurement follows
+  the larger-packet cadence.
+
 - Fixed adaptive request parallelism after a canceled downward adjustment.
   The published request count now follows a completed permit drain; partial
   drains are refunded and overlapping adjustments are serialized. Four

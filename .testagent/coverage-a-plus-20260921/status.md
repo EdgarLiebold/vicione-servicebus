@@ -1217,3 +1217,14 @@ The clean detached exact source/test commit `eb04d4283` passed locked restore, a
 Release build, and the complete 79/79 PostgreSQL provider suite under a canonical fixture with
 empty findings and matching broker-log hash. The worktree was removed after retaining the logs
 and fixture evidence; details are in `postgresql-maintenance-phase.md`.
+
+T110 closes the Transformation property-context packet on exact implementation commit
+`f34880737`. Red-first cases and the two Red Team P2 counterprobes reproduced
+absent-source, null-task, pre-cancellation and null-context faults. Final
+Transformation 58/58 and complete Core 7,071/7,071 pass, zero skipped;
+independent read-only re-review is PASS. See `t110-transformation-property.md`.
+The PO-approved cadence now groups larger connected behavior packets, runs
+focused tests during edits and the complete affected project once per frozen
+packet, and defers the 33-profile global Line/Branch/CRAP aggregate to roughly
+five such packets or an earlier shared-boundary/A+ checkpoint. T97 remains the
+last valid aggregate; no new global A+ claim is made.
