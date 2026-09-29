@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Added twelve behavior cases for recurring message initialization failures
+  across endpoint and publish command transports, explicit and topology
+  destinations, and all three pipe forms. A failed input property read now
+  has a direct test for exact exception identity and zero command, endpoint
+  resolution and pipe effects; the same input must then succeed with the
+  correct payload, destination, schedule and cancellation token. A deliberate
+  early endpoint-resolution counterchange failed the no-pipe test. Product
+  source was unchanged; global A+ awaits the next full checkpoint.
+
 - Fixed EF reliable outbox admission after change-tracker callback failure:
   rejected sends are detached before they can be saved without a session,
   capacity is restored, and earlier accepted sends remain intact when

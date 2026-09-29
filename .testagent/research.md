@@ -4101,3 +4101,27 @@ receive the original exception and a new caller must be able to retry. The
 tests must assert observable results, ownership and recovery, not just an
 exception. T107 Roslyn pairing and T97 profiles are reused read-only; no new
 global discovery or measurement is needed during this packet.
+# T116 — recurring initializer failure boundary
+
+- The two recurring schedulers expose the same initialized send/publish
+  contract through different command transports. Existing completion and
+  admission tests cover accepted commands, transport outcomes, cancellation,
+  and unavailable publish destinations. They do not directly prove that an
+  input-property failure during message initialization leaves both command
+  transports untouched and permits a later healthy attempt.
+- Use the existing `RecurringPublishAdmissionTests` recording provider,
+  topology, endpoint and pipes. Exercise both scheduler implementations,
+  explicit send versus topology publish, and no pipe versus typed and untyped
+  pipes. The
+  failure oracle is the exact original exception, zero command/pipe/provider
+  effects, and a successful retry with exact command, payload, destination,
+  token and pipe effects. The prior T107 Roslyn source/test pairing is reused;
+  static pairing is not execution evidence.
+- Independent read-only Red Team found that the no-pipe overloads have their
+  own initializer path. The original eight-case typed/untyped matrix could
+  miss a no-pipe-only command after failure. The matrix now includes all three
+  pipe forms (twelve cases) and checks zero pipe effects for no-pipe recovery.
+- Apply Microsoft `code-testing-agent` inline Research → Plan → Implement,
+  `test-gap-analysis` for mutation sensitivity, `assertion-quality` for the
+  result assertions, and `run-tests` for the MTP command. Run the affected
+  Core class while editing and the complete Core project once when frozen.

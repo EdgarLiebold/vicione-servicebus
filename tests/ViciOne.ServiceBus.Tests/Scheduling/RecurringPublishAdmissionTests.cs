@@ -131,7 +131,99 @@ public sealed class RecurringPublishAdmissionTests
         Assert.Equal("accepted", context.Headers.Get<string>("admission"));
     }
 
+    public static IEnumerable<object[]> InitializerFailureCases()
+    {
+        foreach (bool publishCommand in new[] { false, true })
+            foreach (bool publishPayload in new[] { false, true })
+                foreach (PipeForm pipeForm in Enum.GetValues<PipeForm>())
+                    yield return [publishCommand, publishPayload, pipeForm];
+    }
+
+    [Theory]
+    [MemberData(nameof(InitializerFailureCases))]
+    [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER", "initializer-failure-prevents-command-and-allows-retry")]
+    public async Task InitializerFailure_LeavesCommandBoundaryUntouchedAndAllowsRetryAsync(
+        bool publishCommand, bool publishPayload, PipeForm pipeForm)
+    {
+        using var caller = new CancellationTokenSource();
+        var endpoint = DispatchProxy.Create<CombinedEndpoint, EndpointBoundary>();
+        var delivery = (EndpointBoundary)(object)endpoint;
+        delivery.PublishCommand = publishCommand;
+        var provider = DispatchProxy.Create<ISendEndpointProvider, ProviderBoundary>();
+        var resolution = (ProviderBoundary)(object)provider;
+        resolution.Endpoint = endpoint;
+        var topology = DispatchProxy.Create<IBusTopology, TopologyBoundary>();
+        var addresses = (TopologyBoundary)(object)topology;
+        addresses.Available = true;
+        IRecurringMessageScheduler scheduler = publishCommand
+            ? new PublishRecurringMessageScheduler(endpoint, topology)
+            : new EndpointRecurringMessageScheduler(provider, SchedulerAddress, topology);
+        var schedule = new Schedule();
+        var failure = new InvalidOperationException("The input property could not be read.");
+        var values = new FaultingAdmissionValues(failure);
+        int pipeCalls = 0;
+        IPipe<SendContext<RecurringCompletionPayload>> typed = Pipe.Execute<SendContext<RecurringCompletionPayload>>(context =>
+        {
+            pipeCalls++;
+            Assert.Equal("admitted-53", context.Message.Value);
+            Assert.Equal(53, context.Message.Count);
+            context.Headers.Set("initializer-retry", "typed");
+        });
+        IPipe<SendContext> untyped = Pipe.Execute<SendContext>(context =>
+        {
+            pipeCalls++;
+            context.Headers.Set("initializer-retry", "untyped");
+        });
+
+        Task<ScheduledRecurringMessage<RecurringCompletionPayload>> InvokeAsync() => publishPayload
+            ? pipeForm switch
+            {
+                PipeForm.None => scheduler.ScheduleRecurringPublishAsync<RecurringCompletionPayload>(schedule, values, caller.Token),
+                PipeForm.Typed => scheduler.ScheduleRecurringPublishAsync<RecurringCompletionPayload>(schedule, values, typed, caller.Token),
+                PipeForm.Untyped => scheduler.ScheduleRecurringPublishAsync<RecurringCompletionPayload>(schedule, values, untyped, caller.Token),
+                _ => throw new ArgumentOutOfRangeException(nameof(pipeForm))
+            }
+            : pipeForm switch
+            {
+                PipeForm.None => scheduler.ScheduleRecurringSendAsync<RecurringCompletionPayload>(SendAddress, schedule, values, caller.Token),
+                PipeForm.Typed => scheduler.ScheduleRecurringSendAsync<RecurringCompletionPayload>(SendAddress, schedule, values, typed, caller.Token),
+                PipeForm.Untyped => scheduler.ScheduleRecurringSendAsync<RecurringCompletionPayload>(SendAddress, schedule, values, untyped, caller.Token),
+                _ => throw new ArgumentOutOfRangeException(nameof(pipeForm))
+            };
+
+        Assert.Same(failure, await Assert.ThrowsAsync<InvalidOperationException>(InvokeAsync));
+        Assert.True(values.ValueReads > 0);
+        Assert.Empty(resolution.Lookups);
+        Assert.Empty(delivery.Commands);
+        Assert.Equal(0, pipeCalls);
+        Assert.Equal(publishPayload ? [typeof(RecurringCompletionPayload)] : Array.Empty<Type>(), addresses.Lookups);
+
+        values.AllowReads();
+        ScheduledRecurringMessage<RecurringCompletionPayload> handle = await InvokeAsync();
+        Assert.Same(schedule, handle.Schedule);
+        Assert.Equal(publishPayload ? PublishAddress : SendAddress, handle.Destination);
+        Assert.Equal("admitted-53", handle.Payload.Value);
+        Assert.Equal(53, handle.Payload.Count);
+        Assert.True(values.CountReads > 0);
+        Assert.Equal(publishPayload ? [typeof(RecurringCompletionPayload), typeof(RecurringCompletionPayload)] : Array.Empty<Type>(),
+            addresses.Lookups);
+        if (publishCommand)
+            Assert.Empty(resolution.Lookups);
+        else
+            Assert.Equal((SchedulerAddress, caller.Token), Assert.Single(resolution.Lookups));
+        MessageSendContext<ScheduleRecurringMessage> context = Assert.Single(delivery.Commands);
+        Assert.Equal(caller.Token, context.CancellationToken);
+        ScheduleRecurringMessage command = context.Message;
+        Assert.Same(schedule, command.Schedule);
+        Assert.Equal(handle.Destination, command.Destination);
+        Assert.Same(handle.Payload, command.Payload);
+        Assert.Equal(pipeForm == PipeForm.None ? 0 : 1, pipeCalls);
+        Assert.Equal(pipeForm == PipeForm.None ? null : pipeForm == PipeForm.Typed ? "typed" : "untyped",
+            context.Headers.Get<string>("initializer-retry"));
+    }
+
     public enum Form { Generic, Runtime, Declared, Initialized }
+    public enum PipeForm { None, Typed, Untyped }
 
     public sealed class AdmissionValues
     {
@@ -139,6 +231,25 @@ public sealed class RecurringPublishAdmissionTests
         public int CountReads { get; private set; }
         public string Value { get { ValueReads++; return "admitted-53"; } }
         public int Count { get { CountReads++; return 53; } }
+    }
+
+    public sealed class FaultingAdmissionValues(InvalidOperationException failure)
+    {
+        private bool _fail = true;
+        public int ValueReads { get; private set; }
+        public int CountReads { get; private set; }
+        public string Value
+        {
+            get
+            {
+                ValueReads++;
+                if (_fail)
+                    throw failure;
+                return "admitted-53";
+            }
+        }
+        public int Count { get { CountReads++; return 53; } }
+        public void AllowReads() => _fail = false;
     }
 
     private sealed class Schedule : RecurringSchedule

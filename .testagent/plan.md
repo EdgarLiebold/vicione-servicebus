@@ -5438,3 +5438,17 @@ the two later-business reuse variants; both sources are independently restored b
    the product-wide 33-profile Line/Branch/CRAP aggregate at the grouped
    checkpoint unless the review finds a cross-provider contract risk that
    requires it earlier.
+# T116 — recurring initializer failure boundary
+
+1. Add one twelve-case product test matrix spanning endpoint/publish command
+   transport, explicit send/topology publish destination, and no/typed/untyped
+   payload pipes. Make input initialization throw the same sentinel error on
+   the first attempt; assert no command or pipe effect, then allow the same
+   input to recover and assert exact successful command shape and token.
+2. Run the focused class while editing. Review pseudo-mutations and assertion
+   strength under the Microsoft testing skills; correct demonstrated product
+   defects only. Ask the independent read-only Red Team to inspect the final
+   source/test diff and counterexample quality.
+3. Freeze the packet and run the complete affected Core project once, then
+   record evidence, changelog, requirement mapping and push. Preserve the
+   larger-packet product-wide 33-profile checkpoint cadence.
