@@ -90,6 +90,51 @@ public sealed class SignalRBackplaneConfigurationTests
             descriptor.ServiceType == typeof(HubLifetimeManager<ConfigurationHub>));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "unusable-remote-group-timeout-rejected-before-registration")]
+    public void Registration_RejectsTimeoutBeyondTheSystemTimerLimit(bool useMaximum)
+    {
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
+        int descriptorCount = services.Count;
+        TimeSpan timeout = useMaximum
+            ? TimeSpan.MaxValue
+            : TimeSpan.FromMilliseconds(4294967295L);
+
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            configurator.AddSignalRBackplane<ConfigurationHub>(options =>
+                options.RemoteGroupOperationTimeout = timeout));
+
+        Assert.Contains(nameof(SignalRBackplaneOptions.RemoteGroupOperationTimeout), failure.Message, StringComparison.Ordinal);
+        Assert.Equal(descriptorCount, services.Count);
+        Assert.DoesNotContain(services, descriptor =>
+            descriptor.ServiceType == typeof(HubLifetimeManager<ConfigurationHub>));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "maximum-system-timer-timeout-is-registrable")]
+    public void Registration_AcceptsTheLargestSystemTimerTimeout(bool fractionalMaximum)
+    {
+        var services = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(services);
+        TimeSpan maximum = fractionalMaximum
+            ? TimeSpan.FromMilliseconds(4294967295L) - TimeSpan.FromTicks(1)
+            : TimeSpan.FromMilliseconds(4294967294L);
+
+        configurator.AddSignalRBackplane<ConfigurationHub>(options =>
+            options.RemoteGroupOperationTimeout = maximum);
+
+        ServiceDescriptor descriptor = Assert.Single(services, candidate =>
+            candidate.ServiceType == typeof(SignalRBackplaneSettings<ConfigurationHub>));
+        var settings = Assert.IsType<SignalRBackplaneSettings<ConfigurationHub>>(
+            descriptor.ImplementationInstance);
+        Assert.Equal(maximum, settings.RemoteGroupOperationTimeout.Value);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-COMPOSITION", "fluent-hub-registration")]
     public void Registration_ReturnsTheConfiguratorAndAddsTheHubLifetimeManager()

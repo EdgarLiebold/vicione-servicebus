@@ -477,6 +477,20 @@
   },
   {
     "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "unusable-remote-group-timeout-rejected-before-registration",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_RejectsTimeoutBeyondTheSystemTimerLimit"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
+    "variantKey": "maximum-system-timer-timeout-is-registrable",
+    "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
+    "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
+    "testMethod": "Registration_AcceptsTheLargestSystemTimerTimeout"
+  },
+  {
+    "requirementId": "REQ-VSB-SIGNALR-COMPOSITION",
     "variantKey": "fluent-hub-registration",
     "testAssembly": "ViciOne.ServiceBus.SignalR.Tests",
     "testType": "ViciOne.ServiceBus.SignalR.Tests.SignalRBackplaneConfigurationTests",
