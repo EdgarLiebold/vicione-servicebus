@@ -64,7 +64,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         /// <summary>Gets the parent state, or <see langword="null" /> for a top-level state.</summary>
-        public IState<TInstance>? SuperState { get; }
+        public IState<TInstance>? SuperState { get; private set; }
         /// <summary>Gets the name used for state equality, ordering and transition-event names.</summary>
         public string Name { get; }
 
@@ -272,6 +272,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 throw new ArgumentException("A state cannot be a substate of itself", nameof(subState));
 
             _subStates.Add(subState);
+        }
+
+        internal void RemoveSubstate(IState<TInstance> subState) => _subStates.Remove(subState);
+
+        internal void MoveSubstatesTo(StateMachineState replacement)
+        {
+            foreach (StateMachineState child in _subStates.OfType<StateMachineState>().ToArray())
+            {
+                _subStates.Remove(child);
+                child.SuperState = replacement;
+                replacement.AddSubstate(child);
+            }
         }
 
         /// <summary>Searches this state and its descendants for a state with the supplied name.</summary>

@@ -5467,3 +5467,29 @@ the two later-business reuse variants; both sources are independently restored b
    independent read-only adversarial Red Team review, record risk and test
    evidence, changelog and requirement mapping, then push. The complete
    33-profile product-wide measurement remains at the grouped checkpoint.
+# T118 — saga state declaration ownership
+
+1. Add one four-form red-first matrix for direct/nested State and SubState
+   re-declaration after the property is assigned a matching-name state from
+   a second machine. Require the first machine's original state identity in
+   its property and cache after re-declaration, unchanged parent identity
+   and transition-event identities, and no reference to the second machine.
+2. Correct all four property declaration paths to use the registered state
+   as authority when name/parent match. Preserve normal first declaration
+   and intentional parent changes. Run the focused test during edits.
+3. Review pseudo-mutations and assertions, obtain independent read-only Red
+   Team review, freeze the code/test commit, run the full Core project once,
+   record requirement mapping, changelog, risk/evidence and push. Keep the
+   full 33-profile aggregate for the next grouped checkpoint.
+4. Incorporate Red Team's named-overload and stale-parent counterexamples:
+   rebind when the registered parent reference changes and detach replaced
+   children from the old parent set. Assert old/new parent membership after
+   both direct/nested property reparenting and named-child re-registration.
+5. Preserve all registered child state instances when replacing their parent:
+   move each child to the new parent before returning from `SetState`, and
+   assert both direct and nested child `SuperState` references and old/new
+   parent membership after the replacement.
+6. Reject direct, nested and named attempts to move a state beneath its own
+   descendant before constructing a replacement. Verify exact parameter,
+   property/cache/event identity and both directions of parent membership
+   after rejection.

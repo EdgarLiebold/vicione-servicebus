@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed saga state re-declaration after a property receives a same-name state
+  from another machine. All four direct/nested state and substate declarations
+  restore the registered state and its transition-event identity. Reparenting
+  now compares the registered parent instance, and replacing a substate
+  removes it from the former parent's hierarchy before registering it with
+  the new parent. Replacing a parent moves its registered children to the
+  new parent while preserving their identities and transition events. Ten
+  focused behavior cases cover foreign ownership, direct/nested reparenting
+  and the named-substate overload. Direct, nested and named attempts to move
+  a state beneath its own descendant now fail atomically before a hierarchy
+  cycle can form. The global A+ checkpoint remains open.
+
 - Fixed cron evaluation at the representable time limits. A search after
   `DateTimeOffset.MaxValue` now returns no next occurrence instead of
   overflowing, and `IsSatisfiedBy` returns false at the earliest UTC instant

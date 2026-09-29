@@ -4155,3 +4155,40 @@ global discovery or measurement is needed during this packet.
   that the original UTC-10 test did not protect all supported negative zone
   offsets, and that all three new requirement variants needed JSON projection.
   Both findings are included in the current implementation/checklist.
+# T118 — saga state declaration ownership
+
+- T114's full 33-profile run measured 785/850 lines and 325/416 branches in
+  `ViciOneServiceBusStateMachine.cs`, the largest single-source branch gap.
+  Many uncovered paths are declaration and re-declaration paths. Existing
+  state storage/runtime tests prove normal registration and execution but do
+  not compare a state property's reference to the machine's cached state
+  after a same-name foreign state is assigned.
+- Four declaration forms have the same ownership risk: direct State,
+  containing-object State, direct SubState, containing-object SubState. Their
+  short-circuit checks compare names (and parent names), so a foreign state
+  with matching names can make the method return without restoring the
+  machine's own registered state. This leaves the property pointing at the
+  foreign machine while `GetState` and transition event caches retain the
+  original owner. Preserve the registered state and transition-event
+  identities when re-declaring; reject foreign reference adoption.
+- The T98 Microsoft Roslyn static pairing maps this source to 27 test files,
+  including state machine configuration tests; it is a static location aid.
+  Use the existing public machine/state contracts and a separate machine
+  instance as the foreign source. Avoid reflection-only assertions.
+- Apply Microsoft `code-testing-agent` inline Research → Plan → Implement,
+  `test-gap-analysis` to check a name-only mutant, `assertion-quality` for
+  identity and effect assertions, and `run-tests` for focused MTP execution.
+- Independent Red Team found the adjacent named `SubState` overload comparing
+  only parent names, and a stale child left in the former parent's substate
+  set after reparenting. Both affect actual hierarchy and transitions. The
+  packet now includes named and property reparenting with assertions on
+  parent identity, cache/event identity and both parent membership sets.
+- A second Red Team pass exposed parent replacement leaving already registered
+  direct and nested children attached to the old same-name parent. Preserve
+  those child instances and move their hierarchy links to the newly
+  registered parent; test both children before invoking named re-declaration.
+- A third Red Team pass found a cycle if a state is made a substate of its own
+  descendant. Validate before constructing the new state, because the
+  constructor already links it to the proposed parent. Direct, nested and
+  named tests assert exact rejection and both directed hierarchy memberships
+  after the throw, ruling out a phantom parent added before validation.

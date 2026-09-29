@@ -798,10 +798,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var propertyValue = property.GetValue(this);
 
-        // A matching initialized property already represents the declared state.
-        var existingState = propertyValue as StateMachineState;
-        if (name.Equals(existingState?.Name))
+        if (TryGetState(name, out IState<TInstance>? registeredState) &&
+            registeredState is StateMachineState existingState && existingState.SuperState == null)
+        {
+            if (!ReferenceEquals(propertyValue, existingState))
+                InitializeState(this, property, existingState);
             return;
+        }
 
         var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers);
 
@@ -827,9 +830,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var name = $"{property.Name}.{stateProperty.Name}";
 
-        var existingState = GetStateProperty(stateProperty, propertyValue);
-        if (name.Equals(existingState?.Name))
+        var propertyState = GetStateProperty(stateProperty, propertyValue);
+        if (TryGetState(name, out IState<TInstance>? registeredState) &&
+            registeredState is StateMachineState existingState && existingState.SuperState == null)
+        {
+            if (!ReferenceEquals(propertyState, existingState))
+                InitializeStateProperty(stateProperty, propertyValue, existingState);
             return;
+        }
 
         var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers);
 
@@ -867,12 +875,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var name = property.Name;
 
+        ValidateSubstateParent(name, superStateInstance);
+
         var propertyValue = property.GetValue(this);
 
-        // A matching initialized property already represents the declared substate.
-        var existingState = propertyValue as StateMachineState;
-        if (name.Equals(existingState?.Name) && superState.Name.Equals(existingState?.SuperState?.Name))
+        if (TryGetState(name, out IState<TInstance>? registeredState) &&
+            registeredState is StateMachineState existingState &&
+            ReferenceEquals(existingState.SuperState, superStateInstance))
+        {
+            if (!ReferenceEquals(propertyValue, existingState))
+                InitializeState(this, property, existingState);
             return;
+        }
 
         var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers, superStateInstance);
 
@@ -892,10 +906,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         IState<TInstance> superStateInstance = GetState(superState.Name);
 
-        // A matching named state with the same parent already represents the declared substate.
+        ValidateSubstateParent(name, superStateInstance);
+
+        // The registered parent instance must match, including after a same-name parent is replaced.
         if (TryGetState(name, out IState<TInstance>? existingState) &&
             name.Equals(existingState?.Name) &&
-            superState.Name.Equals(existingState?.SuperState?.Name))
+            ReferenceEquals(existingState?.SuperState, superStateInstance))
             return existingState;
 
         var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers, superStateInstance);
@@ -927,9 +943,17 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var name = $"{property.Name}.{stateProperty.Name}";
 
-        var existingState = GetStateProperty(stateProperty, propertyValue);
-        if (name.Equals(existingState?.Name) && superState.Name.Equals(existingState?.SuperState?.Name))
+        ValidateSubstateParent(name, superStateInstance);
+
+        var propertyState = GetStateProperty(stateProperty, propertyValue);
+        if (TryGetState(name, out IState<TInstance>? registeredState) &&
+            registeredState is StateMachineState existingState &&
+            ReferenceEquals(existingState.SuperState, superStateInstance))
+        {
+            if (!ReferenceEquals(propertyState, existingState))
+                InitializeStateProperty(stateProperty, propertyValue, existingState);
             return;
+        }
 
         var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers, superStateInstance);
 
@@ -938,11 +962,26 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         SetState(name, state);
     }
 
+    void ValidateSubstateParent(string name, IState<TInstance> superState)
+    {
+        if (TryGetState(name, out IState<TInstance>? registeredState) &&
+            registeredState is StateMachineState existingState && existingState.HasState(superState))
+            throw new ArgumentException("A state cannot be a substate of itself or one of its descendants", nameof(superState));
+    }
+
     /// <summary>Adds the state, and state transition events, to the cache.</summary>
     /// <param name="name">The state-cache key.</param>
     /// <param name="state">The state whose four transition events are registered.</param>
     void SetState(string name, StateMachineState state)
     {
+        if (_stateCache.TryGetValue(name, out IState<TInstance>? previous) &&
+            !ReferenceEquals(previous, state) && previous is StateMachineState previousState)
+        {
+            (previousState.SuperState as StateMachineState)?.RemoveSubstate(previousState);
+            (state.SuperState as StateMachineState)?.AddSubstate(state);
+            previousState.MoveSubstatesTo(state);
+        }
+
         _stateCache[name] = state;
 
         _eventCache[state.BeforeEnter.Name] = new StateMachineEvent(state.BeforeEnter, true);
