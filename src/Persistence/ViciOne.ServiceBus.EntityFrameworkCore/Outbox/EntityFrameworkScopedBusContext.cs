@@ -138,6 +138,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             CapacityReservation reservation = await ReserveCapacityAsync(record.StorageSize, cancellationToken).ConfigureAwait(false);
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 EntityEntry<DurableSendRecord> entry = _dbContext.Add(record);
                 _staged.Add(id, new StagedSend(entry, record.StorageSize, record.GenerationToken));
             }

@@ -98,6 +98,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
         where TOutgoingMessage : class
     {
         ArgumentNullException.ThrowIfNull(context);
+        CancellationToken.ThrowIfCancellationRequested();
         CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
             ? cancellationToken
             : context.CancellationToken.CanBeCanceled
@@ -140,6 +141,8 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
             DueAt = context.Delay.HasValue ? now + context.Delay.Value : null,
         }.Validate();
 
+        CancellationToken.ThrowIfCancellationRequested();
+        operationCancellationToken.ThrowIfCancellationRequested();
         lock (_messagesLock)
             _messages.Add(message);
         return Task.CompletedTask;

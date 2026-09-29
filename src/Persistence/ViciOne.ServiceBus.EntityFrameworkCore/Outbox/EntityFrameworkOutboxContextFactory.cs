@@ -58,10 +58,16 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(next);
-        CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
-            ? cancellationToken
-            : context.CancellationToken;
-        operationCancellationToken.ThrowIfCancellationRequested();
+        CancellationToken deliveryCancellationToken = context.CancellationToken;
+        using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled
+            && deliveryCancellationToken.CanBeCanceled
+            && cancellationToken != deliveryCancellationToken
+                ? CancellationTokenSource.CreateLinkedTokenSource(deliveryCancellationToken, cancellationToken)
+                : null;
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? (cancellationToken.CanBeCanceled ? cancellationToken : deliveryCancellationToken);
+        deliveryCancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
         var messageId = context.GetOriginalMessageId() ?? throw new MessageException(typeof(T), "MessageId required to use the outbox");
         var updateDeliveryCount = true;
 
@@ -173,17 +179,31 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
             }
         }
 
-        var continueProcessing = true;
-        while (continueProcessing)
+        try
         {
-            var executionStrategy = _dbContext.Database.CreateExecutionStrategy();
-            continueProcessing = await EntityFrameworkExecutionStrategy.ExecuteAsync(
-                    _dbContext,
-                    executionStrategy,
-                    ExecuteAsync,
-                    operationCancellationToken)
-                .ConfigureAwait(false);
-            updateDeliveryCount = false;
+            var continueProcessing = true;
+            while (continueProcessing)
+            {
+                deliveryCancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
+                var executionStrategy = _dbContext.Database.CreateExecutionStrategy();
+                continueProcessing = await EntityFrameworkExecutionStrategy.ExecuteAsync(
+                        _dbContext,
+                        executionStrategy,
+                        ExecuteAsync,
+                        operationCancellationToken)
+                    .ConfigureAwait(false);
+                updateDeliveryCount = false;
+            }
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && operationCancellationToken.IsCancellationRequested
+            && exception.CancellationToken != deliveryCancellationToken
+            && exception.CancellationToken != cancellationToken)
+        {
+            deliveryCancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            throw;
         }
     }
 

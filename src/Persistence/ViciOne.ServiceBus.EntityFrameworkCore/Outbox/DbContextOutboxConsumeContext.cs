@@ -83,12 +83,17 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
     /// <returns>A task that completes when the consumption timestamp has been persisted.</returns>
     public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
-        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
+        CancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = LinkCancellation(cancellationToken);
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? ResolveOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
         _inboxState.Consumed = _timeProvider.GetUtcNow().UtcDateTime;
         _dbContext.Update(_inboxState);
 
-        await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
+        await AwaitWithCancellationSourceAsync(_dbContext.SaveChangesAsync(operationCancellationToken), cancellationToken, linkedCancellation)
+            .ConfigureAwait(false);
 
         LogContext.Debug?.Log("Outbox Consumed: {MessageId} {Consumed}", MessageId, _inboxState.Consumed);
     }
@@ -98,12 +103,17 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
     /// <returns>A task that completes when the delivery timestamp has been persisted.</returns>
     public override async Task SetDeliveredAsync(CancellationToken cancellationToken = default)
     {
-        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
+        CancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = LinkCancellation(cancellationToken);
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? ResolveOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
         _inboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
         _dbContext.Update(_inboxState);
 
-        await _dbContext.SaveChangesAsync(operationCancellationToken).ConfigureAwait(false);
+        await AwaitWithCancellationSourceAsync(_dbContext.SaveChangesAsync(operationCancellationToken), cancellationToken, linkedCancellation)
+            .ConfigureAwait(false);
 
         LogContext.Debug?.Log("Outbox Delivered: {MessageId} {Delivered}", MessageId, _inboxState.Delivered);
     }
@@ -113,16 +123,20 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
     /// <returns>The ordered outgoing messages, bounded by the configured delivery limit plus one look-ahead row.</returns>
     public override async Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
+        CancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = LinkCancellation(cancellationToken);
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? ResolveOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
         var lastSequenceNumber = LastSequenceNumber ?? 0;
 
-        List<OutboxMessage> messages = await _dbContext.Set<OutboxMessage>()
+        List<OutboxMessage> messages = await AwaitWithCancellationSourceAsync(_dbContext.Set<OutboxMessage>()
             .Where(x => x.InboxMessageId == MessageId && x.InboxConsumerId == ConsumerId && x.SequenceNumber > lastSequenceNumber)
             .OrderBy(x => x.SequenceNumber)
             .Take(Options.MessageDeliveryLimit + 1)
             .AsNoTracking()
-            .ToListAsync(operationCancellationToken).ConfigureAwait(false);
+            .ToListAsync(operationCancellationToken), cancellationToken, linkedCancellation).ConfigureAwait(false);
 
         for (var i = 0; i < messages.Count; i++)
             messages[i].Deserialize(SerializerContext);
@@ -137,6 +151,8 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
     public override Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
+        if (CancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(CancellationToken);
         CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
         if (operationCancellationToken.IsCancellationRequested)
             return Task.FromCanceled(operationCancellationToken);
@@ -152,11 +168,15 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
     /// <returns>A task that completes when the associated outbox rows have been deleted.</returns>
     public override async Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        CancellationToken operationCancellationToken = ResolveOperationCancellationToken(cancellationToken);
+        CancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = LinkCancellation(cancellationToken);
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? ResolveOperationCancellationToken(cancellationToken);
         operationCancellationToken.ThrowIfCancellationRequested();
-        var count = await _dbContext.Set<OutboxMessage>()
+        var count = await AwaitWithCancellationSourceAsync(_dbContext.Set<OutboxMessage>()
             .Where(x => x.InboxMessageId == MessageId && x.InboxConsumerId == ConsumerId)
-            .ExecuteDeleteAsync(operationCancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(operationCancellationToken), cancellationToken, linkedCancellation).ConfigureAwait(false);
 
         if (count > 0)
             LogContext.Debug?.Log("Outbox removed {Count} messages: {MessageId}", count, MessageId);
@@ -167,17 +187,19 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
     /// <param name="context">The send context to serialize and persist.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes after the serialized message has been staged in the DbContext.</returns>
-    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
+    public override async Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
+        CancellationToken.ThrowIfCancellationRequested();
         CancellationToken operationCancellationToken = cancellationToken.CanBeCanceled
             ? cancellationToken
             : context.CancellationToken.CanBeCanceled
                 ? context.CancellationToken
                 : CancellationToken;
-        if (operationCancellationToken.IsCancellationRequested)
-            return Task.FromCanceled(operationCancellationToken);
+        operationCancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = LinkCancellation(operationCancellationToken);
+        CancellationToken effectiveCancellationToken = linkedCancellation?.Token ?? operationCancellationToken;
 
         PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
         if (admissionRuntime is null)
@@ -198,12 +220,55 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
             MessageId,
             ConsumerId,
             admittedBody: admittedBody);
-        return _writeCoordinator.ExecuteAsync(() =>
+        await AwaitWithCancellationSourceAsync(_writeCoordinator.ExecuteAsync(() =>
         {
             _dbContext.Add(message);
             return Task.CompletedTask;
-        }, operationCancellationToken);
+        }, effectiveCancellationToken), operationCancellationToken, linkedCancellation).ConfigureAwait(false);
     }
+
+    async Task AwaitWithCancellationSourceAsync(Task task, CancellationToken operationCancellationToken,
+        CancellationTokenSource? linkedCancellation)
+    {
+        try
+        {
+            await task.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && linkedCancellation.IsCancellationRequested
+            && exception.CancellationToken != CancellationToken
+            && exception.CancellationToken != operationCancellationToken)
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+            operationCancellationToken.ThrowIfCancellationRequested();
+            throw;
+        }
+    }
+
+    async Task<TResult> AwaitWithCancellationSourceAsync<TResult>(Task<TResult> task, CancellationToken operationCancellationToken,
+        CancellationTokenSource? linkedCancellation)
+    {
+        try
+        {
+            return await task.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && linkedCancellation.IsCancellationRequested
+            && exception.CancellationToken != CancellationToken
+            && exception.CancellationToken != operationCancellationToken)
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+            operationCancellationToken.ThrowIfCancellationRequested();
+            throw;
+        }
+    }
+
+    CancellationTokenSource? LinkCancellation(CancellationToken operationCancellationToken) =>
+        CancellationToken.CanBeCanceled
+        && operationCancellationToken.CanBeCanceled
+        && CancellationToken != operationCancellationToken
+            ? CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, operationCancellationToken)
+            : null;
 
     CancellationToken ResolveOperationCancellationToken(CancellationToken cancellationToken) =>
         cancellationToken.CanBeCanceled ? cancellationToken : CancellationToken;

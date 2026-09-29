@@ -156,6 +156,8 @@ public static class InMemoryOutboxTestContextFactory
                 case "AddConsumeTask":
                     _consumeTasks.Add((Task)args![0]!);
                     return null;
+                case "NotifyFaultedAsync":
+                    return Task.CompletedTask;
                 case "GetSendEndpointAsync":
                     return _receiveContext.SendEndpointProvider.GetSendEndpointAsync(
                         (Uri)args![0]!,

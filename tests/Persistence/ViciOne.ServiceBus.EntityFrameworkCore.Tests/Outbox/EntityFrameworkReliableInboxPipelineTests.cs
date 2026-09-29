@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Providers.Persistence;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox;
@@ -654,11 +656,226 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
             row => row.MessageId == preMessageId && row.ConsumerId == options.ConsumerId, fixture.CancellationToken));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "in-flight-outbox-admission-reports-delivery-cancellation-source")]
+    public async Task AddSend_WaitingForScopedOutboxWrite_ReportsDeliveryTokenWithoutStagingAsync(bool cancelDelivery)
+    {
+        var saveGate = new GatedReliableSaveInterceptor();
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync(saveGate);
+        using var delivery = new CancellationTokenSource();
+        using var operation = new CancellationTokenSource();
+        Guid outgoingId = Guid.NewGuid();
+        Guid messageId = Guid.NewGuid();
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            var outbox = scope.ServiceProvider.GetRequiredService<
+                EntityFrameworkScopedBusContext<IBus, ReliableInboxDbContext>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, delivery.Token, messageId: messageId);
+            var inbox = new ReliableInboxRecord
+            {
+                StoreKey = "test-in-flight-admission",
+                MessageId = messageId,
+                ConsumerId = options.ConsumerId,
+                ReceivedAt = DateTime.UtcNow,
+            };
+            var context = new EntityFrameworkReliableInboxContext<IBus, ReliableInboxDbContext, ReliableInboxCommand>(
+                input, options, scope.ServiceProvider, db, inbox, outbox, TimeProvider.System);
+            var outgoing = new MessageSendContext<AdmissionRecoveryEvent>(
+                new AdmissionRecoveryEvent(command.CorrelationId, "blocked-intent"), operation.Token)
+            {
+                MessageId = outgoingId,
+            };
+            saveGate.Enable();
+            Task heldWrite = outbox.CommitAsync(fixture.CancellationToken);
+            try
+            {
+                await saveGate.Entered.Task.WaitAsync(TimeSpan.FromSeconds(10), fixture.CancellationToken);
+                Task pending = context.AddSendAsync(outgoing, operation.Token);
+                Assert.False(pending.IsCompleted);
+                if (cancelDelivery)
+                    delivery.Cancel();
+                else
+                    operation.Cancel();
+                OperationCanceledException failure = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                    () => pending.WaitAsync(TimeSpan.FromSeconds(10), fixture.CancellationToken));
+                Assert.Equal(cancelDelivery ? delivery.Token : operation.Token, failure.CancellationToken);
+                Assert.Equal(cancelDelivery, delivery.IsCancellationRequested);
+                Assert.Equal(!cancelDelivery, operation.IsCancellationRequested);
+                Assert.Empty(db.ChangeTracker.Entries<DurableSendRecord>());
+            }
+            finally
+            {
+                saveGate.Release();
+                await heldWrite.WaitAsync(TimeSpan.FromSeconds(10), fixture.CancellationToken);
+            }
+        }
+        await using ReliableInboxDbContext verification = fixture.CreateContext();
+        Assert.False(await verification.Set<DurableSendRecord>().AnyAsync(
+            row => row.Id == outgoingId, fixture.CancellationToken));
+        Assert.Equal(0, fixture.Events.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "cancellation-during-second-payload-admission-rejects-staging")]
+    public async Task SecondIntent_CanceledDuringSerialization_ThrowsBeforeStagingAndRollsBackAsync()
+    {
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
+        using var delivery = new CancellationTokenSource();
+        using var operation = new CancellationTokenSource();
+        Guid messageId = Guid.NewGuid();
+        Guid firstId = Guid.NewGuid();
+        Guid secondId = Guid.NewGuid();
+        var probe = new SerializationCancellationProbe(delivery);
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        OperationCanceledException? admissionFailure = null;
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, delivery.Token, messageId: messageId);
+            OperationCanceledException failure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(async context =>
+                {
+                    var first = new MessageSendContext<AdmissionRecoveryEvent>(
+                        new AdmissionRecoveryEvent(command.CorrelationId, "first-intent"), operation.Token)
+                    {
+                        MessageId = firstId,
+                        DestinationAddress = new Uri("loopback://reliable-inbox/first"),
+                        Serializer = ServiceBusMetadataJson.MessageSerializer,
+                    };
+                    await context.AddSendAsync(first, operation.Token);
+                    Assert.Equal(firstId, Assert.Single(db.ChangeTracker.Entries<DurableSendRecord>()).Entity.Id);
+                    var second = new MessageSendContext<SerializationCancellationEvent>(
+                        new SerializationCancellationEvent(probe), operation.Token)
+                    {
+                        MessageId = secondId,
+                        DestinationAddress = new Uri("loopback://reliable-inbox/second"),
+                        Serializer = ServiceBusMetadataJson.MessageSerializer,
+                    };
+                    admissionFailure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                        context.AddSendAsync(second, operation.Token));
+                    Assert.Equal(delivery.Token, admissionFailure.CancellationToken);
+                    Assert.Equal(firstId, Assert.Single(db.ChangeTracker.Entries<DurableSendRecord>()).Entity.Id);
+                    throw admissionFailure;
+                }), operation.Token));
+            Assert.Same(admissionFailure, failure);
+            Assert.True(probe.Calls > 0);
+            Assert.False(operation.IsCancellationRequested);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+        await using ReliableInboxDbContext verification = fixture.CreateContext();
+        Assert.False(await verification.Set<ReliableInboxRecord>().AnyAsync(
+            row => row.MessageId == messageId && row.ConsumerId == options.ConsumerId, fixture.CancellationToken));
+        Assert.False(await verification.Set<DurableSendRecord>().AnyAsync(
+            row => row.Id == firstId || row.Id == secondId, fixture.CancellationToken));
+        Assert.Equal(0, fixture.Events.Count);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-RELIABLE-INBOX-PIPELINE", "canceled-delivery-rejects-second-intent-and-rolls-back-first")]
+    public async Task CanceledDelivery_RejectsSecondIntentAndRollsBackFirstAsync()
+    {
+        await using ReliableInboxFixture fixture = await ReliableInboxFixture.CreateAsync();
+        using var delivery = new CancellationTokenSource();
+        using var operation = new CancellationTokenSource();
+        Guid messageId = Guid.NewGuid();
+        Guid outgoingId = Guid.NewGuid();
+        Guid rejectedId = Guid.NewGuid();
+        var command = new ReliableInboxCommand(Guid.NewGuid(), FailuresBeforeSuccess: 0);
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = Guid.NewGuid(),
+            ConsumerType = nameof(ReliableInboxCommandConsumer),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        OperationCanceledException? admissionFailure = null;
+        await using (AsyncServiceScope scope = fixture.Services.CreateAsyncScope())
+        {
+            ReliableInboxDbContext db = scope.ServiceProvider.GetRequiredService<ReliableInboxDbContext>();
+            IPublishEndpoint publisher = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            var factory = scope.ServiceProvider.GetRequiredService<
+                IOutboxContextFactory<EntityFrameworkReliableInboxScope<IBus, ReliableInboxDbContext>>>();
+            ConsumeContext<ReliableInboxCommand> input = InMemoryOutboxTestContextFactory.Create(
+                command, delivery.Token, messageId: messageId);
+            OperationCanceledException failure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                factory.SendAsync(input, options, Pipe.ExecuteAwaited<OutboxConsumeContext<ReliableInboxCommand>>(async context =>
+                {
+                    db.BusinessRecords.Add(new ReliableBusinessRecord { Id = command.CorrelationId, Value = "canceled" });
+                    await publisher.PublishAsync(new AdmissionRecoveryEvent(command.CorrelationId, "first-intent"),
+                        send => send.MessageId = outgoingId, operation.Token);
+                    Assert.Equal(outgoingId, Assert.Single(db.ChangeTracker.Entries<DurableSendRecord>()).Entity.Id);
+                    delivery.Cancel();
+                    var rejected = new MessageSendContext<AdmissionRecoveryEvent>(
+                        new AdmissionRecoveryEvent(command.CorrelationId, "second-intent"), operation.Token)
+                    {
+                        MessageId = rejectedId,
+                    };
+                    admissionFailure = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+                        context.AddSendAsync(rejected, operation.Token));
+                    throw admissionFailure;
+                }), operation.Token));
+            Assert.Same(admissionFailure, failure);
+            Assert.Equal(delivery.Token, failure.CancellationToken);
+            Assert.Empty(db.ChangeTracker.Entries());
+        }
+        await using ReliableInboxDbContext verification = fixture.CreateContext();
+        Assert.False(await verification.BusinessRecords.AnyAsync(row => row.Id == command.CorrelationId, fixture.CancellationToken));
+        Assert.False(await verification.Set<ReliableInboxRecord>().AnyAsync(
+            row => row.MessageId == messageId && row.ConsumerId == options.ConsumerId, fixture.CancellationToken));
+        Assert.False(await verification.Set<DurableSendRecord>().AnyAsync(row => row.Id == outgoingId, fixture.CancellationToken));
+        Assert.False(await verification.Set<DurableSendRecord>().AnyAsync(row => row.Id == rejectedId, fixture.CancellationToken));
+        Assert.Equal(0, fixture.Events.Count);
+    }
+
     public sealed record ReliableInboxCommand(Guid CorrelationId, int FailuresBeforeSuccess);
 
     public sealed record ReliableInboxEvent(Guid CorrelationId);
 
     public sealed record AdmissionRecoveryEvent(Guid CorrelationId, string Text);
+
+    public sealed class SerializationCancellationProbe(CancellationTokenSource delivery)
+    {
+        public CancellationTokenSource Delivery { get; } = delivery;
+        public int Calls;
+    }
+
+    public sealed class SerializationCancellationEvent(SerializationCancellationProbe probe)
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public SerializationCancellationProbe Probe { get; } = probe;
+
+        public string Text
+        {
+            get
+            {
+                Interlocked.Increment(ref Probe.Calls);
+                Probe.Delivery.Cancel();
+                return "cancel-during-serialization";
+            }
+        }
+    }
 
     public sealed class ReliableInboxCommandConsumer(
         ReliableInboxDbContext dbContext,
@@ -742,6 +959,29 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
 
         public Task<ReliableInboxEvent> ReadAsync(TimeSpan timeout, CancellationToken cancellationToken) =>
             _events.Reader.ReadAsync(cancellationToken).AsTask().WaitAsync(timeout, cancellationToken);
+    }
+
+    sealed class GatedReliableSaveInterceptor : SaveChangesInterceptor
+    {
+        bool _enabled;
+        readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public TaskCompletionSource Entered { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public void Enable() => _enabled = true;
+
+        public void Release() => _release.TrySetResult();
+
+        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        {
+            if (_enabled)
+            {
+                Entered.TrySetResult();
+                await _release.Task.ConfigureAwait(false);
+            }
+            return result;
+        }
     }
 
     sealed class ReliableInboxFixture : IAsyncDisposable
@@ -834,6 +1074,7 @@ public sealed class EntityFrameworkReliableInboxPipelineTests
                     reliable.AddMessageContract<ReliableInboxCommand>("reliable-inbox-command");
                     reliable.AddMessageContract<ReliableInboxEvent>("reliable-inbox-event");
                     reliable.AddMessageContract<AdmissionRecoveryEvent>("admission-recovery-event");
+                    reliable.AddMessageContract<SerializationCancellationEvent>("serialization-cancellation-event");
                 });
             });
 

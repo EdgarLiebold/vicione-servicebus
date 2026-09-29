@@ -93,7 +93,7 @@ internal sealed class EntityFrameworkReliableInboxContext<TBus, TDbContext, TMes
     public override Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default) =>
         CompletedOrCanceledAsync(ResolveOperationCancellationToken(cancellationToken));
 
-    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
+    public override async Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -102,7 +102,27 @@ internal sealed class EntityFrameworkReliableInboxContext<TBus, TDbContext, TMes
             : context.CancellationToken.CanBeCanceled
                 ? context.CancellationToken
                 : CancellationToken;
-        return _outbox.AddSendAsync(context, operationCancellationToken);
+        CancellationToken.ThrowIfCancellationRequested();
+        operationCancellationToken.ThrowIfCancellationRequested();
+        using CancellationTokenSource? linkedCancellation = CancellationToken.CanBeCanceled
+            && operationCancellationToken.CanBeCanceled
+            && CancellationToken != operationCancellationToken
+                ? CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, operationCancellationToken)
+                : null;
+        try
+        {
+            await _outbox.AddSendAsync(context, linkedCancellation?.Token ?? operationCancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (linkedCancellation is not null
+            && linkedCancellation.IsCancellationRequested
+            && exception.CancellationToken != CancellationToken
+            && exception.CancellationToken != operationCancellationToken)
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+            operationCancellationToken.ThrowIfCancellationRequested();
+            throw;
+        }
     }
 
     static Task CompletedOrCanceledAsync(CancellationToken cancellationToken) =>

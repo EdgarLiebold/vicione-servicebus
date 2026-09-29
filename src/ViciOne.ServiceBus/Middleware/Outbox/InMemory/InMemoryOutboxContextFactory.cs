@@ -35,9 +35,16 @@ internal sealed class InMemoryOutboxContextFactory :
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(next);
 
-        using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, context.CancellationToken);
-        CancellationToken operationCancellationToken = linkedCancellation.Token;
-        operationCancellationToken.ThrowIfCancellationRequested();
+        CancellationToken deliveryCancellationToken = context.CancellationToken;
+        using CancellationTokenSource? linkedCancellation = cancellationToken.CanBeCanceled
+            && deliveryCancellationToken.CanBeCanceled
+            && cancellationToken != deliveryCancellationToken
+                ? CancellationTokenSource.CreateLinkedTokenSource(deliveryCancellationToken, cancellationToken)
+                : null;
+        CancellationToken operationCancellationToken = linkedCancellation?.Token
+            ?? (cancellationToken.CanBeCanceled ? cancellationToken : deliveryCancellationToken);
+        deliveryCancellationToken.ThrowIfCancellationRequested();
+        cancellationToken.ThrowIfCancellationRequested();
 
         var updateDeliveryCount = true;
         var continueProcessing = true;
@@ -46,8 +53,23 @@ internal sealed class InMemoryOutboxContextFactory :
 
         while (continueProcessing)
         {
-            InMemoryInboxMessage inboxMessage =
-                await _messageRepository.LockAsync(messageId, options.ConsumerId, operationCancellationToken).ConfigureAwait(false);
+            deliveryCancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            InMemoryInboxMessage inboxMessage;
+            try
+            {
+                inboxMessage = await _messageRepository.LockAsync(
+                    messageId, options.ConsumerId, operationCancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException exception) when (linkedCancellation is not null
+                && operationCancellationToken.IsCancellationRequested
+                && exception.CancellationToken != deliveryCancellationToken
+                && exception.CancellationToken != cancellationToken)
+            {
+                deliveryCancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
+                throw;
+            }
 
             try
             {
