@@ -1,5 +1,22 @@
 # A+ remediation test status
 
+## T143 — scalar property metadata and case-distinct hiding — 29 September 2026
+
+Red-first regressions reproduced public property-cache construction failing
+on indexers and a message type projection retaining both `Item` and `item`
+from a base/derived hierarchy. The public caches and message type projection
+now discard indexers before name grouping; the latter groups names with the
+ordinal case-insensitive rule used by downstream caches. The tests cover both
+access policies, one- and two-parameter indexers, a hidden base scalar,
+generic and runtime message projections, selected declaring types, and real
+read/write behavior. A Core regression also exercises the downstream read and
+write property caches on the case-distinct hierarchy. Focused Abstractions
+and Core groups pass 11/11 and 9/9. Independent read-only adversarial review
+found and then verified closure of the case-distinct duplicate-key defect;
+final verdict is PASS with no concrete P1/P2 in this packet. The complete
+Abstractions and Core projects pass 979/979 and 7,371/7,371. Exact-commit
+checks follow.
+
 ## T142 — test-harness Activity lifecycle ownership — 29 September 2026
 
 Two timeline-diagnostic counterprobes failed red-first: a throwing root-start

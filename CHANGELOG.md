@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Property metadata caches now skip indexers before selecting scalar members.
+  Message type metadata also selects case-distinct hidden properties using
+  ordinal case-insensitive names, so runtime read and write caches can use the
+  derived member without duplicate-key failures.
+
 - Completed the test harness's Activity ownership path. Timeline diagnostics
   now survive hostile start and stop observers without leaking their listener;
   the idle tracker keeps its root trace current after a reentrant start

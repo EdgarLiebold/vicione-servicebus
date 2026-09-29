@@ -128,6 +128,21 @@ public sealed class PropertyCacheContractTests
         Assert.Equal("generated", read.Get(target));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-CACHE", "case-distinct-hidden-property-access")]
+    public void CaseDistinctHiddenProperty_UsesDerivedMemberWithoutDuplicateKeyFailure()
+    {
+        IReadProperty<CaseDerivedTarget, string> read = ReadPropertyCache<CaseDerivedTarget>.GetProperty<string>("ITEM");
+        IWriteProperty<CaseDerivedTarget, string> write = WritePropertyCache<CaseDerivedTarget>.GetProperty<string>("item");
+        var target = new CaseDerivedTarget();
+
+        write.Set(target, "derived-updated");
+
+        Assert.Equal("derived-updated", read.Get(target));
+        Assert.Equal("derived-updated", target.item);
+        Assert.Equal("base", ((CaseBaseTarget)target).Item);
+    }
+
     private sealed class CacheTarget
     {
         public string Name { get; set; } = string.Empty;
@@ -136,6 +151,16 @@ public sealed class PropertyCacheContractTests
     private sealed class UnrelatedTarget
     {
         public string Name { get; set; } = string.Empty;
+    }
+
+    private class CaseBaseTarget
+    {
+        public string Item { get; set; } = "base";
+    }
+
+    private sealed class CaseDerivedTarget : CaseBaseTarget
+    {
+        public string item { get; set; } = "derived";
     }
 
     public interface InterfaceCacheTarget

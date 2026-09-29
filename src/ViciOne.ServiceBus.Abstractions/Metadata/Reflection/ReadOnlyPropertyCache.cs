@@ -38,7 +38,7 @@ public class ReadOnlyPropertyCache<T> : IReadOnlyPropertyCache<T>
         bool includeNonPublic = PropertyAccessorFactory.IncludeNonPublic(accessPolicy);
 
         return typeof(T).GetReadableInstanceProperties()
-            .Where(property => property.GetGetMethod(includeNonPublic) != null)
+            .Where(property => property.GetIndexParameters().Length == 0 && property.GetGetMethod(includeNonPublic) != null)
             .GroupBy(property => property.Name, StringComparer.OrdinalIgnoreCase)
             .Select(group => group.Last())
             .Select(property => new ReadOnlyProperty<T>(property, accessPolicy))

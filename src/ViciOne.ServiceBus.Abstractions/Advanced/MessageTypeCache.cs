@@ -199,7 +199,8 @@ public sealed class MessageTypeCache<T> :
             return Array.AsReadOnly(Array.Empty<PropertyInfo>());
 
         PropertyInfo[] properties = type.GetReadableInstanceProperties()
-            .GroupBy(x => x.Name)
+            .Where(property => property.GetIndexParameters().Length == 0)
+            .GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
             .Select(x => x.Last())
             .ToArray();
 

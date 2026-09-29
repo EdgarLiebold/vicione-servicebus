@@ -1948,6 +1948,20 @@
    {
       "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Indexer_DoesNotPreventCachingOrUsingScalarProperties",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "indexer-does-not-prevent-scalar-property-access"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CaseDistinctHiddenProperty_SelectsDerivedScalarForEveryProjection",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "case-insensitive-hidden-property-selection"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "ExpressionOperations_UseTheSameCachedProperty",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
       "variantKey" : "expression-get-set"

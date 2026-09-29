@@ -42,7 +42,8 @@ public class ReadWritePropertyCache<T> : IReadWritePropertyCache<T>
         bool includeNonPublic = PropertyAccessorFactory.IncludeNonPublic(accessPolicy);
 
         return typeof(T).GetReadableInstanceProperties()
-            .Where(property => property.GetGetMethod(includeNonPublic) != null && property.GetSetMethod(includeNonPublic) != null)
+            .Where(property => property.GetIndexParameters().Length == 0
+                && property.GetGetMethod(includeNonPublic) != null && property.GetSetMethod(includeNonPublic) != null)
             .GroupBy(property => property.Name, StringComparer.OrdinalIgnoreCase)
             .Select(group => group.Last())
             .Select(property => new ReadWriteProperty<T>(property, accessPolicy))

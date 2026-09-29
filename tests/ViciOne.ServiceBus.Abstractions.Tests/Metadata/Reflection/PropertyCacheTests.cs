@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -87,6 +88,58 @@ public sealed class PropertyCacheTests
         Assert.Null(((BaseTarget)target).Value);
     }
 
+    [Theory]
+    [InlineData(PropertyAccessPolicy.PublicOnly)]
+    [InlineData(PropertyAccessPolicy.IncludeNonPublic)]
+    [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-CACHE", "indexer-does-not-prevent-scalar-property-access")]
+    public void Indexer_DoesNotPreventCachingOrUsingScalarProperties(PropertyAccessPolicy policy)
+    {
+        var readCache = new ReadOnlyPropertyCache<IndexedTarget>(policy);
+        var writeCache = new ReadWritePropertyCache<IndexedTarget>(policy);
+        var target = new IndexedTarget();
+
+        Assert.Equal(2, readCache.Count());
+        Assert.Equal(2, writeCache.Count());
+        Assert.Equal([nameof(IndexedBaseTarget.Item), nameof(IndexedBaseTarget.Name)],
+            MessageTypeCache<IndexedTarget>.Properties.Select(property => property.Name).Order(StringComparer.Ordinal));
+        Assert.Equal([nameof(IndexedBaseTarget.Item), nameof(IndexedBaseTarget.Name)],
+            MessageTypeCache.GetProperties(typeof(IndexedTarget)).Select(property => property.Name).Order(StringComparer.Ordinal));
+
+        ReadWriteProperty<IndexedTarget> property = writeCache[nameof(IndexedTarget.Name)];
+        property.Set(target, "updated");
+        ReadWriteProperty<IndexedTarget> baseItem = writeCache[nameof(IndexedBaseTarget.Item)];
+        baseItem.Set(target, "base-updated");
+
+        Assert.Equal("updated", target.Name);
+        Assert.Equal("updated", readCache.Single(item => item.Property.Name == nameof(IndexedTarget.Name)).Get(target));
+        Assert.Same(property, writeCache[nameof(IndexedTarget.Name)]);
+        Assert.Equal(typeof(IndexedBaseTarget), baseItem.Property.DeclaringType);
+        Assert.Equal("base-updated", ((IndexedBaseTarget)target).Item);
+        Assert.Equal("base-updated", readCache.Single(item => item.Property.Name == nameof(IndexedBaseTarget.Item)).Get(target));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-CACHE", "case-insensitive-hidden-property-selection")]
+    public void CaseDistinctHiddenProperty_SelectsDerivedScalarForEveryProjection()
+    {
+        var readCache = new ReadOnlyPropertyCache<CaseDerivedTarget>();
+        var writeCache = new ReadWritePropertyCache<CaseDerivedTarget>();
+        var target = new CaseDerivedTarget();
+
+        Assert.Single(readCache);
+        Assert.Single(writeCache);
+        Assert.Equal(typeof(CaseDerivedTarget), readCache.Single().Property.DeclaringType);
+        Assert.Equal(typeof(CaseDerivedTarget), writeCache.Single().Property.DeclaringType);
+        Assert.Equal(typeof(CaseDerivedTarget), Assert.Single(MessageTypeCache<CaseDerivedTarget>.Properties).DeclaringType);
+        Assert.Equal(typeof(CaseDerivedTarget), Assert.Single(MessageTypeCache.GetProperties(typeof(CaseDerivedTarget))).DeclaringType);
+
+        writeCache["ITEM"].Set(target, "derived-updated");
+
+        Assert.Equal("derived-updated", readCache.Single().Get(target));
+        Assert.Equal("derived-updated", target.item);
+        Assert.Equal("base", ((CaseBaseTarget)target).Item);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-CACHE", "expression-get-set")]
     public void ExpressionOperations_UseTheSameCachedProperty()
@@ -144,5 +197,37 @@ public sealed class PropertyCacheTests
     private sealed class DerivedTarget : BaseTarget
     {
         public new string? Value { get; set; }
+    }
+
+    private class IndexedBaseTarget
+    {
+        public string Item { get; set; } = "base";
+
+        public string Name { get; set; } = "initial";
+    }
+
+    private sealed class IndexedTarget : IndexedBaseTarget
+    {
+        public string this[int index]
+        {
+            get => index.ToString();
+            set { }
+        }
+
+        public string this[int row, int column]
+        {
+            get => (row + column).ToString();
+            set { }
+        }
+    }
+
+    private class CaseBaseTarget
+    {
+        public string Item { get; set; } = "base";
+    }
+
+    private sealed class CaseDerivedTarget : CaseBaseTarget
+    {
+        public string item { get; set; } = "derived";
     }
 }
