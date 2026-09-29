@@ -49,7 +49,7 @@ public static class SendContextExtensions
     {
         ArgumentNullException.ThrowIfNull(headers);
         ArgumentNullException.ThrowIfNull(exceptionContext);
-        Exception exception = exceptionContext.Exception.GetBaseException();
+        Exception exception = GetSafeBaseException(exceptionContext.Exception);
 
         string exceptionMessage = ExceptionUtil.GetMessage(exception);
 
@@ -82,7 +82,7 @@ public static class SendContextExtensions
         ArgumentNullException.ThrowIfNull(adapter);
         ArgumentNullException.ThrowIfNull(headers);
         ArgumentNullException.ThrowIfNull(exceptionContext);
-        Exception exception = exceptionContext.Exception.GetBaseException();
+        Exception exception = GetSafeBaseException(exceptionContext.Exception);
 
         string exceptionMessage = ExceptionUtil.GetMessage(exception);
 
@@ -102,6 +102,18 @@ public static class SendContextExtensions
 
         if (exceptionContext.TryGetPayload(out RetryContext? retryContext) && retryContext.RetryCount > 0)
             adapter.Set(headers, MessageHeaders.FaultRetryCount, retryContext.RetryCount);
+    }
+
+    static Exception GetSafeBaseException(Exception original)
+    {
+        try
+        {
+            return original.GetBaseException() ?? original;
+        }
+        catch
+        {
+            return original;
+        }
     }
 
     /// <summary>Transfers the active consume scope, message causality, and application headers to an outgoing context.</summary>

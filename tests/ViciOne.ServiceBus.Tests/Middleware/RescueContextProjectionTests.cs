@@ -70,6 +70,27 @@ public sealed class RescueContextProjectionTests
         Assert.Equal(now.ToString("O"), rescue.ExceptionHeaders.Get<string>(MessageHeaders.FaultTimestamp));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RESCUE", "unsafe-base-exception-cannot-block-fault-headers")]
+    public void ReceiveProjection_UsesOriginalFailureWhenBaseExceptionOverrideIsUnsafe(bool throws)
+    {
+        ReceiveContext source = CreateReceiveContext(TimeProvider.System);
+        var failure = new UnsafeBaseException(throws);
+
+        ExceptionReceiveContext rescue = RescueContextTestFactory.Create(source, failure);
+        var dictionary = new Dictionary<string, object>();
+        var adapter = new DictionaryTransportSetHeaderAdapter(new StringHeaderValueConverter());
+        adapter.SetExceptionHeaders(dictionary, rescue);
+
+        Assert.Same(failure, rescue.Exception);
+        Assert.Equal(failure.Message, rescue.ExceptionHeaders.Get<string>(MessageHeaders.FaultMessage));
+        Assert.Equal(TypeCache.GetShortName(failure.GetType()), rescue.ExceptionHeaders.Get<string>(MessageHeaders.FaultExceptionType));
+        Assert.Equal(failure.Message, dictionary[MessageHeaders.FaultMessage]);
+        Assert.Equal(TypeCache.GetShortName(failure.GetType()), dictionary[MessageHeaders.FaultExceptionType]);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "projection-constructors-reject-null-inputs")]
     public void ProjectionFactories_RejectNullContextsAndFailures()
@@ -129,4 +150,11 @@ public sealed class RescueContextProjectionTests
     }
 
     private sealed class RescueConsumer;
+
+    private sealed class UnsafeBaseException(bool throws) : Exception("original failure")
+    {
+        public override Exception GetBaseException() => throws
+            ? throw new ApplicationException("unsafe base exception override")
+            : null!;
+    }
 }

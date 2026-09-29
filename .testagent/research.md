@@ -1,5 +1,25 @@
 # A+ remediation research
 
+## T126 receive fault ownership and cancellation
+
+Manual review covered `GenerateFaultFilter`, `ErrorTransportFilter`,
+`RethrowErrorTransportFilter`, `ReceivePipeDispatcher`, rescue projections,
+`SendContextExtensions` and related context/transport contracts. Red-first
+counterprobes confirmed that a failing Rethrow notification hid the original
+failure, a Rethrow delivery notified receive observers twice, cancellation was
+lost across fault endpoint resolution/send and error transport, and a custom
+`GetBaseException()` could prevent rescue projection before error movement.
+Adversarial review found that a throwing diagnostic logger could replace the
+dispatch failure and skip lock settlement. The test oracles use original
+exception identity, one observer notification, fault state, exact delivery
+token, no side effects after cancellation and one fault settlement. Three-stage
+transport/publication controls and an already-faulted canceled context reject
+mutations that drop the early guard or token forwarding.
+Follow-up inspection found that `BaseReceiveContext` logs before all three
+observer notifications; a throwing logger could suppress even a successfully
+recorded delivery or fault. The two fault forms failed red-first. A three-form
+test requires the exact recorded outcome and observer call despite logger failure.
+
 ## T125 observer and outbox fault ownership
 
 Manual review of `ObserverMessageFilter`, `OutboxMessagePipe`, their context

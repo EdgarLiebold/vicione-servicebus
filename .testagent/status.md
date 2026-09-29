@@ -1,5 +1,30 @@
 # A+ remediation test status
 
+## T126 — receive fault ownership and cancellation — 29 September 2026
+
+Red-first counterprobes confirmed lost original failure in the Rethrow path,
+two receive-fault observer calls for one failure, omitted delivery tokens in
+fault publication and error movement, and rescue projection failure on a
+throwing or null-returning `GetBaseException()` override. A further red-first
+test exposed that an observer failure followed by a throwing diagnostic logger
+could replace the dispatch failure and skip lock settlement. The Rethrow
+filter now returns the original failed task; the dispatcher calls the receive
+context's fault notification once, thereby recording fault state. Logger
+failure is isolated. Fault publishing and error transport observe delivery
+cancellation; both header overloads use the original exception when a custom
+base lookup is unsafe. A final three-form counterprobe showed that a throwing
+logger could also suppress consume-success, consume-fault or receive-fault
+observer notification in `BaseReceiveContext`; each diagnostic write is now
+isolated after state recording.
+
+Focused neighboring tests passed 21/21 before the final logger counterprobe,
+which passed 3/3 after the correction. The frozen complete Core suite passed
+7,267/7,267 and Abstractions passed 972/972, with zero failures or skips.
+Eight new requirement variants are mapped.
+Independent read-only Red Team re-review is PASS with no concrete remaining
+P1/P2 in this packet. No global Line/Branch/CRAP profile was repeated because
+the user accepts the current coverage and prioritizes product correctness.
+
 ## T125 — observer and outbox fault ownership — 29 September 2026
 
 The observer previously let fault notification or `OnError` hide the original

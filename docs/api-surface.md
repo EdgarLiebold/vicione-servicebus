@@ -93,6 +93,13 @@ owned by the downstream stage. If either reporting callback fails, the thrown
 aggregate retains the original failure followed by each additional failure.
 For an outbox commit failure, fault notification receives the original commit
 exception; if notification also fails, both causes remain observable.
+Receive-fault publication and error-queue movement use the delivery context's
+cancellation token. A canceled delivery cannot continue through a discard
+branch. In rethrow mode the receive dispatcher reports the original failure
+once, records the receive context as faulted and settles the receive lock with
+that same failure. Logger failures do not suppress consume or receive observer
+notifications. Fault-header generation falls back to the original exception
+if a custom base-exception lookup fails.
 
 ## Advanced SPI
 

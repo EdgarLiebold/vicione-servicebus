@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Middleware;
 
@@ -11,12 +10,9 @@ public class RethrowErrorTransportFilter :
     /// <param name="context">The context associated with the operation.</param>
     /// <param name="next">The next pipeline stage to invoke.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    public Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
-        if (!context.IsFaulted)
-            await context.NotifyFaultedAsync(context.Exception).ConfigureAwait(false);
-
-        context.Exception.Rethrow();
+        return Task.FromException(context.Exception);
     }
 
     /// <summary>Writes diagnostic information to the probe context.</summary>

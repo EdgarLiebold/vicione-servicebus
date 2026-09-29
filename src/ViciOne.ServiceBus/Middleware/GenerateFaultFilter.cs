@@ -23,11 +23,12 @@ public class GenerateFaultFilter :
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
+        context.CancellationToken.ThrowIfCancellationRequested();
         if (!context.IsFaulted)
         {
             await GenerateFaultAsync(context).ConfigureAwait(false);
 
-            await context.NotifyFaultedAsync(context.Exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(context.Exception, context.CancellationToken).ConfigureAwait(false);
         }
 
         await next.SendAsync(context).ConfigureAwait(false);
@@ -56,9 +57,9 @@ public class GenerateFaultFilter :
             ReceiveFault fault = new ReceiveFaultEvent(HostMetadataCache.Host, context.Exception, context.ContentType?.MediaType, messageId, messageTypes,
                 context.GetTimeProvider());
 
-            var faultEndpoint = await context.GetReceiveFaultEndpointAsync(consumeContext, requestId).ConfigureAwait(false);
+            var faultEndpoint = await context.GetReceiveFaultEndpointAsync(consumeContext, requestId, context.CancellationToken).ConfigureAwait(false);
 
-            await faultEndpoint.SendAsync(fault).ConfigureAwait(false);
+            await faultEndpoint.SendAsync(fault, context.CancellationToken).ConfigureAwait(false);
         }
     }
 }

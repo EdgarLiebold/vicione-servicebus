@@ -1,5 +1,25 @@
 # A+ remediation test plan
 
+## T126 receive fault ownership and cancellation
+
+1. Red-first test the Rethrow receive path through a dispatcher and shared
+   observer. Require the exact primary exception, one notification, fault
+   state, no downstream work and lock settlement. Keep a direct filter test
+   for original identity and downstream absence.
+2. Red-first test delivery cancellation before and during fault publication
+   and error transport, including an already-faulted context. Forward the
+   token to endpoint resolution, send, notification and message movement.
+3. Red-first test throwing and null-returning `GetBaseException()` overrides
+   through rescue projection and both fault-header overloads. Preserve the
+   original failure and header identity.
+4. Red-first test a failing receive observer together with a throwing logger;
+   require original exception and fault-lock settlement. Isolate diagnostic
+   logging, then run focused, full Core and Abstractions suites, read-only Red
+   Team re-review and requirement projection checks before commit/push.
+5. Prove the real receive context still calls the observer after a throwing
+   logger for success, consumer fault and receive fault. Isolate only the
+   diagnostic logging and repeat frozen Core verification and Red Team review.
+
 ## T125 observer and outbox fault ownership
 
 1. Red-first test independent fault and observer-error callbacks, including

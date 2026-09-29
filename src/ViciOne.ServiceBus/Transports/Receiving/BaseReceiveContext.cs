@@ -136,7 +136,14 @@ public abstract class BaseReceiveContext :
 
         Interlocked.Exchange(ref _isDelivered, 1);
 
-        context.LogConsumed(duration, consumerType);
+        try
+        {
+            context.LogConsumed(duration, consumerType);
+        }
+        catch
+        {
+            // A diagnostic logger cannot suppress delivery state or observer notification.
+        }
 
         return _receiveEndpointContext.ReceiveObservers.PostConsumeAsync(context, duration, consumerType)
             ?? throw new InvalidOperationException("The receive observer returned no post-consume task.");
@@ -162,15 +169,22 @@ public abstract class BaseReceiveContext :
 
         Interlocked.Exchange(ref _isFaulted, 1);
 
-        switch (exception)
+        try
         {
-            case OperationCanceledException canceled when canceled.CancellationToken == context.CancellationToken:
-                context.LogCanceled(duration, consumerType);
-                break;
+            switch (exception)
+            {
+                case OperationCanceledException canceled when canceled.CancellationToken == context.CancellationToken:
+                    context.LogCanceled(duration, consumerType);
+                    break;
 
-            default:
-                context.LogFaulted(duration, consumerType, exception);
-                break;
+                default:
+                    context.LogFaulted(duration, consumerType, exception);
+                    break;
+            }
+        }
+        catch
+        {
+            // A diagnostic logger cannot suppress fault metadata or observer notification.
         }
 
         GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
@@ -192,7 +206,14 @@ public abstract class BaseReceiveContext :
 
         Interlocked.Exchange(ref _isFaulted, 1);
 
-        this.LogFaulted(exception);
+        try
+        {
+            this.LogFaulted(exception);
+        }
+        catch
+        {
+            // A diagnostic logger cannot suppress the receive-fault observer.
+        }
 
         return _receiveEndpointContext.ReceiveObservers.ReceiveFaultAsync(this, exception)
             ?? throw new InvalidOperationException("The receive observer returned no receive-fault task.");

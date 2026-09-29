@@ -16,10 +16,11 @@ public class ErrorTransportFilter :
 
     async Task IFilter<ExceptionReceiveContext>.SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
+        context.CancellationToken.ThrowIfCancellationRequested();
         if (!context.TryGetPayload(out IErrorTransport? transport))
             throw new TransportException(context.InputAddress, $"The {nameof(IErrorTransport)} was not available on the {nameof(ReceiveContext)}.");
 
-        await transport.SendAsync(context).ConfigureAwait(false);
+        await transport.SendAsync(context, context.CancellationToken).ConfigureAwait(false);
 
         await next.SendAsync(context).ConfigureAwait(false);
     }

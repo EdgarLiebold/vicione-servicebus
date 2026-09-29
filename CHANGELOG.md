@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Corrected receive-fault cancellation and ownership. A canceled delivery now
+  stops fault publication and error-queue movement, and its token reaches
+  endpoint resolution, fault send, notification and error transport. The
+  rethrow mode reports the original receive fault once through the dispatcher,
+  which also records fault state; observer and diagnostic-logger failures no
+  longer prevent observer notification or lock settlement. Rescue fault headers fall back to the
+  original exception when a custom `GetBaseException()` throws or returns null.
+
 - Fixed observer and outbox failure ownership. An observer callback or consumed
   notification failure now retains its original cause even when fault
   notification or the observer error callback also fails; each reporting path

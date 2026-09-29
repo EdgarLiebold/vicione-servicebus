@@ -1,7 +1,9 @@
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Observers;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Mediator.Contexts;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
@@ -16,6 +18,32 @@ public sealed class ReceiveNotificationContractTests
     static readonly TimeSpan Duration = TimeSpan.FromTicks(87);
     const string ConsumerType = "notification-consumer";
     const string MessageType = "ViciOne.ServiceBus.Tests.Transports.Receiving.ReceiveNotificationContractTests+NotificationMessage";
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-NOTIFICATION", "logger-cannot-suppress-receive-notification")]
+    public async Task LoggerFailure_CannotSuppressTheRecordedOutcomeOrObserverAsync(int operation)
+    {
+        using var fixture = new Fixture(useMediator: false);
+        var failure = new InvalidOperationException("delivery failed");
+        var logger = new ThrowingLogger();
+        ILogContext? previous = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+
+        try
+        {
+            await NotifyAsync(fixture, operation, failure, TestContext.Current.CancellationToken);
+
+            AssertRecordedNotification(fixture, operation, failure);
+            Assert.Equal(1, logger.CallCount);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
 
     [Theory]
     [InlineData(false, false)]
@@ -455,6 +483,19 @@ public sealed class ReceiveNotificationContractTests
             if (ThrownException is { } exception)
                 throw exception;
             return ReturnedTask!;
+        }
+    }
+
+    sealed class ThrowingLogger : ILogger
+    {
+        public int CallCount { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            CallCount++;
+            throw new ApplicationException("diagnostic logger failed");
         }
     }
 

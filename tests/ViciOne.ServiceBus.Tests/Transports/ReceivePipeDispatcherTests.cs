@@ -1,11 +1,13 @@
 using System.Net.Mime;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Rescue;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 using Xunit;
@@ -14,6 +16,71 @@ namespace ViciOne.ServiceBus.Tests.Transports;
 
 public sealed class ReceivePipeDispatcherTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-FAULT", "rethrow-notifies-once-and-records-fault-before-settlement")]
+    public async Task RethrowFaultedMessage_ReportsOneOriginalFaultAndMarksDeliveryFaultedAsync()
+    {
+        var failure = new ExpectedPipelineException();
+        var observers = new ReceiveObservable();
+        var observer = new CountingReceiveObserver();
+        observers.Connect(observer);
+        var context = new TestReceiveContext(observers: observers);
+        var receiveLock = new RecordingReceiveLock();
+        var downstreamCalls = 0;
+        var filter = new RethrowErrorTransportFilter();
+        var dispatcher = CreateDispatcher(receive => filter.SendAsync(
+            RescueContextTestFactory.Create(receive, failure),
+            Pipe.Execute<ExceptionReceiveContext>(_ => downstreamCalls++)), observers);
+
+        ExpectedPipelineException actual = await Assert.ThrowsAsync<ExpectedPipelineException>(() =>
+            DispatchWithoutAmbientLoggingAsync(dispatcher, context, receiveLock));
+
+        Assert.Same(failure, actual);
+        Assert.Same(failure, receiveLock.Failure);
+        Assert.Same(context, observer.Context);
+        Assert.Same(failure, observer.Failure);
+        Assert.Equal(1, observer.FaultCount);
+        Assert.True(context.IsFaulted);
+        Assert.Equal(0, downstreamCalls);
+        Assert.Equal(0, receiveLock.CompletionCount);
+        Assert.Equal(1, receiveLock.FaultCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-DISPATCH", "fault-observer-and-logger-failures-cannot-skip-settlement")]
+    public async Task FaultObserverAndLoggerFailures_DoNotReplaceTheDispatchFailureOrSkipSettlementAsync()
+    {
+        var primary = new ExpectedPipelineException();
+        var observerFailure = new ExpectedObserverException();
+        var loggerFailure = new InvalidOperationException("diagnostic logger failed");
+        var receiveObservers = new ReceiveObservable();
+        var dispatcher = CreateDispatcher(_ => Task.FromException(primary), receiveObservers);
+        dispatcher.ConnectReceiveObserver(new FaultingReceiveObserver(observerFailure));
+        var context = new TestReceiveContext(observers: receiveObservers);
+        var receiveLock = new RecordingReceiveLock();
+        var logger = new ThrowingErrorLogger(loggerFailure);
+        ILogContext? previous = LogContext.Current;
+        LogContext.ConfigureCurrentLogContext(logger);
+
+        try
+        {
+            ExpectedPipelineException actual = await Assert.ThrowsAsync<ExpectedPipelineException>(() =>
+                dispatcher.DispatchAsync(context, receiveLock, TestContext.Current.CancellationToken));
+
+            Assert.Same(primary, actual);
+            Assert.Same(primary, receiveLock.Failure);
+            Assert.True(context.IsFaulted);
+            Assert.Equal(1, logger.CallCount);
+            Assert.Same(observerFailure, logger.ObservedFailure);
+            Assert.Equal(1, receiveLock.FaultCount);
+            Assert.Equal(0, receiveLock.CompletionCount);
+        }
+        finally
+        {
+            LogContext.Current = previous;
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -27,12 +94,13 @@ public sealed class ReceivePipeDispatcherTests
         var failure = new ExpectedPipelineException();
         var receiveLock = new OrderedReceiveLock(events);
         var observer = new OrderedReceiveObserver(events);
+        var receiveObservers = new ReceiveObservable();
         var dispatcher = CreateDispatcher(_ =>
         {
             events.Add("dispatch");
             dispatched.TrySetResult();
             return Task.CompletedTask;
-        });
+        }, receiveObservers);
         dispatcher.ConnectReceiveObserver(observer);
         dispatcher.ZeroActivity += () =>
         {
@@ -40,7 +108,7 @@ public sealed class ReceivePipeDispatcherTests
             return Task.CompletedTask;
         };
 
-        Task dispatch = DispatchWithoutAmbientLoggingAsync(dispatcher, new TestReceiveContext(work.Task), receiveLock);
+        Task dispatch = DispatchWithoutAmbientLoggingAsync(dispatcher, new TestReceiveContext(work.Task, receiveObservers), receiveLock);
         try
         {
             await dispatched.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
@@ -87,7 +155,7 @@ public sealed class ReceivePipeDispatcherTests
 
         events.Clear();
         var successorLock = new OrderedReceiveLock(events);
-        await DispatchWithoutAmbientLoggingAsync(dispatcher, new TestReceiveContext(), successorLock)
+        await DispatchWithoutAmbientLoggingAsync(dispatcher, new TestReceiveContext(observers: receiveObservers), successorLock)
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(new[] { "pre", "validate", "dispatch", "complete", "post", "zero" }, events);
@@ -105,12 +173,13 @@ public sealed class ReceivePipeDispatcherTests
         var pipelineFailure = new ExpectedPipelineException();
         var observerFailure = new ExpectedObserverException();
         var receiveLock = new RecordingReceiveLock();
-        var dispatcher = CreateDispatcher(_ => Task.FromException(pipelineFailure));
+        var receiveObservers = new ReceiveObservable();
+        var dispatcher = CreateDispatcher(_ => Task.FromException(pipelineFailure), receiveObservers);
         dispatcher.ConnectReceiveObserver(new FaultingReceiveObserver(observerFailure));
         dispatcher.ZeroActivity += () => Task.FromException(new ExpectedZeroActivityException());
 
         Exception actual = await Assert.ThrowsAsync<ExpectedPipelineException>(() =>
-            DispatchWithoutAmbientLoggingAsync(dispatcher, new TestReceiveContext(), receiveLock));
+            DispatchWithoutAmbientLoggingAsync(dispatcher, new TestReceiveContext(observers: receiveObservers), receiveLock));
 
         Assert.Same(pipelineFailure, actual);
         Assert.Same(pipelineFailure, receiveLock.Failure);
@@ -166,12 +235,12 @@ public sealed class ReceivePipeDispatcherTests
         Assert.Equal(0, dispatcher.ActiveDispatchCount);
     }
 
-    private static ReceivePipeDispatcher CreateDispatcher(Func<ReceiveContext, Task> dispatch)
+    private static ReceivePipeDispatcher CreateDispatcher(Func<ReceiveContext, Task> dispatch, ReceiveObservable? observers = null)
     {
         var hostConfiguration = DispatchProxy.Create<IHostConfiguration, HostConfigurationProxy>();
         return new ReceivePipeDispatcher(
             new CallbackReceivePipe(dispatch),
-            new ReceiveObservable(),
+            observers ?? new ReceiveObservable(),
             hostConfiguration,
             new Uri("loopback://localhost/orders"));
     }
@@ -231,8 +300,9 @@ public sealed class ReceivePipeDispatcherTests
         }
     }
 
-    private sealed class TestReceiveContext(Task? completion = null) : BasePipeContext, ReceiveContext
+    private sealed class TestReceiveContext(Task? completion = null, ReceiveObservable? observers = null) : BasePipeContext, ReceiveContext
     {
+        private bool _isFaulted;
         public TimeSpan ElapsedTime => TimeSpan.Zero;
         public Uri InputAddress { get; } = new("loopback://localhost/orders");
         public ContentType ContentType { get; } = new("application/json");
@@ -240,7 +310,7 @@ public sealed class ReceivePipeDispatcherTests
         public Headers TransportHeaders { get; } = new JsonTransportHeaders(new DictionaryHeaderProvider());
         public Task ReceiveCompleted => completion ?? Task.CompletedTask;
         public bool IsDelivered => false;
-        public bool IsFaulted => false;
+        public bool IsFaulted => _isFaulted;
         public ISendEndpointProvider SendEndpointProvider => throw new NotSupportedException();
         public IPublishEndpointProvider PublishEndpointProvider => throw new NotSupportedException();
         public bool PublishFaults => false;
@@ -254,7 +324,12 @@ public sealed class ReceivePipeDispatcherTests
             Exception exception, CancellationToken cancellationToken = default)
             where TMessage : class => Task.CompletedTask;
 
-        public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            _isFaulted = true;
+            return observers?.ReceiveFaultAsync(this, exception) ?? Task.CompletedTask;
+        }
 
         public void AddReceiveTask(Task task)
         {
@@ -304,6 +379,41 @@ public sealed class ReceivePipeDispatcherTests
             where T : class => Task.CompletedTask;
 
         public Task ReceiveFaultAsync(ReceiveContext context, Exception exception) => Task.FromException(failure);
+    }
+
+    private sealed class CountingReceiveObserver : IReceiveObserver
+    {
+        public ReceiveContext? Context { get; private set; }
+        public Exception? Failure { get; private set; }
+        public int FaultCount { get; private set; }
+
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
+        public Task PostReceiveAsync(ReceiveContext context) => Task.CompletedTask;
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType) where T : class => Task.CompletedTask;
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+            where T : class => Task.CompletedTask;
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
+        {
+            Context = context;
+            Failure = exception;
+            FaultCount++;
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class ThrowingErrorLogger(Exception failure) : ILogger
+    {
+        public int CallCount { get; private set; }
+        public Exception? ObservedFailure { get; private set; }
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Error;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+        {
+            CallCount++;
+            ObservedFailure = exception;
+            throw failure;
+        }
     }
 
     private sealed class OrderedReceiveLock(List<string> events) : ReceiveLockContext

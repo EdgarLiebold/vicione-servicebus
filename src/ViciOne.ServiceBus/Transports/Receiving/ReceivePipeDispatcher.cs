@@ -153,17 +153,21 @@ internal sealed class ReceivePipeDispatcher :
 
     async Task NotifyReceiveFaultAsync(ReceiveContext context, Exception dispatchFailure)
     {
-        if (_observers.Count == 0)
-            return;
-
         try
         {
-            await _observers.ReceiveFaultAsync(context, dispatchFailure).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(dispatchFailure).ConfigureAwait(false);
         }
         catch (Exception observerFailure)
         {
-            LogContext.Error?.Log(observerFailure,
-                "A receive-fault observer failed after receive dispatch faulted: {InputAddress}", _inputAddress);
+            try
+            {
+                LogContext.Error?.Log(observerFailure,
+                    "A receive-fault observer failed after receive dispatch faulted: {InputAddress}", _inputAddress);
+            }
+            catch
+            {
+                // Diagnostics cannot replace the dispatch failure or prevent lock settlement.
+            }
         }
     }
 

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11021 |
+| Added | 11023 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -16310,10 +16310,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ReceiveErrorPipelineCancellationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Redelivery/DelayedRedeliveryIntegrationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RescueContextProjectionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RethrowErrorTransportFilterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/RetryOperationOwnershipTests.cs` | Added |  |
