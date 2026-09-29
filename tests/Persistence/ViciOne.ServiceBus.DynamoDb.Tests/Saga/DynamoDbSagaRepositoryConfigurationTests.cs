@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DynamoDb;
 using ViciOne.ServiceBus.DynamoDb.Configuration;
@@ -237,6 +238,34 @@ public sealed class DynamoDbSagaRepositoryConfigurationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "runtime-type-provider-skips-unversioned-saga")]
+    public void RuntimeTypeProvider_SkipsRegisteredSagaWithoutVersion()
+    {
+        IDynamoDBContext context = DispatchProxy.Create<IDynamoDBContext, UnsupportedInvocationProxy>();
+        int configurationCount = 0;
+        var services = new ServiceCollection();
+
+        services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
+        {
+            configuration.UseDynamoDbForRegisteredSagas(repository =>
+            {
+                configurationCount++;
+                repository.TableName = "versioned-saga-table";
+                repository.UseContextFactory(() => context);
+            });
+            configuration.AddSaga<TestSaga>();
+            configuration.AddSaga<UnversionedSaga>();
+        });
+
+        Assert.Equal(1, configurationCount);
+        Assert.Same(context, ResolveRegisteredFactory<TestSaga>(services).Create());
+        Assert.DoesNotContain(services, service =>
+            service.ServiceType.IsConstructedGenericType &&
+            service.ServiceType.GenericTypeArguments.Contains(typeof(UnversionedSaga)) &&
+            service.ServiceType.Namespace == typeof(DynamoDbSagaContextFactory<TestSaga>).Namespace);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-CONFIGURATION", "invalid-input-rejected-and-runtime-options-frozen")]
     public void InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration()
     {
@@ -342,6 +371,11 @@ public sealed class DynamoDbSagaRepositoryConfigurationTests
     {
         public Guid CorrelationId { get; set; }
         public int Version { get; set; }
+    }
+
+    private sealed class UnversionedSaga : ISaga
+    {
+        public Guid CorrelationId { get; set; }
     }
 
     private static DynamoDbSagaContextFactory<TSaga> ResolveRegisteredFactory<TSaga>(IServiceCollection services)
