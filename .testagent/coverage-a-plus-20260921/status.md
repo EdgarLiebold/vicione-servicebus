@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T118 saga declaration ownership packet
+
+Four red-first cases reproduced cross-machine same-name state ownership;
+direct/nested state and substate properties now recover their registered
+state and transition events. Adversarial review expanded the packet to
+named parent identity, hierarchy cleanup, child migration and atomic cycle
+rejection. Ten focused cases and complete Core 7,126/7,126 pass on
+`dc0b89541`; final read-only Red Team review is PASS. See
+[T118 evidence](t118-saga-state-ownership.md). T114 remains the latest full
+33-profile checkpoint; the next grouped measurement follows T119.
+
 ## Current T117 cron terminal-year packet
 
 `GetTimeAfter` now returns null at the maximum representable instant, and

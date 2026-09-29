@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11011 |
+| Added | 11013 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -242,6 +242,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t115-outbox-inbox-state-admission.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t116-recurring-initializer-failure.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t117-cron-terminal-year.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t118-saga-state-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -16394,6 +16395,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationMetadataDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineContainerFaultActivitiesDeepContractTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCoreActivityBindersDeepContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDeclarationOwnershipTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDualResponseCorrelationTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineEventExceptionActivityBindersDeepContractTests.cs` | Added |  |
