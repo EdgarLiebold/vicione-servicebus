@@ -1,5 +1,14 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T105 RabbitMQ quorum configuration packet
+
+Repeated quorum configuration clears an earlier group size, and the broker
+builder emits valid durable, non-auto-delete, non-exclusive quorum queues.
+Red-first tests caught the defects; 32 focused tests and complete RabbitMQ
+unit tests (525/525) pass on `fbb25b940`. Final adversarial re-review is PASS.
+See [T105 evidence](t105-rabbitmq-quorum-configuration.md). T97
+remains the latest global checkpoint; Line and Branch A+ remain open.
+
 ## Current T104 in-memory outbox release admission packet
 
 Deferred send and scheduled cancellation admission are now linearized with

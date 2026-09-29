@@ -1,5 +1,15 @@
 # A+ remediation test status
 
+## T105 — RabbitMQ quorum configuration and broker topology
+
+Repeated quorum configuration now clears a stale group size, and final
+broker declarations normalize quorum queues to durable, non-auto-delete and
+non-exclusive without changing exchange settings. Red-first tests exposed
+both defects; 32 focused tests and the complete RabbitMQ unit project
+(525/525) pass on `fbb25b940`. Final adversarial re-review is PASS.
+See [T105 evidence](coverage-a-plus-20260921/t105-rabbitmq-quorum-configuration.md).
+T97 remains the global profile; Line and Branch A+ are still open.
+
 ## T104 — in-memory outbox release admission
 
 Five deterministic tests prove that deferred sends and scheduler

@@ -34,7 +34,7 @@ false; the exchange remains governed by source settings. The verified broker
 defect is that an auto-delete request without `x-expires` still produced an
 auto-delete quorum queue, and a direct queue declaration could preserve an
 exclusive request. Quorum queues require durable, non-auto-delete,
-non-exclusive broker flags. Tests inspect both endpoint and direct binding
+non-exclusive broker flags. Tests inspect both endpoint and direct queue-declaration
 paths with and without expiration.
 
 ## T104 in-memory outbox release admission race

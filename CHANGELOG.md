@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed RabbitMQ quorum reconfiguration retaining an old group size and
+  broker topology emitting auto-delete or exclusive quorum queues. Endpoint
+  and direct declaration tests verify final queue and exchange behavior,
+  including expiration and invalid-repeat recovery. Focused tests pass 32/32
+  and complete RabbitMQ unit tests 525/525 on `fbb25b940`; final adversarial
+  re-review is PASS. Global Line and Branch A+ remain open.
+
 - Fixed an in-memory outbox race that could acknowledge a deferred send or
   scheduled cancellation after the final release drain without executing it.
   Admission now checks release and cancellation under the queue lock, while

@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 10992 |
+| Added | 10994 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -229,6 +229,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t102-ef-outbox-delivery-cursor.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t103-bus-composition-ownership.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t104-inmemory-outbox-release-admission.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t105-rabbitmq-quorum-configuration.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -15520,6 +15521,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqBusTopologyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqMessagePublishTopologyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqNestedConsumeBindingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqQuorumTopologyTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqSendSettingsContractTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/Topology/RabbitMqTopologyLoggingTests.cs` | Added |  |
 | `tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqTransport/TransportLifetimeTests.cs` | Added |  |
