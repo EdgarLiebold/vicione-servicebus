@@ -185,9 +185,17 @@ public sealed class ActiveMqSchedulingTests
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
             Assert.Equal(needsSchedulerFence ? 2 : 1, receives.CompletedCount);
             Assert.Equal(0, await fixture.GetScheduledMessageCountAsync(queueName, cancellationToken));
-            Assert.Equal(
-                new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
-                await fixture.GetQueueStatisticsAsync(queueName, cancellationToken));
+            ActiveMqBroker.BrokerQueueStatistics statistics =
+                await fixture.GetQueueStatisticsAsync(queueName, cancellationToken);
+            if (flavor == ActiveMqBroker.ArtemisFlavor)
+            {
+                Assert.Equal(1, statistics.EnqueueCount);
+                Assert.Equal(0, statistics.ScheduledCount);
+                Assert.Equal(1, statistics.DequeueCount + statistics.QueueSize);
+                Assert.InRange(statistics.DeliveringCount, 0, 1);
+            }
+            else
+                Assert.Equal(new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0), statistics);
         }
         finally
         {

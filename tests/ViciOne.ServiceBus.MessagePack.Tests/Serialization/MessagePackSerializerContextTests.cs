@@ -121,6 +121,26 @@ public sealed class MessagePackSerializerContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "empty-aggregate-prevents-false-cancellation")]
+    public void TryGetMessage_EmptyAggregateBranchCannotTurnIntoCancellation()
+    {
+        SerializerContext context = CreateContextFor(new EmptyAggregateBranchMessage());
+
+        Assert.False(context.TryGetMessage<EmptyAggregateBranchMessage>(out var result));
+        Assert.Null(result);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "throwing-base-exception-prevents-false-cancellation")]
+    public void TryGetMessage_ThrowingBaseExceptionBranchCannotTurnIntoCancellation()
+    {
+        SerializerContext context = CreateContextFor(new ThrowingBaseExceptionBranchMessage());
+
+        Assert.False(context.TryGetMessage<ThrowingBaseExceptionBranchMessage>(out var result));
+        Assert.Null(result);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-DESERIALIZATION", "non-null-envelope-payload")]
     public void SerializerContext_RejectsEveryMissingOwnedInputAndPayload()
     {
@@ -303,6 +323,31 @@ public sealed class MessagePackSerializerContextTests
         public void OnAfterDeserialize() => throw new AggregateException(
             new OperationCanceledException("first cancellation"),
             new OperationCanceledException("second cancellation", new InvalidOperationException("business failure")));
+    }
+
+    private sealed class EmptyAggregateBranchMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize() => throw new AggregateException(
+            new AggregateException(), new OperationCanceledException("canceled branch"));
+    }
+
+    private sealed class ThrowingBaseExceptionBranchMessage : IMessagePackSerializationCallbackReceiver
+    {
+        public void OnBeforeSerialize()
+        {
+        }
+
+        public void OnAfterDeserialize() => throw new AggregateException(
+            new ThrowingBaseException(), new OperationCanceledException("canceled branch"));
+    }
+
+    private sealed class ThrowingBaseException : Exception
+    {
+        public override Exception GetBaseException() => throw new InvalidOperationException("base inspection failed");
     }
 
     private sealed class CyclicBaseFailure : Exception
