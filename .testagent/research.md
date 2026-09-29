@@ -1,5 +1,20 @@
 # A+ remediation research
 
+## T134 public RetryAsync failure and policy cleanup
+
+`PipeRetryExtensions.ExecuteAsync<TResult>` acquires `RetryPolicyContext` in a
+`using` declaration. If policy disposal throws while admission, the operation
+or cancellation also fails, C# disposal replaces the original exception.
+`RetryPolicyExecution.ExecuteAsync` already preserves both causes in an ordered
+aggregate for the corresponding pipeline path. Existing public RetryAsync
+tests cover exact terminal failures and callback order but no faulting policy
+disposal. A small test policy exercises both public return shapes and each
+failure phase without mocking the retry loop.
+All six dual-failure variants failed red-first because only the cleanup
+exception escaped; both successful-operation controls already passed. The
+corrected ownership boundary passes all eight cases and preserves exact
+exception identities and single-disposal counts.
+
 ## T133 circuit-breaker aggregate cancellation ownership
 
 `CircuitBreakerFilter<TContext>.IsCallerCancellation` recognizes only a top-level

@@ -519,6 +519,79 @@ public sealed class PipeRetryExtensionsTests
         Assert.Equal(1, attempts);
     }
 
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 0)]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "primary-failure-precedes-policy-cleanup-failure")]
+    public async Task PolicyCleanupFailure_PreservesAdmissionOperationOrCancellationCauseAsync(
+        bool valueResult, int failureKind)
+    {
+        using var operationCancellation = new CancellationTokenSource();
+        operationCancellation.Cancel();
+        Exception operationFailure = failureKind == 1
+            ? new OperationCanceledException("operation canceled", operationCancellation.Token)
+            : new RetryFailureException("operation failed");
+        var cleanupFailure = new CleanupFailureException();
+        var policy = new DisposalFailurePolicy(cleanupFailure, missingContext: failureKind == 2);
+        var attempts = 0;
+
+        Task execution = valueResult
+            ? policy.RetryAsync(() =>
+            {
+                attempts++;
+                return Task.FromException<int>(operationFailure);
+            }, false, TestContext.Current.CancellationToken)
+            : policy.RetryAsync(() =>
+            {
+                attempts++;
+                return Task.FromException(operationFailure);
+            }, false, TestContext.Current.CancellationToken);
+
+        AggregateException actual = await Assert.ThrowsAsync<AggregateException>(() => execution);
+        Assert.Equal(2, actual.InnerExceptions.Count);
+        if (failureKind == 2)
+            Assert.Equal("The retry policy returned a policy context without a pipe context.",
+                Assert.IsType<InvalidOperationException>(actual.InnerExceptions[0]).Message);
+        else
+            Assert.Same(operationFailure, actual.InnerExceptions[0]);
+        Assert.Same(cleanupFailure, actual.InnerExceptions[1]);
+        Assert.Equal(failureKind == 2 ? 0 : 1, attempts);
+        Assert.Equal(failureKind == 0 ? 1 : 0, policy.DecisionCount);
+        Assert.Equal(1, policy.DisposeCount);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RETRY-HELPER", "successful-operation-exposes-exact-policy-cleanup-failure")]
+    public async Task SuccessfulOperation_PropagatesExactPolicyCleanupFailureAsync(bool valueResult)
+    {
+        var cleanupFailure = new CleanupFailureException();
+        var policy = new DisposalFailurePolicy(cleanupFailure, missingContext: false);
+        var attempts = 0;
+        Task execution = valueResult
+            ? policy.RetryAsync(() =>
+            {
+                attempts++;
+                return Task.FromResult(42);
+            }, false, TestContext.Current.CancellationToken)
+            : policy.RetryAsync(() =>
+            {
+                attempts++;
+                return Task.CompletedTask;
+            }, false, TestContext.Current.CancellationToken);
+
+        CleanupFailureException actual = await Assert.ThrowsAsync<CleanupFailureException>(() => execution);
+        Assert.Same(cleanupFailure, actual);
+        Assert.Equal(1, attempts);
+        Assert.Equal(0, policy.DecisionCount);
+        Assert.Equal(1, policy.DisposeCount);
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -725,6 +798,53 @@ public sealed class PipeRetryExtensionsTests
             return RetryAttempt < _retryLimit;
         }
     }
+
+    private sealed class DisposalFailurePolicy(Exception cleanupFailure, bool missingContext) : IRetryPolicy
+    {
+        private readonly Exception _cleanupFailure = cleanupFailure;
+        private readonly bool _missingContext = missingContext;
+
+        public int DecisionCount { get; private set; }
+        public int DisposeCount { get; private set; }
+
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        public RetryPolicyContext<T> CreatePolicyContext<T>(T context)
+            where T : class, PipeContext => new DisposalFailureContext<T>(this, context);
+
+        public bool IsHandled(Exception exception) => false;
+
+        private sealed class DisposalFailureContext<T>(DisposalFailurePolicy owner, T context) : RetryPolicyContext<T>
+            where T : class, PipeContext
+        {
+            public T Context => owner._missingContext ? null! : context;
+
+            public bool CanRetry(Exception exception, out RetryContext<T> retryContext)
+            {
+                owner.DecisionCount++;
+                retryContext = new TrackingRetryContext<T>(context, exception, 0, [], 0,
+                    null, null, default);
+                return false;
+            }
+
+            public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) =>
+                Task.CompletedTask;
+
+            public void Cancel()
+            {
+            }
+
+            public void Dispose()
+            {
+                owner.DisposeCount++;
+                throw owner._cleanupFailure;
+            }
+        }
+    }
+
+    private sealed class CleanupFailureException : Exception;
 
     private sealed class RetryFailureException(string message) : Exception(message);
 }

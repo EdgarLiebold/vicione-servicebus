@@ -1,5 +1,16 @@
 # A+ remediation test plan
 
+## T134 public RetryAsync failure and policy cleanup
+
+1. Red-first invoke both void and value overloads with a policy whose
+   `Dispose()` fails after business failure, operation cancellation or missing
+   admission context. Require the escaped aggregate to keep the original
+   exception first and cleanup second, with one disposal and no extra attempt.
+2. Control successful operations followed by failed policy cleanup: expose the
+   exact cleanup failure, without inventing a processing failure.
+3. Correct the public helper's ownership boundary, map the requirement, run
+   read-only adversarial review and the exact-commit Core suite before push.
+
 ## T133 circuit-breaker aggregate cancellation ownership
 
 1. Red-first exercise the real half-open pipe with a nested aggregate of

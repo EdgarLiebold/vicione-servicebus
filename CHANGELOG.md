@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Preserved both causes when public `RetryAsync` processing or policy admission
+  fails and policy disposal also fails. The execution cause precedes cleanup
+  in an aggregate for both task and result overloads; successful processing
+  still exposes a cleanup failure directly.
+
 - Corrected half-open circuit-breaker cancellation ownership for nested
   aggregates. A pure caller cancellation now releases the exclusive recovery
   probe; a mixed business failure, a distinct dependency token, or a business

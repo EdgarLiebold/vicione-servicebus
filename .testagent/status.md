@@ -1,5 +1,17 @@
 # A+ remediation test status
 
+## T134 — public RetryAsync failure and policy cleanup — 29 September 2026
+
+Six void/result dual-failure counterprobes failed red-first because policy
+disposal replaced admission, business or cancellation causes. Both
+successful-operation cleanup controls passed. The public helper now preserves
+an acquired policy's primary cause before its one disposal and emits ordered
+`AggregateException(primary, cleanup)` only when both fail. Eight focused
+cases pass; the new requirement variants and public XML contract are mapped.
+Independent read-only Red Team review is PASS with no concrete P1/P2. The
+complete Core suite is checked at the exact commit before push. No global
+coverage profile was repeated under the user's accepted Line/Branch baseline.
+
 ## T133 — circuit-breaker aggregate cancellation ownership — 29 September 2026
 
 The real half-open pipe failed red-first only for a nested pure caller

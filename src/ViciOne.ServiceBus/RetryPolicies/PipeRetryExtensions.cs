@@ -7,6 +7,10 @@ using ViciOne.ServiceBus.Middleware;
 namespace ViciOne.ServiceBus.RetryPolicies;
 
 /// <summary>Executes asynchronous operations under an <see cref="IRetryPolicy" />.</summary>
+/// <remarks>
+/// If both retry execution and policy cleanup fail, the returned task preserves the execution
+/// failure followed by the cleanup failure in an <see cref="AggregateException" />.
+/// </remarks>
 public static class PipeRetryExtensions
 {
     /// <summary>Executes an operation and retries handled failures according to the policy.</summary>
@@ -128,8 +132,40 @@ public static class PipeRetryExtensions
         var context = new InlinePipeContext(cancellationToken);
         context.SetTimeProvider(timeProvider);
 
-        using RetryPolicyContext<InlinePipeContext> policyContext = retryPolicy.CreatePolicyContext(context)
+        RetryPolicyContext<InlinePipeContext> policyContext = retryPolicy.CreatePolicyContext(context)
             ?? throw new InvalidOperationException("The retry policy returned a null policy context.");
+        Exception? primaryFailure = null;
+        try
+        {
+            return await ExecuteWithPolicyContextAsync(retryPolicy, retryMethod, log,
+                timeProvider, cancellationToken, policyContext).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            throw;
+        }
+        finally
+        {
+            try
+            {
+                policyContext.Dispose();
+            }
+            catch (Exception cleanupFailure)
+            {
+                if (primaryFailure == null)
+                    throw;
+
+                throw new AggregateException("Retry execution and policy cleanup both failed.",
+                    primaryFailure, cleanupFailure);
+            }
+        }
+    }
+
+    static async Task<TResult> ExecuteWithPolicyContextAsync<TResult>(IRetryPolicy retryPolicy,
+        Func<Task<TResult>> retryMethod, bool log, TimeProvider timeProvider, CancellationToken cancellationToken,
+        RetryPolicyContext<InlinePipeContext> policyContext)
+    {
         if (policyContext.Context == null)
             throw new InvalidOperationException("The retry policy returned a policy context without a pipe context.");
 
