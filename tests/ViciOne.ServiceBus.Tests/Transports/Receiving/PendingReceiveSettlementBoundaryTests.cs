@@ -12,6 +12,69 @@ public sealed class PendingReceiveSettlementBoundaryTests
     private static TimeSpan Timeout => TestConfigurationProvider.ForCurrentTestRun().GetValidatedOptions().OperationTimeout!.Value;
 
     [Theory]
+    [InlineData(Operation.Validate)]
+    [InlineData(Operation.Complete)]
+    [InlineData(Operation.Fault)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-LOCK", "unsafe-base-exception-still-tries-fallback")]
+    public async Task UnsafeBaseException_DoesNotPreventSettlementFallbackAsync(Operation operation)
+    {
+        using var firstContext = CreateReceiveContext();
+        using var secondContext = CreateReceiveContext();
+        var failure = new UnsafeBaseException();
+        var calls = new List<int>();
+        var pending = new PendingReceiveLockContext();
+        Assert.True(pending.Enqueue(firstContext, new CallbackLock((_, _, _) =>
+        {
+            calls.Add(1);
+            return Task.FromException(failure);
+        })));
+        Assert.False(pending.Enqueue(secondContext, new CallbackLock((_, _, _) =>
+        {
+            calls.Add(2);
+            return Task.CompletedTask;
+        })));
+
+        await InvokeAsync(pending, operation, new InvalidOperationException("consumer failure"), TestContext.Current.CancellationToken);
+
+        Assert.Equal(new[] { 1, 2 }, calls);
+        Assert.Equal(1, failure.BaseLookupCount);
+        Assert.Equal(operation != Operation.Validate, pending.IsEmpty);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RECEIVE-LOCK", "exhausted-unsafe-base-failure-preserves-cause-and-recovery")]
+    public async Task UnsafeFinalFailure_ExhaustsFallbacksAndPreservesTheOriginalCauseAsync(bool nullBase)
+    {
+        using var firstContext = CreateReceiveContext();
+        using var secondContext = CreateReceiveContext();
+        using var successorContext = CreateReceiveContext();
+        var finalFailure = new UnsafeBaseException(nullBase);
+        var calls = new List<int>();
+        var pending = new PendingReceiveLockContext();
+        Assert.True(pending.Enqueue(firstContext, new CallbackLock((_, _, _) =>
+        {
+            calls.Add(1);
+            return Task.FromException(new InvalidOperationException("stale first lock"));
+        })));
+        Assert.False(pending.Enqueue(secondContext, new CallbackLock((_, _, _) =>
+        {
+            calls.Add(2);
+            return Task.FromException(finalFailure);
+        })));
+
+        Exception actual = await Assert.ThrowsAnyAsync<Exception>(() => pending.CompleteAsync(TestContext.Current.CancellationToken));
+
+        Assert.Same(finalFailure, actual);
+        Assert.Equal(new[] { 1, 2 }, calls);
+        Assert.True(pending.IsEmpty);
+        Assert.True(pending.Enqueue(successorContext, new CallbackLock((_, _, _) => Task.CompletedTask)));
+        await pending.CompleteAsync(TestContext.Current.CancellationToken);
+        Assert.True(pending.IsEmpty);
+    }
+
+    [Theory]
     [InlineData(Operation.Validate, false)]
     [InlineData(Operation.Complete, false)]
     [InlineData(Operation.Fault, false)]
@@ -150,5 +213,16 @@ public sealed class PendingReceiveSettlementBoundaryTests
         public Task CompleteAsync(CancellationToken cancellationToken = default) => callback(Operation.Complete, null, cancellationToken);
         public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default) => callback(Operation.Fault, exception, cancellationToken);
         public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default) => callback(Operation.Validate, null, cancellationToken);
+    }
+
+    private sealed class UnsafeBaseException(bool nullBase = false) : Exception
+    {
+        public int BaseLookupCount { get; private set; }
+
+        public override Exception GetBaseException()
+        {
+            BaseLookupCount++;
+            return nullBase ? null! : throw new InvalidOperationException("base lookup failed");
+        }
     }
 }

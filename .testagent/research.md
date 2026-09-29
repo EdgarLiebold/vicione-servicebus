@@ -1,5 +1,18 @@
 # A+ remediation research
 
+## T127 exception diagnostics and lifecycle safety
+
+The three call sites use virtual exception properties while handling another
+failure. Red-first counterprobes failed in duplicate receive settlement, both
+pipe-agent fault paths and all three consumer ingress shapes. The settlement
+counterprobe required FIFO fallback, final original-cause identity, empty
+state and a healthy successor. The agent counterprobe required terminal stop
+signals and exactly one disposal of a context already published to the agent.
+Consumer ingress required the original wrapper as the reported fault and as
+the cause of `ConsumerCanceledException`, with no downstream work. The fixes
+use the original exception when base lookup is unsafe and continue the normal
+operation instead of allowing a diagnostic failure to take ownership.
+
 ## T126 receive fault ownership and cancellation
 
 Manual review covered `GenerateFaultFilter`, `ErrorTransportFilter`,

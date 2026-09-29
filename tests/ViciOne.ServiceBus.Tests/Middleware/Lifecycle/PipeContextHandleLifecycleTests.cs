@@ -167,6 +167,52 @@ public sealed class PipeContextHandleLifecycleTests
         Assert.True(asyncAgent.Stopped.IsCancellationRequested);
     }
 
+    [Theory]
+    [InlineData(false, false, false)]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, false)]
+    [InlineData(true, true, false)]
+    [InlineData(false, false, true)]
+    [InlineData(true, false, true)]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-TERMINALITY", "unsafe-base-exception-still-stops-agent")]
+    public async Task AsyncAgent_UnsafeBaseExceptionStillStopsAfterFailureAsync(bool duringCreation, bool nullBase, bool throwingMessage)
+    {
+        var agent = new AsyncPipeContextAgent<AgentContext>();
+        IAsyncPipeContextAgent<AgentContext> asyncAgent = agent;
+        var failure = new UnsafeBaseException(nullBase, throwingMessage);
+
+        if (duringCreation)
+            await asyncAgent.CreateFaultedAsync(failure);
+        else
+            await asyncAgent.FaultedAsync(failure);
+
+        Assert.True(asyncAgent.Context.IsFaulted);
+        Assert.Same(failure, Assert.Single(asyncAgent.Context.Exception!.InnerExceptions));
+        await asyncAgent.Completed.WaitAsync(Xunit.TestContext.Current.CancellationToken);
+        Assert.True(asyncAgent.Stopping.IsCancellationRequested);
+        Assert.True(asyncAgent.Stopped.IsCancellationRequested);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-TERMINALITY", "unsafe-runtime-failure-disposes-owned-context")]
+    public async Task AsyncAgent_UnsafeRuntimeFailureDisposesTheCreatedContextAsync(bool nullBase, bool throwingMessage)
+    {
+        var agent = new AsyncPipeContextAgent<CountingDisposableContext>();
+        IAsyncPipeContextAgent<CountingDisposableContext> asyncAgent = agent;
+        var owned = new CountingDisposableContext();
+        await asyncAgent.CreatedAsync(owned);
+
+        await asyncAgent.FaultedAsync(new UnsafeBaseException(nullBase, throwingMessage));
+
+        await asyncAgent.Completed.WaitAsync(Xunit.TestContext.Current.CancellationToken);
+        Assert.Same(owned, await asyncAgent.Context);
+        Assert.Equal(1, owned.DisposeCount);
+        Assert.True(asyncAgent.Stopped.IsCancellationRequested);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-PIPELINE", "filter-publishes-before-next-and-waits")]
     public async Task AsyncFilter_PublishesBeforeTheNextStageAndWaitsForAgentCompletionAsync()
@@ -662,4 +708,13 @@ public sealed class PipeContextHandleLifecycleTests
     private sealed class AgentContext : BasePipeContext;
 
     private sealed class ExpectedFailureException : Exception;
+
+    private sealed class UnsafeBaseException(bool nullBase = false, bool throwingMessage = false) : Exception
+    {
+        public override string Message => throwingMessage ? throw new InvalidOperationException("message lookup failed") : "original failure";
+
+        public override Exception GetBaseException() => nullBase ? null! : throwingMessage
+            ? this
+            : throw new InvalidOperationException("base lookup failed");
+    }
 }

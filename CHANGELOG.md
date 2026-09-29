@@ -11,6 +11,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Hardened failure handling during duplicate receive-lock settlement, supervised
+  pipe-context shutdown and consumer ingress cancellation. An exception with an
+  unsafe base-exception lookup no longer skips a valid settlement fallback,
+  replaces the final settlement cause, prevents agent shutdown or hides a
+  structurally wrapped consumer cancellation. Agent shutdown also survives an
+  unsafe exception-message getter and disposes its owned context once.
+
 - Corrected receive-fault cancellation and ownership. A canceled delivery now
   stops fault publication and error-queue movement, and its token reaches
   endpoint resolution, fault send, notification and error transport. The

@@ -99,7 +99,12 @@ branch. In rethrow mode the receive dispatcher reports the original failure
 once, records the receive context as faulted and settles the receive lock with
 that same failure. Logger failures do not suppress consume or receive observer
 notifications. Fault-header generation falls back to the original exception
-if a custom base-exception lookup fails.
+if a custom base-exception lookup fails. Duplicate receive-lock settlement
+still tries retained fallback deliveries if a transport failure has an unsafe
+base-exception lookup. A supervised pipe context still stops and disposes its
+owned context if diagnostic exception properties throw. Consumer cancellation
+classification continues through the ordinary inner-exception chain when
+base-exception lookup is unsafe.
 
 ## Advanced SPI
 

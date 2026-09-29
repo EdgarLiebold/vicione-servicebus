@@ -1,5 +1,24 @@
 # A+ remediation test status
 
+## T127 — exception diagnostics and lifecycle safety — 29 September 2026
+
+Red-first tests exposed five failing settlement and agent cases; an independent
+read-only Red Team review found a third cancellation-classification fault that
+failed red-first in all three consumer ingress shapes. Duplicate receive-lock
+settlement now continues FIFO fallback if a custom base-exception lookup throws
+or returns null, retains the original final failure and accepts a successor.
+Pipe-agent creation and runtime failures now stop the agent and release an owned
+context even when a custom base lookup or message getter is unsafe. Consumer
+ingress continues structural inner-exception traversal after an unsafe base
+lookup while retaining a valid custom base projection when present.
+
+Focused neighboring classes passed 100/100; the later hostile-message and
+custom-base additions passed 10/10 with the requirement projection. The frozen
+complete Core suite passed 7,287/7,287 with zero failures or skips. Six new
+requirement variants are mapped; JSON and Git whitespace checks pass. Final
+read-only adversarial review is PASS with no concrete P1/P2 in this packet.
+The user accepts current Line/Branch coverage, so no global profile was run.
+
 ## T126 — receive fault ownership and cancellation — 29 September 2026
 
 Red-first counterprobes confirmed lost original failure in the Rethrow path,

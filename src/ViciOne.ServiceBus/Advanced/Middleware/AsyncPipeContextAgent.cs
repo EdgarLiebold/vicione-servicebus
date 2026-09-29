@@ -73,7 +73,7 @@ public sealed class AsyncPipeContextAgent<TContext> :
         if (!_context.TrySetException(exception))
             return Task.CompletedTask;
 
-        return _agent.StopAsync($"Create Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
+        return _agent.StopAsync($"Create Faulted: {GetFailureMessage(exception)}", CancellationToken.None);
     }
 
     Task IAsyncPipeContextHandle<TContext>.FaultedAsync(Exception exception)
@@ -82,7 +82,21 @@ public sealed class AsyncPipeContextAgent<TContext> :
 
         _context.TrySetException(exception);
 
-        return _agent.StopAsync($"Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
+        return _agent.StopAsync($"Faulted: {GetFailureMessage(exception)}", CancellationToken.None);
+    }
+
+    static string GetFailureMessage(Exception exception)
+    {
+        try
+        {
+            exception = exception.GetBaseException() ?? exception;
+        }
+        catch
+        {
+            // An exception's custom base lookup cannot prevent the owned agent from stopping.
+        }
+
+        return ExceptionUtil.GetMessage(exception);
     }
 
     /// <inheritdoc />

@@ -338,6 +338,54 @@ public sealed class ConsumerIngressFilterContractTests
     }
 
     [Theory]
+    [InlineData(FilterShape.Factory)]
+    [InlineData(FilterShape.Handler)]
+    [InlineData(FilterShape.Instance)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "unsafe-base-lookup-preserves-structural-cancellation")]
+    public async Task UnsafeBaseLookup_StillClassifiesWrappedCancellationAsync(FilterShape shape)
+    {
+        var wrapper = new UnsafeBaseException(new OperationCanceledException("dependency canceled"));
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(wrapper);
+        });
+
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(() =>
+            filter.SendAsync(context, Pipe.Execute<ConsumeContext<TestMessage>>(_ => trace.Add("next"))));
+
+        Assert.Same(wrapper, actual.InnerException);
+        Assert.Same(wrapper, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
+    [InlineData(FilterShape.Factory)]
+    [InlineData(FilterShape.Handler)]
+    [InlineData(FilterShape.Instance)]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CANCELLATION", "safe-custom-base-cancellation-remains-classified")]
+    public async Task CustomBaseCancellation_RemainsClassifiedWithoutAnInnerExceptionAsync(FilterShape shape)
+    {
+        var failure = new ProjectedBaseException(new OperationCanceledException("dependency canceled"));
+        var trace = new List<string>();
+        var context = (RecordingScope)CreateContext(TestContext.Current.CancellationToken, trace);
+        IFilter<ConsumeContext<TestMessage>> filter = CreateFilter(shape, new TestConsumer(), _ =>
+        {
+            trace.Add("work");
+            return Task.FromException(failure);
+        });
+
+        ConsumerCanceledException actual = await Assert.ThrowsAsync<ConsumerCanceledException>(() =>
+            filter.SendAsync(context, Pipe.Execute<ConsumeContext<TestMessage>>(_ => trace.Add("next"))));
+
+        Assert.Same(failure, actual.InnerException);
+        Assert.Same(failure, context.Fault);
+        Assert.Equal(["work", "faulted"], trace);
+    }
+
+    [Theory]
     [InlineData(FilterShape.Factory, false, false)]
     [InlineData(FilterShape.Handler, false, false)]
     [InlineData(FilterShape.Instance, false, false)]
@@ -600,6 +648,16 @@ public sealed class ConsumerIngressFilterContractTests
     public sealed record TestMessage;
 
     private sealed class ExpectedBusinessException : Exception;
+
+    private sealed class UnsafeBaseException(Exception inner) : Exception("wrapper", inner)
+    {
+        public override Exception GetBaseException() => throw new InvalidOperationException("base lookup failed");
+    }
+
+    private sealed class ProjectedBaseException(Exception baseException) : Exception("projected cancellation")
+    {
+        public override Exception GetBaseException() => baseException;
+    }
 
     private sealed class RecordingScope(
         ConsumeContext<TestMessage> context,

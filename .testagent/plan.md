@@ -1,5 +1,19 @@
 # A+ remediation test plan
 
+## T127 exception diagnostics and lifecycle safety
+
+1. Red-first prove that an unsafe base-exception lookup cannot skip a valid
+   duplicate receive lock, replace the final failure or block a successor.
+2. Red-first prove that creation and runtime pipe-agent faults still complete
+   shutdown, with exact failure identity and one owned-context disposal, even
+   when exception diagnostic properties throw or return null.
+3. Red-first prove that factory, handler and instance ingress classify a
+   wrapped cancellation through its structural inner exception when the
+   wrapper's base lookup throws.
+4. Run the focused neighboring tests, obtain independent read-only adversarial
+   review, freeze the packet, run the complete Core suite once, update API and
+   requirement evidence, then commit and push the authorized result.
+
 ## T126 receive fault ownership and cancellation
 
 1. Red-first test the Rethrow receive path through a dispatcher and shared

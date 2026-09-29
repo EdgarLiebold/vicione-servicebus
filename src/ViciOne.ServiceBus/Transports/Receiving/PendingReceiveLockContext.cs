@@ -122,7 +122,17 @@ internal sealed class PendingReceiveLockContext :
                 }
                 catch (Exception exception)
                 {
-                    dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+                    Exception settlementFailure;
+                    try
+                    {
+                        settlementFailure = exception.GetBaseException() ?? exception;
+                    }
+                    catch
+                    {
+                        settlementFailure = exception;
+                    }
+
+                    dispatchInfo = ExceptionDispatchInfo.Capture(settlementFailure);
                 }
             }
             while (TryDequeue());

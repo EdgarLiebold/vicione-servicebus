@@ -44,7 +44,15 @@ internal static class ConsumerIngressFailure
             }
 
             Exception? innerException = current.InnerException;
-            Exception? baseException = current.GetBaseException();
+            Exception? baseException;
+            try
+            {
+                baseException = current.GetBaseException();
+            }
+            catch
+            {
+                baseException = null;
+            }
             bool hasBase = baseException is not null && !ReferenceEquals(baseException, current);
             if (innerException is not null)
                 pending.Push(innerException);
