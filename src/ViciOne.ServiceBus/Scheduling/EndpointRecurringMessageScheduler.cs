@@ -248,7 +248,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        var destinationAddress = GetPublishAddress<T>();
+        var destinationAddress = GetPublishAddress<T>(cancellationToken);
 
         return ScheduleAsync(destinationAddress, schedule, message, cancellationToken);
     }
@@ -265,7 +265,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        var destinationAddress = GetPublishAddress<T>();
+        var destinationAddress = GetPublishAddress<T>(cancellationToken);
 
         return ScheduleAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
@@ -282,7 +282,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        var destinationAddress = GetPublishAddress<T>();
+        var destinationAddress = GetPublishAddress<T>(cancellationToken);
 
         return ScheduleAsync(destinationAddress, schedule, message, pipe, cancellationToken);
     }
@@ -297,7 +297,7 @@ public sealed class EndpointRecurringMessageScheduler :
 
         var messageType = message.GetType();
 
-        var destinationAddress = GetPublishAddress(messageType);
+        var destinationAddress = GetPublishAddress(messageType, cancellationToken);
 
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, cancellationToken);
     }
@@ -313,7 +313,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        var destinationAddress = GetPublishAddress(messageType);
+        var destinationAddress = GetPublishAddress(messageType, cancellationToken);
 
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, cancellationToken);
     }
@@ -331,7 +331,7 @@ public sealed class EndpointRecurringMessageScheduler :
 
         var messageType = message.GetType();
 
-        var destinationAddress = GetPublishAddress(messageType);
+        var destinationAddress = GetPublishAddress(messageType, cancellationToken);
 
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
@@ -349,7 +349,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        var destinationAddress = GetPublishAddress(messageType);
+        var destinationAddress = GetPublishAddress(messageType, cancellationToken);
 
         return MessageSchedulerConverterCache.ScheduleRecurringSendAsync(this, destinationAddress, schedule, message, messageType, pipe, cancellationToken);
     }
@@ -364,7 +364,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        var destinationAddress = GetPublishAddress<T>();
+        var destinationAddress = GetPublishAddress<T>(cancellationToken);
 
         global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> send = await MessageInitializerCache<T>.InitializeMessageAsync(values, cancellationToken).ConfigureAwait(false);
 
@@ -383,7 +383,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        var destinationAddress = GetPublishAddress<T>();
+        var destinationAddress = GetPublishAddress<T>(cancellationToken);
 
         global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> send = await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -402,7 +402,7 @@ public sealed class EndpointRecurringMessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        var destinationAddress = GetPublishAddress<T>();
+        var destinationAddress = GetPublishAddress<T>(cancellationToken);
 
         global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T> send = await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -414,10 +414,12 @@ public sealed class EndpointRecurringMessageScheduler :
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
         var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync<CancelScheduledRecurringMessage>(command, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -427,10 +429,12 @@ public sealed class EndpointRecurringMessageScheduler :
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
         var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync<PauseScheduledRecurringMessage>(command, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -440,10 +444,12 @@ public sealed class EndpointRecurringMessageScheduler :
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleId);
         ArgumentException.ThrowIfNullOrWhiteSpace(scheduleGroup);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
         var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync<ResumeScheduledRecurringMessage>(command, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
@@ -452,9 +458,11 @@ public sealed class EndpointRecurringMessageScheduler :
         CancellationToken cancellationToken)
         where T : class
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var command = CreateCommand(destinationAddress, schedule, message);
 
         var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync(command, cancellationToken).ConfigureAwait(false);
 
@@ -465,9 +473,11 @@ public sealed class EndpointRecurringMessageScheduler :
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var command = CreateCommand(destinationAddress, schedule, message);
 
         var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync(command, pipe, cancellationToken).ConfigureAwait(false);
 
@@ -478,11 +488,13 @@ public sealed class EndpointRecurringMessageScheduler :
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var command = CreateCommand(destinationAddress, schedule, message);
 
         var scheduleMessagePipe = new ScheduleRecurringMessageContextPipe<T>(message, pipe);
 
         var endpoint = await _schedulerEndpoint(cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         await endpoint.SendAsync(command, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
@@ -502,9 +514,11 @@ public sealed class EndpointRecurringMessageScheduler :
         return new ScheduleRecurringMessageCommand<T>(schedule, destinationAddress, message);
     }
 
-    Uri GetPublishAddress<T>()
+    Uri GetPublishAddress<T>(CancellationToken cancellationToken)
         where T : class
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (_busTopology == null)
             throw new InvalidOperationException("The bus topology is required to use ScheduleRecurringPublishAsync.");
 
@@ -514,8 +528,10 @@ public sealed class EndpointRecurringMessageScheduler :
         throw new ArgumentException($"The publish address for the specified type was not returned: {TypeCache<T>.ShortName}");
     }
 
-    Uri GetPublishAddress(Type messageType)
+    Uri GetPublishAddress(Type messageType, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (_busTopology == null)
             throw new InvalidOperationException("The bus topology is required to use ScheduleRecurringPublishAsync.");
 
