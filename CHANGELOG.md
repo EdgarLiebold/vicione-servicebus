@@ -17,6 +17,9 @@ entry below records what the current work changed for anyone reading the source.
   skipped after any route fails. Single and multiple outputs reject a null
   task consistently. Diagnostic probing uses a stable registration snapshot,
   so a pipe can register another route during its probe callback.
+  The running-job cancellation regression now observes the persisted Running
+  state before canceling, closing a test race between consumer entry and the
+  job saga's state transition.
 
 - Preserved both causes when public `RetryAsync` processing or policy admission
   fails and policy disposal also fails. The execution cause precedes cleanup

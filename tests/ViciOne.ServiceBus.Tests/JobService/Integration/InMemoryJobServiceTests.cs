@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Contracts.JobService;
@@ -100,7 +101,7 @@ public sealed class InMemoryJobServiceTests
 
         Guid accepted = await fixture.SubmitAsync(jobId, new InMemoryJob("cancel"));
         JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
-        IJobState started = await fixture.GetStateAsync(jobId);
+        IJobState started = await fixture.WaitForStatusAsync(jobId, JobLifecycleStatus.Running);
         await fixture.Harness.Bus.CancelJobAsync(jobId, "operator-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         JobCancellationSnapshot cancellation = await consumer.NextCancellationAsync(fixture);
         IJobCanceled canceled = await fixture.PublishedAsync<IJobCanceled>(message => message.JobId == jobId);
@@ -809,6 +810,23 @@ public sealed class InMemoryJobServiceTests
             IRequestClient<IGetJobState> client = Harness.CreateRequestClient<IGetJobState>();
             return client.GetJobStateAsync(jobId)
                 .WaitAsync(OperationTimeout, CancellationToken);
+        }
+
+        public async Task<IJobState> WaitForStatusAsync(Guid jobId, JobLifecycleStatus expected)
+        {
+            var elapsed = Stopwatch.StartNew();
+            while (true)
+            {
+                IJobState state = await GetStateAsync(jobId);
+                if (state.Status == expected)
+                    return state;
+
+                if (elapsed.Elapsed >= OperationTimeout)
+                    throw new Xunit.Sdk.XunitException(
+                        $"Job {jobId} remained {state.Status} instead of reaching {expected}.");
+
+                await Task.Delay(TimeSpan.FromMilliseconds(10), CancellationToken);
+            }
         }
 
         public Task<IJobState<TCheckpoint>> GetStateAsync<TCheckpoint>(Guid jobId)

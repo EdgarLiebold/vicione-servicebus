@@ -26,6 +26,13 @@ modified` on its next dictionary-enumerator step, and the single-output
 dispatch returned null. The multiple-output null control already produced
 the intended faulted task. A shared safe invocation and volatile snapshot
 publication now close both inconsistent boundaries.
+The first complete Core run at `89a344f95` exposed a separate test race:
+`InMemoryJobServiceTests.CancelRunningJob` read `Starting` immediately after
+the consumer-entered signal. `JobStateMachine` transitions on the later
+`IJobAttemptStarted` consumption, so consumer entry alone is not a persisted
+`Running` witness. The test passed when isolated. Its cancellation journey now
+waits a bounded interval for `GetJobStateAsync` to report `Running` before
+cancelling, and fails with the last observed state if the transition stalls.
 
 ## T134 public RetryAsync failure and policy cleanup
 

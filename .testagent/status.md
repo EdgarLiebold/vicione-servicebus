@@ -11,8 +11,13 @@ callback invalidated dictionary enumeration. A single-output null-task test
 also failed red-first, while its multi-output control passed. The shared safe
 output invocation and volatile registration snapshot address these paths.
 All nine DynamicRouting/requirement cases pass; independent read-only Red Team
-review is PASS with no concrete P1/P2. The complete Core suite is checked at
-the exact commit before push; no global coverage profile was repeated.
+review is PASS with no concrete P1/P2 in the dynamic-dispatch packet. The
+first complete Core run at `89a344f95` found one unrelated status-observation
+race in a JobService cancellation test (`Starting` immediately after consumer
+entry). That test passed isolated; it now waits on the persisted `Running`
+state before cancellation and fails if the transition stalls. The corrected
+Core gate is checked at the next exact commit before push. No global coverage
+profile was repeated.
 
 ## T134 — public RetryAsync failure and policy cleanup — 29 September 2026
 

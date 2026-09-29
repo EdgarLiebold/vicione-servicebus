@@ -12,6 +12,9 @@
    a stable diagnostic snapshot and successful use of the new output afterward.
 4. Map the requirements, run read-only adversarial review and the exact-commit
    Core suite, then push the authorized result.
+5. If the full Core run exposes an unrelated asynchronous state-observation
+   race, verify the state-machine order and synchronize that test on the
+   persisted product state before repeating the exact-commit gate.
 
 ## T134 public RetryAsync failure and policy cleanup
 
