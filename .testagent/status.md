@@ -13,8 +13,9 @@ variants 2/2, including fixture cleanup. The architecture platform test class
 passes 18/18, and the complete architecture project passes 450/450.
 Independent read-only review is PASS with no concrete P1/P2;
 physical store cleanup would require a separate Quartz store-level contract
-and an after-TriggeredJobComplete observation hook. The Unit solution gate
-still requires replay at the final commit.
+and an after-TriggeredJobComplete observation hook. At code commit
+`83f3b0f4c`, the complete parallel Unit solution passes 12,231/12,231 with
+zero failures or skips. The 16,796-entry change-list identity check passes.
 
 ## T146 — asynchronous test helper and test identity contract — 29 September 2026
 
