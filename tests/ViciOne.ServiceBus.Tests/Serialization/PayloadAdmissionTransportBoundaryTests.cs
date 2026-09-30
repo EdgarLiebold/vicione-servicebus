@@ -1,7 +1,9 @@
+using System.Buffers;
 using System.Net.Mime;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transports;
 using Xunit;
 
@@ -70,6 +72,29 @@ public sealed class PayloadAdmissionTransportBoundaryTests
         Assert.Null(context.BodyLength);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION", "serializer-getter-cannot-change-physical-destination")]
+    public void SerializerGetterChangingDestination_IsRejectedBeforePhysicalAdmission()
+    {
+        var context = new MessageSendContext<PayloadMessage>(new PayloadMessage("send"))
+        {
+            MessageId = Guid.NewGuid(),
+            DestinationAddress = new Uri("loopback://admission/original"),
+        };
+        Uri originalDestination = context.DestinationAddress!;
+        var serializer = new DestinationChangingSerializer(() =>
+            context.DestinationAddress = new Uri("loopback://admission/replacement"));
+        context.Serializer = serializer;
+        serializer.Arm();
+
+        MessageException failure = Assert.Throws<MessageException>(
+            () => PayloadAdmissionTransportBoundary.Admit(CreateRuntime(), context));
+
+        Assert.Contains("DestinationAddress", failure.Message, StringComparison.Ordinal);
+        Assert.True(serializer.GetterCallsAfterArming > 0);
+        Assert.Equal(originalDestination, context.DestinationAddress);
+    }
+
     static MessageSendContext<PayloadMessage> CreateContext()
     {
         var context = new MessageSendContext<PayloadMessage>(new PayloadMessage("send"));
@@ -86,6 +111,57 @@ public sealed class PayloadAdmissionTransportBoundaryTests
             MaximumTransportEnvelopeBytes = 1024,
         };
         return new PayloadAdmissionRuntime<IBus>(new PayloadAdmissionEvaluator<IBus>(policy));
+    }
+
+    private sealed class DestinationChangingSerializer(Action changeDestination) : IBoundedMessageSerializer
+    {
+        private readonly ContentType _contentType = new("application/octet-stream");
+        private bool _armed;
+
+        public int GetterCallsAfterArming { get; private set; }
+
+        public ContentType ContentType
+        {
+            get
+            {
+                if (_armed)
+                {
+                    GetterCallsAfterArming++;
+                    changeDestination();
+                }
+                return _contentType;
+            }
+        }
+
+        public SerializedTransportTextFormat TransportTextFormat => SerializedTransportTextFormat.Base64;
+
+        public void Arm() => _armed = true;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            throw new NotSupportedException("The bounded serializer path must be used.");
+
+        public void WriteSerializedBody<T>(SendContext<T> context, IBufferWriter<byte> writer) where T : class
+        {
+            writer.GetSpan(1)[0] = 42;
+            writer.Advance(1);
+        }
+
+        public void WriteTransportEnvelope<T>(SendContext<T> context, Stream serializedBody, IBufferWriter<byte> writer)
+            where T : class
+        {
+            int value = serializedBody.ReadByte();
+            if (value < 0)
+                throw new InvalidOperationException("The admitted application body was empty.");
+            writer.GetSpan(1)[0] = (byte)value;
+            writer.Advance(1);
+        }
+
+        public bool TryLocateSerializedBody(ReadOnlySpan<byte> serializedEnvelope, out int offset, out int length)
+        {
+            offset = 0;
+            length = serializedEnvelope.Length;
+            return length == 1;
+        }
     }
 
     sealed record PayloadMessage(string Value);

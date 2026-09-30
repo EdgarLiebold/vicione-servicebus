@@ -179,6 +179,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed physical payload admission accepting a serializer getter that changed
+  the send destination before body creation. The shared admission boundary now
+  binds expected metadata before serializer callbacks, checks it through body
+  length and proof binding, and restores rejected changes. A red-first boundary
+  test verifies that the changed destination cannot cross admission.
+
 - Fixed reliable in-memory inbox staging when a serializer changed the send
   destination after it had been selected, or a header getter changed correlation
   metadata after body materialization. Admission, body, proof, and replay
