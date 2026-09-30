@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11178 |
+| Added | 11179 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -258,6 +258,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t161-durable-message-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t162-inbox-outbox-serializer-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t163-inmemory-receive-outbox-identity.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t164-journal-lazy-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |

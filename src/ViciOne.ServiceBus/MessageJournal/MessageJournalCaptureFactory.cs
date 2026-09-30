@@ -18,6 +18,7 @@ internal static class MessageJournalCaptureFactory
         MessageBody body = context is TransportSendContext transportContext
             ? transportContext.Body
             : context.Serializer.GetMessageBody(context);
+        byte[] bodyBytes = body.ToArray();
 
         var metadata = CreateSendMetadata(context, exception);
         Add(metadata, MessageJournalMetadataKeys.ScheduledMessageId, context.ScheduledMessageId);
@@ -30,7 +31,7 @@ internal static class MessageJournalCaptureFactory
             context.SupportedMessageTypes ?? [],
             metadata,
             SnapshotHeaders(context.Headers),
-            body.ToArray());
+            bodyBytes);
     }
 
     public static MessageJournalCapture CreateConsume<T>(

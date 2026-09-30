@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed message-journal capture of a faulted outgoing send with a lazy
+  serializer. The journal now materializes the body before snapshotting message
+  metadata, so its recorded `MessageId` matches the serialized body even when
+  serialization changes the send context. A red-first bus integration test
+  proves the old mismatch and confirms the original send fault is preserved.
+  The complete Core suite passes 7,394/7,394; adversarial review found no
+  concrete P1/P2 in the fix.
+
 - Fixed the classic in-memory receive outbox accepting a serializer-modified
   outgoing `MessageId`, including `Guid.Empty`. It now snapshots a nonempty ID
   before serialization and rejects changes after transport text is fully

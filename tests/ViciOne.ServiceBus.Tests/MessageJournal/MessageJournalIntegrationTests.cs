@@ -1,6 +1,11 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net.Mime;
+using System.Text;
 using System.Text.Json;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
@@ -213,6 +218,57 @@ public sealed class MessageJournalIntegrationTests
                 sent.Metadata[MessageJournalMetadataKeys.FailureType]);
             Assert.Equal(TypeCache<ExpectedPublishException>.ShortName,
                 published.Metadata[MessageJournalMetadataKeys.FailureType]);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "faulted-send-captures-lazy-body-after-identity-change")]
+    public async Task FaultedSend_JournalMetadataMatchesDeferredSerializedBodyAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-lazy-fault", timeout);
+        harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        var expectedFailure = new ExpectedSendException();
+        Guid initialId = NewId.NextGuid();
+        Guid serializedId = NewId.NextGuid();
+        var serializer = new DeferredIdentitySerializer(serializedId);
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+            ISendEndpoint endpoint = await harness.Bus.GetSendEndpointAsync(harness.InputQueueAddress, token);
+            using ConnectHandle failingObserver = harness.Bus.ConnectSendObserver(
+                new ThrowingSendObserver(expectedFailure));
+
+            ExpectedSendException actual = await Assert.ThrowsAsync<ExpectedSendException>(() =>
+                endpoint.SendAsync(new JournalMessage(NewId.NextGuid(), "lazy-fault"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.MessageId = initialId;
+                        context.Serializer = serializer;
+                    }), token));
+            await store.ExpectedEntriesReached.WaitAsync(timeout, token);
+
+            Assert.Same(expectedFailure, actual);
+            Assert.Equal(1, serializer.MaterializationCalls);
+            Assert.Equal(serializedId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).MessageId);
+            MessageJournalEntry entry = Assert.Single(store.Entries);
+            Assert.Equal(MessageJournalOutcome.Faulted, entry.Outcome);
+            Assert.Equal(serializedId.ToString("D", CultureInfo.InvariantCulture),
+                entry.Metadata[MessageJournalMetadataKeys.MessageId]);
+            using JsonDocument body = JsonDocument.Parse(entry.Body);
+            Assert.Equal(serializedId,
+                body.RootElement.GetProperty("messageId").GetGuid());
         }
         finally
         {
@@ -435,6 +491,48 @@ public sealed class MessageJournalIntegrationTests
     private sealed record FaultingMessage(Guid CorrelationId) : ICorrelatedBy<Guid>;
     private sealed record OutboxRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
     private sealed record DeferredMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
+
+    private sealed class DeferredIdentitySerializer(Guid serializedId) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/json");
+
+        public int MaterializationCalls { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            new DeferredIdentityBody(serializedId, () =>
+            {
+                MaterializationCalls++;
+                context.MessageId = serializedId;
+            });
+    }
+
+    private sealed class DeferredIdentityBody : MessageBody
+    {
+        private readonly byte[] _body;
+        private readonly Action _onMaterialize;
+
+        public DeferredIdentityBody(Guid serializedId, Action onMaterialize)
+        {
+            _body = Encoding.UTF8.GetBytes($"{{\"messageId\":\"{serializedId:D}\"}}");
+            _onMaterialize = onMaterialize;
+        }
+
+        public long Length => _body.Length;
+
+        public byte[] ToArray()
+        {
+            _onMaterialize();
+            return (byte[])_body.Clone();
+        }
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
+
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text)
+        {
+            text = Encoding.UTF8.GetString(ToArray());
+            return true;
+        }
+    }
 
     private sealed class ThrowingSendObserver(Exception failure) : ISendObserver
     {
