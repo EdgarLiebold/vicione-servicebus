@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Mime;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Transports;
 
@@ -19,14 +20,25 @@ internal static class MessageJournalCaptureFactory
             throw new InvalidOperationException("The rejected transport body has no stable journal capture.");
 
         Guid? messageIdBeforeBody = context.MessageId;
-        MessageBody body = context is TransportSendContext transportContext
-            ? transportContext.Body
-            : context.Serializer.GetMessageBody(context);
-        byte[] bodyBytes = body.ToArray();
-        if (outcome == MessageJournalOutcome.Succeeded && context.MessageId != messageIdBeforeBody)
+        string? contentTypeBeforeBody = context.ContentType?.ToString();
+        byte[] bodyBytes;
+        try
         {
-            context.MessageId = messageIdBeforeBody;
-            throw new InvalidOperationException("The send context identity changed after transport delivery.");
+            MessageBody body = context is TransportSendContext transportContext
+                ? transportContext.Body
+                : context.Serializer.GetMessageBody(context);
+            bodyBytes = body.ToArray();
+        }
+        catch
+        {
+            RestoreSendMetadata(context, messageIdBeforeBody, contentTypeBeforeBody);
+            throw;
+        }
+        if (context.MessageId != messageIdBeforeBody
+            || !string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))
+        {
+            RestoreSendMetadata(context, messageIdBeforeBody, contentTypeBeforeBody);
+            throw new InvalidOperationException("The send context metadata changed during journal capture.");
         }
 
         var metadata = CreateSendMetadata(context, exception);
@@ -41,6 +53,13 @@ internal static class MessageJournalCaptureFactory
             metadata,
             SnapshotHeaders(context.Headers),
             bodyBytes);
+    }
+
+    private static void RestoreSendMetadata<T>(SendContext<T> context, Guid? messageId, string? contentType)
+        where T : class
+    {
+        context.MessageId = messageId;
+        context.ContentType = contentType is null ? null : new ContentType(contentType);
     }
 
     public static MessageJournalCapture CreateConsume<T>(

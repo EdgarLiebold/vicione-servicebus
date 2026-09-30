@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed outgoing journal captures that could retain changed `MessageId` or
+  `ContentType` after a second body read. Successful delivery remains intact,
+  while the inconsistent capture is discarded and the send context is
+  restored. The same guard now applies to faulted sends, including a body
+  callback that throws after changing metadata. Red-first real-bus tests
+  distinguish delivered content type, body bytes, journal writes and the
+  original send fault. A fault capture with metadata changed during body
+  materialization is now conservatively discarded because a generic body
+  cannot prove whether the change preceded or followed byte creation. The
+  complete Core project passes 7,411/7,411; final read-only Red Team verdict:
+  PASS, no further concrete P1/P2 in this change.
+
 - Fixed the typed Durable Sender accepting a serializer that changed
   `ContentType` while creating or reading the message body. It now restores
   the original content type and rejects the send before durable admission;
@@ -43,12 +55,11 @@ entry below records what the current work changed for anyone reading the source.
   7,398/7,398; adversarial review found no further concrete P1/P2 in this diff.
 
 - Fixed message-journal capture of a faulted outgoing send with a lazy
-  serializer. The journal now materializes the body before snapshotting message
-  metadata, so its recorded `MessageId` matches the serialized body even when
-  serialization changes the send context. A red-first bus integration test
-  proves the old mismatch and confirms the original send fault is preserved.
-  The complete Core suite passes 7,394/7,394; adversarial review found no
-  concrete P1/P2 in the fix.
+  serializer. Materializing the body before metadata exposed changes made by
+  the serializer; the later journal consistency guard now discards such a
+  capture when the identity or content type changes during materialization.
+  The original send fault remains intact. The complete Core suite passed
+  7,394/7,394 at this stage.
 
 - Fixed the classic in-memory receive outbox accepting a serializer-modified
   outgoing `MessageId`, including `Guid.Empty`. It now snapshots a nonempty ID
