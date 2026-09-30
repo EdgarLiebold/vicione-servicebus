@@ -179,6 +179,13 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed reliable in-memory inbox staging when a serializer changed the send
+  destination after it had been selected, or a header getter changed correlation
+  metadata after body materialization. Admission, body, proof, and replay
+  metadata now share one expected metadata snapshot before a send is staged.
+  A red-first destination drift test and a delayed header drift test assert
+  that neither inconsistent message can be committed to the inbox outbox.
+
 - Fixed durable sends and both EF outbox paths whose serializer or header
   callbacks could change identity, destination, or other send metadata during
   payload admission and later metadata capture. The expected metadata is bound

@@ -1,8 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 
@@ -109,6 +111,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
             throw new MessageException(typeof(TOutgoingMessage), "The SendContext MessageId must be present and nonempty");
         Uri destination = context.DestinationAddress
             ?? throw new MessageException(typeof(TOutgoingMessage), "The SendContext DestinationAddress must be present");
+        TransportBodyMaterializer.MetadataSnapshot expected = TransportBodyMaterializer.CaptureExpectedMetadata(context);
         DateTimeOffset now = _timeProvider.GetUtcNow();
         PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
         if (admissionRuntime is null)
@@ -121,7 +124,39 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
                     "Register payload admission for this bus before using the reliable inbox"));
         }
 
-        byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();
+        SerializedDurableSend message;
+        try
+        {
+            PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
+            message = TransportBodyMaterializer.ReadWithExpectedMetadata(context,
+                guardedBody => CreateSerializedSend(context, guardedBody, messageId, destination, now), expected);
+        }
+        catch (Exception failure)
+        {
+            if (expected.ChangedField(context) is not null)
+            {
+                expected.Restore(context);
+                TransportBodyMaterializer.MarkMutationFailure(failure);
+            }
+            throw;
+        }
+
+        CancellationToken.ThrowIfCancellationRequested();
+        operationCancellationToken.ThrowIfCancellationRequested();
+        lock (_messagesLock)
+            _messages.Add(message);
+        return Task.CompletedTask;
+    }
+
+    SerializedDurableSend CreateSerializedSend<TOutgoingMessage>(
+        SendContext<TOutgoingMessage> context,
+        MessageBody admittedBody,
+        Guid messageId,
+        Uri destination,
+        DateTimeOffset now)
+        where TOutgoingMessage : class
+    {
+        byte[] body = admittedBody.ToArray();
         string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
         if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
             || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
@@ -131,7 +166,7 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
         if (context.MessageId != messageId)
             throw new MessageException(typeof(TOutgoingMessage), "The SendContext MessageId changed during serialization");
 
-        var message = new SerializedDurableSend
+        return new SerializedDurableSend
         {
             Id = new DurableSendId(messageId),
             ContractIdentity = _contracts.GetIdentity(typeof(TOutgoingMessage)),
@@ -143,12 +178,6 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
             CorrelationId = context.CorrelationId,
             DueAt = context.Delay.HasValue ? now + context.Delay.Value : null,
         }.Validate();
-
-        CancellationToken.ThrowIfCancellationRequested();
-        operationCancellationToken.ThrowIfCancellationRequested();
-        lock (_messagesLock)
-            _messages.Add(message);
-        return Task.CompletedTask;
     }
 
     static Task CompletedOrCanceledAsync(CancellationToken cancellationToken) =>
