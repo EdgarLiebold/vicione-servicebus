@@ -1,1 +1,0 @@
-{"allowedBrokerOutage": null, "brokers": ["servicebus"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"servicebus": "0d2f9f8b58fecfa3bdca281d843230b46d6470f4c7ab6361301c21ca2872eaa3"}, "schemaVersion": 1}

@@ -35,7 +35,7 @@ tools/ci/vulnerability_inventory.py	RETAINED_ENGINEERING	tools/ci/vulnerability_
 tools/identity/analyzer_baseline_gate.py	RETIRED_ONE_TIME_MIGRATION	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/ANALYZER_BASELINE_COMPARISON.json
 tools/identity/apply_identity_refactor.py	RETIRED_ONE_TIME_MIGRATION	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/BASELINE_TO_TARGET_PATHS.json
 tools/identity/artifact_gate.py	RETAINED_ENGINEERING	tools/identity/artifact_gate.py	evidence/WP-F2-SERVICEBUS-IDENTITY/ARTIFACT_GATE.json
-tools/identity/change_list.py	RETAINED_ENGINEERING	tools/identity/change_list.py	CHANGELIST.md
+tools/identity/change_list.py	RELOCATED_ENGINEERING	license/repository_diff.py	license/README.md
 tools/identity/evidence_summary_gate.py	RETIRED_HISTORICAL_REPRODUCTION	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/SOURCE_IDENTITY_GATE.json
 tools/identity/freeze_manifest.py	RETIRED_ONE_TIME_MIGRATION	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/SOURCE_IDENTITY_GATE.json
 tools/identity/generate_rabbitmq_native_obligation_maps.py	RETIRED_ONE_TIME_MIGRATION	evidence/native-tests/obligation-maps/rabbitmq-unit-native-obligation-map.tsv	evidence/native-tests/obligation-maps/rabbitmq-local-native-obligation-map.tsv
@@ -46,7 +46,7 @@ tools/identity/not_executed_source_gate.py	RETIRED_LEGACY_VERDICT	tests/Architec
 tools/identity/proof_contract_gate.py	RETIRED_ONE_TIME_MIGRATION	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/SOURCE_IDENTITY_GATE.json
 tools/identity/test_analyzer_baseline_gate.py	REPLACED_NATIVE_TEST	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/ANALYZER_BASELINE_COMPARISON.json
 tools/identity/test_artifact_gate.py	REPLACED_NATIVE_TEST	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/ARTIFACT_SCANNER_MUTATION_GATE.json
-tools/identity/test_change_list.py	REPLACED_NATIVE_TEST	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	CHANGELIST.md
+tools/identity/test_change_list.py	REPLACED_NATIVE_TEST	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	license/README.md
 tools/identity/test_failure_partition_gate.py	RETIRED_LEGACY_VERDICT	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/native-tests/obligation-maps/research.md
 tools/identity/test_freeze_manifest.py	RETIRED_ONE_TIME_MIGRATION	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/SOURCE_IDENTITY_GATE.json
 tools/identity/test_identity_gate.py	REPLACED_NATIVE_TEST	tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs	evidence/WP-F2-SERVICEBUS-IDENTITY/SOURCE_IDENTITY_GATE.json

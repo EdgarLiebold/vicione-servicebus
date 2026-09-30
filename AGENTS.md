@@ -5,7 +5,7 @@ the fixed upstream commit and carries the retained, modernised capability scope 
 identity `ViciOne.ServiceBus`. Upstream provenance, the Apache license and the modification notices
 stay; see [README.md](README.md), [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
 [COPYRIGHT](COPYRIGHT), [MODIFICATIONS.md](MODIFICATIONS.md) and the generated
-[CHANGELIST.md](CHANGELIST.md).
+[changelog](CHANGELOG.md) and [repository diff script](license/repository_diff.py).
 
 ViciOne changes are made only from a hash-bound development slice. What is in scope, what is
 retained and what is removed is decided there and not in this file; a removal is valid only with the

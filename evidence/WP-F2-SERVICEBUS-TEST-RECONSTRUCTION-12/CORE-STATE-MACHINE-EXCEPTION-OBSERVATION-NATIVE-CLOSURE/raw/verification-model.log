@@ -1,7 +1,0 @@
-Captured terminal summary
-
-Command:
-python3 -B tools/ci/verification/model.py
-
-Result:
-PASS

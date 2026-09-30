@@ -1,8 +1,0 @@
-Captured terminal summary
-
-Commands:
-python3 -B tools/identity/change_list.py --write
-python3 -B tools/identity/change_list.py
-
-PASS change-list written after the complete Evidence inventory was staged.
-PASS change-list matches the generated repository delta (10668 entries).

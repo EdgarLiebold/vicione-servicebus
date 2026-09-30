@@ -13,9 +13,9 @@ public sealed class VerificationCapabilityDispositionTests
     private static readonly IReadOnlyDictionary<string, int> ExpectedDispositions =
         new Dictionary<string, int>(StringComparer.Ordinal)
         {
-            ["RELOCATED_ENGINEERING"] = 1,
+            ["RELOCATED_ENGINEERING"] = 2,
             ["REPLACED_NATIVE_TEST"] = 11,
-            ["RETAINED_ENGINEERING"] = 11,
+            ["RETAINED_ENGINEERING"] = 10,
             ["RETAINED_NATIVE_CI"] = 1,
             ["RETIRED_HISTORICAL_REPRODUCTION"] = 1,
             ["RETIRED_LEGACY_VERDICT"] = 21,
@@ -35,7 +35,6 @@ public sealed class VerificationCapabilityDispositionTests
         "tools/ci/run_broker_category.py",
         "tools/ci/vulnerability_inventory.py",
         "tools/identity/artifact_gate.py",
-        "tools/identity/change_list.py",
         "tools/identity/identity_gate.py",
         "tools/identity/identity_rules.py",
     ];
@@ -100,9 +99,9 @@ public sealed class VerificationCapabilityDispositionTests
         Assert.Contains("dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet pack ViciOne.ServiceBus.slnx", workflow, StringComparison.Ordinal);
-        Assert.Contains("tools/identity/identity_gate.py scan", workflow, StringComparison.Ordinal);
+        Assert.Contains("tools/identity/identity_gate.py current", workflow, StringComparison.Ordinal);
         Assert.Contains("tools/identity/artifact_gate.py", workflow, StringComparison.Ordinal);
-        Assert.Contains("tools/identity/change_list.py", workflow, StringComparison.Ordinal);
+        Assert.Contains("license/repository_diff.py", workflow, StringComparison.Ordinal);
         Assert.Contains("tools/ci/vulnerability_inventory.py", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("VERIFICATION_MODEL", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("tools/ci/verify.py", workflow, StringComparison.Ordinal);

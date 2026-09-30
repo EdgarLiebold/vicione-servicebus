@@ -52,7 +52,7 @@ and do not by themselves prove deficient documentation.
 
 This inventory checks presence, not whether comments accurately describe
 runtime behavior. The current ServiceBus product-wide test checkpoint is
-[`490dde6d6`](../../.testagent/coverage-a-plus-20260921/product-wide-profile-490dde6d6.md):
+`490dde6d6` (measurement packet preserved in Git tag `archive/servicebus-pre-review-cleanup-20260930`):
 14,138 passing test executions, 92.39550% line coverage, 85.12921%
 conservative branch coverage and zero CRAP scores above 30. Its independent
 Red Team review validated the measurement and found no concrete P1/P2

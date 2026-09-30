@@ -1,8 +1,0 @@
-file	assembly	tests	passed	failed	skipped	pending	other
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_10_54.972454.ctrf	ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll	9	9	0	0	0	0
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_01.288772.ctrf	ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll	25	25	0	0	0	0
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_05.659194.ctrf	ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll	5	5	0	0	0	0
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_11_08.063629.ctrf	ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll	95	95	0	0	0	0
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_12_36.294568.ctrf	ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll	59	59	0	0	0	0
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_13_02.496720.ctrf	ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll	3	3	0	0	0	0
-positive/local-ctrf/edgar.liebold_Edgars-iMac-2_2026-08-28_17_13_03.587154.ctrf	ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll	48	48	0	0	0	0

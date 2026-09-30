@@ -1,1 +1,0 @@
-{"allowedBrokerOutage": null, "brokers": ["activemq", "artemis"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"activemq": "f4437f3b34a19a14d965a6e5c6bfc9068bbc662779328246663582cd99b4f401", "artemis": "ea882eac3aeb83ea294049d496f210f8324ec394cf9e1d145f1c317c7a551027"}, "schemaVersion": 1}

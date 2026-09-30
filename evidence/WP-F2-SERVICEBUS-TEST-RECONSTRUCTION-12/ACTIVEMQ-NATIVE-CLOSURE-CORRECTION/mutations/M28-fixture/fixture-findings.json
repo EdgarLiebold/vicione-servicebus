@@ -1,1 +1,0 @@
-{"allowedBrokerOutage": null, "brokers": ["artemis"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"artemis": "b534514dbd5f164287ebfae7f114d46589c283e2abf61a3c28aa216338e20ee0"}, "schemaVersion": 1}

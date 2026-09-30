@@ -4,7 +4,7 @@ ViciOne modification: WP-F2-SERVICEBUS-IDENTITY, 2026-08-07.
 
 The baseline is the complete MassTransit 8.5.10 source tree at upstream commit `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, imported into the local fork baseline commit `1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc` (tree `2b09d4e2b2e14289f06ba112ce1ae52e326a0307`).
 
-ViciOne changed the technical identity to `ViciOne.ServiceBus` across paths, projects, assemblies, packages, source identifiers, configuration, wire formats, topology, diagnostics, tests, documentation and automation. The deterministic mapping and one-to-one baseline census are generated under `evidence/WP-F2-SERVICEBUS-IDENTITY/`.
+ViciOne changed the technical identity to `ViciOne.ServiceBus` across paths, projects, assemblies, packages, source identifiers, configuration, wire formats, topology, diagnostics, tests, documentation and automation. The deterministic mapping and one-to-one baseline census remain available in Git tag `archive/servicebus-pre-review-cleanup-20260930` under `evidence/WP-F2-SERVICEBUS-IDENTITY/`.
 
 ## ViciOne modification: WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03, 2026-08-18
 
@@ -32,7 +32,7 @@ Beyond the identity change, ViciOne removed and modernised capabilities of the b
 - The Apache-2.0 licence text is carried as `LICENSE.txt`. The text is unchanged; only its file
   name changed.
 
-The generated [source change overview](CHANGELIST.md) summarizes the Git diff from the original
+The [repository diff script](license/repository_diff.py) summarizes the current Git diff from the original
 MassTransit import. Git retains the exact file history; the [changelog](CHANGELOG.md) describes
 the source changes by area.
 
@@ -63,7 +63,7 @@ useful capture capability now has an intentionally incompatible greenfield `Mess
 - it is a diagnostic message journal, never the ViciOne Suite operational or security audit owner.
 
 The retained provider capability is implemented for EF Core and Azure Table under source-mirrored
-namespaces. The generated [source change overview](CHANGELIST.md) groups changes to the original
+namespaces. The [repository diff script](license/repository_diff.py) groups changes to the original
 source tree; the [changelog](CHANGELOG.md) explains the replacement and retired capability.
 
 ## ViciOne modification: A+ public API program, 2026-09-05

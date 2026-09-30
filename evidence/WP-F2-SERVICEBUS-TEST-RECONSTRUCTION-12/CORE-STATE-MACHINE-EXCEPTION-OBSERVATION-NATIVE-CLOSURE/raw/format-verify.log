@@ -1,9 +1,0 @@
-Captured terminal summary
-
-Scoped dotnet format --verify-no-changes subject:
-- tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs
-- tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs
-- tests2/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs
-
-Result: exit=0
-Binlog: binlogs/format-verify.binlog

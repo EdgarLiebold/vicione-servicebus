@@ -17,9 +17,9 @@ retained and modernised ViciOne capability scope today. The retained and modifie
 under the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
 [COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md).
 
-The generated [source change overview](CHANGELIST.md) summarizes the Git diff from the original
-MassTransit import by code area. [CHANGELOG.md](CHANGELOG.md) explains the source redesign,
-retired modules and product fixes. Git retains the exact file history.
+The [changelog](CHANGELOG.md) indexes source changes, removed capabilities and corrected defects.
+For a current Git comparison of the entire repository, including tests, run
+`python3 license/repository_diff.py`. Git retains the exact file history.
 
 ## Install and configure
 

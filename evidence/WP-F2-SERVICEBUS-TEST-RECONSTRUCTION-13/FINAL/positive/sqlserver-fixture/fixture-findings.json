@@ -1,1 +1,0 @@
-{"allowedBrokerOutage": null, "brokers": ["postgres", "mssql"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"mssql": "62fa7d967050f78019aa68594e94fe9ab4ca8cf9594a8352480cd9830a77be57", "postgres": "c584aaea83ccdc5a3b1da98049d0e104a9146aac2e6e9970cb2d812db5febee1"}, "schemaVersion": 1}

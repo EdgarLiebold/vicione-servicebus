@@ -1,6 +1,0 @@
-M	.testagent/status.md
-M	MODIFICATIONS.md
-M	tools/ci/tests/test_verification_model.py
-M	tools/ci/verification/model.py
-M	tools/identity/identity_gate.py
-M	tools/identity/test_identity_gate.py

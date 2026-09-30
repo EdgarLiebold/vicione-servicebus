@@ -1,6 +1,0 @@
-Captured terminal summary
-
-Subject: 9eb4cdc6f14481ba7868febd5ebff9aba58b0f5a
-Filter: ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineExceptionBehaviorTests and ViciOne.ServiceBus.Tests.SagaStateMachine.StateMachineObservationTests
-Result: tests=16 passed=16 failed=0 skipped=0 pending=0 other=0 exit=0
-Machine result: positive/focused/focused.json

@@ -1,1 +1,0 @@
-{"allowedBrokerOutage": null, "brokers": ["azurite"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"azurite": "ab5c20e7b3efb69090239704257cbe81e1c5e9c4d4d13cf4517c1ee12d9c86c3"}, "schemaVersion": 1}

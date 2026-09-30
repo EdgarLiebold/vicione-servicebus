@@ -1,6 +1,0 @@
-azurite-1  | 2026-08-28T07:20:46.773876491Z Azurite Blob service is starting at http://127.0.0.1:10000
-azurite-1  | 2026-08-28T07:20:46.822639843Z Azurite Blob service is successfully listening at http://127.0.0.1:10000
-azurite-1  | 2026-08-28T07:20:46.822827383Z Azurite Queue service is starting at http://127.0.0.1:10001
-azurite-1  | 2026-08-28T07:20:46.839101717Z Azurite Queue service is successfully listening at http://127.0.0.1:10001
-azurite-1  | 2026-08-28T07:20:46.839129935Z Azurite Table service is starting at http://0.0.0.0:10002
-azurite-1  | 2026-08-28T07:20:46.841549873Z Azurite Table service is successfully listening at http://0.0.0.0:10002

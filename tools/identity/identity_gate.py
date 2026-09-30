@@ -1789,6 +1789,30 @@ def run_gate(root: Path, output: Path | None, evidence: Path | None = None) -> i
     return 0 if not findings else 1
 
 
+def run_current_gate(root: Path, output: Path | None) -> int:
+    """Check active product source and legal files without historical run artifacts."""
+    paths = [
+        path.decode("utf-8", errors="surrogateescape")
+        for path in git(root, "ls-files", "-z", "--", "src").split(b"\0")
+        if path
+    ]
+    findings = list(validate_legal_documents(root))
+    for path in paths:
+        try:
+            findings.extend(scan_entry(path, (root / path).read_bytes()))
+        except OSError as error:
+            findings.append(Finding("current-source", path, str(error)))
+    result = {
+        "status": "PASS" if not findings else "FAIL",
+        "trackedProductPaths": len(paths),
+        "findings": [finding.as_dict() for finding in findings],
+    }
+    if output:
+        write_json(output, result)
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0 if not findings else 1
+
+
 def generate_evidence(root: Path, evidence: Path) -> int:
     mapping, mapping_findings = derive_baseline_mapping(root)
     notices, notice_findings = derive_change_notices(root)
@@ -1815,12 +1839,14 @@ def generate_evidence(root: Path, evidence: Path) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("scan", "evidence"))
+    parser.add_argument("command", choices=("current", "scan", "evidence"))
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--output", type=Path)
     parser.add_argument("--evidence-root", type=Path)
     args = parser.parse_args()
     root = args.root.resolve(strict=True)
+    if args.command == "current":
+        return run_current_gate(root, args.output)
     if args.command == "scan":
         evidence_root = args.evidence_root.resolve(strict=True) if args.evidence_root else None
         return run_gate(root, args.output, evidence_root)

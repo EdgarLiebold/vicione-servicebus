@@ -1,5 +1,0 @@
-command=dotnet list ViciOne.ServiceBus.slnx package --vulnerable --include-transitive
-source=https://api.nuget.org/v3/index.json
-projects_scanned=22
-projects_with_vulnerable_packages=0
-exit_code=0

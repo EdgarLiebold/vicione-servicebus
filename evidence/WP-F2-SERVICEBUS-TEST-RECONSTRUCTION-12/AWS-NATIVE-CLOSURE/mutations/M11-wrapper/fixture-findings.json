@@ -1,1 +1,0 @@
-{"allowedBrokerOutage": null, "brokers": ["localstack"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"localstack": "4faad9a1e4bcb4ac8dd867d382544cce26889994f0f2e23c660ebc9d75400233"}, "schemaVersion": 1}

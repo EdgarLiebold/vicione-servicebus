@@ -1,9 +1,0 @@
-{
-  "artifacts": 178,
-  "asciiAndUtf16FormerIdentityScanning": true,
-  "dllAndPdbRawScanningUnchanged": true,
-  "findings": [],
-  "invalidUtf8BinaryScanning": true,
-  "nupkgContainerAwareScanning": true,
-  "status": "PASS"
-}
