@@ -55,8 +55,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 5632,
-      "authorizedLinesSha256": "7d1adfba4a5cd6848f46d2eebdc8bb4996514cb00879dc5a1740fa7d33796cc4",
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "0dd2156ecf00cefdfb9f09f408c953dae00728b3609f54c7ce8cc005d64e288d",
       "category": "LEGAL_PROVENANCE",
       "path": "CHANGELIST.md"
     },
@@ -65,8 +65,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 1,
-      "authorizedLinesSha256": "a067c7079fd85f26a94ec548277e576c359099cc50a357d07eda9e0eb5252211",
+      "authorizedLineCount": 17,
+      "authorizedLinesSha256": "55a4eb54983e9f96bf7ca657a6c808825a2b3b05577a560904a9f45c2024ee81",
       "category": "HISTORICAL_EVIDENCE",
       "path": "CHANGELOG.md"
     },
@@ -75,8 +75,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 2,
-      "authorizedLinesSha256": "bf4d886a129673c8c3bce3dbe15164c7752cb129ab88c788577f00de4ae0c9b9",
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "9016fca07d443d7526c73884f2460aed0ebd337f2ac55c8b2ce354881ad3b717",
       "category": "LEGAL_PROVENANCE",
       "path": "MODIFICATIONS.md"
     },
@@ -849,8 +849,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 1,
-      "authorizedLinesSha256": "cda97a52348b5090eed895302cf80965bf600ca4801aecbc675a6a068015f48e",
+      "authorizedLineCount": 5,
+      "authorizedLinesSha256": "4d34b69ab285d182bd49cf7eedcdc3a8db950580ab02f093db2aaeb75250b883",
       "category": "IDENTITY_TOOL_SELF_REFERENCE",
       "path": "tools/identity/change_list.py"
     },

@@ -454,19 +454,6 @@ def deleted_path_commits(root: Path) -> dict[str, str]:
     return records
 
 
-def change_list_deleted_baseline_paths(root: Path) -> set[str]:
-    document = (root / "CHANGELIST.md").read_text(encoding="utf-8")
-    return {
-        match.group("source")
-        for match in re.finditer(
-            r"^\| `(?P<path>[^`]+)` \| Deleted \| `(?P<source>[^`]+)` \|$",
-            document,
-            flags=re.MULTILINE,
-        )
-        if match.group("path") == match.group("source")
-    }
-
-
 def commit_tree(root: Path, commit: str) -> str:
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise ValueError("commit must be a full lowercase Git object id")
@@ -504,7 +491,7 @@ def validate_terminal_baseline_records(
             if (
                 not isinstance(retirement_commit, str)
                 or not re.fullmatch(r"[0-9a-f]{40}", retirement_commit)
-                or record.get("retirementEvidence") != "ROOT_CHANGE_LIST"
+                or record.get("retirementEvidence") != "GIT_DELETION_HISTORY"
                 or not isinstance(record.get("retirementTree"), str)
                 or not re.fullmatch(r"[0-9a-f]{40}", str(record.get("retirementTree")))
             ):
@@ -642,7 +629,6 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
     records: list[dict[str, object]] = []
     findings: list[Finding] = []
     seen_targets: dict[str, str] = {}
-    deleted_sources = change_list_deleted_baseline_paths(root)
     deletion_commits = deleted_path_commits(root)
     retirement_trees: dict[str, str] = {}
     actual_tree_entries: dict[str, tuple[str, str]] = {}
@@ -677,8 +663,6 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
             record["targetGitBlobOid"] = target_blob_oid
         elif not exists:
             deletion_commit = deletion_commits.get(target) or deletion_commits.get(source)
-            if source not in deleted_sources:
-                findings.append(Finding("baseline-retirement", target, f"CHANGELIST has no deletion for {source}"))
             if not deletion_commit:
                 findings.append(Finding("baseline-retirement", target, f"Git history has no deletion for {source}"))
             retirement_tree = None
@@ -688,7 +672,7 @@ def derive_baseline_mapping(root: Path) -> tuple[list[dict[str, object]], list[F
                 retirement_tree = retirement_trees[deletion_commit]
             record.update({
                 "retirementCommit": deletion_commit,
-                "retirementEvidence": "ROOT_CHANGE_LIST",
+                "retirementEvidence": "GIT_DELETION_HISTORY",
                 "retirementTree": retirement_tree,
             })
         records.append(record)
@@ -715,7 +699,7 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
                     "contentChanged": False,
                     "pathChanged": source != target,
                     "changeKind": "RETIRED_DELETED",
-                    "mechanism": "ROOT_CHANGE_LIST",
+                    "mechanism": "GIT_BASELINE_COMPARISON",
                     "effective": True,
                 }
             )
@@ -725,9 +709,8 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
         if source == target and before == after:
             continue
 
-        # The per file notice duty was replaced by the generated root change list, so a changed baseline file is
-        # no longer required to carry a comment of its own. The census of what changed stays, because the change
-        # list is built from exactly this comparison.
+        # Record the direct baseline-to-candidate comparison. The generated source-area
+        # overview is a separate, aggregate account and does not prove individual files.
         records.append(
             {
                 **baseline_binding(root, source),
@@ -735,7 +718,7 @@ def derive_change_notices(root: Path) -> tuple[list[dict[str, object]], list[Fin
                 "contentChanged": before != after,
                 "pathChanged": source != target,
                 "changeKind": "MODIFIED_OR_MOVED",
-                "mechanism": "ROOT_CHANGE_LIST",
+                "mechanism": "GIT_BASELINE_COMPARISON",
                 "effective": True,
             }
         )

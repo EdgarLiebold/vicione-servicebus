@@ -17,8 +17,9 @@ retained and modernised ViciOne capability scope today. The retained and modifie
 under the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
 [COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md).
 
-The generated [CHANGELIST.md](CHANGELIST.md) lists path-level changes required by Apache License
-2.0 section 4(b). [CHANGELOG.md](CHANGELOG.md) describes product-facing changes.
+The generated [source change overview](CHANGELIST.md) summarizes the Git diff from the original
+MassTransit import by code area. [CHANGELOG.md](CHANGELOG.md) explains the source redesign,
+retired modules and product fixes. Git retains the exact file history.
 
 ## Install and configure
 

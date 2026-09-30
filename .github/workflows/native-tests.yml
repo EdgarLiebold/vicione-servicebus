@@ -182,6 +182,8 @@ jobs:
       - rabbitmq-local-integration
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
@@ -203,7 +205,7 @@ jobs:
         run: python3 tools/identity/identity_gate.py scan --root . --output artifacts/policy/SOURCE_IDENTITY_GATE.json --evidence-root evidence/WP-F2-SERVICEBUS-IDENTITY
       - name: Verify package and binary identity closure
         run: python3 tools/identity/artifact_gate.py --root . --output artifacts/policy/ARTIFACT_GATE.json
-      - name: Verify Apache change evidence
+      - name: Verify generated source change overview
         run: python3 tools/identity/change_list.py --repository .
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()

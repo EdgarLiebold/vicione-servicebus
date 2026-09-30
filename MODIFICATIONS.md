@@ -29,11 +29,12 @@ Beyond the identity change, ViciOne removed and modernised capabilities of the b
   control files, broker logs - under `artifacts/run-output/<run>/`, and its durable record under the
   evidence parent the caller named, in that run's own child of it. The record is the one file meant to
   outlive the run, which is why it is not written under the raw output.
-- The Apache-2.0 licence text is carried as `LICENSE.txt`. The text is unchanged; only the file name
-  changed, and the generated ChangeList records the rename.
+- The Apache-2.0 licence text is carried as `LICENSE.txt`. The text is unchanged; only its file
+  name changed.
 
-Which file each of these touched is not repeated here. The generated
-[CHANGELIST.md](CHANGELIST.md) is the section 4(b) record and holds the complete path inventory.
+The generated [source change overview](CHANGELIST.md) summarizes the Git diff from the original
+MassTransit import. Git retains the exact file history; the [changelog](CHANGELOG.md) describes
+the source changes by area.
 
 ## Changed files without an in-file modification comment
 
@@ -62,8 +63,8 @@ useful capture capability now has an intentionally incompatible greenfield `Mess
 - it is a diagnostic message journal, never the ViciOne Suite operational or security audit owner.
 
 The retained provider capability is implemented for EF Core and Azure Table under source-mirrored
-namespaces. The generated [CHANGELIST.md](CHANGELIST.md) records every added, modified and removed
-path, including removed inherited files that can no longer carry an inline modification notice.
+namespaces. The generated [source change overview](CHANGELIST.md) groups changes to the original
+source tree; the [changelog](CHANGELOG.md) explains the replacement and retired capability.
 
 ## ViciOne modification: A+ public API program, 2026-09-05
 

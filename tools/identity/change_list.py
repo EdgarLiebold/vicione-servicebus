@@ -1,141 +1,137 @@
 #!/usr/bin/env python3
-"""Generate and verify the root change list that carries the Apache 2.0 section 4(b) evidence.
-
-The per file notice was retired, so this document is the only place that states which files this fork
-changed against its upstream baseline. That makes it evidence rather than documentation: it is
-generated from the pinned baseline and the working tree, never edited by hand, and the check mode
-rejects a file that differs from what the generator produces by a single byte.
-
-Standard library only, so it runs before any restore.
-"""
+"""Generate a concise source-area overview from the original MassTransit import."""
 
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
+from collections import Counter, defaultdict
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from identity_rules import BASELINE_COMMIT, BASELINE_TREE  # noqa: E402
-from identity_gate import (  # noqa: E402
-    baseline_archive,
-    baseline_bytes,
-    commit_candidate_files,
-    map_path,
+ORIGINAL_IMPORT = "9be1da2046218be2503c77c529b68d96fe113008"
+CHANGE_LIST = "CHANGELIST.md"
+AREAS = (
+    "Core and contracts",
+    "Workflow and application packages",
+    "Persistence",
+    "Scheduling",
+    "Transports",
+    "Serialization, diagnostics and tooling",
+    "Other source",
 )
 
-CHANGE_LIST = "CHANGELIST.md"
 
-HEADER = """# ViciOne.ServiceBus change list
-
-This file is generated. It is the change evidence Apache License 2.0 section 4(b) asks for: it names
-every file this fork adds, changes, deletes or renames against its upstream baseline. Do not edit it
-by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
-
-| Baseline | Value |
-|---|---|
-| Upstream | MassTransit 8.5.10 |
-| Baseline commit | `{commit}` |
-| Baseline tree | `{tree}` |
-
-| Status | Count |
-|---|---|
-| Added | {added} |
-| Modified | {modified} |
-| Deleted | {deleted} |
-| Renamed | {renamed} |
-
-| Path | Status | Baseline path |
-|---|---|---|
-"""
+def git(root: Path, *args: str) -> bytes:
+    return subprocess.check_output(["git", "-C", str(root), *args], stderr=subprocess.PIPE)
 
 
-def classify(root: Path) -> list[tuple[str, str, str]]:
-    """Every difference against the baseline, as (path, status, baseline path).
+def area(path: str) -> str:
+    parts = path.split("/")
+    if len(parts) < 2 or parts[0] != "src":
+        raise ValueError(f"Unexpected source path: {path}")
+    if parts[1] == "Persistence":
+        return "Persistence"
+    if parts[1] == "Scheduling":
+        return "Scheduling"
+    if parts[1] == "Transports":
+        return "Transports"
+    name = parts[1]
+    if name in {"MassTransit", "MassTransit.Abstractions", "ViciOne.ServiceBus", "ViciOne.ServiceBus.Abstractions"}:
+        return "Core and contracts"
+    if name in {"ViciOne.ServiceBus.Sagas", "ViciOne.ServiceBus.Courier", "ViciOne.ServiceBus.Futures",
+                "ViciOne.ServiceBus.JobService", "ViciOne.ServiceBus.Mediator", "ViciOne.ServiceBus.Initializers"}:
+        return "Workflow and application packages"
+    if name.startswith(("MassTransit.", "ViciOne.ServiceBus.")):
+        return "Serialization, diagnostics and tooling"
+    return "Other source"
 
-    The status vocabulary is fixed, so a file that was both renamed and edited has to pick one word.
-    Content wins: section 4(b) asks which files were changed, and this fork renamed almost everything,
-    so calling those Renamed would report a path move and stay silent about the edit underneath.
-    Renamed therefore means moved with identical bytes, and the baseline path column carries the
-    origin either way, so the rename is never lost.
-    """
-    baseline = baseline_archive(root)
-    present = {
-        str(p.relative_to(root)).replace("\\", "/")
-        for p in commit_candidate_files(root)
-    }
 
-    rows: list[tuple[str, str, str]] = []
-    mapped_targets: set[str] = set()
+def changes(root: Path) -> dict[str, Counter[str]]:
+    untracked = git(root, "ls-files", "--others", "--exclude-standard", "-z", "--", "src")
+    if untracked:
+        raise ValueError("Stage or remove untracked source files before generating the overview")
 
-    for source in sorted(baseline):
-        target = map_path(source)
-        mapped_targets.add(target)
-        if target not in present:
-            rows.append((source, "Deleted", source))
-            continue
-        if (root / target).read_bytes() != baseline_bytes(root, source):
-            rows.append((target, "Modified", source))
-        elif target != source:
-            rows.append((target, "Renamed", source))
+    raw = git(root, "diff", "--no-renames", "--name-status", "-z", ORIGINAL_IMPORT, "--", "src")
+    fields = raw.decode("utf-8", errors="surrogateescape").split("\0")
+    if fields[-1] == "":
+        fields.pop()
+    if len(fields) % 2:
+        raise ValueError("Git returned an incomplete name-status record")
 
-    for path in sorted(present - mapped_targets):
-        rows.append((path, "Added", ""))
-
-    return sorted(rows)
+    totals: dict[str, Counter[str]] = defaultdict(Counter)
+    for status, path in zip(fields[::2], fields[1::2]):
+        kind = status[0]
+        if kind not in {"A", "M", "D", "T"}:
+            raise ValueError(f"Unexpected Git status: {status}")
+        totals[area(path)]["M" if kind == "T" else kind] += 1
+    return totals
 
 
 def render(root: Path) -> str:
-    return render_rows(classify(root))
-
-
-def render_rows(rows: list[tuple[str, str, str]]) -> str:
-    counts = {status: sum(1 for _, s, _ in rows if s == status)
-              for status in ("Added", "Modified", "Deleted", "Renamed")}
-
-    body = HEADER.format(commit=BASELINE_COMMIT, tree=BASELINE_TREE,
-                         added=counts["Added"], modified=counts["Modified"],
-                         deleted=counts["Deleted"], renamed=counts["Renamed"])
-    for path, status, origin in rows:
-        body += f"| `{path}` | {status} | {f'`{origin}`' if origin else ''} |\n"
-    return body
+    if git(root, "rev-parse", "--verify", f"{ORIGINAL_IMPORT}^{{commit}}").decode().strip() != ORIGINAL_IMPORT:
+        raise ValueError("The original MassTransit import commit is unavailable")
+    totals = changes(root)
+    original_projects = sum(
+        path.endswith(".csproj")
+        for path in git(root, "ls-tree", "-r", "--name-only", ORIGINAL_IMPORT, "src").decode().splitlines()
+    )
+    current_projects = len(list((root / "src").rglob("*.csproj")))
+    lines = [
+        "# Source change overview",
+        "",
+        "This overview is generated from the original MassTransit 8.5.10 import and the current",
+        "source tree. It summarizes scale by source area; the [changelog](CHANGELOG.md) explains",
+        "behavior, replacements, removed capabilities and fixes. Git retains the exact file history.",
+        "",
+        f"Original import: `{ORIGINAL_IMPORT}`.",
+        f"Source projects: {original_projects} in the import; {current_projects} in the current tree.",
+        "Regenerate with `python3 tools/identity/change_list.py --write`; check with",
+        "`python3 tools/identity/change_list.py`.",
+        "The underlying comparison is `git diff --no-renames " + ORIGINAL_IMPORT + " -- src`.",
+        "",
+        "| Source area | Added paths | Changed paths | Removed paths |",
+        "|---|---:|---:|---:|",
+    ]
+    for name in AREAS:
+        count = totals[name]
+        lines.append(f"| {name} | {count['A']} | {count['M']} | {count['D']} |")
+    overall = Counter()
+    for count in totals.values():
+        overall.update(count)
+    lines += [
+        f"| **Total** | **{overall['A']}** | **{overall['M']}** | **{overall['D']}** |",
+        "",
+        "The repository-wide identity and path migration counts as additions and removals",
+        "because rename detection is disabled. These numbers describe Git paths, not independent",
+        "features or the amount of original code retained. Read the area-based changelog for",
+        "the corresponding product changes.",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository", type=Path, default=Path(__file__).resolve().parents[2])
-    parser.add_argument("--write", action="store_true", help="Write the change list instead of checking it.")
+    parser.add_argument("--write", action="store_true", help="Write the summary instead of checking it")
     args = parser.parse_args(argv)
-
-    rows = classify(args.repository)
-    expected = render_rows(rows)
-    target = args.repository / CHANGE_LIST
-
+    root = args.repository.resolve()
+    try:
+        expected = render(root)
+    except (subprocess.CalledProcessError, ValueError) as error:
+        print(f"FAIL source change overview: {error}", file=sys.stderr)
+        return 1
+    target = root / CHANGE_LIST
     if args.write:
         target.write_text(expected, encoding="utf-8")
-        print(f"PASS change-list written {CHANGE_LIST}")
+        print(f"PASS source change overview written {CHANGE_LIST}")
         return 0
-
-    if not target.is_file():
-        print(f"FAIL change-list {CHANGE_LIST} is missing; the change evidence has no carrier", file=sys.stderr)
+    if not target.is_file() or target.read_text(encoding="utf-8") != expected:
+        print(f"FAIL source change overview differs from {CHANGE_LIST}", file=sys.stderr)
         return 1
-
-    actual = target.read_text(encoding="utf-8")
-    if actual != expected:
-        expected_lines, actual_lines = expected.splitlines(), actual.splitlines()
-        for number, (want, got) in enumerate(zip(expected_lines, actual_lines), 1):
-            if want != got:
-                print(f"FAIL change-list line {number} differs\n  expected: {want}\n  actual:   {got}", file=sys.stderr)
-                return 1
-        print(f"FAIL change-list has {abs(len(expected_lines) - len(actual_lines))} line(s) too "
-              f"{'few' if len(actual_lines) < len(expected_lines) else 'many'}", file=sys.stderr)
-        return 1
-
-    # The number of classified rows, not a line count with a header offset subtracted from it. The
-    # offset was one too high for the header this file actually has, so the gate reported one entry
-    # more than the document lists and every count taken from its console output was wrong.
-    print(f"PASS change-list matches the generated evidence ({len(rows)} entries)")
+    print("PASS source change overview matches the original-import Git diff")
     return 0
 
 
