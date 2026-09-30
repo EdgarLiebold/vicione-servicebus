@@ -81,6 +81,16 @@
       "path": "MODIFICATIONS.md"
     },
     {
+      "path": "README.md",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "25499d0eeb3841cb468e5524f8928b0de444375e858ecbd4c37ff5aced789d4e"
+    },
+    {
       "path": "docs/amazon-s3-message-data.md",
       "category": "HISTORICAL_EVIDENCE",
       "allowedGates": [
@@ -89,6 +99,14 @@
       ],
       "authorizedLineCount": 3,
       "authorizedLinesSha256": "49318d9e839f860fa9205064754908ca86d877224b21b896b136315b463761a1"
+    },
+    {
+      "path": "docs/api/roslyn-all-repos-api-2026-09-30.tar.gz",
+      "category": "HISTORICAL_EVIDENCE",
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "e3f84874c918ea33261ea334a4bb6342e554e3abb15584db592c9cc685e53193"
     },
     {
       "allowedGates": [
