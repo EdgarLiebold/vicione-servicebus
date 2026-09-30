@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11154 |
+| Added | 11173 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -253,6 +253,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t154-azure-table-journal-boundary.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t155-azure-table-job-keys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t156-signalr-timer-boundary.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t159-ef-transactional-empty-message-id.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -735,6 +736,22 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `TestResults/artifacts/coverage-sns-subscription-20260923-61f7e4705/coverage.cobertura.xml` | Added |  |
 | `TestResults/artifacts/t115-core-direct.cobertura.xml` | Added |  |
 | `TestResults/artifacts/t115-ef-direct.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-00.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-01.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-02.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-03.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-04.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-05.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-06.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/-07.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-00.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-01.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-02.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-03.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-04.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-05.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-06.cobertura.xml` | Added |  |
+| `TestResults/artifacts/t158-gc-coverage-replay/isolated-07.cobertura.xml` | Added |  |
 | `TestResults/coverage-analysis/analyze_messagepack_coverage.rb` | Added |  |
 | `TestResults/coverage-analysis/combined.cobertura.xml` | Added |  |
 | `TestResults/coverage-analysis/coverage-analysis.md` | Added |  |
@@ -887,6 +904,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `docs/api/packed-public-api.txt` | Added |  |
 | `docs/api/roslyn-all-repos-api-2026-09-29.md` | Added |  |
 | `docs/api/roslyn-all-repos-api-2026-09-29.tar.gz` | Added |  |
+| `docs/api/roslyn-all-repos-api-2026-09-30.md` | Added |  |
+| `docs/api/roslyn-all-repos-api-2026-09-30.tar.gz` | Added |  |
 | `docs/build.md` | Added |  |
 | `docs/migrations/README.md` | Added |  |
 | `docs/migrations/reliable-messaging-postgresql.sql` | Added |  |

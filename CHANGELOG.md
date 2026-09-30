@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed the EF transactional outbox accepting `Guid.Empty` as a message ID.
+  It now rejects the invalid identity before serialization, staging or capacity
+  reservation, matching the existing EF outbox contract. A red-first SQLite
+  test checks that no record or capacity state is staged and that a following
+  valid send commits normally.
+
 - A fresh exact-commit product-wide checkpoint verifies 33 profiles,
   14,138 passing test executions, all 32 product assemblies and no method
   above CRAP 30. Line and conservative Branch coverage are 92.39550% and

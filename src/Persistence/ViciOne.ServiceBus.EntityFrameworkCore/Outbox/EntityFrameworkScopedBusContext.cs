@@ -157,8 +157,8 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
 
     DurableSendRecord CreateStagedRecord<T>(SendContext<T> context) where T : class
     {
-        if (!context.MessageId.HasValue)
-            throw new MessageException(typeof(T), "The SendContext MessageId must be present");
+        if (context.MessageId is not { } messageId || messageId == Guid.Empty)
+            throw new MessageException(typeof(T), "The SendContext MessageId must be present and nonempty");
         Uri destination = context.DestinationAddress
             ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
         DateTimeOffset now = _timeProvider.GetUtcNow();
@@ -181,7 +181,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             throw new InvalidOperationException("The transactional outbox has no complete payload admission proof for its serialized envelope.");
 
         byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof).ToArray();
-        Guid id = context.MessageId.Value;
+        Guid id = messageId;
         if (_staged.ContainsKey(id)
             || _dbContext.ChangeTracker.Entries<DurableSendRecord>()
                 .Any(entry => entry.Entity.Id == id && entry.Entity.StoreKey == _persistenceIdentity))

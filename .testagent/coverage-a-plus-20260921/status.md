@@ -1,5 +1,15 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T159 EF transactional message identity
+
+The EF transactional outbox now rejects `Guid.Empty` before serialization or
+staging. Its red-first SQLite regression checks rejection without tracker or
+capacity effects and a following valid commit through the same context. The
+complete EF project passes 401/401; independent read-only Red Team re-review
+is PASS after closing one P2 test-oracle gap. See
+[T159 evidence](t159-ef-transactional-empty-message-id.md). T157 remains the
+latest complete product-wide Coverage/CRAP checkpoint.
+
 ## Current T158 Roslyn API inventory
 
 The refreshed [cross-repository API snapshot](../../docs/api/roslyn-all-repos-api-2026-09-30.md)

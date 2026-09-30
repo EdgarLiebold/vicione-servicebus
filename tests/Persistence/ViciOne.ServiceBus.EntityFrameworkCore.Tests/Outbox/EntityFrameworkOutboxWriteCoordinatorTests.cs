@@ -458,6 +458,42 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "transactional-outbox-rejects-empty-message-id-before-staging")]
+    public async Task EmptyMessageId_RejectsBeforeStagingAndPreservesTheSessionAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                context.AddSendAsync(CreateSendContext(Guid.Empty, 1), token));
+            Assert.Contains("nonempty", failure.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.False(context.HasActiveSession);
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>());
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>());
+        }
+        finally
+        {
+            if (context.HasActiveSession)
+                await context.AbortAsync(token);
+        }
+
+        Guid validId = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(validId, 2), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        DurableSendCapacityState capacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(validId, stored.Id);
+        Assert.Equal(validId, stored.MessageId);
+        Assert.Equal(1, capacity.StoredCount);
+        Assert.Equal(stored.StorageSize, capacity.StoredBytes);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-duplicate-message-id-does-not-reserve-capacity-twice")]
     public async Task DuplicateMessageId_RejectsSecondAdmissionWithoutInflatingCommittedCapacityAsync()
     {
