@@ -1,5 +1,14 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T158 Roslyn API inventory
+
+The refreshed [cross-repository API snapshot](../../docs/api/roslyn-all-repos-api-2026-09-30.md)
+contains 69 projects and 30,339 visible symbols. ServiceBus has 32 projects
+without Roslyn diagnostics and no exposed explicit symbol lacking its own XML;
+CodeFixes remains flagged by a workspace reference diagnostic despite a clean
+Release build. Independent Red Team review accepts the snapshot as triage,
+not as an A+ API certificate. No product source changed in this packet.
+
 ## Current T157 product-wide checkpoint
 
 The strict exact-commit 33-profile aggregate on `490dde6d6` covers all 32
