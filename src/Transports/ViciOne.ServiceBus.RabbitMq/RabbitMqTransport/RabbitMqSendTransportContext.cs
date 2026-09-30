@@ -150,7 +150,7 @@ public class RabbitMqSendTransportContext :
 
         string exchange = context.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) ? "" : context.Exchange;
 
-        byte[] body = context.Body.ToArray();
+        byte[] body = TransportBodyMaterializer.ToArray(context);
 
         if (context.TryGetPayload(out PublishContext? publishContext))
             context.Mandatory = context.Mandatory || publishContext.Mandatory;

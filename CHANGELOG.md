@@ -11,6 +11,18 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed send-time body callbacks that could change `MessageId` or `ContentType`
+  after the serialized payload was read but before transport metadata was
+  written. In-memory, RabbitMQ, Azure Service Bus, ActiveMQ, Event Hubs,
+  Amazon SQS, SQL Server and PostgreSQL now use a shared metadata guard. A
+  rejected or throwing callback restores the original metadata; the outgoing
+  journal cannot record a contradictory fault entry. Red-first transport,
+  SQL-storage and bus integration tests cover successful and throwing
+  mutations, plus an untrusted exception that tries to suppress journal
+  capture. The read-only adversarial review found no further concrete P1/P2
+  in this change. The full Unit solution passed 12,268/12,269; its sole Quartz
+  timeout passed alone and in the complete isolated Quartz project (318/318).
+
 - Fixed four message-identity mismatches at outgoing serialization boundaries.
   The in-memory transport now rejects an identity change while materializing
   the body. Payload admission rejects a bounded serializer that changes the

@@ -107,6 +107,34 @@ public sealed class RabbitMqSendTransportContextTests
         Assert.Equal(RabbitMqExchangeNames.ReplyTo, published.BasicProperties.ReplyTo);
     }
 
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "serializer-cannot-change-published-frame-metadata")]
+    public async Task SendAsync_RejectsBodyCallbackThatChangesPublishedMetadataAsync(bool changeId, bool changeContentType)
+    {
+        Guid initialId = Guid.Parse("b70f751c-58d0-4ac8-8549-b00d3aa91a32");
+        Guid laterId = Guid.Parse("7274f764-414d-43cd-aae8-e9bbfdd5818e");
+        var context = CreateMessageContext("orders", [1, 2, 3, 4]);
+        context.MessageId = initialId;
+        context.Serializer = new MutatingSerializer(sendContext =>
+        {
+            if (changeId)
+                sendContext.MessageId = laterId;
+            if (changeContentType)
+                sendContext.ContentType = new ContentType("application/vnd.vicione.changed");
+        });
+        var channel = new RecordingChannelContext();
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        Assert.Contains(changeId ? "MessageId changed" : "ContentType changed", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(initialId, context.MessageId);
+        Assert.Equal("application/vnd.vicione.test", context.ContentType?.ToString());
+        Assert.Empty(channel.Published);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "distinct-publish-payload-enforces-mandatory-routing")]
     public async Task SendAsync_EnforcesMandatoryRoutingFromADistinctPublishPayloadAsync()
@@ -787,6 +815,33 @@ public sealed class RabbitMqSendTransportContextTests
 
         public MessageBody GetMessageBody<T>(SendContext<T> context)
             where T : class => new BinaryMessageBody(body);
+    }
+
+    private sealed class MutatingSerializer(Action<SendContext> mutate) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/vnd.vicione.test");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            new MutatingBody(() => mutate(context));
+    }
+
+    private sealed class MutatingBody(Action mutate) : MessageBody
+    {
+        public long Length => 4;
+
+        public byte[] ToArray()
+        {
+            mutate();
+            return [1, 2, 3, 4];
+        }
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
+
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text)
+        {
+            text = Convert.ToBase64String(ToArray());
+            return true;
+        }
     }
 
     private sealed class InvariantFormattable(decimal value) : IFormattable

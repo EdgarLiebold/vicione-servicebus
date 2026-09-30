@@ -420,7 +420,7 @@ internal sealed class SqlServerClientContext :
     static object CreateMessageParameters<T>(string entityName, SqlMessageSendContext<T> context)
         where T : class
     {
-        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
+        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context);
         Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
         DateTime? expirationTime = context.TimeToLive.HasValue
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value

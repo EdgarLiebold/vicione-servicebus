@@ -15,6 +15,9 @@ internal static class MessageJournalCaptureFactory
         Exception? exception)
         where T : class
     {
+        if (exception is not null && TransportBodyMaterializer.IsMutationFailure(exception))
+            throw new InvalidOperationException("The rejected transport body has no stable journal capture.");
+
         Guid? messageIdBeforeBody = context.MessageId;
         MessageBody body = context is TransportSendContext transportContext
             ? transportContext.Body

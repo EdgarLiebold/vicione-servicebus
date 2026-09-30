@@ -281,7 +281,7 @@ internal sealed class PostgreSqlClientContext :
         DateTime? expirationTime = context.TimeToLive.HasValue
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
-        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
+        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context);
         string? exactBody = bodyStorage.Text;
 
         return ExecuteDatabaseOperationAsync(async (connection, transaction, token) =>
@@ -346,7 +346,7 @@ internal sealed class PostgreSqlClientContext :
         DateTime? expirationTime = context.TimeToLive.HasValue
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
-        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context.Body, context.ContentType);
+        SqlMessageBodyStorage bodyStorage = SqlMessageBodyStorage.Create(context);
         string? exactBody = bodyStorage.Text;
 
         return ExecuteDatabaseOperationAsync(async (connection, transaction, token) =>

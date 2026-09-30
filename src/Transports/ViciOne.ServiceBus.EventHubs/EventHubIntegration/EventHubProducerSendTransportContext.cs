@@ -111,7 +111,7 @@ public class EventHubProducerSendTransportContext :
                 Activity.Current.SetTag(nameof(context.PartitionKey), options.PartitionKey);
         }
 
-        var eventData = new EventData(context.Body.ToArray());
+        var eventData = new EventData(TransportBodyMaterializer.ToArray(context));
 
         eventData.Properties.Set(context.Headers);
 

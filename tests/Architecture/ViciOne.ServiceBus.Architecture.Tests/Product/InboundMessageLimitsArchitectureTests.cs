@@ -76,7 +76,7 @@ public sealed class InboundMessageLimitsArchitectureTests
 
         string clientContext = Read(clientContextPath);
         Assert.Equal(expectedStorageSelections,
-            clientContext.Split("SqlMessageBodyStorage.Create(context.Body, context.ContentType)", StringSplitOptions.None).Length - 1);
+            clientContext.Split("SqlMessageBodyStorage.Create(context)", StringSplitOptions.None).Length - 1);
         Assert.Contains("bodyStorage.Text", clientContext, StringComparison.Ordinal);
         Assert.Contains("bodyStorage.Binary", clientContext, StringComparison.Ordinal);
     }

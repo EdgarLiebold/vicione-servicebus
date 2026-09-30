@@ -182,7 +182,7 @@ internal static class EventHubProducerBatchSender
             EventHubMessageSendContext<T> context = contexts[index];
             context.ConversationId ??= conversationIds[index].ToGuid();
 
-            var eventData = new EventData(context.Body.ToArray());
+            var eventData = new EventData(TransportBodyMaterializer.ToArray(context));
             eventData.Properties.Set(context.Headers);
 
             if (context.MessageId.HasValue)

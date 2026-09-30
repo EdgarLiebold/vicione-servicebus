@@ -117,7 +117,7 @@ public class ActiveMqSendTransportContext :
 
         var destination = context.ReplyDestination ?? await sessionContext.GetDestinationAsync(EntityName, _destinationType, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        var transportMessage = sessionContext.CreateBytesMessage(context.Body.ToArray());
+        var transportMessage = sessionContext.CreateBytesMessage(TransportBodyMaterializer.ToArray(context));
 
         await SetResponseToAsync(transportMessage, context, sessionContext);
 

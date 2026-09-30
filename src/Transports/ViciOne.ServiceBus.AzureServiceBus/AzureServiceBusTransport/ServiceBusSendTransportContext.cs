@@ -213,7 +213,7 @@ public class ServiceBusSendTransportContext :
     static ServiceBusMessage CreateMessage<T>(AzureServiceBusSendContext<T> context)
         where T : class
     {
-        var message = new ServiceBusMessage(BinaryData.FromBytes(context.Body.ToArray()))
+        var message = new ServiceBusMessage(BinaryData.FromBytes(TransportBodyMaterializer.ToArray(context)))
         {
             ContentType = (context.ContentType
                 ?? throw new InvalidOperationException("A content type is required before an Azure Service Bus message can be sent.")).ToString()

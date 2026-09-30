@@ -121,7 +121,7 @@ public class TopicSendTransportContext :
         operationToken.ThrowIfCancellationRequested();
 
         AmazonSqsDelay.EnsureNotSetForTopic(context.Delay);
-        string body = context.Body.GetRequiredTransportText();
+        string body = TransportBodyMaterializer.GetTransportText(context);
         AmazonSqsTransportTextAdmission.Validate(context, body);
 
         operationToken.ThrowIfCancellationRequested();

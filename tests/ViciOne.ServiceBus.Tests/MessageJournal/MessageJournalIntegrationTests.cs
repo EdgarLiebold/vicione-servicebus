@@ -277,6 +277,43 @@ public sealed class MessageJournalIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "untrusted-exception-data-cannot-suppress-fault-capture")]
+    public async Task FaultedSend_UntrustedExceptionDataCannotSuppressJournalAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-untrusted-fault-data", timeout);
+        harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        var expectedFailure = new ExpectedSendException();
+        expectedFailure.Data["ViciOne.ServiceBus.TransportBodyMetadataChanged"] = true;
+        var message = new JournalMessage(NewId.NextGuid(), "untrusted-fault-data");
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+            using ConnectHandle failingObserver = harness.Bus.ConnectSendObserver(
+                new ThrowingSendObserver(expectedFailure));
+
+            ExpectedSendException actual = await Assert.ThrowsAsync<ExpectedSendException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(message, token));
+
+            Assert.Same(expectedFailure, actual);
+            MessageJournalEntry entry = Assert.Single(store.Entries);
+            Assert.Equal(MessageJournalOutcome.Faulted, entry.Outcome);
+            Assert.Equal(TypeCache<ExpectedSendException>.ShortName,
+                entry.Metadata[MessageJournalMetadataKeys.FailureType]);
+            AssertEnvelope(entry, message);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "successful-send-rejects-post-dispatch-identity-mutation")]
     public async Task SuccessfulSend_JournalDoesNotRecordAnIdentityChangedAfterDeliveryAsync()
     {
@@ -348,6 +385,94 @@ public sealed class MessageJournalIntegrationTests
 
             Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
             Assert.Equal(1, Assert.IsType<MaterializationIdentitySerializer>(serializer).MaterializationCalls);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "rejected-transport-body-mutation-has-no-contradictory-fault-entry")]
+    public async Task RejectedSend_JournalDoesNotRecordMutatedFaultMetadataAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-rejected-body-identity", timeout);
+        harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        Guid initialId = NewId.NextGuid();
+        Guid changedId = NewId.NextGuid();
+        MaterializationIdentitySerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "rejected-body"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.MessageId = initialId;
+                        serializer = new MaterializationIdentitySerializer(
+                            context.Serializer, changedId, mutationCall: 0);
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(initialId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).MessageId);
+            Assert.Equal(1, Assert.IsType<MaterializationIdentitySerializer>(serializer).MaterializationCalls);
+            Assert.Equal(0, store.AppendAttempts);
+            Assert.Empty(store.Entries);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "throwing-body-mutation-preserves-original-fault-without-false-entry")]
+    public async Task ThrowingBodyMutation_PreservesOriginalSendFaultWithoutContradictoryJournalAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-throwing-body-identity", timeout);
+        harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        var expectedFailure = new ExpectedSendException();
+        Guid initialId = NewId.NextGuid();
+        Guid changedId = NewId.NextGuid();
+        ThrowingFirstBodySerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+
+            ExpectedSendException actual = await Assert.ThrowsAsync<ExpectedSendException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "throwing-body"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.MessageId = initialId;
+                        serializer = new ThrowingFirstBodySerializer(context.Serializer, changedId, expectedFailure);
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Same(expectedFailure, actual);
+            Assert.Equal(initialId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).MessageId);
+            Assert.Equal(1, Assert.IsType<ThrowingFirstBodySerializer>(serializer).MaterializationCalls);
+            Assert.Equal(0, store.AppendAttempts);
+            Assert.Empty(store.Entries);
         }
         finally
         {
@@ -623,7 +748,7 @@ public sealed class MessageJournalIntegrationTests
             new MaterializationIdentityBody(inner.GetMessageBody(context), () =>
             {
                 MaterializationCalls++;
-                if (MaterializationCalls == mutationCall)
+                if (mutationCall == 0 || MaterializationCalls == mutationCall)
                     context.MessageId = laterId;
             });
     }
@@ -639,6 +764,41 @@ public sealed class MessageJournalIntegrationTests
         }
 
         public Stream OpenReadStream() => inner.OpenReadStream();
+
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text) =>
+            inner.TryGetTransportText(out text);
+    }
+
+    private sealed class ThrowingFirstBodySerializer(IMessageSerializer inner, Guid changedId, Exception failure)
+        : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public int MaterializationCalls { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            new ThrowingFirstBody(inner.GetMessageBody(context), () =>
+            {
+                MaterializationCalls++;
+                if (MaterializationCalls == 1)
+                {
+                    context.MessageId = changedId;
+                    throw failure;
+                }
+            });
+    }
+
+    private sealed class ThrowingFirstBody(MessageBody inner, Action onMaterialize) : MessageBody
+    {
+        public long Length => inner.Length;
+
+        public byte[] ToArray()
+        {
+            onMaterialize();
+            return inner.ToArray();
+        }
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
 
         public bool TryGetTransportText([NotNullWhen(true)] out string? text) =>
             inner.TryGetTransportText(out text);
