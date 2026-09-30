@@ -180,6 +180,9 @@ public sealed class AmazonSqsReceiverFifoTests
 
             await harness.Receiver.Ready.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
             await harness.Receiver.Completed.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            var stopped = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            using CancellationTokenRegistration registration = harness.Receiver.Stopped.Register(() => stopped.TrySetResult());
+            await stopped.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
             Assert.True(harness.PollCount >= 1);
             Assert.Equal(0, harness.DispatchCount);

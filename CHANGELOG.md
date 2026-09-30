@@ -179,6 +179,10 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Synchronized the Amazon SQS FIFO shutdown test with the receiver's actual
+  `Stopped` signal. `Completed` can precede that signal, so the former immediate
+  assertion intermittently failed despite a successful shutdown.
+
 - Separated send-body metadata preflight, contract binding, and failure
   restoration into explicit operations; journal capture now separates its
   preflight, body read, and header snapshot. The admission proof and identity
