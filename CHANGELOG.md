@@ -11,6 +11,12 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- A fresh exact-commit product-wide checkpoint verifies 33 profiles,
+  14,138 passing test executions, all 32 product assemblies and no method
+  above CRAP 30. Line and conservative Branch coverage are 92.39550% and
+  85.12921%. One Core collectible-type test failed under parallel load but
+  passed in a complete isolated rerun; its load sensitivity remains open.
+
 - SignalR backplane registration now rejects remote group timeouts that the
   .NET system timer cannot schedule. The final supported fractional-millisecond
   value remains valid; invalid values fail before DI registration. The complete

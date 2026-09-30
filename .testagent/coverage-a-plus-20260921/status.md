@@ -1,5 +1,16 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T157 product-wide checkpoint
+
+The strict exact-commit 33-profile aggregate on `490dde6d6` covers all 32
+product assemblies and records 14,138/14,138 passed executions. Line is
+87,578/94,786 (92.39550%), conservative Branch 31,823/37,382 (85.12921%),
+and zero of 26,194 methods exceed CRAP 30. All twelve broker fixture runs
+have empty findings. The earlier Core run had one collectible-type GC
+assertion fail under parallel build load; a complete isolated rerun passed
+7,385/7,385 and supplies the accepted receipt. The test's load sensitivity
+remains a reliability follow-up. See the [T157 report](product-wide-profile-490dde6d6.md).
+
 ## Current T156 SignalR timer boundary
 
 SignalR registration previously accepted remote group timeouts that fail when
