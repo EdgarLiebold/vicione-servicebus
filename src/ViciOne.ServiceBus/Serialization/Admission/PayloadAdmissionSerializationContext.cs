@@ -7,6 +7,10 @@ namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>Associates one send operation with its payload-admission runtime and offload evidence.</summary>
 internal sealed class PayloadAdmissionSerializationContext
 {
+    private readonly object _identityLock = new();
+    private bool _messageIdBound;
+    private Guid? _admittedMessageId;
+
     public PayloadAdmissionSerializationContext(IPayloadAdmissionRuntime runtime, bool messageDataOffloadObserved)
     {
         OwnerRuntime = runtime ?? throw new ArgumentNullException(nameof(runtime));
@@ -19,6 +23,21 @@ internal sealed class PayloadAdmissionSerializationContext
     public IPayloadAdmissionRuntime Runtime { get; }
 
     public bool MessageDataOffloadObserved { get; }
+
+    public bool TryBindMessageId(Guid? messageId, out Guid? admittedMessageId)
+    {
+        lock (_identityLock)
+        {
+            if (!_messageIdBound)
+            {
+                _admittedMessageId = messageId;
+                _messageIdBound = true;
+            }
+
+            admittedMessageId = _admittedMessageId;
+            return messageId == admittedMessageId;
+        }
+    }
 
     public bool HasCompleteAdmissionFor(long serializedLength)
         => ((TrackingRuntime)Runtime).HasCompleteAdmissionFor(serializedLength);

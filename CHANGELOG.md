@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed four message-identity mismatches at outgoing serialization boundaries.
+  The in-memory transport now rejects an identity change while materializing
+  the body. Payload admission rejects a bounded serializer that changes the
+  identity and binds the first admitted identity across the later `PreSend`
+  observer pass. A successful send journal capture rejects a second body read
+  that changes the already delivered identity, restores the send context, and
+  avoids writing a contradictory journal entry. Four red-first bus integration
+  tests exercise the distinct timing windows. The complete Core suite passes
+  7,398/7,398; adversarial review found no further concrete P1/P2 in this diff.
+
 - Fixed message-journal capture of a faulted outgoing send with a lazy
   serializer. The journal now materializes the body before snapshotting message
   metadata, so its recorded `MessageId` matches the serialized body even when

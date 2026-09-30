@@ -15,10 +15,16 @@ internal static class MessageJournalCaptureFactory
         Exception? exception)
         where T : class
     {
+        Guid? messageIdBeforeBody = context.MessageId;
         MessageBody body = context is TransportSendContext transportContext
             ? transportContext.Body
             : context.Serializer.GetMessageBody(context);
         byte[] bodyBytes = body.ToArray();
+        if (outcome == MessageJournalOutcome.Succeeded && context.MessageId != messageIdBeforeBody)
+        {
+            context.MessageId = messageIdBeforeBody;
+            throw new InvalidOperationException("The send context identity changed after transport delivery.");
+        }
 
         var metadata = CreateSendMetadata(context, exception);
         Add(metadata, MessageJournalMetadataKeys.ScheduledMessageId, context.ScheduledMessageId);

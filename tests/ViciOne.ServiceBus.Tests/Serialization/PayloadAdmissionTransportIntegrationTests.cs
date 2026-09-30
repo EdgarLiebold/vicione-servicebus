@@ -1,9 +1,13 @@
+using System.Buffers;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -16,6 +20,97 @@ namespace ViciOne.ServiceBus.Tests.Serialization;
 public sealed class PayloadAdmissionTransportIntegrationTests
 {
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(15);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "bounded-serializer-cannot-change-dispatch-identity")]
+    public async Task BoundedAdmission_RejectsIdentityChangedBeforeProviderDispatchAsync()
+    {
+        var converter = new CountingPayloadConverter();
+        var observer = new BodyReadingObserver();
+        var delivered = 0;
+        Guid originalId = NewId.NextGuid();
+        Guid changedId = NewId.NextGuid();
+        MutatingEnvelopeSerializer? serializer = null;
+        await using ServiceProvider provider = BuildJsonProvider(
+            converter, observer,
+            options =>
+            {
+                options.MaximumSerializedBodyBytes = 1_000_000;
+                options.MaximumTransportEnvelopeBytes = 1_000_000;
+            },
+            _ => Interlocked.Increment(ref delivered));
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+
+        await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
+        try
+        {
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(
+                new Uri("loopback://payload-json/payload-json-input"), TestContext.Current.CancellationToken);
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() => endpoint.SendAsync(
+                new CountingPayload("admission-identity"),
+                Pipe.Execute<SendContext<CountingPayload>>(context =>
+                {
+                    context.MessageId = originalId;
+                    serializer = new MutatingEnvelopeSerializer(context.Serializer, changedId);
+                    context.Serializer = serializer;
+                }), TestContext.Current.CancellationToken));
+
+            Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(1, Assert.IsType<MutatingEnvelopeSerializer>(serializer).EnvelopeWrites);
+            Assert.Equal(0, observer.PreSendCalls);
+            Assert.Equal(0, Volatile.Read(ref delivered));
+        }
+        finally
+        {
+            await bus.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "pre-send-observer-cannot-change-admitted-identity")]
+    public async Task ConfiguredAdmission_RejectsPreSendIdentityChangeAfterBodyIsCachedAsync()
+    {
+        var converter = new CountingPayloadConverter();
+        Guid originalId = NewId.NextGuid();
+        Guid changedId = NewId.NextGuid();
+        var observer = new BodyReadingObserver { ReplacementMessageId = changedId };
+        var delivered = 0;
+        SendContext<CountingPayload>? capturedContext = null;
+        await using ServiceProvider provider = BuildJsonProvider(
+            converter, observer,
+            options =>
+            {
+                options.MaximumSerializedBodyBytes = 1_000_000;
+                options.MaximumTransportEnvelopeBytes = 1_000_000;
+            },
+            _ => Interlocked.Increment(ref delivered));
+        IBusControl bus = provider.GetRequiredService<IBusControl>();
+
+        await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
+        try
+        {
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(
+                new Uri("loopback://payload-json/payload-json-input"), TestContext.Current.CancellationToken);
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() => endpoint.SendAsync(
+                new CountingPayload("observer-identity"),
+                Pipe.Execute<SendContext<CountingPayload>>(context =>
+                {
+                    capturedContext = context;
+                    context.MessageId = originalId;
+                }),
+                TestContext.Current.CancellationToken));
+
+            Assert.Contains("MessageId changed after payload admission", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(originalId, Assert.IsAssignableFrom<SendContext<CountingPayload>>(capturedContext).MessageId);
+            Assert.Equal(1, observer.PreSendCalls);
+            Assert.Equal(1, converter.WriteCalls);
+            Assert.Equal(0, Volatile.Read(ref delivered));
+        }
+        finally
+        {
+            await bus.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+        }
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "json-body-rejection-before-observers-and-provider")]
@@ -768,11 +863,45 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         }
     }
 
+    private sealed class MutatingEnvelopeSerializer(IMessageSerializer inner, Guid changedId) : IBoundedMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public SerializedTransportTextFormat TransportTextFormat => SerializedTransportTextFormat.Utf8;
+
+        public int EnvelopeWrites { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            inner.GetMessageBody(context);
+
+        public void WriteSerializedBody<T>(SendContext<T> context, IBufferWriter<byte> writer) where T : class =>
+            writer.Write(inner.GetMessageBody(context).ToArray());
+
+        public void WriteTransportEnvelope<T>(SendContext<T> context, Stream serializedBody, IBufferWriter<byte> writer)
+            where T : class
+        {
+            using var buffer = new MemoryStream();
+            serializedBody.CopyTo(buffer);
+            writer.Write(buffer.ToArray());
+            EnvelopeWrites++;
+            context.MessageId = changedId;
+        }
+
+        public bool TryLocateSerializedBody(ReadOnlySpan<byte> serializedEnvelope, out int offset, out int length)
+        {
+            offset = 0;
+            length = serializedEnvelope.Length;
+            return true;
+        }
+    }
+
     private sealed class BodyReadingObserver : ISendObserver
     {
         private int _preSendCalls;
 
         public int PreSendCalls => Volatile.Read(ref _preSendCalls);
+
+        public Guid? ReplacementMessageId { get; init; }
 
         public long? FirstBodyLength { get; private set; }
 
@@ -787,6 +916,8 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             SecondBodyLength = transport.Body.GetRequiredTransportText().Length > 0
                 ? transport.Body.ToArray().LongLength
                 : null;
+            if (ReplacementMessageId.HasValue)
+                context.MessageId = ReplacementMessageId;
             return Task.CompletedTask;
         }
 

@@ -277,6 +277,85 @@ public sealed class MessageJournalIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "successful-send-rejects-post-dispatch-identity-mutation")]
+    public async Task SuccessfulSend_JournalDoesNotRecordAnIdentityChangedAfterDeliveryAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-post-send-identity", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        Guid deliveredId = NewId.NextGuid();
+        Guid laterId = NewId.NextGuid();
+        MaterializationIdentitySerializer? serializer = null;
+        SendContext<JournalMessage>? sendContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+
+            var message = new JournalMessage(NewId.NextGuid(), "post-send-identity");
+            await harness.InputQueueSendEndpoint.SendAsync(message,
+                Pipe.Execute<SendContext<JournalMessage>>(context =>
+                {
+                    sendContext = context;
+                    context.MessageId = deliveredId;
+                    serializer = new MaterializationIdentitySerializer(context.Serializer, laterId, mutationCall: 2);
+                    context.Serializer = serializer;
+                }), token);
+            IConsumedMessage<JournalMessage> consumed = await handler.Consumed
+                .SelectAsync(token).FirstObservedAsync(cancellationToken: token);
+
+            Assert.Equal(message, consumed.Context.Message);
+            Assert.Equal(deliveredId, consumed.Context.MessageId);
+            Assert.Equal(deliveredId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(sendContext).MessageId);
+            Assert.Equal(2, Assert.IsType<MaterializationIdentitySerializer>(serializer).MaterializationCalls);
+            Assert.Empty(store.Entries);
+            Assert.Equal(0, store.AppendAttempts);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serialization-must-not-change-dispatch-identity")]
+    public async Task InMemorySend_RejectsIdentityChangedWhileMaterializingBodyAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-serialized-identity", timeout);
+        harness.AddHandler<JournalMessage>();
+        Guid initialId = NewId.NextGuid();
+        Guid serializedId = NewId.NextGuid();
+        MaterializationIdentitySerializer? serializer = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "identity-mutation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        context.MessageId = initialId;
+                        serializer = new MaterializationIdentitySerializer(context.Serializer, serializedId, mutationCall: 1);
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(1, Assert.IsType<MaterializationIdentitySerializer>(serializer).MaterializationCalls);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "store-failure-does-not-change-delivery")]
     public async Task StoreFailure_DoesNotChangeASuccessfulMessageDeliveryAsync()
     {
@@ -532,6 +611,37 @@ public sealed class MessageJournalIntegrationTests
             text = Encoding.UTF8.GetString(ToArray());
             return true;
         }
+    }
+
+    private sealed class MaterializationIdentitySerializer(IMessageSerializer inner, Guid laterId, int mutationCall) : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public int MaterializationCalls { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            new MaterializationIdentityBody(inner.GetMessageBody(context), () =>
+            {
+                MaterializationCalls++;
+                if (MaterializationCalls == mutationCall)
+                    context.MessageId = laterId;
+            });
+    }
+
+    private sealed class MaterializationIdentityBody(MessageBody inner, Action onMaterialize) : MessageBody
+    {
+        public long Length => inner.Length;
+
+        public byte[] ToArray()
+        {
+            onMaterialize();
+            return inner.ToArray();
+        }
+
+        public Stream OpenReadStream() => inner.OpenReadStream();
+
+        public bool TryGetTransportText([NotNullWhen(true)] out string? text) =>
+            inner.TryGetTransportText(out text);
     }
 
     private sealed class ThrowingSendObserver(Exception failure) : ISendObserver

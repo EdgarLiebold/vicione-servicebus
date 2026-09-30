@@ -89,12 +89,15 @@ internal sealed class InMemorySendTransportContext :
         sendContext.CancellationToken.ThrowIfCancellationRequested();
         ApplyPayloadAdmission(context);
 
-        var messageId = context.MessageId ?? NewId.NextGuid();
+        Guid? contextMessageId = context.MessageId;
+        var messageId = contextMessageId ?? NewId.NextGuid();
 
         var body = context.Body ?? throw new InvalidOperationException("The send context body has not been serialized.");
         var contentType = context.ContentType ?? throw new InvalidOperationException("The send context content type has not been set.");
         string contentTypeName = contentType.ToString();
         byte[] serializedEnvelope = body.ToArray();
+        if (context.MessageId != contextMessageId)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
         InMemoryPayloadAdmissionProof? admissionProof = null;
         if (context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
         {

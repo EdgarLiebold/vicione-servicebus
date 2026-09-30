@@ -26,6 +26,7 @@ internal static class PayloadAdmissionTransportBoundary
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(context);
+        Guid? messageIdBeforeAdmission = context.MessageId;
 
         if (context.BodyLength.HasValue
             && !context.TryGetPayload(out PayloadAdmissionSerializationContext? _))
@@ -72,6 +73,8 @@ internal static class PayloadAdmissionTransportBoundary
 
         MessageBody body = transportContext.Body;
         long serializedLength = body.Length;
+        if (context.MessageId != messageIdBeforeAdmission)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
         bool admittedBody = body is IPayloadAdmittedMessageBody { AdmissionContext: { } bodyAdmission }
             && ReferenceEquals(bodyAdmission, admission);
         if (!admittedBody || !admission.HasCompleteAdmissionFor(serializedLength))
@@ -82,6 +85,12 @@ internal static class PayloadAdmissionTransportBoundary
                     "unknown",
                     "The send serializer did not provide an immutable body admitted for this bus and operation.",
                     "Use a payload-admission-aware serializer or CopyBodySerializer"));
+        }
+
+        if (!admission.TryBindMessageId(context.MessageId, out Guid? admittedMessageId))
+        {
+            context.MessageId = admittedMessageId;
+            throw new MessageException(typeof(T), "The SendContext MessageId changed after payload admission");
         }
 
         return body;
