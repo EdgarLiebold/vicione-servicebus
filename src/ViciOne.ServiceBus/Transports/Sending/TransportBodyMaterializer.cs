@@ -35,6 +35,32 @@ internal static class TransportBodyMaterializer
         MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
         ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
         object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
+        ThrowIfChanged(context, metadata, messageContext, nativeContext, nativeMetadata);
+        TResult result;
+        try
+        {
+            MessageBody body = (context as TransportSendContext)?.Body
+                ?? throw new InvalidOperationException("A transport send context with a serialized body is required.");
+            result = readBody(body);
+        }
+        catch (Exception failure)
+        {
+            RestoreAfterFailure(context, metadata, messageContext, nativeContext, nativeMetadata, failure);
+            throw;
+        }
+
+        ThrowIfChanged(context, metadata, messageContext, nativeContext, nativeMetadata);
+        return result;
+    }
+
+    private static void ThrowIfChanged<T>(
+        SendContext<T> context,
+        MetadataSnapshot metadata,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata)
+        where T : class
+    {
         if (metadata.ChangedField(context) is { } staleField)
         {
             metadata.Restore(context);
@@ -50,51 +76,34 @@ internal static class TransportBodyMaterializer
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw CreateMutationFailure<T>(staleNativeField);
         }
-        TResult result;
-        try
-        {
-            MessageBody body = (context as TransportSendContext)?.Body
-                ?? throw new InvalidOperationException("A transport send context with a serialized body is required.");
-            result = readBody(body);
-        }
-        catch (Exception failure)
-        {
-            if (metadata.ChangedField(context) is not null)
-            {
-                metadata.Restore(context);
-                MarkMutationFailure(failure);
-            }
-            if (messageContext?.MessageTypesChanged == true)
-            {
-                messageContext.RestoreSerializedMessageTypes();
-                MarkMutationFailure(failure);
-            }
-            if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
-            {
-                nativeContext.RestoreNativeMetadata(nativeMetadata);
-                MarkMutationFailure(failure);
-            }
+        messageContext?.ThrowIfEnvelopeHeadersChanged();
+    }
 
-            throw;
-        }
-
-        if (metadata.ChangedField(context) is { } changedField)
+    private static void RestoreAfterFailure<T>(
+        SendContext<T> context,
+        MetadataSnapshot metadata,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata,
+        Exception failure)
+        where T : class
+    {
+        if (metadata.ChangedField(context) is not null)
         {
             metadata.Restore(context);
-            throw CreateMutationFailure<T>(changedField);
+            MarkMutationFailure(failure);
         }
         if (messageContext?.MessageTypesChanged == true)
         {
             messageContext.RestoreSerializedMessageTypes();
-            throw CreateMutationFailure<T>(nameof(SendContext.SupportedMessageTypes));
+            MarkMutationFailure(failure);
         }
-        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is { } changedNativeField)
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
         {
             nativeContext.RestoreNativeMetadata(nativeMetadata);
-            throw CreateMutationFailure<T>(changedNativeField);
+            MarkMutationFailure(failure);
         }
-
-        return result;
+        messageContext?.RestoreEnvelopeHeadersAfterFailure(failure);
     }
 
     private static TResult Materialize<T, TResult>(SendContext<T> context, Func<MessageBody, TResult> readBody)
@@ -133,7 +142,10 @@ internal static class TransportBodyMaterializer
             context.TimeToLive,
             context.ContentType?.ToString());
 
-        public string? ChangedField(SendContext context)
+        public string? ChangedField(SendContext context) =>
+            ChangedIdentityField(context) ?? ChangedAddressField(context) ?? ChangedDeliveryField(context);
+
+        private string? ChangedIdentityField(SendContext context)
         {
             if (context.MessageId != MessageId) return nameof(MessageId);
             if (context.RequestId != RequestId) return nameof(RequestId);
@@ -141,10 +153,20 @@ internal static class TransportBodyMaterializer
             if (context.ConversationId != ConversationId) return nameof(ConversationId);
             if (context.InitiatorId != InitiatorId) return nameof(InitiatorId);
             if (context.ScheduledMessageId != ScheduledMessageId) return nameof(ScheduledMessageId);
+            return null;
+        }
+
+        private string? ChangedAddressField(SendContext context)
+        {
             if (!Equals(context.SourceAddress, SourceAddress)) return nameof(SourceAddress);
             if (!Equals(context.DestinationAddress, DestinationAddress)) return nameof(DestinationAddress);
             if (!Equals(context.ResponseAddress, ResponseAddress)) return nameof(ResponseAddress);
             if (!Equals(context.FaultAddress, FaultAddress)) return nameof(FaultAddress);
+            return null;
+        }
+
+        private string? ChangedDeliveryField(SendContext context)
+        {
             if (context.TimeToLive != TimeToLive) return nameof(TimeToLive);
             if (!string.Equals(context.ContentType?.ToString(), ContentType, StringComparison.Ordinal)) return nameof(ContentType);
             return null;

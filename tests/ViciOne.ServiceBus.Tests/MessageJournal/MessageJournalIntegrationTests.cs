@@ -766,6 +766,134 @@ public sealed class MessageJournalIntegrationTests
         }
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serializer-getter-cannot-change-serialized-application-header")]
+    public async Task InMemorySend_RejectsSerializerChangingApplicationHeaderAfterEnvelopeCreationAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-getter-application-header", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        GetterHeaderMutationSerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "getter-application-header"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.Headers.Set("journal-test-header", "before");
+                        serializer = new GetterHeaderMutationSerializer(context.Serializer);
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains("journal-test-header", failure.Message, StringComparison.Ordinal);
+            Assert.Equal("before", Assert.IsType<GetterHeaderMutationSerializer>(serializer).SerializedHeader);
+            Assert.Equal("before", Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext)
+                .Headers.Get<string>("journal-test-header"));
+            Assert.Equal(0, handler.Consumed.Count);
+            Assert.Equal(0, store.AppendAttempts);
+            Assert.Empty(store.Entries);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serializer-getter-cannot-change-mutable-application-header")]
+    public async Task InMemorySend_RejectsInPlaceHeaderMutationAfterEnvelopeCreationAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-getter-mutable-header", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        GetterMutableHeaderSerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "getter-mutable-header"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.Headers.Set("journal-mutable-header", new List<string> { "before" });
+                        serializer = new GetterMutableHeaderSerializer(context.Serializer);
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains("journal-mutable-header", failure.Message, StringComparison.Ordinal);
+            Assert.Equal("before", Assert.IsType<GetterMutableHeaderSerializer>(serializer).SerializedHeader);
+            Assert.Equal(["before"], Assert.IsType<List<string>>(
+                Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext)
+                    .Headers.Get<List<string>>("journal-mutable-header")));
+            Assert.Equal(0, handler.Consumed.Count);
+            Assert.Equal(0, store.AppendAttempts);
+            Assert.Empty(store.Entries);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "body-materialization-cannot-change-serialized-application-header")]
+    public async Task InMemorySend_RejectsHeaderMutationWhileReadingSerializedBytesAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-body-header-mutation", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        MaterializationGuidMetadataSerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "body-header-mutation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.Headers.Set("journal-test-header", "before");
+                        serializer = new MaterializationGuidMetadataSerializer(context.Serializer,
+                            sendContext => sendContext.Headers.Set("journal-test-header", "after"));
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains("journal-test-header", failure.Message, StringComparison.Ordinal);
+            Assert.Equal("before", Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext)
+                .Headers.Get<string>("journal-test-header"));
+            Assert.Equal(1, Assert.IsType<MaterializationGuidMetadataSerializer>(serializer).MaterializationCalls);
+            Assert.Equal(0, handler.Consumed.Count);
+            Assert.Equal(0, store.AppendAttempts);
+            Assert.Empty(store.Entries);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Theory]
     [InlineData(SendRouteField.SourceAddress)]
     [InlineData(SendRouteField.DestinationAddress)]
@@ -1333,6 +1461,40 @@ public sealed class MessageJournalIntegrationTests
             using JsonDocument document = JsonDocument.Parse(body.ToArray());
             SerializedCorrelationId = document.RootElement.GetProperty("correlationId").GetGuid();
             context.CorrelationId = laterCorrelationId;
+            return body;
+        }
+    }
+
+    private sealed class GetterHeaderMutationSerializer(IMessageSerializer inner) : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public string? SerializedHeader { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            MessageBody body = inner.GetMessageBody(context);
+            using JsonDocument document = JsonDocument.Parse(body.ToArray());
+            SerializedHeader = document.RootElement.GetProperty("headers")
+                .GetProperty("journal-test-header").GetString();
+            context.Headers.Set("journal-test-header", "after");
+            return body;
+        }
+    }
+
+    private sealed class GetterMutableHeaderSerializer(IMessageSerializer inner) : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public string? SerializedHeader { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            MessageBody body = inner.GetMessageBody(context);
+            using JsonDocument document = JsonDocument.Parse(body.ToArray());
+            SerializedHeader = document.RootElement.GetProperty("headers")
+                .GetProperty("journal-mutable-header")[0].GetString();
+            Assert.IsType<List<string>>(context.Headers.Get<List<string>>("journal-mutable-header"))[0] = "after";
             return body;
         }
     }

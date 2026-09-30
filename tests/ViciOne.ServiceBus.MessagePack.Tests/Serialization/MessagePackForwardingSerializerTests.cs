@@ -10,6 +10,28 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 
 public sealed class MessagePackForwardingSerializerTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "serialized-forwarding-headers-remain-bound")]
+    public void ForwardedBody_RejectsLaterApplicationHeaderChangesAndPreservesInheritedHeaders()
+    {
+        var source = CreateContext(new ForwardedMessage { Changed = "source" }, Guid.NewGuid());
+        source.Headers.Set("inherited", "source-value");
+        var forwarding = new MessagePackForwardingSerializer(new MessagePackEnvelope(source, source.Message));
+        var outgoing = CreateContext(source.Message, Guid.NewGuid());
+        outgoing.Headers.Set("application", "before");
+        outgoing.Serializer = forwarding;
+
+        MessagePackEnvelope encoded = MessagePackSerializationRuntime.Deserialize<MessagePackEnvelope>(
+            outgoing.Body.ToArray());
+        Assert.Equal("source-value", encoded.Headers!["inherited"]);
+        Assert.Equal("before", encoded.Headers["application"]);
+
+        outgoing.Headers.Set("application", "after");
+        MessageException failure = Assert.Throws<MessageException>(() => outgoing.Body.ToArray());
+        Assert.Contains("application", failure.Message, StringComparison.Ordinal);
+        Assert.Equal("before", outgoing.Headers.Get<string>("application"));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

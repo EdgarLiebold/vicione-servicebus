@@ -37,6 +37,15 @@ static class MessagePackSerializationRuntime
         return MessagePackSerializer.Serialize(value, Options);
     }
 
+    /// <summary>Serializes a runtime-typed value with the shared resolver and security options.</summary>
+    public static byte[] Serialize(Type type, object? value)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        var buffer = new ArrayBufferWriter<byte>();
+        MessagePackSerializer.Serialize(type, buffer, value, Options);
+        return buffer.WrittenMemory.ToArray();
+    }
+
     /// <summary>Serializes a runtime-typed value to a caller-owned buffer.</summary>
     /// <param name="type">The declared runtime type.</param>
     /// <param name="writer">The buffer that receives the encoded value.</param>

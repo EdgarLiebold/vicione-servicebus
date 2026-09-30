@@ -179,6 +179,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed sends whose serialized JSON or MessagePack envelope retained one
+  application header value while the mutable send context or journal exposed
+  another. The send boundary now binds application headers through the active
+  wire serializer, rejects changes during body creation and byte reads, and
+  restores replaced values and prevents rejected messages from reaching a
+  transport. A write-only converter still fails closed if an existing value
+  mutates in place. Forwarding binds inherited and newly supplied headers together;
+  the journal captures that projected set. Diagnostic propagation and broker
+  scheduling headers can still change at their defined transport boundary.
+  Red-first tests cover replacement and in-place header mutations, byte-read
+  callbacks, forwarding in both wire formats, and custom JSON header
+  converters, including a write-only converter. The final product-wide coverage and provider replay for this
+  change remain open.
+
 - Fixed RabbitMQ and Event Hubs sends that could publish a body through a
   different native route or with different delivery guarantees after a body
   callback changed provider metadata. The shared body and journal guards now

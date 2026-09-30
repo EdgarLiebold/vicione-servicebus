@@ -38,6 +38,7 @@ internal static class MessageJournalCaptureFactory
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw new InvalidOperationException("The send context native metadata changed before journal capture.");
         }
+        messageContext?.ThrowIfEnvelopeHeadersChanged();
         byte[] bodyBytes;
         try
         {
@@ -46,34 +47,28 @@ internal static class MessageJournalCaptureFactory
                 : context.Serializer.GetMessageBody(context);
             bodyBytes = body.ToArray();
         }
-        catch
+        catch (Exception failure)
         {
-            metadataBeforeBody.Restore(context);
-            if (messageContext?.MessageTypesChanged == true)
-                messageContext.RestoreSerializedMessageTypes();
-            if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
-                nativeContext.RestoreNativeMetadata(nativeMetadata);
+            RestoreAfterCaptureFailure(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata, failure);
             throw;
         }
-        if (metadataBeforeBody.ChangedField(context) is not null)
-        {
-            metadataBeforeBody.Restore(context);
-            throw new InvalidOperationException("The send context metadata changed during journal capture.");
-        }
-        if (messageContext?.MessageTypesChanged == true)
-        {
-            messageContext.RestoreSerializedMessageTypes();
-            throw new InvalidOperationException("The send context message types changed during journal capture.");
-        }
-        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
-        {
-            nativeContext.RestoreNativeMetadata(nativeMetadata);
-            throw new InvalidOperationException("The send context native metadata changed during journal capture.");
-        }
+        ValidateCapturedState(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
 
         var metadata = CreateSendMetadata(context, exception);
         Add(metadata, MessageJournalMetadataKeys.ScheduledMessageId, context.ScheduledMessageId);
         Add(metadata, MessageJournalMetadataKeys.TimeToLive, context.TimeToLive);
+        Dictionary<string, string> headers;
+        try
+        {
+            headers = messageContext?.SerializedEnvelopeHeaders?.SnapshotJournalHeaders(context.Headers)
+                ?? SnapshotHeaders(context.Headers);
+        }
+        catch (Exception failure)
+        {
+            RestoreAfterCaptureFailure(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata, failure);
+            throw;
+        }
+        ValidateCapturedState(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
 
         return new MessageJournalCapture(
             operation,
@@ -81,8 +76,68 @@ internal static class MessageJournalCaptureFactory
             context.ContentType?.ToString(),
             context.SupportedMessageTypes ?? [],
             metadata,
-            SnapshotHeaders(context.Headers),
+            headers,
             bodyBytes);
+    }
+
+    private static void ValidateCapturedState<T>(
+        SendContext<T> context,
+        TransportBodyMaterializer.MetadataSnapshot metadata,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata)
+        where T : class
+    {
+        if (metadata.ChangedField(context) is not null)
+        {
+            metadata.Restore(context);
+            throw CreateCaptureMutationFailure("metadata");
+        }
+        if (messageContext?.MessageTypesChanged == true)
+        {
+            messageContext.RestoreSerializedMessageTypes();
+            throw CreateCaptureMutationFailure("message types");
+        }
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
+        {
+            nativeContext.RestoreNativeMetadata(nativeMetadata);
+            throw CreateCaptureMutationFailure("native metadata");
+        }
+        messageContext?.ThrowIfEnvelopeHeadersChanged();
+    }
+
+    private static void RestoreAfterCaptureFailure<T>(
+        SendContext<T> context,
+        TransportBodyMaterializer.MetadataSnapshot metadata,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata,
+        Exception failure)
+        where T : class
+    {
+        if (metadata.ChangedField(context) is not null)
+        {
+            metadata.Restore(context);
+            TransportBodyMaterializer.MarkMutationFailure(failure);
+        }
+        if (messageContext?.MessageTypesChanged == true)
+        {
+            messageContext.RestoreSerializedMessageTypes();
+            TransportBodyMaterializer.MarkMutationFailure(failure);
+        }
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
+        {
+            nativeContext.RestoreNativeMetadata(nativeMetadata);
+            TransportBodyMaterializer.MarkMutationFailure(failure);
+        }
+        messageContext?.RestoreEnvelopeHeadersAfterFailure(failure);
+    }
+
+    private static InvalidOperationException CreateCaptureMutationFailure(string field)
+    {
+        var failure = new InvalidOperationException($"The send context {field} changed during journal capture.");
+        TransportBodyMaterializer.MarkMutationFailure(failure);
+        return failure;
     }
 
     public static MessageJournalCapture CreateConsume<T>(

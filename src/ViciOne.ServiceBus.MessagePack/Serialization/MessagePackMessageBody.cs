@@ -5,6 +5,7 @@ using System.Runtime.ExceptionServices;
 using MessagePack;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.MessagePack.Serialization;
 
@@ -63,6 +64,7 @@ internal sealed class MessagePackMessageBody<TMessage> :
         if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
         {
             var unboundedEnvelope = envelope ?? new MessagePackEnvelope(context, context.Message);
+            BindHeaders(context, unboundedEnvelope);
             return MessagePackSerializationRuntime.Serialize(unboundedEnvelope);
         }
 
@@ -85,12 +87,22 @@ internal sealed class MessagePackMessageBody<TMessage> :
                 envelope,
                 boundedBody,
                 envelope.IsNativeMessagePackPayload);
+        BindHeaders(context, envelopeToSerialize);
 
         IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
         SerializeBounded(() => MessagePackSerializationRuntime.Serialize(envelopeBuffer, envelopeToSerialize));
         admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
 
         return envelopeBuffer.WrittenMemory.ToArray();
+    }
+
+    static void BindHeaders(SendContext<TMessage> context, MessagePackEnvelope envelope)
+    {
+        if (context is MessageSendContext<TMessage> sendContext && envelope.Headers is { } headers)
+            sendContext.BindSerializedEnvelopeHeaders(headers,
+                (value, type) => MessagePackSerializationRuntime.Serialize(type, value),
+                (type, encoded) => MessagePackSerializationRuntime.Deserialize(type, encoded));
+
     }
 
     static void SerializeBounded(Action serialize)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using ViciOne.ServiceBus.Advanced.Serialization;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Serialization;
 
@@ -58,7 +59,10 @@ internal sealed class SystemTextJsonMessageBody<TMessage> :
             var envelope = existingEnvelope ?? new JsonMessageEnvelope(context, context.Message);
 
             if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+            {
+                BindHeaders(context, envelope, options);
                 return JsonSerializer.SerializeToUtf8Bytes(envelope, options);
+            }
 
             var writerOptions = new JsonWriterOptions
             {
@@ -89,6 +93,7 @@ internal sealed class SystemTextJsonMessageBody<TMessage> :
             {
                 Message = bodyDocument.RootElement,
             };
+            BindHeaders(context, boundedEnvelope, options);
 
             IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
             using (var envelopeWriter = new Utf8JsonWriter(envelopeBuffer, writerOptions))
@@ -107,5 +112,15 @@ internal sealed class SystemTextJsonMessageBody<TMessage> :
         {
             throw new SerializationException("Failed to serialize message", ex);
         }
+    }
+
+    private static void BindHeaders(
+        SendContext<TMessage> context, MessageEnvelope envelope, JsonSerializerOptions options)
+    {
+        if (context is MessageSendContext<TMessage> sendContext && envelope.Headers is { } headers)
+            sendContext.BindSerializedEnvelopeHeaders(headers,
+                (value, type) => JsonSerializer.SerializeToUtf8Bytes(value, type, options),
+                (type, encoded) => JsonSerializer.Deserialize(encoded, type, options));
+
     }
 }

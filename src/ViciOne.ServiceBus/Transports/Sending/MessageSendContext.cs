@@ -32,6 +32,7 @@ public class MessageSendContext<TMessage> :
     TransportBodyMaterializer.MetadataSnapshot? _serializedMetadata;
     object? _serializedNativeMetadata;
     string[]? _serializedMessageTypes;
+    SerializedEnvelopeHeaderSnapshot? _serializedEnvelopeHeaders;
     bool _messageTypesBound;
     string[]? _authorizedForwardedMessageTypes;
     bool _forwardedTypesAuthorized;
@@ -68,6 +69,8 @@ public class MessageSendContext<TMessage> :
         {
             if (_metadataFailure is { } rejected)
                 throw rejected;
+
+            ThrowIfEnvelopeHeadersChanged();
 
             TransportBodyMaterializer.MetadataSnapshot beforeBody =
                 _serializedMetadata ?? TransportBodyMaterializer.MetadataSnapshot.Capture(this);
@@ -123,6 +126,7 @@ public class MessageSendContext<TMessage> :
                     RestoreSerializedMessageTypes();
                     throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
                 }
+                ThrowIfEnvelopeHeadersChanged();
 
                 _serializedMetadata ??= beforeBody;
                 _serializedNativeMetadata ??= nativeBeforeBody;
@@ -130,6 +134,7 @@ public class MessageSendContext<TMessage> :
             }
             catch (Exception failure)
             {
+                RestoreEnvelopeHeadersAfterFailure(failure);
                 if (beforeBody.ChangedField(this) is not null)
                 {
                     beforeBody.Restore(this);
@@ -157,6 +162,52 @@ public class MessageSendContext<TMessage> :
             {
                 _bodyCreationInProgress = false;
             }
+        }
+    }
+
+    internal void BindSerializedEnvelopeHeaders(
+        IReadOnlyDictionary<string, object?> projectedHeaders,
+        Func<object?, Type, byte[]> encode,
+        Func<Type, byte[], object?> decode)
+    {
+        if (_bodyCreationInProgress)
+            _serializedEnvelopeHeaders ??= new SerializedEnvelopeHeaderSnapshot(
+                projectedHeaders, _headers, encode, decode);
+    }
+
+    internal SerializedEnvelopeHeaderSnapshot? SerializedEnvelopeHeaders => _serializedEnvelopeHeaders;
+
+    internal void ThrowIfEnvelopeHeadersChanged()
+    {
+        if (_serializedEnvelopeHeaders?.ChangedHeader(_headers) is not { } changedHeader)
+            return;
+
+        MessageException failure = TransportBodyMaterializer.CreateMutationFailure<TMessage>($"Headers[{changedHeader}]");
+        _metadataFailure = failure;
+        try
+        {
+            _serializedEnvelopeHeaders.Restore(_headers);
+        }
+        catch (Exception restoreFailure)
+        {
+            failure.Data["HeaderRestoreFailure"] = restoreFailure;
+        }
+        throw failure;
+    }
+
+    internal void RestoreEnvelopeHeadersAfterFailure(Exception failure)
+    {
+        if (_serializedEnvelopeHeaders?.ChangedHeader(_headers) is null)
+            return;
+
+        TransportBodyMaterializer.MarkMutationFailure(failure);
+        try
+        {
+            _serializedEnvelopeHeaders.Restore(_headers);
+        }
+        catch (Exception restoreFailure)
+        {
+            failure.Data["HeaderRestoreFailure"] = restoreFailure;
         }
     }
 
