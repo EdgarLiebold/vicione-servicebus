@@ -23,6 +23,35 @@ internal static class MessageJournalCaptureFactory
         MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
         ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
         object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
+        ValidateBeforeCapture(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
+        byte[] bodyBytes = ReadSendBody(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
+        ValidateCapturedState(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
+
+        var metadata = CreateSendMetadata(context, exception);
+        Add(metadata, MessageJournalMetadataKeys.ScheduledMessageId, context.ScheduledMessageId);
+        Add(metadata, MessageJournalMetadataKeys.TimeToLive, context.TimeToLive);
+        Dictionary<string, string> headers = ReadSendHeaders(context, metadataBeforeBody,
+            messageContext, nativeContext, nativeMetadata);
+        ValidateCapturedState(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
+
+        return new MessageJournalCapture(
+            operation,
+            outcome,
+            context.ContentType?.ToString(),
+            context.SupportedMessageTypes ?? [],
+            metadata,
+            headers,
+            bodyBytes);
+    }
+
+    private static void ValidateBeforeCapture<T>(
+        SendContext<T> context,
+        TransportBodyMaterializer.MetadataSnapshot metadataBeforeBody,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata)
+        where T : class
+    {
         try
         {
             messageContext?.ThrowIfEnvelopeHeadersChanged();
@@ -47,28 +76,41 @@ internal static class MessageJournalCaptureFactory
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw new InvalidOperationException("The send context native metadata changed before journal capture.");
         }
-        byte[] bodyBytes;
+    }
+
+    private static byte[] ReadSendBody<T>(
+        SendContext<T> context,
+        TransportBodyMaterializer.MetadataSnapshot metadataBeforeBody,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata)
+        where T : class
+    {
         try
         {
             MessageBody body = context is TransportSendContext transportContext
                 ? transportContext.Body
                 : context.Serializer.GetMessageBody(context);
-            bodyBytes = body.ToArray();
+            return body.ToArray();
         }
         catch (Exception failure)
         {
             RestoreAfterCaptureFailure(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata, failure);
             throw;
         }
-        ValidateCapturedState(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
+    }
 
-        var metadata = CreateSendMetadata(context, exception);
-        Add(metadata, MessageJournalMetadataKeys.ScheduledMessageId, context.ScheduledMessageId);
-        Add(metadata, MessageJournalMetadataKeys.TimeToLive, context.TimeToLive);
-        Dictionary<string, string> headers;
+    private static Dictionary<string, string> ReadSendHeaders<T>(
+        SendContext<T> context,
+        TransportBodyMaterializer.MetadataSnapshot metadataBeforeBody,
+        MessageSendContext<T>? messageContext,
+        ITransportSendMetadata? nativeContext,
+        object? nativeMetadata)
+        where T : class
+    {
         try
         {
-            headers = messageContext?.SerializedEnvelopeHeaders?.SnapshotJournalHeaders(context.Headers)
+            return messageContext?.SerializedEnvelopeHeaders?.SnapshotJournalHeaders(context.Headers)
                 ?? SnapshotHeaders(context.Headers);
         }
         catch (Exception failure)
@@ -76,16 +118,6 @@ internal static class MessageJournalCaptureFactory
             RestoreAfterCaptureFailure(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata, failure);
             throw;
         }
-        ValidateCapturedState(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata);
-
-        return new MessageJournalCapture(
-            operation,
-            outcome,
-            context.ContentType?.ToString(),
-            context.SupportedMessageTypes ?? [],
-            metadata,
-            headers,
-            bodyBytes);
     }
 
     private static void ValidateCapturedState<T>(

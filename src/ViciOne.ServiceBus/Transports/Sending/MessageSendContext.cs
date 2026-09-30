@@ -76,22 +76,7 @@ public class MessageSendContext<TMessage> :
                 _serializedMetadata ?? TransportBodyMaterializer.MetadataSnapshot.Capture(this);
             ITransportSendMetadata? nativeContext = this as ITransportSendMetadata;
             object? nativeBeforeBody = _serializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
-            if (beforeBody.ChangedField(this) is { } staleField)
-            {
-                beforeBody.Restore(this);
-                _serializedMetadata ??= beforeBody;
-                throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(staleField);
-            }
-            if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is { } staleNativeField)
-            {
-                nativeContext.RestoreNativeMetadata(nativeBeforeBody);
-                throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(staleNativeField);
-            }
-            if (MessageTypesChanged)
-            {
-                RestoreSerializedMessageTypes();
-                throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
-            }
+            ThrowIfBodyMetadataChanged(beforeBody, nativeContext, nativeBeforeBody);
 
             string[]? typesBeforeGetter = _messageTypesBound ? null : SupportedMessageTypes?.ToArray();
             try
@@ -99,68 +84,89 @@ public class MessageSendContext<TMessage> :
                 _bodyCreationInProgress = true;
                 _forwardedTypesAuthorized = false;
                 MessageBody body = _body.Value;
-                if (!_messageTypesBound)
-                {
-                    if ((_forwardedTypesAuthorized && !SameMessageTypes(_authorizedForwardedMessageTypes, SupportedMessageTypes)) ||
-                        (!_forwardedTypesAuthorized && !SameMessageTypes(typesBeforeGetter, SupportedMessageTypes)))
-                    {
-                        SupportedMessageTypes = typesBeforeGetter!;
-                        throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
-                    }
-                    _serializedMessageTypes = SupportedMessageTypes?.ToArray();
-                    _messageTypesBound = true;
-                }
+                BindBodyMessageTypes(typesBeforeGetter);
                 ThrowIfEnvelopeHeadersChanged();
-                if (beforeBody.ChangedField(this) is { } changedField)
-                {
-                    beforeBody.Restore(this);
-                    _serializedMetadata ??= beforeBody;
-                    throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedField);
-                }
-                if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is { } changedNativeField)
-                {
-                    nativeContext.RestoreNativeMetadata(nativeBeforeBody);
-                    throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedNativeField);
-                }
-                if (MessageTypesChanged)
-                {
-                    RestoreSerializedMessageTypes();
-                    throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
-                }
+                ThrowIfBodyMetadataChanged(beforeBody, nativeContext, nativeBeforeBody);
                 _serializedMetadata ??= beforeBody;
                 _serializedNativeMetadata ??= nativeBeforeBody;
                 return body;
             }
             catch (Exception failure)
             {
-                RestoreEnvelopeHeadersAfterFailure(failure);
-                if (beforeBody.ChangedField(this) is not null)
-                {
-                    beforeBody.Restore(this);
-                    TransportBodyMaterializer.MarkMutationFailure(failure);
-                }
-                if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is not null)
-                {
-                    nativeContext.RestoreNativeMetadata(nativeBeforeBody);
-                    TransportBodyMaterializer.MarkMutationFailure(failure);
-                }
-                if (MessageTypesChanged)
-                {
-                    RestoreSerializedMessageTypes();
-                    TransportBodyMaterializer.MarkMutationFailure(failure);
-                }
-                else if (!_messageTypesBound && !SameMessageTypes(typesBeforeGetter, SupportedMessageTypes))
-                {
-                    SupportedMessageTypes = typesBeforeGetter!;
-                    TransportBodyMaterializer.MarkMutationFailure(failure);
-                }
-
+                RestoreAfterBodyFailure(beforeBody, nativeContext, nativeBeforeBody, typesBeforeGetter, failure);
                 throw;
             }
             finally
             {
                 _bodyCreationInProgress = false;
             }
+        }
+    }
+
+    void ThrowIfBodyMetadataChanged(
+        TransportBodyMaterializer.MetadataSnapshot beforeBody,
+        ITransportSendMetadata? nativeContext,
+        object? nativeBeforeBody)
+    {
+        if (beforeBody.ChangedField(this) is { } changedField)
+        {
+            beforeBody.Restore(this);
+            _serializedMetadata ??= beforeBody;
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedField);
+        }
+        if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is { } changedNativeField)
+        {
+            nativeContext.RestoreNativeMetadata(nativeBeforeBody);
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedNativeField);
+        }
+        if (MessageTypesChanged)
+        {
+            RestoreSerializedMessageTypes();
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
+        }
+    }
+
+    void BindBodyMessageTypes(string[]? typesBeforeGetter)
+    {
+        if (_messageTypesBound)
+            return;
+        if ((_forwardedTypesAuthorized && !SameMessageTypes(_authorizedForwardedMessageTypes, SupportedMessageTypes)) ||
+            (!_forwardedTypesAuthorized && !SameMessageTypes(typesBeforeGetter, SupportedMessageTypes)))
+        {
+            SupportedMessageTypes = typesBeforeGetter!;
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
+        }
+        _serializedMessageTypes = SupportedMessageTypes?.ToArray();
+        _messageTypesBound = true;
+    }
+
+    void RestoreAfterBodyFailure(
+        TransportBodyMaterializer.MetadataSnapshot beforeBody,
+        ITransportSendMetadata? nativeContext,
+        object? nativeBeforeBody,
+        string[]? typesBeforeGetter,
+        Exception failure)
+    {
+        RestoreEnvelopeHeadersAfterFailure(failure);
+        if (beforeBody.ChangedField(this) is not null)
+        {
+            beforeBody.Restore(this);
+            TransportBodyMaterializer.MarkMutationFailure(failure);
+        }
+        if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is not null)
+        {
+            nativeContext.RestoreNativeMetadata(nativeBeforeBody);
+            TransportBodyMaterializer.MarkMutationFailure(failure);
+        }
+        if (MessageTypesChanged)
+        {
+            RestoreSerializedMessageTypes();
+            TransportBodyMaterializer.MarkMutationFailure(failure);
+        }
+        else if (!_messageTypesBound && !SameMessageTypes(typesBeforeGetter, SupportedMessageTypes))
+        {
+            SupportedMessageTypes = typesBeforeGetter!;
+            TransportBodyMaterializer.MarkMutationFailure(failure);
         }
     }
 

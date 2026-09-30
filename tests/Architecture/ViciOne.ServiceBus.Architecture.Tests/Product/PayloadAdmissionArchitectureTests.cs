@@ -25,8 +25,8 @@ public sealed class PayloadAdmissionArchitectureTests
 
         string boundary = Source("src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionTransportBoundary.cs");
         Assert.Contains("TransportBodyMaterializer.CaptureExpectedMetadata(context)", boundary, StringComparison.Ordinal);
-        Assert.Contains("TransportBodyMaterializer.ReadWithExpectedMetadata(context, body =>", boundary, StringComparison.Ordinal);
-        Assert.Contains("}, expected)", boundary, StringComparison.Ordinal);
+        Assert.Contains("TransportBodyMaterializer.ReadWithExpectedMetadata(context,", boundary, StringComparison.Ordinal);
+        Assert.Contains("ValidateAdmittedBody(context, body, admission, messageIdBeforeAdmission), expected)", boundary, StringComparison.Ordinal);
         Assert.Contains("long serializedLength = body.Length", boundary, StringComparison.Ordinal);
         Assert.Contains("admission.HasCompleteAdmissionFor(serializedLength)", boundary, StringComparison.Ordinal);
         Assert.DoesNotContain("transportContext.Body.ToArray()", boundary, StringComparison.Ordinal);

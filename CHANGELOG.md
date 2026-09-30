@@ -179,6 +179,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Separated send-body metadata preflight, contract binding, and failure
+  restoration into explicit operations; journal capture now separates its
+  preflight, body read, and header snapshot. The admission proof and identity
+  checks and the scalar identity comparisons have likewise been split at
+  their behavior boundaries. This reduces complexity without relaxing
+  rejection or restoration. New tests require cached bodies to reject later
+  correlation, native-route, and contract changes, preserve the original
+  serializer failure after multiple mutations, and reject stale journal
+  metadata before capture.
+
 - Fixed physical payload admission accepting a serializer getter that changed
   the send destination before body creation. The shared admission boundary now
   binds expected metadata before serializer callbacks, checks it through body

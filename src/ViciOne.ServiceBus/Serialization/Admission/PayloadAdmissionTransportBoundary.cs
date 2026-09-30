@@ -93,30 +93,52 @@ internal static class PayloadAdmissionTransportBoundary
                     "Keep the serializer and content type paired for this send operation"));
         }
 
-        return TransportBodyMaterializer.ReadWithExpectedMetadata(context, body =>
+        return TransportBodyMaterializer.ReadWithExpectedMetadata(context,
+            body => ValidateAdmittedBody(context, body, admission, messageIdBeforeAdmission), expected);
+    }
+
+    private static MessageBody ValidateAdmittedBody<T>(
+        SendContext<T> context,
+        MessageBody body,
+        PayloadAdmissionSerializationContext admission,
+        Guid? messageIdBeforeAdmission)
+        where T : class
+    {
+        long serializedLength = body.Length;
+        if (context.MessageId != messageIdBeforeAdmission)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
+        RequireCompleteAdmission(body, admission, serializedLength);
+        BindAdmittedMessageId(context, admission);
+        return body;
+    }
+
+    private static void RequireCompleteAdmission(
+        MessageBody body,
+        PayloadAdmissionSerializationContext admission,
+        long serializedLength)
+    {
+        bool admittedBody = body is IPayloadAdmittedMessageBody { AdmissionContext: { } bodyAdmission }
+            && ReferenceEquals(bodyAdmission, admission);
+        if (!admittedBody || !admission.HasCompleteAdmissionFor(serializedLength))
         {
-            long serializedLength = body.Length;
-            if (context.MessageId != messageIdBeforeAdmission)
-                throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
-            bool admittedBody = body is IPayloadAdmittedMessageBody { AdmissionContext: { } bodyAdmission }
-                && ReferenceEquals(bodyAdmission, admission);
-            if (!admittedBody || !admission.HasCompleteAdmissionFor(serializedLength))
-            {
-                throw new ConfigurationException(
-                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
-                        "Serialization",
-                        "unknown",
-                        "The send serializer did not provide an immutable body admitted for this bus and operation.",
-                        "Use a payload-admission-aware serializer or CopyBodySerializer"));
-            }
+            throw new ConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                    "Serialization",
+                    "unknown",
+                    "The send serializer did not provide an immutable body admitted for this bus and operation.",
+                    "Use a payload-admission-aware serializer or CopyBodySerializer"));
+        }
+    }
 
-            if (!admission.TryBindMessageId(context.MessageId, out Guid? admittedMessageId))
-            {
-                context.MessageId = admittedMessageId;
-                throw new MessageException(typeof(T), "The SendContext MessageId changed after payload admission");
-            }
-
-            return body;
-        }, expected);
+    private static void BindAdmittedMessageId<T>(
+        SendContext<T> context,
+        PayloadAdmissionSerializationContext admission)
+        where T : class
+    {
+        if (!admission.TryBindMessageId(context.MessageId, out Guid? admittedMessageId))
+        {
+            context.MessageId = admittedMessageId;
+            throw new MessageException(typeof(T), "The SendContext MessageId changed after payload admission");
+        }
     }
 }

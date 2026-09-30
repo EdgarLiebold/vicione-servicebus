@@ -153,11 +153,19 @@ internal static class TransportBodyMaterializer
         public string? ChangedField(SendContext context) =>
             ChangedIdentityField(context) ?? ChangedAddressField(context) ?? ChangedDeliveryField(context);
 
-        private string? ChangedIdentityField(SendContext context)
+        private string? ChangedIdentityField(SendContext context) =>
+            ChangedMessageIdentityField(context) ?? ChangedCausalIdentityField(context);
+
+        private string? ChangedMessageIdentityField(SendContext context)
         {
             if (context.MessageId != MessageId) return nameof(MessageId);
             if (context.RequestId != RequestId) return nameof(RequestId);
             if (context.CorrelationId != CorrelationId) return nameof(CorrelationId);
+            return null;
+        }
+
+        private string? ChangedCausalIdentityField(SendContext context)
+        {
             if (context.ConversationId != ConversationId) return nameof(ConversationId);
             if (context.InitiatorId != InitiatorId) return nameof(InitiatorId);
             if (context.ScheduledMessageId != ScheduledMessageId) return nameof(ScheduledMessageId);

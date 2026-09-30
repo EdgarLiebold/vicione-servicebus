@@ -69,6 +69,86 @@ public sealed class MessageSendContextPropertyTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TRANSPORT-SEND-SERIALIZATION", "cached-body-rejects-later-correlation-change")]
+    public void CachedBody_RejectsChangedCorrelationAndRestoresTheSerializedIdentity()
+    {
+        Guid correlation = Guid.NewGuid();
+        var context = new MessageSendContext<ProbeMessage>(new ProbeMessage())
+        {
+            CorrelationId = correlation,
+            Serializer = new RecordingSerializer([1, 2, 3]),
+        };
+        Assert.Equal([1, 2, 3], context.Body.ToArray());
+        context.CorrelationId = Guid.NewGuid();
+
+        MessageException failure = Assert.Throws<MessageException>(() => _ = context.Body);
+
+        Assert.Contains("CorrelationId", failure.Message, StringComparison.Ordinal);
+        Assert.True(TransportBodyMaterializer.IsMutationFailure(failure));
+        Assert.Equal(correlation, context.CorrelationId);
+        Assert.Same(failure, Assert.Throws<MessageException>(() => _ = context.Body));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TRANSPORT-SEND-SERIALIZATION", "cached-body-rejects-later-native-route-change")]
+    public void CachedBody_RejectsChangedNativeRouteAndRestoresTheSerializedRoute()
+    {
+        var context = new NativeSendContext { Route = "orders.original", Serializer = new RecordingSerializer([4]) };
+        Assert.Equal([4], context.Body.ToArray());
+        context.Route = "orders.replacement";
+
+        MessageException failure = Assert.Throws<MessageException>(() => _ = context.Body);
+
+        Assert.Contains(nameof(NativeSendContext.Route), failure.Message, StringComparison.Ordinal);
+        Assert.True(TransportBodyMaterializer.IsMutationFailure(failure));
+        Assert.Equal("orders.original", context.Route);
+        Assert.Same(failure, Assert.Throws<MessageException>(() => _ = context.Body));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TRANSPORT-SEND-SERIALIZATION", "cached-body-rejects-later-contract-change")]
+    public void CachedBody_RejectsChangedContractTypesAndRestoresTheSerializedTypes()
+    {
+        var context = new MessageSendContext<ProbeMessage>(new ProbeMessage())
+        {
+            Serializer = new RecordingSerializer([5]),
+        };
+        string[] originalTypes = context.SupportedMessageTypes.ToArray();
+        Assert.Equal([5], context.Body.ToArray());
+        context.SupportedMessageTypes = ["urn:wrong:contract"];
+
+        MessageException failure = Assert.Throws<MessageException>(() => _ = context.Body);
+
+        Assert.Contains(nameof(context.SupportedMessageTypes), failure.Message, StringComparison.Ordinal);
+        Assert.True(TransportBodyMaterializer.IsMutationFailure(failure));
+        Assert.Equal(originalTypes, context.SupportedMessageTypes);
+        Assert.Same(failure, Assert.Throws<MessageException>(() => _ = context.Body));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TRANSPORT-SEND-SERIALIZATION", "serializer-failure-restores-metadata-and-preserves-cause")]
+    public void SerializerFailure_RestoresScalarNativeAndContractMetadataWithoutReplacingTheCause()
+    {
+        var failure = new InvalidOperationException("serializer failed after changing metadata");
+        Guid correlation = Guid.NewGuid();
+        var context = new NativeSendContext { Route = "orders.original", CorrelationId = correlation };
+        string[] originalTypes = context.SupportedMessageTypes.ToArray();
+        context.Serializer = new CallbackSerializer(() =>
+        {
+            context.CorrelationId = Guid.NewGuid();
+            context.Route = "orders.replacement";
+            context.SupportedMessageTypes = ["urn:wrong:contract"];
+            throw failure;
+        });
+
+        Assert.Same(failure, Assert.Throws<InvalidOperationException>(() => _ = context.Body));
+        Assert.True(TransportBodyMaterializer.IsMutationFailure(failure));
+        Assert.Equal(correlation, context.CorrelationId);
+        Assert.Equal("orders.original", context.Route);
+        Assert.Equal(originalTypes, context.SupportedMessageTypes);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-ADMISSION-METADATA", "stable-identities-before-serialization")]
     public void DurableAdmissionMetadata_ReplacesDispatchIdentityOnlyBeforeSerialization()
     {
@@ -233,6 +313,31 @@ public sealed class MessageSendContextPropertyTests
             InvocationCount++;
             return _body;
         }
+    }
+
+    private sealed class CallbackSerializer(Action callback) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/vnd.vicione.context-test");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            callback();
+            return new BinaryMessageBody(new byte[] { 1 });
+        }
+    }
+
+    private sealed class NativeSendContext : MessageSendContext<ProbeMessage>, ITransportSendMetadata
+    {
+        public NativeSendContext() : base(new ProbeMessage()) { }
+
+        public string Route { get; set; } = "orders.original";
+
+        public object CaptureNativeMetadata() => Route;
+
+        public string? ChangedNativeField(object snapshot) =>
+            string.Equals(Route, (string)snapshot, StringComparison.Ordinal) ? null : nameof(Route);
+
+        public void RestoreNativeMetadata(object snapshot) => Route = (string)snapshot;
     }
 
     private class UnexpectedInvocationProxy : DispatchProxy
