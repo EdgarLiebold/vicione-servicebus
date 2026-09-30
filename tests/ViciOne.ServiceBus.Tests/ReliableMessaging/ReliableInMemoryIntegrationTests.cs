@@ -59,7 +59,7 @@ public sealed class ReliableInMemoryIntegrationTests
 
             MessageException rejection = Assert.IsType<MessageException>(failure.InnerException);
             Assert.Contains("changed during serialization", rejection.Message, StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(replacementId, outgoing.MessageId);
+            Assert.Equal(initialId, outgoing.MessageId);
             IOutboxStore<IBus> outbox = provider.GetRequiredService<IOutboxStore<IBus>>();
             Assert.Equal(0, (await outbox.GetSnapshotAsync(token)).StoredCount);
             Assert.Empty(await outbox.ClaimDueAsync(clock.GetUtcNow().AddDays(1), 10,

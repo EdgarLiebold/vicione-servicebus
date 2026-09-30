@@ -9,6 +9,96 @@ namespace ViciOne.ServiceBus.ActiveMq.Tests.ActiveMqTransport;
 
 public sealed class TemporaryDestinationOwnershipTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "native-reply-destination-cannot-change-during-body-materialization")]
+    public async Task RequestSend_RejectsNativeDestinationChangedWhileCreatingBodyAsync()
+    {
+        var topology = new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology());
+        var configuration = new ActiveMqBusConfiguration(topology);
+        configuration.HostConfiguration.Settings = new OpenWireHostSettings(new Uri("activemq://broker.internal:61616"));
+        IConnection nativeConnection = InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+        {
+            nameof(IConnection.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected connection operation: {method.Name}"),
+        });
+        await using var connection = new ActiveMqConnectionContext(nativeConnection, configuration.HostConfiguration, CancellationToken.None);
+        var initialDestination = new Apache.NMS.ActiveMQ.Commands.ActiveMQQueue("original");
+        var changedDestination = new Apache.NMS.ActiveMQ.Commands.ActiveMQQueue("changed");
+        int sends = 0;
+        IMessageProducer producer = InterfaceProxy<IMessageProducer>.Create((method, _) => method.Name switch
+        {
+            nameof(IMessageProducer.SendAsync) => CountSendAsync(),
+            nameof(IMessageProducer.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected producer operation: {method.Name}"),
+        });
+        ISession nativeSession = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.CreateBytesMessage) => new Apache.NMS.ActiveMQ.Commands.ActiveMQBytesMessage { Content = (byte[])args![0]! },
+            nameof(ISession.CreateProducerAsync) => Task.FromResult(producer),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            nameof(IDisposable.Dispose) => null,
+            _ => throw new InvalidOperationException($"Unexpected session operation: {method.Name}"),
+        });
+        await using var session = new ActiveMqSessionContext(connection, nativeSession, CancellationToken.None);
+        var serialization = InterfaceProxy<ISerialization>.Create((method, _) =>
+            throw new InvalidOperationException($"Unexpected serialization operation: {method.Name}"));
+        var endpoint = InterfaceProxy<ViciOne.ServiceBus.Transports.ReceiveEndpointContext>.Create((method, _) => method.Name switch
+        {
+            "get_Serialization" => serialization,
+            _ => throw new InvalidOperationException($"Unexpected endpoint operation: {method.Name}"),
+        });
+        var supervisor = InterfaceProxy<ISessionContextSupervisor>.Create((method, _) =>
+            throw new InvalidOperationException($"Unexpected supervisor operation: {method.Name}"));
+        var transport = new ActiveMqSendTransportContext(configuration.HostConfiguration, endpoint, supervisor,
+            Pipe.Empty<SessionContext>(), "service", DestinationType.Queue);
+        var context = new TransportActiveMqSendContext<ReplyRequest>(new ReplyRequest("request-17"), TestContext.Current.CancellationToken)
+        {
+            ReplyDestination = initialDestination,
+        };
+        context.Serializer = new NativeDestinationMutatingSerializer(() => context.ReplyDestination = changedDestination);
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            transport.SendAsync(session, context, TestContext.Current.CancellationToken));
+
+        Assert.Contains("ReplyDestination", failure.Message, StringComparison.Ordinal);
+        Assert.Same(initialDestination, context.ReplyDestination);
+        Assert.Equal(0, sends);
+
+        Task CountSendAsync()
+        {
+            sends++;
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class NativeDestinationMutatingSerializer(Action mutate) : IMessageSerializer
+    {
+        public System.Net.Mime.ContentType ContentType { get; } = new("application/octet-stream");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class => new NativeDestinationMutatingBody(mutate);
+    }
+
+    private sealed class NativeDestinationMutatingBody(Action mutate) : MessageBody
+    {
+        public long Length => 1;
+
+        public byte[] ToArray()
+        {
+            mutate();
+            return [42];
+        }
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
+
+        public bool TryGetTransportText([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? text)
+        {
+            text = null;
+            return false;
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

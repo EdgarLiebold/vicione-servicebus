@@ -117,7 +117,28 @@ public class ActiveMqSendTransportContext :
 
         var destination = context.ReplyDestination ?? await sessionContext.GetDestinationAsync(EntityName, _destinationType, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        var transportMessage = sessionContext.CreateBytesMessage(TransportBodyMaterializer.ToArray(context));
+        IDestination? replyDestinationBeforeBody = context.ReplyDestination;
+        byte[] body;
+        try
+        {
+            body = TransportBodyMaterializer.ToArray(context);
+        }
+        catch (Exception failure)
+        {
+            if (!ReferenceEquals(context.ReplyDestination, replyDestinationBeforeBody))
+            {
+                context.ReplyDestination = replyDestinationBeforeBody;
+                TransportBodyMaterializer.MarkMutationFailure(failure);
+            }
+            throw;
+        }
+        if (!ReferenceEquals(context.ReplyDestination, replyDestinationBeforeBody))
+        {
+            context.ReplyDestination = replyDestinationBeforeBody;
+            throw TransportBodyMaterializer.CreateMutationFailure<T>(nameof(context.ReplyDestination));
+        }
+
+        var transportMessage = sessionContext.CreateBytesMessage(body);
 
         await SetResponseToAsync(transportMessage, context, sessionContext);
 

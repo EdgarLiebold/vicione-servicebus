@@ -101,7 +101,7 @@ public class AzureServiceBusSendContext<T> :
 
         Buffer.BlockCopy(sequenceNumberBytes, 0, bytes, 0, sequenceLength);
 
-        ScheduledMessageId = new Guid(bytes);
+        AcceptBrokerScheduledMessageId(new Guid(bytes));
     }
 
     /// <summary>Decodes the broker sequence number from this context's scheduled-message identifier.</summary>

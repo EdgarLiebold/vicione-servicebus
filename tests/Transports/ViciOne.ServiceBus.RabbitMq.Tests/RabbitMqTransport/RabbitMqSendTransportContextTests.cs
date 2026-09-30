@@ -136,6 +136,25 @@ public sealed class RabbitMqSendTransportContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "serializer-cannot-change-published-correlation")]
+    public async Task SendAsync_RejectsBodyCallbackThatChangesPublishedCorrelationAsync()
+    {
+        Guid initialCorrelationId = Guid.Parse("7274f764-414d-43cd-aae8-e9bbfdd5818e");
+        Guid laterCorrelationId = Guid.Parse("b70f751c-58d0-4ac8-8549-b00d3aa91a32");
+        var context = CreateMessageContext("orders", [1, 2, 3, 4]);
+        context.CorrelationId = initialCorrelationId;
+        context.Serializer = new MutatingSerializer(sendContext => sendContext.CorrelationId = laterCorrelationId);
+        var channel = new RecordingChannelContext();
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        Assert.Contains("CorrelationId changed during serialization", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(initialCorrelationId, context.CorrelationId);
+        Assert.Empty(channel.Published);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "distinct-publish-payload-enforces-mandatory-routing")]
     public async Task SendAsync_EnforcesMandatoryRoutingFromADistinctPublishPayloadAsync()
     {

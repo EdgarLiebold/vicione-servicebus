@@ -1,5 +1,6 @@
 using System.Text;
 using ViciOne.ServiceBus.AzureServiceBus;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -7,6 +8,21 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 
 public sealed class AzureServiceBusTransportMetadataTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-TRANSPORT-METADATA", "broker-schedule-token-after-serialization-remains-readable")]
+    public void BrokerScheduleToken_AfterBodySerializationPreservesTheSerializedBody()
+    {
+        var context = CreateContext();
+        context.Serializer = new SystemTextJsonRawMessageSerializer(System.Text.Json.JsonSerializerOptions.Default);
+        byte[] serialized = context.Body.ToArray();
+
+        context.SetScheduledMessageId(42);
+
+        Assert.True(context.TryGetScheduledMessageId(out long sequenceNumber));
+        Assert.Equal(42, sequenceNumber);
+        Assert.Equal(serialized, context.Body.ToArray());
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-TRANSPORT-METADATA", "persisted-routing-metadata-roundtrips-without-losing-unrelated-properties")]
     public void PersistedRoutingMetadata_RoundTripsExactlyAndPreservesOtherProperties()

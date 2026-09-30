@@ -514,7 +514,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         {
             MessageException failure = await Assert.ThrowsAsync<MessageException>(() => context.AddSendAsync(changed, token));
             Assert.Contains("changed during serialization", failure.Message, StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(replacementId, changed.MessageId);
+            Assert.Equal(initialId, changed.MessageId);
             Assert.False(context.HasActiveSession);
             Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>());
             Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>());

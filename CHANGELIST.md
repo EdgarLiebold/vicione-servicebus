@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11184 |
+| Added | 11186 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -263,6 +263,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t166-transport-body-metadata.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t167-durable-content-type.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t168-journal-capture-metadata.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t169-send-body-metadata-consistency.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -13763,6 +13764,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/Serialization/ReliableMessaging/ReliableEnvelopeMetadataCodec.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Serialization/ReliableMessaging/SerializedTransportMessage.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Serialization/Serializers/CopyBodySerializer.cs` | Added |  |
+| `src/ViciOne.ServiceBus/Serialization/Serializers/IForwardedMessageTypeContext.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Serialization/Serializers/RawMessageSerializer.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Serialization/Serializers/SerializerCollection.cs` | Added |  |
 | `src/ViciOne.ServiceBus/Serialization/Serializers/SystemTextJsonForwardingSerializer.cs` | Added |  |

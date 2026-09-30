@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed send metadata drifting away from its serialized body or native route.
+  Identity, response and fault addresses, expiration, content type, and contract
+  types are now checked when the body is created and materialized; rejected
+  mutations restore the context before transport delivery or journal capture.
+  ActiveMQ also checks its native reply destination. Azure Service Bus can still
+  record the scheduling token returned after broker acceptance, and JSON and
+  MessagePack forwarding can still restore the original contract types during
+  their first body creation. Red-first bus and provider regressions cover the
+  inconsistent deliveries and those legitimate forwarding and scheduling paths.
+
 - Fixed outgoing journal captures that could retain changed `MessageId` or
   `ContentType` after a second body read. Successful delivery remains intact,
   while the inconsistent capture is discarded and the send context is

@@ -11,6 +11,7 @@ using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.MessageJournal;
@@ -451,6 +452,52 @@ public sealed class MessageJournalIntegrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "successful-send-rejects-post-dispatch-correlation-change")]
+    public async Task SuccessfulSend_JournalDoesNotRecordCorrelationChangedAfterDeliveryAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("journal-post-send-correlation", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        var store = new RecordingStore(expectedEntries: 1);
+        Guid deliveredCorrelationId = NewId.NextGuid();
+        Guid laterCorrelationId = NewId.NextGuid();
+        MaterializationGuidMetadataSerializer? serializer = null;
+        SendContext<JournalMessage>? sendContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
+                store, PassThroughPolicy(), Options(timeout));
+
+            var message = new JournalMessage(NewId.NextGuid(), "post-send-correlation");
+            await harness.InputQueueSendEndpoint.SendAsync(message,
+                Pipe.Execute<SendContext<JournalMessage>>(context =>
+                {
+                    sendContext = context;
+                    context.CorrelationId = deliveredCorrelationId;
+                    serializer = new MaterializationGuidMetadataSerializer(
+                        context.Serializer, current => current.CorrelationId = laterCorrelationId, mutationCall: 2);
+                    context.Serializer = serializer;
+                }), token);
+            IConsumedMessage<JournalMessage> consumed = await handler.Consumed
+                .SelectAsync(token).FirstObservedAsync(cancellationToken: token);
+
+            Assert.Equal(message, consumed.Context.Message);
+            Assert.Equal(deliveredCorrelationId, consumed.Context.CorrelationId);
+            Assert.Equal(deliveredCorrelationId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(sendContext).CorrelationId);
+            Assert.Equal(2, Assert.IsType<MaterializationGuidMetadataSerializer>(serializer).MaterializationCalls);
+            Assert.Empty(store.Entries);
+            Assert.Equal(0, store.AppendAttempts);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "successful-send-preserves-delivery-after-throwing-content-type-mutation")]
     public async Task SuccessfulSend_ThrowingJournalBodyRestoresDeliveredContentTypeAsync()
     {
@@ -523,6 +570,238 @@ public sealed class MessageJournalIntegrationTests
 
             Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
             Assert.Equal(1, Assert.IsType<MaterializationIdentitySerializer>(serializer).MaterializationCalls);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Theory]
+    [InlineData(SendIdentityField.RequestId)]
+    [InlineData(SendIdentityField.CorrelationId)]
+    [InlineData(SendIdentityField.ConversationId)]
+    [InlineData(SendIdentityField.InitiatorId)]
+    [InlineData(SendIdentityField.ScheduledMessageId)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serialization-must-not-change-send-identities")]
+    public async Task InMemorySend_RejectsSendIdentityChangedWhileMaterializingBodyAsync(SendIdentityField field)
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-envelope-identity", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        Guid original = NewId.NextGuid();
+        Guid changed = NewId.NextGuid();
+        MaterializationGuidMetadataSerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "envelope-identity-mutation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        SetSendIdentity(context, field, original);
+                        serializer = new MaterializationGuidMetadataSerializer(
+                            context.Serializer, sendContext => SetSendIdentity(sendContext, field, changed));
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains(field.ToString(), failure.Message, StringComparison.Ordinal);
+            Assert.Equal(original, GetSendIdentity(Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext), field));
+            Assert.Equal(1, Assert.IsType<MaterializationGuidMetadataSerializer>(serializer).MaterializationCalls);
+            Assert.Equal(0, handler.Consumed.Count);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "pre-send-cannot-change-cached-envelope-correlation")]
+    public async Task InMemorySend_RejectsObserverChangingCorrelationAfterBodyWasCachedAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-cached-envelope-correlation", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        Guid originalCorrelationId = NewId.NextGuid();
+        Guid laterCorrelationId = NewId.NextGuid();
+        var observer = new BodyReadingCorrelationObserver(laterCorrelationId);
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            using ConnectHandle observerConnection = harness.Bus.ConnectSendObserver(observer);
+
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "cached-envelope-correlation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.CorrelationId = originalCorrelationId;
+                    }), token));
+
+            Assert.Contains("CorrelationId changed during serialization", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(originalCorrelationId, observer.SerializedCorrelationId);
+            Assert.Equal(originalCorrelationId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).CorrelationId);
+            Assert.Equal(0, handler.Consumed.Count);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serialized-contract-types-cannot-change-during-body-materialization")]
+    public async Task InMemorySend_RejectsMessageTypesChangedAfterBodyCreationAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-contract-types-mutation", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        SendContext<JournalMessage>? capturedContext = null;
+        string[]? originalTypes = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "contract-types-mutation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        originalTypes = context.SupportedMessageTypes.ToArray();
+                        context.Serializer = new MaterializationGuidMetadataSerializer(context.Serializer,
+                            sendContext => sendContext.SupportedMessageTypes[0] = "urn:message:wrong:Contract");
+                    }), token));
+
+            Assert.Contains("SupportedMessageTypes", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(originalTypes, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).SupportedMessageTypes);
+            Assert.Equal(0, handler.Consumed.Count);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serializer-getter-cannot-change-serialized-contract-types")]
+    public async Task InMemorySend_RejectsSerializerChangingTypesAfterEnvelopeCreationAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-getter-contract-types", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        SendContext<JournalMessage>? capturedContext = null;
+        string[]? originalTypes = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "getter-contract-types"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        originalTypes = context.SupportedMessageTypes.ToArray();
+                        context.Serializer = new GetterMessageTypesMutationSerializer(context.Serializer);
+                    }), token));
+
+            Assert.Contains("SupportedMessageTypes", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(originalTypes, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).SupportedMessageTypes);
+            Assert.Equal(0, handler.Consumed.Count);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serializer-getter-cannot-change-serialized-correlation")]
+    public async Task InMemorySend_RejectsSerializerChangingCorrelationAfterEnvelopeCreationAsync()
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-getter-correlation", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        Guid originalCorrelationId = NewId.NextGuid();
+        Guid laterCorrelationId = NewId.NextGuid();
+        GetterMutationSerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "getter-correlation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        context.CorrelationId = originalCorrelationId;
+                        serializer = new GetterMutationSerializer(context.Serializer, laterCorrelationId);
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains("CorrelationId changed during serialization", failure.Message, StringComparison.Ordinal);
+            Assert.Equal(originalCorrelationId, Assert.IsType<GetterMutationSerializer>(serializer).SerializedCorrelationId);
+            Assert.Equal(originalCorrelationId, Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext).CorrelationId);
+            Assert.Equal(0, handler.Consumed.Count);
+        }
+        finally
+        {
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Theory]
+    [InlineData(SendRouteField.SourceAddress)]
+    [InlineData(SendRouteField.DestinationAddress)]
+    [InlineData(SendRouteField.ResponseAddress)]
+    [InlineData(SendRouteField.FaultAddress)]
+    [InlineData(SendRouteField.TimeToLive)]
+    [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "serialization-must-not-change-route-or-expiry")]
+    public async Task InMemorySend_RejectsRouteOrExpiryChangedWhileMaterializingBodyAsync(SendRouteField field)
+    {
+        TimeSpan timeout = OperationTimeout;
+        CancellationToken token = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("send-route-expiry-mutation", timeout);
+        HandlerTestHarness<JournalMessage> handler = harness.AddHandler<JournalMessage>();
+        MaterializationGuidMetadataSerializer? serializer = null;
+        SendContext<JournalMessage>? capturedContext = null;
+
+        await harness.StartAsync(token);
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+                harness.InputQueueSendEndpoint.SendAsync(
+                    new JournalMessage(NewId.NextGuid(), "route-expiry-mutation"),
+                    Pipe.Execute<SendContext<JournalMessage>>(context =>
+                    {
+                        capturedContext = context;
+                        SetSendRouteField(context, field, changed: false);
+                        serializer = new MaterializationGuidMetadataSerializer(
+                            context.Serializer, sendContext => SetSendRouteField(sendContext, field, changed: true));
+                        context.Serializer = serializer;
+                    }), token));
+
+            Assert.Contains(field.ToString(), failure.Message, StringComparison.Ordinal);
+            Assert.Equal(ExpectedSendRouteField(field, changed: false),
+                GetSendRouteField(Assert.IsAssignableFrom<SendContext<JournalMessage>>(capturedContext), field));
+            Assert.Equal(1, Assert.IsType<MaterializationGuidMetadataSerializer>(serializer).MaterializationCalls);
+            Assert.Equal(0, handler.Consumed.Count);
         }
         finally
         {
@@ -834,6 +1113,98 @@ public sealed class MessageJournalIntegrationTests
     private sealed record OutboxRequest(Guid CorrelationId) : ICorrelatedBy<Guid>;
     private sealed record DeferredMessage(Guid CorrelationId, string Value) : ICorrelatedBy<Guid>;
 
+    public enum SendIdentityField
+    {
+        RequestId,
+        CorrelationId,
+        ConversationId,
+        InitiatorId,
+        ScheduledMessageId,
+    }
+
+    public enum SendRouteField
+    {
+        SourceAddress,
+        DestinationAddress,
+        ResponseAddress,
+        FaultAddress,
+        TimeToLive,
+    }
+
+    private static object ExpectedSendRouteField(SendRouteField field, bool changed) =>
+        field == SendRouteField.TimeToLive
+            ? changed ? TimeSpan.FromMinutes(2) : TimeSpan.FromMinutes(1)
+            : new Uri(changed ? "loopback://route-changed/input" : "loopback://route-original/input");
+
+    private static void SetSendRouteField(SendContext context, SendRouteField field, bool changed)
+    {
+        object value = ExpectedSendRouteField(field, changed);
+        switch (field)
+        {
+            case SendRouteField.SourceAddress:
+                context.SourceAddress = (Uri)value;
+                break;
+            case SendRouteField.DestinationAddress:
+                context.DestinationAddress = (Uri)value;
+                break;
+            case SendRouteField.ResponseAddress:
+                context.ResponseAddress = (Uri)value;
+                break;
+            case SendRouteField.FaultAddress:
+                context.FaultAddress = (Uri)value;
+                break;
+            case SendRouteField.TimeToLive:
+                context.TimeToLive = (TimeSpan)value;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(field));
+        }
+    }
+
+    private static object? GetSendRouteField(SendContext context, SendRouteField field) => field switch
+    {
+        SendRouteField.SourceAddress => context.SourceAddress,
+        SendRouteField.DestinationAddress => context.DestinationAddress,
+        SendRouteField.ResponseAddress => context.ResponseAddress,
+        SendRouteField.FaultAddress => context.FaultAddress,
+        SendRouteField.TimeToLive => context.TimeToLive,
+        _ => throw new ArgumentOutOfRangeException(nameof(field)),
+    };
+
+    private static void SetSendIdentity(SendContext context, SendIdentityField field, Guid value)
+    {
+        switch (field)
+        {
+            case SendIdentityField.RequestId:
+                context.RequestId = value;
+                break;
+            case SendIdentityField.CorrelationId:
+                context.CorrelationId = value;
+                break;
+            case SendIdentityField.ConversationId:
+                context.ConversationId = value;
+                break;
+            case SendIdentityField.InitiatorId:
+                context.InitiatorId = value;
+                break;
+            case SendIdentityField.ScheduledMessageId:
+                context.ScheduledMessageId = value;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(field));
+        }
+    }
+
+    private static Guid? GetSendIdentity(SendContext context, SendIdentityField field) => field switch
+    {
+        SendIdentityField.RequestId => context.RequestId,
+        SendIdentityField.CorrelationId => context.CorrelationId,
+        SendIdentityField.ConversationId => context.ConversationId,
+        SendIdentityField.InitiatorId => context.InitiatorId,
+        SendIdentityField.ScheduledMessageId => context.ScheduledMessageId,
+        _ => throw new ArgumentOutOfRangeException(nameof(field)),
+    };
+
     private sealed class DeferredIdentitySerializer(Guid serializedId) : IMessageSerializer
     {
         public ContentType ContentType { get; } = new("application/json");
@@ -933,6 +1304,52 @@ public sealed class MessageJournalIntegrationTests
             });
     }
 
+    private sealed class MaterializationGuidMetadataSerializer(IMessageSerializer inner, Action<SendContext> mutate,
+        int mutationCall = 1)
+        : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public int MaterializationCalls { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            new MaterializationIdentityBody(inner.GetMessageBody(context), () =>
+            {
+                MaterializationCalls++;
+                if (MaterializationCalls == mutationCall)
+                    mutate(context);
+            });
+    }
+
+    private sealed class GetterMutationSerializer(IMessageSerializer inner, Guid laterCorrelationId) : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public Guid? SerializedCorrelationId { get; private set; }
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            MessageBody body = inner.GetMessageBody(context);
+            using JsonDocument document = JsonDocument.Parse(body.ToArray());
+            SerializedCorrelationId = document.RootElement.GetProperty("correlationId").GetGuid();
+            context.CorrelationId = laterCorrelationId;
+            return body;
+        }
+    }
+
+    private sealed class GetterMessageTypesMutationSerializer(IMessageSerializer inner) : IMessageSerializer
+    {
+        public ContentType ContentType => inner.ContentType;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            MessageBody body = inner.GetMessageBody(context);
+            _ = body.ToArray();
+            context.SupportedMessageTypes[0] = "urn:message:wrong:Contract";
+            return body;
+        }
+    }
+
     private sealed class MaterializationContentTypeSerializer(IMessageSerializer inner, string laterContentType, int mutationCall)
         : IMessageSerializer
     {
@@ -1029,6 +1446,24 @@ public sealed class MessageJournalIntegrationTests
 
         public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
+    }
+
+    private sealed class BodyReadingCorrelationObserver(Guid laterCorrelationId) : ISendObserver
+    {
+        public Guid? SerializedCorrelationId { get; private set; }
+
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class
+        {
+            byte[] body = Assert.IsAssignableFrom<TransportSendContext>(context).Body.ToArray();
+            using JsonDocument document = JsonDocument.Parse(body);
+            SerializedCorrelationId = document.RootElement.GetProperty("correlationId").GetGuid();
+            context.CorrelationId = laterCorrelationId;
+            return Task.CompletedTask;
+        }
+
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class => Task.CompletedTask;
+
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class => Task.CompletedTask;
     }
 
     private sealed class ThrowingPublishObserver(Exception failure) : IPublishObserver

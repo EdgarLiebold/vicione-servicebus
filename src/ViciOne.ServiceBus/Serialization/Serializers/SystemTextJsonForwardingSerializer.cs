@@ -85,6 +85,9 @@ internal sealed class SystemTextJsonForwardingSerializer :
         if (_messageTypes != null)
             context.SupportedMessageTypes = _messageTypes;
 
+        if (context is IForwardedMessageTypeContext forwardingContext)
+            forwardingContext.AcceptForwardedMessageTypes(context.SupportedMessageTypes);
+
         if (_rawOptions.HasValue)
         {
             if (_rawOptions.Value.HasFlag(RawSerializerOptions.AddTransportHeaders))

@@ -129,6 +129,10 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         {
             body = context.Body.ToArray();
         }
+        catch (MessageException failure) when (TransportBodyMaterializer.IsMutationFailure(failure))
+        {
+            throw new InvalidOperationException($"The durable send {failure.Message}", failure);
+        }
         catch
         {
             if (!string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))

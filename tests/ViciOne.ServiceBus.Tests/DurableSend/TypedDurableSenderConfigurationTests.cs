@@ -99,7 +99,7 @@ public sealed class TypedDurableSenderConfigurationTests
             sender.SendAsync(destination, message, options, TestContext.Current.CancellationToken));
 
         Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
-        Assert.Equal(replacementId, context.MessageId);
+        Assert.Equal(options.IdempotencyKey.Value, context.MessageId);
         Assert.Equal(0, admission.AdmissionCalls);
         Assert.Equal(options.IdempotencyKey.Value, context.ConversationId);
     }

@@ -100,7 +100,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
                 }),
                 TestContext.Current.CancellationToken));
 
-            Assert.Contains("MessageId changed after payload admission", failure.Message, StringComparison.Ordinal);
+            Assert.Contains("MessageId changed", failure.Message, StringComparison.Ordinal);
             Assert.Equal(originalId, Assert.IsAssignableFrom<SendContext<CountingPayload>>(capturedContext).MessageId);
             Assert.Equal(1, observer.PreSendCalls);
             Assert.Equal(1, converter.WriteCalls);

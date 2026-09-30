@@ -10,6 +10,34 @@ namespace ViciOne.ServiceBus.MessagePack.Tests.Serialization;
 
 public sealed class MessagePackForwardingSerializerTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "transport-body-accepts-preserved-contract-types")]
+    public void TransportBody_PreservesForwardedContractTypesDifferentFromTheLocalMessageType(bool decorated)
+    {
+        var source = CreateContext(new ForwardedMessage { Changed = "preserved" }, Guid.NewGuid());
+        string[] preservedTypes = ["urn:message:original:Contract"];
+        source.SupportedMessageTypes = preservedTypes.ToArray();
+        var forwarding = new MessagePackForwardingSerializer(new MessagePackEnvelope(source, source.Message));
+        var outgoing = CreateContext(source.Message, Guid.NewGuid());
+        Assert.NotEqual(preservedTypes, outgoing.SupportedMessageTypes);
+        outgoing.Serializer = decorated ? new ForwardingDecorator(forwarding) : forwarding;
+
+        MessagePackEnvelope delivered = MessagePackSerializationRuntime.Deserialize<MessagePackEnvelope>(outgoing.Body.ToArray());
+
+        Assert.Equal(preservedTypes, outgoing.SupportedMessageTypes);
+        Assert.Equal(preservedTypes, delivered.MessageTypes);
+        Assert.Equal("preserved", outgoing.Message.Changed);
+    }
+
+    private sealed class ForwardingDecorator(IMessageSerializer inner) : IMessageSerializer
+    {
+        public System.Net.Mime.ContentType ContentType => inner.ContentType;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class => inner.GetMessageBody(context);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "owned-input-boundaries")]
     public void ForwardingSerializer_RejectsEveryMissingOwnedInput()

@@ -38,6 +38,8 @@ internal sealed class MessagePackForwardingSerializer :
         ArgumentNullException.ThrowIfNull(context);
         var envelope = new MessagePackEnvelope(_envelope);
         envelope.Update(context);
+        if (context is IForwardedMessageTypeContext forwardingContext)
+            forwardingContext.AcceptForwardedMessageTypes(context.SupportedMessageTypes);
 
         return new MessagePackMessageBody<T>(context, envelope);
     }

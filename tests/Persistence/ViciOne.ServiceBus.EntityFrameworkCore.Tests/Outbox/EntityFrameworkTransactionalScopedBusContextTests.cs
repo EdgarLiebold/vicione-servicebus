@@ -196,7 +196,7 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
         }
 
         Assert.Contains("changed during serialization", failure.Message, StringComparison.OrdinalIgnoreCase);
-        Assert.Equal(replacementId, outgoing.MessageId);
+        Assert.Equal(initialId, outgoing.MessageId);
         Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxMessage>());
         Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxState>());
         Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().AsNoTracking().ToListAsync(token));

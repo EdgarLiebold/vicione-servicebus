@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net.Mime;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Transports;
 
@@ -19,8 +18,19 @@ internal static class MessageJournalCaptureFactory
         if (exception is not null && TransportBodyMaterializer.IsMutationFailure(exception))
             throw new InvalidOperationException("The rejected transport body has no stable journal capture.");
 
-        Guid? messageIdBeforeBody = context.MessageId;
-        string? contentTypeBeforeBody = context.ContentType?.ToString();
+        TransportBodyMaterializer.MetadataSnapshot metadataBeforeBody =
+            TransportBodyMaterializer.CaptureExpectedMetadata(context);
+        if (metadataBeforeBody.ChangedField(context) is not null)
+        {
+            metadataBeforeBody.Restore(context);
+            throw new InvalidOperationException("The send context metadata changed before journal capture.");
+        }
+        MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
+        if (messageContext?.MessageTypesChanged == true)
+        {
+            messageContext.RestoreSerializedMessageTypes();
+            throw new InvalidOperationException("The send context message types changed before journal capture.");
+        }
         byte[] bodyBytes;
         try
         {
@@ -31,14 +41,20 @@ internal static class MessageJournalCaptureFactory
         }
         catch
         {
-            RestoreSendMetadata(context, messageIdBeforeBody, contentTypeBeforeBody);
+            metadataBeforeBody.Restore(context);
+            if (messageContext?.MessageTypesChanged == true)
+                messageContext.RestoreSerializedMessageTypes();
             throw;
         }
-        if (context.MessageId != messageIdBeforeBody
-            || !string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))
+        if (metadataBeforeBody.ChangedField(context) is not null)
         {
-            RestoreSendMetadata(context, messageIdBeforeBody, contentTypeBeforeBody);
+            metadataBeforeBody.Restore(context);
             throw new InvalidOperationException("The send context metadata changed during journal capture.");
+        }
+        if (messageContext?.MessageTypesChanged == true)
+        {
+            messageContext.RestoreSerializedMessageTypes();
+            throw new InvalidOperationException("The send context message types changed during journal capture.");
         }
 
         var metadata = CreateSendMetadata(context, exception);
@@ -53,13 +69,6 @@ internal static class MessageJournalCaptureFactory
             metadata,
             SnapshotHeaders(context.Headers),
             bodyBytes);
-    }
-
-    private static void RestoreSendMetadata<T>(SendContext<T> context, Guid? messageId, string? contentType)
-        where T : class
-    {
-        context.MessageId = messageId;
-        context.ContentType = contentType is null ? null : new ContentType(contentType);
     }
 
     public static MessageJournalCapture CreateConsume<T>(

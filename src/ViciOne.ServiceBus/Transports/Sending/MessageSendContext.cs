@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Mime;
 using System.Runtime.Serialization;
 using System.Text;
@@ -17,7 +18,8 @@ namespace ViciOne.ServiceBus.Transports;
 /// <typeparam name="TMessage">The outgoing message contract.</typeparam>
 public class MessageSendContext<TMessage> :
     BasePipeContext,
-    TransportSendContext<TMessage>
+    TransportSendContext<TMessage>,
+    IForwardedMessageTypeContext
     where TMessage : class
 {
     static readonly TimeSpanTypeConverter _timeSpanConverter = new TimeSpanTypeConverter();
@@ -27,6 +29,13 @@ public class MessageSendContext<TMessage> :
 
     IMessageSerializer? _serializer;
     ISerialization? _serialization;
+    TransportBodyMaterializer.MetadataSnapshot? _serializedMetadata;
+    string[]? _serializedMessageTypes;
+    bool _messageTypesBound;
+    string[]? _authorizedForwardedMessageTypes;
+    bool _forwardedTypesAuthorized;
+    bool _bodyCreationInProgress;
+    MessageException? _metadataFailure;
 
     /// <summary>Creates send state and assigns time-sortable message identity metadata.</summary>
     /// <param name="message">The outgoing message.</param>
@@ -52,7 +61,125 @@ public class MessageSendContext<TMessage> :
     public bool IsPublish { get; set; }
 
     /// <inheritdoc />
-    public MessageBody Body => _body.Value;
+    public MessageBody Body
+    {
+        get
+        {
+            if (_metadataFailure is { } rejected)
+                throw rejected;
+
+            TransportBodyMaterializer.MetadataSnapshot beforeBody =
+                _serializedMetadata ?? TransportBodyMaterializer.MetadataSnapshot.Capture(this);
+            if (beforeBody.ChangedField(this) is { } staleField)
+            {
+                beforeBody.Restore(this);
+                _serializedMetadata ??= beforeBody;
+                throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(staleField);
+            }
+            if (MessageTypesChanged)
+            {
+                RestoreSerializedMessageTypes();
+                throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
+            }
+
+            string[]? typesBeforeGetter = _messageTypesBound ? null : SupportedMessageTypes?.ToArray();
+            try
+            {
+                _bodyCreationInProgress = true;
+                _forwardedTypesAuthorized = false;
+                MessageBody body = _body.Value;
+                if (!_messageTypesBound)
+                {
+                    if ((_forwardedTypesAuthorized && !SameMessageTypes(_authorizedForwardedMessageTypes, SupportedMessageTypes)) ||
+                        (!_forwardedTypesAuthorized && !SameMessageTypes(typesBeforeGetter, SupportedMessageTypes)))
+                    {
+                        SupportedMessageTypes = typesBeforeGetter!;
+                        throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
+                    }
+                    _serializedMessageTypes = SupportedMessageTypes?.ToArray();
+                    _messageTypesBound = true;
+                }
+                if (beforeBody.ChangedField(this) is { } changedField)
+                {
+                    beforeBody.Restore(this);
+                    _serializedMetadata ??= beforeBody;
+                    throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedField);
+                }
+                if (MessageTypesChanged)
+                {
+                    RestoreSerializedMessageTypes();
+                    throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
+                }
+
+                _serializedMetadata ??= beforeBody;
+                return body;
+            }
+            catch (Exception failure)
+            {
+                if (beforeBody.ChangedField(this) is not null)
+                {
+                    beforeBody.Restore(this);
+                    TransportBodyMaterializer.MarkMutationFailure(failure);
+                }
+                if (MessageTypesChanged)
+                {
+                    RestoreSerializedMessageTypes();
+                    TransportBodyMaterializer.MarkMutationFailure(failure);
+                }
+                else if (!_messageTypesBound && !SameMessageTypes(typesBeforeGetter, SupportedMessageTypes))
+                {
+                    SupportedMessageTypes = typesBeforeGetter!;
+                    TransportBodyMaterializer.MarkMutationFailure(failure);
+                }
+
+                throw;
+            }
+            finally
+            {
+                _bodyCreationInProgress = false;
+            }
+        }
+    }
+
+    void IForwardedMessageTypeContext.AcceptForwardedMessageTypes(string[]? messageTypes)
+    {
+        if (_bodyCreationInProgress)
+        {
+            _authorizedForwardedMessageTypes = messageTypes?.ToArray();
+            _forwardedTypesAuthorized = true;
+        }
+    }
+
+    internal TransportBodyMaterializer.MetadataSnapshot? SerializedMetadata => _serializedMetadata;
+
+    internal bool MessageTypesChanged => _messageTypesBound && !SameMessageTypes(_serializedMessageTypes, SupportedMessageTypes);
+
+    static bool SameMessageTypes(string[]? expected, string[]? actual) =>
+        expected is null ? actual is null : actual is not null && expected.SequenceEqual(actual, StringComparer.Ordinal);
+
+    internal void RestoreSerializedMessageTypes() => SupportedMessageTypes = _serializedMessageTypes?.ToArray()!;
+
+    /// <summary>Accepts the scheduling identifier returned by a broker after successful delivery.</summary>
+    /// <param name="scheduledMessageId">The broker-confirmed scheduling identifier.</param>
+    internal void AcceptBrokerScheduledMessageId(Guid scheduledMessageId)
+    {
+        if (_metadataFailure is { } rejected)
+            throw rejected;
+        if (_serializedMetadata is { } serialized && serialized.ChangedField(this) is { } changedField)
+        {
+            serialized.Restore(this);
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedField);
+        }
+        if (MessageTypesChanged)
+        {
+            RestoreSerializedMessageTypes();
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
+        }
+
+        ScheduledMessageId = scheduledMessageId;
+        if (_serializedMetadata is { } bound)
+            _serializedMetadata = bound with { ScheduledMessageId = scheduledMessageId };
+    }
 
     /// <inheritdoc />
     public virtual TimeSpan? Delay { get; set; }
