@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed source-tree and baseline-completeness gate for the identity fork."""
+"""Check current tracked product source and legal identity documents."""
 
 from __future__ import annotations
 
@@ -1839,19 +1839,12 @@ def generate_evidence(root: Path, evidence: Path) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("current", "scan", "evidence"))
+    parser.add_argument("command", choices=("current",))
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--evidence-root", type=Path)
     args = parser.parse_args()
     root = args.root.resolve(strict=True)
-    if args.command == "current":
-        return run_current_gate(root, args.output)
-    if args.command == "scan":
-        evidence_root = args.evidence_root.resolve(strict=True) if args.evidence_root else None
-        return run_gate(root, args.output, evidence_root)
-    evidence = args.output or root / "evidence" / "WP-F2-SERVICEBUS-IDENTITY"
-    return generate_evidence(root, evidence)
+    return run_current_gate(root, args.output)
 
 
 if __name__ == "__main__":

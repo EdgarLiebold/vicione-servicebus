@@ -4,7 +4,8 @@
   records in Git tag `archive/servicebus-pre-review-cleanup-20260930`, retained the obligation
   maps used by architecture tests, split this changelog into topic documents, and replaced the
   static source-only change list with a live whole-repository Git comparison under `license/`.
-  CI now checks current source identity without rescanning archived binary evidence.
+  CI now checks current source identity without rescanning archived binary evidence. The obsolete
+  historical `scan` and `evidence` CLI modes and their path policy are retired with that archive.
 
 - Message-limit tests now exercise inclusive body and envelope boundaries,
   independently optional warning and offload thresholds, and exact failure
