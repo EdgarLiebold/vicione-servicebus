@@ -11,6 +11,11 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- The corrected EF message-ID path passed a new exact-commit, 33-profile
+  product-wide measurement: 14,139 passing executions, 92.40183% Line,
+  85.14605% conservative Branch, and no method above CRAP 30. All twelve
+  local provider fixtures ended without findings.
+
 - Fixed the EF transactional outbox accepting `Guid.Empty` as a message ID.
   It now rejects the invalid identity before serialization, staging or capacity
   reservation, matching the existing EF outbox contract. A red-first SQLite

@@ -1,5 +1,14 @@
 # ServiceBus A+ coverage campaign — status
 
+## Current T160 product-wide checkpoint
+
+The strict exact-commit aggregate on `096e8ecfa` accepts all 33 profiles:
+14,139/14,139 passed executions, all 32 product assemblies, 87,584/94,786
+lines (92.40183%), 31,831/37,384 conservative branches (85.14605%), and
+zero of 26,194 methods above CRAP 30. All twelve provider fixture findings
+are empty. Independent read-only Red Team audit is PASS with no concrete
+P1/P2 measurement finding. See [T160 report](product-wide-profile-096e8ecfa.md).
+
 ## Current T159 EF transactional message identity
 
 The EF transactional outbox now rejects `Guid.Empty` before serialization or
@@ -7,8 +16,8 @@ staging. Its red-first SQLite regression checks rejection without tracker or
 capacity effects and a following valid commit through the same context. The
 complete EF project passes 401/401; independent read-only Red Team re-review
 is PASS after closing one P2 test-oracle gap. See
-[T159 evidence](t159-ef-transactional-empty-message-id.md). T157 remains the
-latest complete product-wide Coverage/CRAP checkpoint.
+[T159 evidence](t159-ef-transactional-empty-message-id.md). T160 supplies
+the subsequent complete product-wide Coverage/CRAP checkpoint.
 
 ## Current T158 Roslyn API inventory
 

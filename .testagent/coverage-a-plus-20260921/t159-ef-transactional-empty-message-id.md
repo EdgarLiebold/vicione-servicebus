@@ -25,6 +25,6 @@ before checking tracker state could hide an invalid staged record. The
 assertions now run before cleanup, and the final read-only re-review reports
 no remaining concrete P1/P2 in this diff.
 
-This focused result does not establish a new product-wide Coverage/CRAP
-profile. The last complete 33-profile checkpoint remains T157 at
-`490dde6d6` until a new exact-commit aggregate is produced.
+The subsequent [T160 product-wide checkpoint](product-wide-profile-096e8ecfa.md)
+includes this fix and the new test in a complete exact-commit 33-profile
+Coverage/CRAP aggregate.
