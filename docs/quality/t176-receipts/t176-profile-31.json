@@ -1,0 +1,59 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.Courier",
+    "ViciOne.ServiceBus.EntityFrameworkCore",
+    "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+    "ViciOne.ServiceBus.Initializers",
+    "ViciOne.ServiceBus.JobService",
+    "ViciOne.ServiceBus.MessagePack",
+    "ViciOne.ServiceBus.Sagas",
+    "ViciOne.ServiceBus.SqlTransport",
+    "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "eb9b28355aa23d98e9991cbdf8e2de8192b7b3edb2e71560a7bab5ca6d7ee533",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Courier.dll": "7e71826d6afa745cad9edec163876ce32c39a3158cffee65cd371a6ed1cffaff",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll": "3d039515c196a732db67eb57ccccef2848a1dd7fe10f4bc2d89433c60cd34f2a",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll": "dec098b0a7c3ff94cb661e4416297920bbd4c406466259f5910d68afe37ab7ce",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Futures.dll": "badecfcd9189a70d3abfac6347861e7ee7ddab6e10aaf896d3b903bf26ed7988",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Initializers.dll": "59a7f53b69f1bc2b8dfc52480b5f0d57f38a811173b350313b52118e3240ff5e",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.JobService.dll": "5015da6f23a7518607b693f4c8d79f2e1c1c3ac8da3ead6806e6f013c08e9383",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Mediator.dll": "b924c1ceb5efbf65990f152522ff616468270e0c641ba95ba35c3751e87054e3",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.MessagePack.dll": "4c0b3b81e8ea7ce22bb4cda4053a2f10ab53b01d61e3df87084f37f7c9d8da93",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Sagas.dll": "cccc6b1866824c5512072ec0bb3b1190582806bf2c8450de6b376eb929bd2411",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll": "b47e0793d881eb83688c829192664ccbe0816ca12fcda096de5dcfe62f9d35d3",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.pdb": "66e0d7c6dd2cf1a9f464b620667cba4c76a5cdd8072050c445a7499a37787e0b",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll": "79c72404dacbe8fc9b90b0953d07d60dba9ccc4a3cdba0cdf012886cc82e16e9",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.dll": "cc6a4234ed2f31090d570e1b75be491cf61ffc58bdb6116e1c6d1cbc5826f6e2",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Testing.dll": "14d1cb5170ab9de1de93307f3e9938d92ad47a912bce8f396f227ce3ba6fc968",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "3d100f2992c97ed031432821b8a9695a94c1ee104e726b29b37497f0e4d239d9",
+    "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.dll": "f755412e59540ffb0ba6fe147101138f127aadf83bfd0ad3ce0d9f71b30dc801"
+  },
+  "completedUtc": "2026-09-30T15:29:21.038614+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-31/build.log": "9e242b3ef04c62647d5bbb55a6c4f8b69d1cc0ed56a07e062259a9c574ee78b1",
+    "artifacts/t176-profile-31/restore.log": "fd0fbc017aeaf76d37d60b6162688a940823af68b64d4eb1e9201c04c41997fb",
+    "artifacts/t176-profile-31/tests.log": "cb04df734fad4b36409859b45f944a97d35562c67b1684479ba94960d5ff17fd"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-31/coverage.cobertura.xml": "35274bc1f4f1420124be8ab0e1c55b8025a03bf4fcae9894a9610872e7be6a52"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 79,
+  "testDll": "artifacts/t176-profile-31/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 2064
+}

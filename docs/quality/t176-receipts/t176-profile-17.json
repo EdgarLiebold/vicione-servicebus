@@ -1,0 +1,35 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus.Abstractions"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-17/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll": "dc9f368b048559c1f07fa253943661aab4a55a20f1f3d524fe327b699268c0af",
+    "artifacts/t176-profile-17/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.pdb": "8a07975509a59187099434b63ecc3955b073c729f033f6f3b5d2c7cecc73aa80",
+    "artifacts/t176-profile-17/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "62108ae5c919e5a86ef8d3220845ced9c0888ca401e54b5e94558b267c279927",
+    "artifacts/t176-profile-17/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "234b9f3e1f7b7861b8408ca3ef701f7eeb6ee7e28985e2fdccf78f7e0a935076"
+  },
+  "completedUtc": "2026-09-30T15:15:45.520905+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-17/build.log": "bad53cd38e010fe263cdf17e230ec77836810df9f4fad9fe0a3a5b94bdee2687",
+    "artifacts/t176-profile-17/restore.log": "0f770824f67dd48cc996494b650f8c711ba8914ed53aea28fc5f571abaf8c8bf",
+    "artifacts/t176-profile-17/tests.log": "7d46cd8ea3014f3c796c4387d758e9b1d673768b0a86346257361e6706b75cbc"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-17/coverage.cobertura.xml": "54861e6807eac9e6e22312ab9fbc9a039f1abe6a389d6e9163d93d9954180f54"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.Abstractions",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 979,
+  "testDll": "artifacts/t176-profile-17/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 321
+}

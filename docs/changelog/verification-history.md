@@ -3,7 +3,18 @@
 ViciOne.ServiceBus has not been released. The repository is in a private development state, and the
 entry below records what the current work changed for anyone reading the source.
 
+This is a chronological record: statements that a task was pending describe
+the point in time of that entry. The [current review status](../quality-status.md)
+records the latest complete measurement and open findings.
+
 ### Verification added during the source review
+
+- The complete 33-profile T176 checkpoint on `42a028a7f` recorded 14,235
+  passing test executions, 92.3765% line coverage, 85.1251% conservative
+  branch coverage and no method with CRAP above 30. Its first SQL Server
+  parallel-publish attempt received 999/1,000 messages; a fresh-container
+  retry passed. The missing-message cause remains open in the current review
+  status. Compact aggregate and profile receipts are versioned there.
 
 - Synchronized the Amazon SQS FIFO shutdown test with the receiver's actual
   `Stopped` signal. `Completed` can precede that signal, so the former immediate

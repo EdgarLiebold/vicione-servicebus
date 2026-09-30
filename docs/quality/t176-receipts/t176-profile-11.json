@@ -1,0 +1,43 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.SqlTransport",
+    "ViciOne.ServiceBus.SqlTransport.PostgreSql",
+    "ViciOne.ServiceBus.SqlTransport.SqlServer"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "5784b8f33c4b004b845b7ea63422ee263bc20b9d37f36d62b1787cd624b0f13d",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll": "472d0f1be1862ca11fce7109e46b8e4071652d7cea59db2503dc74542ff67218",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll": "a50acd1ede3c4658f046cf6b9abaff102462c0df2b3c5fedc55cf47184537a2a",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.Tests.dll": "396a54b866f114847e5f9e0fa7975f7f99a40a1ac4445997340d570fc153058f",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.Tests.pdb": "13e34a6565281730e4d874042ade71fc044759579d8735ddedea35bc2f7b09fa",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.dll": "bad28f8352fe5e0b493dce183d812285afa1b24f7af97c160600c0b0528adff6",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "9b4e6426db2683cb75b118d2435b8812346c9b243d31c96cf7e7fa1f7b59f848",
+    "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.dll": "6a512cb57824e3922a3b4e6d6e374a537b06700394a118fd0180dba8198bb3ee"
+  },
+  "completedUtc": "2026-09-30T15:11:32.111754+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-11/build.log": "3c904a9b4664b6f42611dfdcfc7914bc6374fb8aa21b174c318db62aa2f23865",
+    "artifacts/t176-profile-11/restore.log": "646bef9b0c18224c4248f18d63055472e6be209177272c2b4504d1b4117ec010",
+    "artifacts/t176-profile-11/tests.log": "6d1e55d44692f70adac017c47e0f62cc2be700fa5618dccb768790e81d4590d8"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-11/coverage.cobertura.xml": "0f1ed1da83d112d5da41ca35b3c66ba537212faebc38baa41e1f78ab1cdd6a95"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.SqlTransport",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 249,
+  "testDll": "artifacts/t176-profile-11/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1431
+}

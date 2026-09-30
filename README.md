@@ -69,6 +69,8 @@ dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build 
 
 See [docs/build.md](docs/build.md) for all build targets, formatting checks, package verification,
 and provider-backed test commands.
+The [current quality status](docs/quality-status.md) records the latest product-wide measurement
+and open reliability finding.
 
 ## Reliability and operations
 

@@ -1,0 +1,47 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.RabbitMq",
+    "ViciOne.ServiceBus.RabbitMq.Testing",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "c61fec6ec95b4f8737305990fa46f298ac89f67e7b2311b59cd08e03435ceab0",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Courier.dll": "2e98e755dbbfee517f649edccb04c001cd76d4684d365f51a93ee8b25165018d",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Futures.dll": "a336bfdc9ddb6d46265f69cb8674620268f9edabe27cba84d044f5ac51d3cc97",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Mediator.dll": "aeb1e3627bc8591bafd15651f5743c9928fbe9a19f126f981b9d252d39d062b3",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.Testing.dll": "b8290656f51078e46063f8c0215131a02748d11eac799ffc155a9bb11de03ef3",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.Tests.dll": "8d3cc4e3e3fc36571d007d06620d8d9147d5c6c0dc910e8c2884d0781a80441a",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.Tests.pdb": "6c33e1076af7319dd672f88639915da5bd9a2023994751d8bb150cccf689e3ba",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.dll": "5d16f7a016bb730dda5a9ac0820ffe14301c921f38594a87dfe7593876f85224",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Sagas.dll": "6fc0bba9fa9f8e9bce0344957802e4bd9d101b0ef57c46c50a95a7337da65c23",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Testing.dll": "052c578e30f3fe0c35630ac2c9795e2ce0080cf7dbf45dca6d7c3e4e374832cb",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "5c0e31c2a7b0dc88d6b538ab0e0650f46ddde6705fad0177fefe100198834af2",
+    "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.dll": "4fe874e7b90c99a8067ae232fc2e1d060a9312a6d47f08c038aaf9d3d1b781ac"
+  },
+  "completedUtc": "2026-09-30T15:15:27.826916+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-16/build.log": "b6bd11b0d9b86f6b6d60edb5c749316ff51ed48bb143568c5fed095e87bb3850",
+    "artifacts/t176-profile-16/restore.log": "9492c5d95d29a89d64a10cdfc4d6ab5ff6f09f2995d5925a5ba918eb5335fd4e",
+    "artifacts/t176-profile-16/tests.log": "3ed65abc6fbe8ff598152113dfa884a13994ae60c1422ce510cf6fb74bbdb2b1"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-16/coverage.cobertura.xml": "bb3f61310ce70962369e0317661a25bf891a9edb6816d7bd131d87c7685e1569"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.RabbitMq",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 536,
+  "testDll": "artifacts/t176-profile-16/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1519
+}

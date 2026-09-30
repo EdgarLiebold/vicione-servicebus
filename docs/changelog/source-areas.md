@@ -159,9 +159,9 @@ these removed modules.
   tests for success, failure, boundary, cancellation, restart and recovery
   paths. Architecture tests bind package, API, requirement and identity rules.
   The chronological entries below record red-first defects and focused
-  adversarial reviews; the latest product-wide Coverage/CRAP measurement and
-  its exact commit remain in
-  the archived measurement packet in Git tag `archive/servicebus-pre-review-cleanup-20260930`.
+  adversarial reviews. The [current review status](../quality-status.md)
+  names the latest product-wide Coverage/CRAP measurement, its source commit
+  and the still-open SQL Server reliability finding.
 - The Roslyn [API and XML-comment inventory](../api/roslyn-all-repos-api-2026-09-30.md)
   records public and protected symbols across the ViciOne repositories. It is
   a triage inventory, not a certificate that every comment is semantically

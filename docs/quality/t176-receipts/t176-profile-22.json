@@ -1,0 +1,48 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.Courier",
+    "ViciOne.ServiceBus.DynamoDb",
+    "ViciOne.ServiceBus.Sagas",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "bcbdcfc3a98a284b030327e7e5b550cb37c871ee05defacc40c050e61ef30847",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Courier.dll": "4ede40e5e5fdd01afb75c700cf1e4eb37e5cc3f1f9024224d72c2c12a5ce98dc",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.dll": "a3a5258dd1e6b7c5e7b6cf978cc58b97d655498c55eabf4d39081e18c1cd3418",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.pdb": "7035c9d77cbcefa4319d423aa095fe97f7ea49543cfe4f60d8c911e3ad09a22f",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.dll": "4c1d9523c9c01096f8f274322502f3d4c82240a2880bf7769aadaf30d542966e",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Futures.dll": "fcd29a9edac3b8faac2634b3fcd9b723283a02df253143fe519831ef5c8de8bc",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Mediator.dll": "0c3a8d35b9a428450daa3b10fe87b3e68bf9b4b9883c2f557af65e9859d58bf8",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Sagas.dll": "d04c811b642aefff535ca60c9fac9a312a2aff33eb9968f7addfcfdfcdf6a345",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Testing.dll": "2c586445c0a2804e18b518578cbb6be9fc095ccf3a39cb58d8278518184a2430",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "f97096ff2fd4699eea819baae5f4af724ca60b75b0e596f557d824cba39bd920",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.InternalAccess.dll": "87a2eff0cd14a27f4271596820aa3ea8529b44ad33cb3f86894aa8a3cb33e2ec",
+    "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.dll": "d45e9e6813756906ddee026bf5ef5af5289f2f188c344df56d266ace2976e55c"
+  },
+  "completedUtc": "2026-09-30T15:19:43.124802+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-22/build.log": "39de4cd449d0fe74cd39d3a2df446d945a5d76bdfb55b50b6b6b5eeabf22786a",
+    "artifacts/t176-profile-22/restore.log": "c3293a6c718110305f8548de82f65e04b8c669e32d7c9888a9cf3be19a40aca8",
+    "artifacts/t176-profile-22/tests.log": "74be65104d1bad3a21eb80754505bf56cf31c22dab13339f2431d1b12b328d5b"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-22/coverage.cobertura.xml": "f502053281d4399277a6359f8a4767cd8efcc4bd5fbee1f81816222c7c238a39"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.DynamoDb",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 9,
+  "testDll": "artifacts/t176-profile-22/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1762
+}

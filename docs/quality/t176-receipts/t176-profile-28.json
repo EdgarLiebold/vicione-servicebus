@@ -1,0 +1,49 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.Courier",
+    "ViciOne.ServiceBus.EventHubs",
+    "ViciOne.ServiceBus.EventHubs.Testing",
+    "ViciOne.ServiceBus.Sagas",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "8bc2bff2de7f667a1a2c752f7ebf5d1a5169b00f91af431ee65365d19b5b4198",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Courier.dll": "7841e90da47521296cb8a355285d84808082bda4afd9064c020af94ec54391d9",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll": "132ee9d05a3b672f1daebb6529babefd7ffde1205a4cd7361994a656bc7a0626",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.pdb": "fa50960f10e9998f140201e18ae373d029624796965192a993ffc93830651c6f",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.Testing.dll": "b0d0b133ceb97aa71f832f170eb5e4896797fd5c7a7a8283010e9740a23a1017",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.dll": "7682fafce4603378a48656db6a5e37c25f6cab9fbc52ef80fd6f5e47aa0a8982",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Futures.dll": "e16862ec25df3d6b8e4e4c68ac45219ad2073b58859b3a8d83a96cacdf383624",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Mediator.dll": "91a7a179d6c15612106a598783af175692331cd18b9b82d6b3ef3f336371159b",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Sagas.dll": "722993bed7d5a116111965af5d3d02c04cabb596006b82dbf7cea59edf24df62",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Testing.dll": "21fb8d51d6c953fe11eda622566b00cb00ccf231cc5261466712da1b677b7483",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "97d4709c11ab886b4f214da1743ea1ed76abbdb3a2843bfc3c8486ff7aacc491",
+    "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.dll": "8bd872a80f0334e7cd86f5dd9ce836ad66d1b8a7ca126b9aaa5cd196678dc566"
+  },
+  "completedUtc": "2026-09-30T15:24:04.773689+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-28/build.log": "700a0815873c030172ce4dd51fd321eb98481830f76ec1a146066e288baec5b9",
+    "artifacts/t176-profile-28/restore.log": "9d0bc82a2f6c5a5f5cf10e42417d5ed5b6af125644646d1f1c7cb4f3585cdb39",
+    "artifacts/t176-profile-28/tests.log": "59f0ee985187315ebe15d164ac0b504ffa130c09bd3784e2754bc16b567ae95a"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-28/coverage.cobertura.xml": "7832bc98a333536a8cff545482cb5e051aec02c6d6b170b13d5b47ce29811ba1"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.EventHubs",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 108,
+  "testDll": "artifacts/t176-profile-28/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1809
+}

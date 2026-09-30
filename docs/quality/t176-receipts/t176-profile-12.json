@@ -1,0 +1,53 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.Courier",
+    "ViciOne.ServiceBus.Initializers",
+    "ViciOne.ServiceBus.JobService",
+    "ViciOne.ServiceBus.MessagePack",
+    "ViciOne.ServiceBus.Quartz",
+    "ViciOne.ServiceBus.Sagas",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "05e24cc562f0d9c8e86cdace99b1e3689b0ed25d68c28c86538f56df57b5d754",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Courier.dll": "477ec875bcda47350901423eb65ae394aa35afa8617734acf30fbcf15bad34e8",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Futures.dll": "180b6005f75f3a5805ee27a0d048514433826f2a36994e7f3cf7b730eaebe279",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Initializers.dll": "4843304c303fe7d72d6e449c63afc2fded63285ba1cbcc899d328407bb8d449a",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.JobService.dll": "d874e1b4c8618102880dfd603d876e16fa308acbd687c42ec160949264eb0ec2",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Mediator.dll": "71e4da49ef0cfb50c22ef9d72d025f5585957e3b9107cdd40e03a929d2ee96e8",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.MessagePack.dll": "bf5f662f66c27ecae525c20d1bb20767ac04f5f9c814dbab00e483d34c70fc2a",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Quartz.Tests.dll": "2590a07872c28eeaa1716659ee45011eb2b6996e52b7ad99317a46c7f9590053",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Quartz.Tests.pdb": "d066acb631954a30ae8a54703a2f069ca4f85092a9a823b14597de64f16e778f",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Quartz.dll": "70bfba01973d8d291a0198e8af8be71f26f709f42e7ff433ea8a84027fdc6558",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Sagas.dll": "578f65080a7e126be0a250e73c8fda5cec2f726e167310a1c211ac4139c2b387",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Testing.dll": "6a573d709924e65cbef95fa4a18c0e05a9152321cc0b9ce717a0e76a77d181ef",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "3cd11e8e5eafe4b3f6c16585a7ca337000f76e99d8162f02e7756dcb94076d8e",
+    "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.dll": "2e72d3a6ee54e1adc45ff9ecda07738b6ac1e65f6bcd2304d57ada52abc12605"
+  },
+  "completedUtc": "2026-09-30T15:12:30.788617+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-12/build.log": "e52b33011081c4672364d5123598848fe3c7f8212469829a3841f72337dcb943",
+    "artifacts/t176-profile-12/restore.log": "8447f639e7025a5cc0a2e544d4338180908fff5d600005940fea7be085b848fd",
+    "artifacts/t176-profile-12/tests.log": "670cb8c59f8db1182cdc03b60ed009f08e6f05626220057a3ec47db9de3b2923"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/ViciOne.ServiceBus.Quartz.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-12/coverage.cobertura.xml": "3f255ac6906b0be9b085a980dc5297f7fc806b5caee28a29724d5cf17bf8656e"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.Quartz",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 318,
+  "testDll": "artifacts/t176-profile-12/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Quartz.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1912
+}

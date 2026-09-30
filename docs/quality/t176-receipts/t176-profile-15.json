@@ -1,0 +1,52 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.ActiveMq",
+    "ViciOne.ServiceBus.AzureServiceBus",
+    "ViciOne.ServiceBus.AzureServiceBus.Testing",
+    "ViciOne.ServiceBus.Courier",
+    "ViciOne.ServiceBus.Sagas",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "b374530f6aae71f9399280c3b652d42c4a3e1c8ad0c96b75a063006da9d8366f",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.ActiveMq.dll": "6a0cfa88d94ecc94594190516a1af76b8bda67ec5caea7b9c3050eaa7d89ac89",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Testing.dll": "7db28e64524fc9cb6e1b76fbe7cde9acb395309dc11df562625c2fd03bb98633",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Tests.dll": "67b19efab2d657e0574f080a8ee9e959711f636d9eae4ecdb6b16cf6e1e62db8",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Tests.pdb": "613d57334df538cc34dfdd184f3d11d436d06b1e2f9abc1b4b40e683ae21f515",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.dll": "c5dd67e02eb5e1083a1bb45b329d4627de5f5dc0461ac97bc7efdd23dda2da4a",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Courier.dll": "098af316f58ac4df49065222bdaa7bb6bb8d87d893866399acb5339256434896",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Futures.dll": "ec7352e137c40e5c7e1329dd8d3b7b1c0ccd6168d8f6c37f06ceccb9e823812d",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Mediator.dll": "207869feb57ca77f7757fff082770e951d6655df9355027e6feb9eeba2a37580",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Sagas.dll": "d9ac58b03dbeae512ecf05674712fb90bf1d7761e0f9aa6acbd71c743dcce43e",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Testing.dll": "edba870b37ad1ec16571d2594e713c812b4024c558a775bd3df973d48e472fa7",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "df7a15743924e42e3173c3d0785473584b44f5281cd4ceee8ae8d26135b8bc98",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.Tests.InternalAccess.dll": "099aa274f057b4734a27e9b2014a1dc184db1e0863b6b448bcc41b57cc318123",
+    "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.dll": "6cdc882b6402907fba5e1db88f394bd1ef2c47f7755789889bdee69d246c5958"
+  },
+  "completedUtc": "2026-09-30T15:14:51.548467+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-15/build.log": "642a6dabf838299f921698f4f54145929c6b5693784e1a7a2eda2d484f47901f",
+    "artifacts/t176-profile-15/restore.log": "c09f72ebc584f91ec0d38b5c2c7ea6572e3d9fc90385f172e7677da1a0c5d0db",
+    "artifacts/t176-profile-15/tests.log": "7a232abf7c30ea724595fa2784d35669e61bb76a6f51457168fe387f2968ce6e"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-15/coverage.cobertura.xml": "6e4c51573600ed506ef9019be36b1e01b8053ad021b8a6bbdac606c854dd0642"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.AzureServiceBus",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 407,
+  "testDll": "artifacts/t176-profile-15/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1986
+}

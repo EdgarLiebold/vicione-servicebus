@@ -1,5 +1,13 @@
 ### Changed
 
+- Updated the external-review documentation to distinguish the latest
+  measured quality checkpoint from older work notes. A compact aggregate and
+  33 profile receipts now document the T176 result and its unresolved SQL
+  Server parallel-publish timeout. The dated Roslyn inventory uses relative
+  paths; older snapshots and migration journals remain available in Git.
+  Current obligation maps stay in the tree with their historical limits
+  explained under `evidence/`.
+
 - Prepared the repository for external review: archived historical raw proof and agent work
   records in Git tag `archive/servicebus-pre-review-cleanup-20260930`, retained the obligation
   maps used by architecture tests, split this changelog into topic documents, and replaced the

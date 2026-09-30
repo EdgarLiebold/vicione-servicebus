@@ -1,0 +1,45 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.ActiveMq"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "07aca2c90bf83c16b4be9e7feb4ca31a9c050523d72961b6bd3745d64b03e8fc",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.ActiveMq.Tests.dll": "a46cf967d79fbb6f1f4855ee21ff14152941d7c29063b38e8877c45152824704",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.ActiveMq.Tests.pdb": "9108c0270ea6b29208573ec804e788c1c2cdab3065941b1d588d8ac17b7d3030",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.ActiveMq.dll": "af3705fc61c125fa4006cf9b2f855bf7b13a3ca7181bf5bff4d068dd85274407",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Courier.dll": "10ec66e98dc1d3aa0bbb5c0521f84153e6f046b1e7ff2a8a8ec3c96b1563e94d",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Futures.dll": "571643c3654e58cd27f02abbe9d8ccb0e95aca2558aadcd69625594e7e74987c",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Mediator.dll": "9ce2a07ab263bd2c75e131dede97e2640db96439c956466d87b3eececf88850e",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Sagas.dll": "28cbfa5474a3e6d0e8d1f76c873a50bf4a7e041c291409413683f7bad89c134e",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Testing.dll": "c4007c53a940e3cb0bb28fa2037b18fd2856b693928b799cab0ceb2e222f438d",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "2a7ee5a6e75f7575e61c0ff8af3b0c602d3666f5a9e60573ebf46436aa3db9e8",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.Tests.InternalAccess.dll": "ea8d058fb5830774ceee4ce43a4cbfa067429b19e1d0c57cabf09a529a31a211",
+    "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.dll": "b9fc3c78147e03237fd05c3de6e41174dee30c5c66e4a2d0f7d17f7f303815b1"
+  },
+  "completedUtc": "2026-09-30T15:11:03.576165+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-10/build.log": "e76b48884d2c73e0ae4c466752b20237fbc23d018a71ba4d5291374de343aefa",
+    "artifacts/t176-profile-10/restore.log": "e4f4364317778dcaaf6c599725f3cb233af0b00348b2494298ec7740e8fafe50",
+    "artifacts/t176-profile-10/tests.log": "494df370afc564adccbe14c1bcbeef0ac7388b6d94d82c1c83700740b8deef59"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/ViciOne.ServiceBus.ActiveMq.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-10/coverage.cobertura.xml": "2ecd3f9b487afe8203190a85e67687083a87aaecb883297aab44b65956cfe7db"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.ActiveMq",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 267,
+  "testDll": "artifacts/t176-profile-10/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.ActiveMq.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1412
+}

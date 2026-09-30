@@ -1,0 +1,39 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.Azure.Storage"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "233e355092d488e588cfb321e997c0455128e93c539313fd37e162cfcc97cdce",
+    "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.dll": "dd8b05c16a37f902419461fb46aaa7355091b3057a6034a0868bfbe5ee189fbb",
+    "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.pdb": "351dc711d82022ac038b27f6bde164e7554b4a2cc86bccc3a66ad86a8b3fefb6",
+    "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.dll": "319cdc5407b434a9e863d649b1efdb649a98b38541687e983b428939d1f03d03",
+    "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "a149648ef157ac6b7b4867f8aa7279af75ef3c63f26532e12f490251f6c07df1",
+    "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.dll": "3c20191d48636130269d6ff885efb56d24ce3b6fa888aa0637f680218ad8da43"
+  },
+  "completedUtc": "2026-09-30T15:19:06.542766+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-21/build.log": "12b6f141ecb40d10d3c03f583f63bb0070b2213a702eea3af7d506fa060added",
+    "artifacts/t176-profile-21/restore.log": "49a91abb9d4a7cf53ecc5041819505bd0f5a1dffd2f77dbb1f70bf837a18658b",
+    "artifacts/t176-profile-21/tests.log": "610d0d6e2c6cd58a7d8782f18581ff0bf831d6640f41b95eedf7a242aa6f237b"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-21/coverage.cobertura.xml": "8300d25acf3c9dbf02e359a2e75dd338ef34acf042e7af4061f6dabc95a3feb4"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.Azure.Storage",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 8,
+  "testDll": "artifacts/t176-profile-21/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1325
+}

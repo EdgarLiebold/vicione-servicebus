@@ -1,0 +1,54 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Abstractions",
+    "ViciOne.ServiceBus.Courier",
+    "ViciOne.ServiceBus.EntityFrameworkCore",
+    "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+    "ViciOne.ServiceBus.JobService",
+    "ViciOne.ServiceBus.MessagePack",
+    "ViciOne.ServiceBus.Sagas",
+    "ViciOne.ServiceBus.Testing"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "483222f26b33759abd6cbab6e221158d555e03e49db6ddd994307a8c5beef7e2",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Courier.dll": "457f507a6a26043b3a845f87c9105ea3b59269ee3eb58e8d05fce9775d2d2f74",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll": "8b12cf9c2162c486f16677b29c4a4db791b859ae2dcab10382acd4d36f3a7d27",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll": "9c5eca77fced85b36f5b74dc6f7412b8a0c51206396ecd345ecf00a469e74883",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb": "94b2924ce47c6350429ced96e820e87fb3e9faad956341ae14e03b43b252ccb3",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll": "39b80ef2ff145386a01444e3e592e53b1a477ded0b0fa3221fd082739b629995",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Futures.dll": "c54fb6a21cfa7047c49a1e3ca3c1678121bd5ebb2f8635baa609634eaadbae4c",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.JobService.dll": "ce74624b7727783ec548142907c8b8db3b8220762b69369457607b4843098384",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Mediator.dll": "77eebf71c2722fd47965ff28d576d8f2bb9fafd33370e489e154d2c335e8060e",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.MessagePack.dll": "36b781bc407cf67c4e222069d4caa29e90aaa22cc328b65c4e7e205883811055",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Sagas.dll": "e034819f8ae6837fdacff0d677ecaba08b46f78d9b80e3cbffafe8f7ddfb1c2d",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Testing.dll": "32daed587d29cc8bde61c918a14d44e2705d865ad8081a5a7ee6ce02ad106917",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "e380c8a278c1e70a707dfd5d16d6a727e6947a47625f0af1b67c757733205358",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.Tests.InternalAccess.dll": "7ada60c9c6d62f6a5b80d525f08273f8c9e74825f73209f43d2fb8464c415510",
+    "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.dll": "dd4f9f9f5f8fdf8d752d4fcea0909d55ce74bc03d8c8467e0a0a929bd13349d6"
+  },
+  "completedUtc": "2026-09-30T15:13:44.022572+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-13/build.log": "7e39ebe8b1edbe06b3f68d695e6b802f452a92017eae66dfb97287913ea25685",
+    "artifacts/t176-profile-13/restore.log": "24c1bb94c1fa7ded25690ad8d33eeca7c6c055897331a559ed75d53326d9f537",
+    "artifacts/t176-profile-13/tests.log": "43f927a55d5af6530112c4922b196553fcdfa16fbb24fffd5dade9fec8923e70"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-13/coverage.cobertura.xml": "613157acc1255f780600549d76d95cc76840dffa93dbcc3d6ddf2ffb2a875cce"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.EntityFrameworkCore",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 413,
+  "testDll": "artifacts/t176-profile-13/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 1958
+}

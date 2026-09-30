@@ -15,9 +15,9 @@ public sealed class VerificationCapabilityDispositionTests
         {
             ["RELOCATED_ENGINEERING"] = 2,
             ["REPLACED_NATIVE_TEST"] = 11,
-            ["RETAINED_ENGINEERING"] = 10,
+            ["RETAINED_ENGINEERING"] = 9,
             ["RETAINED_NATIVE_CI"] = 1,
-            ["RETIRED_HISTORICAL_REPRODUCTION"] = 1,
+            ["RETIRED_HISTORICAL_REPRODUCTION"] = 2,
             ["RETIRED_LEGACY_VERDICT"] = 21,
             ["RETIRED_ONE_TIME_MIGRATION"] = 10,
             ["RETIRED_SECOND_WORKFLOW"] = 1,

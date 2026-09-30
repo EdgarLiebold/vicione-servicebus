@@ -338,6 +338,6 @@ contract for those package assemblies: additions, removals, visibility changes, 
 parameter defaults, and inheritance changes fail the gate unless the contract is deliberately
 updated.
 
-The [Roslyn inventory across the ten sibling repositories](api/roslyn-all-repos-api-2026-09-29.md)
+The [Roslyn inventory across the ten sibling repositories](api/roslyn-all-repos-api-2026-09-30.md)
 also records source signatures and their XML comments. Its flagged project diagnostics and
 comment candidates still require assessment; the inventory does not assign an API quality grade.

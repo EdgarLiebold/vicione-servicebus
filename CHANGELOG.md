@@ -17,6 +17,7 @@ tracked source, tests, and other files with the first import commit.
   [other changes](docs/changelog/other-changes.md).
 - [Migration from MassTransit-style APIs](docs/changelog/migration-from-masstransit.md):
   changed call forms, moved namespaces, and new capability packages.
+- [Current review status](docs/quality-status.md): measured coverage, CRAP and open findings.
 
 The detailed documents preserve the original chronological entries. The source-area overview
 helps readers locate the changes relevant to each module. Git contains the exact patch and the

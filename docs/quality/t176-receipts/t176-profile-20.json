@@ -1,0 +1,35 @@
+{
+  "assemblies": [
+    "ViciOne.ServiceBus.Abstractions"
+  ],
+  "binarySha256": {
+    "artifacts/t176-profile-20/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll": "e8be357852de29cdf1d1d7c092cc73c6e582229f0d1ab5cd1a6d468945ce1589",
+    "artifacts/t176-profile-20/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.pdb": "a1280f1a09bcbb8525c23ef63b1e9a7159bcbc1cbb4d429018dc1a7876256bf7",
+    "artifacts/t176-profile-20/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll": "04981f30bfc86b3e889204440125c8ed812e3f5c663a049acda2777a65cb5625",
+    "artifacts/t176-profile-20/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll": "2cf05787d23f0d60e0ae9e64a11a979f448e02bc21f996026ca8810e0e300cb6"
+  },
+  "completedUtc": "2026-09-30T15:18:37.849191+00:00",
+  "dotnetEnvironment": {
+    "DOTNET_EnableAVX2": null,
+    "DOTNET_EnableHWIntrinsic": null
+  },
+  "head": "42a028a7fa8ed6facf941da3d72064cbf438f196",
+  "logsSha256": {
+    "artifacts/t176-profile-20/build.log": "446b8b8e37ecfbf617b2784d2829d572920f09dd255bd60ccbd628b35bc342c2",
+    "artifacts/t176-profile-20/restore.log": "59023c454679f56e83cc9b5f0ac9af6bad92e71d6eb57e60ca88c960af3ceae4",
+    "artifacts/t176-profile-20/tests.log": "eb3c880feea142f22d2ebcad433bb38cd7dcfadd9d6776775afaab49cd7e9521"
+  },
+  "msbuildMaxCpuCount": 1,
+  "project": "tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj",
+  "reports": {
+    "artifacts/t176-profile-20/coverage.cobertura.xml": "74c37b0ebf92cb023ff971f3cd978c40b9ef485bdfb747000ec1aeacbd22c2f9"
+  },
+  "requiredAssembly": "ViciOne.ServiceBus.Abstractions",
+  "runnerSha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc",
+  "settingsSha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d",
+  "srcTree": "0871a1f1b28cfb4f3303ae8c5fbf7f47010fc6e4",
+  "testCount": 3,
+  "testDll": "artifacts/t176-profile-20/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll",
+  "testsTree": "2565d44c7ed34e9dc26adef6ce51e8203b391297",
+  "trackedSourceCount": 321
+}
