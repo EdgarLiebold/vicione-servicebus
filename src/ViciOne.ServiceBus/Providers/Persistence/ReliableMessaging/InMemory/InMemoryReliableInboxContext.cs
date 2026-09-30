@@ -105,8 +105,8 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
                 ? context.CancellationToken
                 : CancellationToken;
         operationCancellationToken.ThrowIfCancellationRequested();
-        if (!context.MessageId.HasValue)
-            throw new MessageException(typeof(TOutgoingMessage), "The SendContext MessageId must be present");
+        if (context.MessageId is not { } messageId || messageId == Guid.Empty)
+            throw new MessageException(typeof(TOutgoingMessage), "The SendContext MessageId must be present and nonempty");
         Uri destination = context.DestinationAddress
             ?? throw new MessageException(typeof(TOutgoingMessage), "The SendContext DestinationAddress must be present");
         DateTimeOffset now = _timeProvider.GetUtcNow();
@@ -127,16 +127,19 @@ internal sealed class InMemoryReliableInboxContext<TBus, TMessage> :
             || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
             || !proof.MatchesEnvelope(body, contentType))
             throw new InvalidOperationException("The in-memory reliable inbox has no complete payload admission proof for its serialized envelope.");
+        ReadOnlyMemory<byte> metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof);
+        if (context.MessageId != messageId)
+            throw new MessageException(typeof(TOutgoingMessage), "The SendContext MessageId changed during serialization");
 
         var message = new SerializedDurableSend
         {
-            Id = new DurableSendId(context.MessageId.Value),
+            Id = new DurableSendId(messageId),
             ContractIdentity = _contracts.GetIdentity(typeof(TOutgoingMessage)),
             DestinationAddress = destination,
             ContentType = contentType,
             Body = body,
-            Metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof),
-            MessageId = context.MessageId,
+            Metadata = metadata,
+            MessageId = messageId,
             CorrelationId = context.CorrelationId,
             DueAt = context.Delay.HasValue ? now + context.Delay.Value : null,
         }.Validate();

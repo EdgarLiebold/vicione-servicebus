@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Closed another serializer-driven message identity gap in the classic EF
+  transactional and receive outboxes and the in-memory reliable inbox. Both EF
+  callers now retain the original ID across payload admission; the EF message
+  factory also checks deferred body materialization. The in-memory inbox checks
+  before buffering. Red-first tests cover a replacement GUID and `Guid.Empty`
+  through both productive EF callers and the registered in-memory inbox
+  pipeline. The complete EF and Core suites pass 409/409 and 7,389/7,389.
+  An adversarial review identified and then verified closure of the initial
+  EF caller gap.
+
 - Fixed two durable-send identity races with mutable serializer callbacks.
   The EF transactional outbox now rejects a `MessageId` changed during
   serialization before staging or reserving capacity. The typed durable sender

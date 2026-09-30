@@ -1,6 +1,8 @@
+using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
@@ -130,6 +132,26 @@ public sealed class OutboxMessageFactoryTests
     }
 
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "factory-rejects-serializer-message-id-change")]
+    public void Create_RejectsMessageIdChangedBySerializer(bool clearId)
+    {
+        MessageSendContext<FactoryMessage> context = CreateContext();
+        Guid initialId = Guid.NewGuid();
+        Guid replacementId = clearId ? Guid.Empty : Guid.NewGuid();
+        context.MessageId = initialId;
+        context.Serializer = new MessageIdChangingSerializer(replacementId);
+
+        MessageException failure = Assert.Throws<MessageException>(() =>
+            Create(context, outboxId: Guid.NewGuid()));
+
+        Assert.Contains("changed during serialization", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(replacementId, context.MessageId);
+        Assert.NotEqual(initialId, context.MessageId);
+    }
+
+    [Theory]
     [InlineData("missing")]
     [InlineData("body-only")]
     [InlineData("envelope-only")]
@@ -202,6 +224,17 @@ public sealed class OutboxMessageFactoryTests
             inboxMessageId,
             inboxConsumerId,
             outboxId);
+
+    private sealed class MessageIdChangingSerializer(Guid replacementId) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/json");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            context.MessageId = replacementId;
+            return new StringMessageBody("{}");
+        }
+    }
 
     private sealed record FactoryMessage(string Value);
 }

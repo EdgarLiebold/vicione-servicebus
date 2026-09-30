@@ -86,6 +86,8 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
         return _writeCoordinator.ExecuteAsync(() =>
         {
             ThrowIfDisposed();
+            if (context.MessageId is not { } messageId || messageId == Guid.Empty)
+                throw new MessageException(typeof(T), "The SendContext MessageId must be present and nonempty");
             PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
             if (admissionRuntime is null)
             {
@@ -98,6 +100,8 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
             }
 
             MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
+            if (context.MessageId != messageId)
+                throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
             var message = OutboxMessageFactory.Create(
                 context,
                 ServiceBusMetadataJson.ObjectDeserializer,

@@ -1,6 +1,10 @@
+using System.Buffers;
 using System.Collections.Concurrent;
+using System.Net.Mime;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -14,6 +18,63 @@ namespace ViciOne.ServiceBus.Tests.ReliableMessaging;
 
 public sealed class ReliableInMemoryIntegrationTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "serializer-cannot-change-buffered-send-message-identity")]
+    public async Task SerializerChangingMessageId_CannotBufferOrCommitOutgoingSendAsync(bool clearId)
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken token = TestContext.Current.CancellationToken;
+        var clock = new FixedInboxClock(new DateTimeOffset(2026, 9, 30, 12, 0, 0, TimeSpan.Zero));
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddSingleton<TimeProvider>(clock)
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration);
+            })
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: token).WaitAsync(timeout, token);
+        Guid inputId = NewId.NextGuid();
+        Guid initialId = NewId.NextGuid();
+        Guid replacementId = clearId ? Guid.Empty : NewId.NextGuid();
+        Guid consumerId = NewId.NextGuid();
+        var outgoing = new MessageSendContext<ReliableEvent>(new ReliableEvent(inputId, "identity"))
+        {
+            MessageId = initialId,
+            DestinationAddress = new Uri("loopback://reliable-inbox/identity"),
+            Serializer = new MessageIdChangingBoundedSerializer(replacementId),
+        };
+        try
+        {
+            await using AsyncServiceScope scope = provider.CreateAsyncScope();
+            ConsumeContext<ReliableCommand> input = InMemoryOutboxTestContextFactory.Create(
+                new ReliableCommand(inputId, 0), token, messageId: inputId);
+
+            Exception failure = await Assert.ThrowsAnyAsync<Exception>(() =>
+                InMemoryInboxPipelineTestDriver.SendAsync(scope.ServiceProvider, input, consumerId,
+                    context => Assert.IsAssignableFrom<OutboxConsumeContext<ReliableCommand>>(context)
+                        .AddSendAsync(outgoing, token), token, completeConsumer: true));
+
+            MessageException rejection = Assert.IsType<MessageException>(failure.InnerException);
+            Assert.Contains("changed during serialization", rejection.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(replacementId, outgoing.MessageId);
+            IOutboxStore<IBus> outbox = provider.GetRequiredService<IOutboxStore<IBus>>();
+            Assert.Equal(0, (await outbox.GetSnapshotAsync(token)).StoredCount);
+            Assert.Empty(await outbox.ClaimDueAsync(clock.GetUtcNow().AddDays(1), 10,
+                TimeSpan.FromMinutes(1), token));
+            IInboxStore<IBus> inbox = provider.GetRequiredService<IInboxStore<IBus>>();
+            Assert.Equal(ReliableInboxAcquireDisposition.NotDue,
+                (await inbox.AcquireAsync(new ReliableInboxKey(inputId, consumerId), clock.GetUtcNow(),
+                    TimeSpan.FromMinutes(1), token)).Disposition);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -695,6 +756,40 @@ public sealed class ReliableInMemoryIntegrationTests
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
+
+    private sealed class MessageIdChangingBoundedSerializer(Guid replacementId) : IBoundedMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/octet-stream");
+
+        public SerializedTransportTextFormat TransportTextFormat => SerializedTransportTextFormat.Base64;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            throw new NotSupportedException("The bounded serializer path must be used.");
+
+        public void WriteSerializedBody<T>(SendContext<T> context, IBufferWriter<byte> writer) where T : class
+        {
+            writer.GetSpan(1)[0] = 42;
+            writer.Advance(1);
+        }
+
+        public void WriteTransportEnvelope<T>(SendContext<T> context, Stream serializedBody, IBufferWriter<byte> writer)
+            where T : class
+        {
+            context.MessageId = replacementId;
+            int value = serializedBody.ReadByte();
+            if (value < 0)
+                throw new InvalidOperationException("The admitted application body was empty.");
+            writer.GetSpan(1)[0] = (byte)value;
+            writer.Advance(1);
+        }
+
+        public bool TryLocateSerializedBody(ReadOnlySpan<byte> serializedEnvelope, out int offset, out int length)
+        {
+            offset = 0;
+            length = serializedEnvelope.Length;
+            return length == 1;
+        }
+    }
 
     private static void ConfigureReliableMessaging(IBusRegistrationConfigurator configuration, int maximumAttempts = 3, MessageLimits? limits = null)
     {

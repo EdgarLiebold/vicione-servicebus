@@ -200,6 +200,8 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
         operationCancellationToken.ThrowIfCancellationRequested();
         using CancellationTokenSource? linkedCancellation = LinkCancellation(operationCancellationToken);
         CancellationToken effectiveCancellationToken = linkedCancellation?.Token ?? operationCancellationToken;
+        if (context.MessageId is not { } messageId || messageId == Guid.Empty)
+            throw new MessageException(typeof(T), "The SendContext MessageId must be present and nonempty");
 
         PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
         if (admissionRuntime is null)
@@ -213,6 +215,8 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
         }
 
         MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
+        if (context.MessageId != messageId)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
         OutboxMessage message = OutboxMessageFactory.Create(
             context,
             SerializerContext,

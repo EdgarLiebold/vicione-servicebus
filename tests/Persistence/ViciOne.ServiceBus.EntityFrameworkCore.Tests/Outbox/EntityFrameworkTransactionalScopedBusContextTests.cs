@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Net.Mime;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -5,6 +7,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware;
@@ -13,6 +16,7 @@ using ViciOne.ServiceBus.Operations;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using ViciOne.ServiceBus.Transports;
 using Xunit;
 
@@ -131,6 +135,71 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
             () => new OutboxMessageSendPipe(stored, stored.DestinationAddress).SendAsync(tamperedReplay));
         Assert.Contains("does not match its payload admission proof", failure.Message, StringComparison.Ordinal);
         Assert.Empty(tamperedReplay.Headers.GetAll());
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "productive-admission-rejects-serializer-message-id-change")]
+    public async Task AddSend_RejectsSerializerIdentityChangeBeforeTrackingAsync(bool receiveOutbox, bool clearId)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        Guid initialId = Guid.NewGuid();
+        Guid replacementId = clearId ? Guid.Empty : Guid.NewGuid();
+        MessageSendContext<OutboxProbe> outgoing = CreateSendContext(initialId, 1);
+        outgoing.Serializer = new MessageIdChangingBoundedSerializer(replacementId);
+
+        MessageException failure;
+        if (receiveOutbox)
+        {
+            Guid inboxId = Guid.NewGuid();
+            Guid consumerId = Guid.NewGuid();
+            var inboxState = new InboxState
+            {
+                MessageId = inboxId,
+                ConsumerId = consumerId,
+                LockId = Guid.NewGuid(),
+                Received = Now,
+                ReceiveCount = 1,
+            };
+            var options = new OutboxConsumeOptions
+            {
+                ConsumerId = consumerId,
+                ConsumerType = nameof(OutboxProbe),
+                MessageDeliveryLimit = 1,
+                MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+            };
+            ConsumeContext<OutboxProbe> input = InMemoryOutboxTestContextFactory.Create(
+                new OutboxProbe(0), token, messageId: inboxId);
+            await using var transaction = await fixture.DbContext.Database.BeginTransactionAsync(token);
+            using var context = new DbContextOutboxConsumeContext<IBus, ClassicOutboxDbContext, OutboxProbe>(
+                input, options, fixture.Services, fixture.DbContext, transaction, inboxState, fixture.TimeProvider);
+            failure = await Assert.ThrowsAsync<MessageException>(() => context.AddSendAsync(outgoing, token));
+            await transaction.RollbackAsync(token);
+        }
+        else
+        {
+            using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> context = fixture.CreateContext();
+            try
+            {
+                failure = await Assert.ThrowsAsync<MessageException>(() => context.AddSendAsync(outgoing, token));
+                Assert.False(context.HasActiveSession);
+            }
+            finally
+            {
+                if (context.HasActiveSession)
+                    await context.AbortAsync(token);
+            }
+        }
+
+        Assert.Contains("changed during serialization", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(replacementId, outgoing.MessageId);
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxMessage>());
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxState>());
+        Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().AsNoTracking().ToListAsync(token));
     }
 
     [Fact]
@@ -536,6 +605,40 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
         Serializer = ServiceBusMetadataJson.MessageSerializer,
         DestinationAddress = new Uri("loopback://classic-transactional-outbox/probe"),
     };
+
+    private sealed class MessageIdChangingBoundedSerializer(Guid replacementId) : IBoundedMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/octet-stream");
+
+        public SerializedTransportTextFormat TransportTextFormat => SerializedTransportTextFormat.Base64;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            throw new NotSupportedException("The bounded serializer path must be used.");
+
+        public void WriteSerializedBody<T>(SendContext<T> context, IBufferWriter<byte> writer) where T : class
+        {
+            writer.GetSpan(1)[0] = 42;
+            writer.Advance(1);
+        }
+
+        public void WriteTransportEnvelope<T>(SendContext<T> context, Stream serializedBody, IBufferWriter<byte> writer)
+            where T : class
+        {
+            context.MessageId = replacementId;
+            int value = serializedBody.ReadByte();
+            if (value < 0)
+                throw new InvalidOperationException("The admitted application body was empty.");
+            writer.GetSpan(1)[0] = (byte)value;
+            writer.Advance(1);
+        }
+
+        public bool TryLocateSerializedBody(ReadOnlySpan<byte> serializedEnvelope, out int offset, out int length)
+        {
+            offset = 0;
+            length = serializedEnvelope.Length;
+            return length == 1;
+        }
+    }
 
     public sealed record OutboxProbe(int Sequence);
     public sealed record BusinessRecord(Guid Id, string Value);

@@ -32,6 +32,9 @@ internal static class OutboxMessageFactory
         DurablePayloadAdmissionProof? proof = admittedBody is null
             ? null
             : RequireAdmissionProof(context, body, contentType);
+        string transportBody = body.GetRequiredTransportText();
+        if (context.MessageId != messageId)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
 
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         var outboxMessage = new OutboxMessage
@@ -48,7 +51,7 @@ internal static class OutboxMessageFactory
             SentTime = context.SentTime ?? now,
             ContentType = contentType,
             MessageType = string.Join(";", context.SupportedMessageTypes),
-            Body = body.GetRequiredTransportText(),
+            Body = transportBody,
             InboxMessageId = inboxMessageId,
             InboxConsumerId = inboxConsumerId,
             OutboxId = outboxId,
