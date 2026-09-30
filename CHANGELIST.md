@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11182 |
+| Added | 11183 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -261,6 +261,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t164-journal-lazy-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t165-send-identity-boundaries.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t166-transport-body-metadata.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t167-durable-content-type.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |

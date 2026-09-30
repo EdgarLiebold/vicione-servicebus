@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced.Serialization;
@@ -122,7 +123,23 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         where TMessage : class
     {
         Guid? messageId = context.MessageId;
-        byte[] body = context.Body.ToArray();
+        string? contentTypeBeforeBody = context.ContentType?.ToString();
+        byte[] body;
+        try
+        {
+            body = context.Body.ToArray();
+        }
+        catch
+        {
+            if (!string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))
+                context.ContentType = contentTypeBeforeBody is null ? null : new ContentType(contentTypeBeforeBody);
+            throw;
+        }
+        if (!string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))
+        {
+            context.ContentType = contentTypeBeforeBody is null ? null : new ContentType(contentTypeBeforeBody);
+            throw new InvalidOperationException("The durable send ContentType changed during serialization.");
+        }
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));

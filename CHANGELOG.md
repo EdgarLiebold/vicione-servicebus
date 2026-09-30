@@ -11,6 +11,15 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed the typed Durable Sender accepting a serializer that changed
+  `ContentType` while creating or reading the message body. It now restores
+  the original content type and rejects the send before durable admission;
+  when the serializer throws, the original exception remains intact.
+  Red-first tests cover both mutation phases, and separate fault tests check
+  exception identity, metadata restoration and no admission. The adversarial
+  review found no further concrete P1/P2 in this change. The complete Core
+  project passes 7,405/7,405.
+
 - Fixed send-time body callbacks that could change `MessageId` or `ContentType`
   after the serialized payload was read but before transport metadata was
   written. In-memory, RabbitMQ, Azure Service Bus, ActiveMQ, Event Hubs,

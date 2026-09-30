@@ -104,6 +104,71 @@ public sealed class TypedDurableSenderConfigurationTests
         Assert.Equal(options.IdempotencyKey.Value, context.ConversationId);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "serializer-cannot-change-durable-content-type")]
+    public async Task SerializerChangingContentType_RejectsBeforeDurableAdmissionAsync(bool mutateDuringBodyRead)
+    {
+        var destination = new Uri("loopback://durable-content-type/input");
+        var message = new ConfigurationMessage("stable content type");
+        var options = new DurableSendOptions { IdempotencyKey = new DurableSendId(Guid.NewGuid()) };
+        var context = new MessageSendContext<ConfigurationMessage>(message)
+        {
+            DestinationAddress = destination,
+            Serializer = new ContentTypeChangingSerializer(mutateDuringBodyRead),
+        };
+        ITransportSendEndpoint endpoint = DispatchProxy.Create<ITransportSendEndpoint, ContextEndpointProxy>();
+        ((ContextEndpointProxy)(object)endpoint).Context = context;
+        IBus bus = DispatchProxy.Create<IBus, EndpointBusProxy>();
+        ((EndpointBusProxy)(object)bus).Endpoint = endpoint;
+        IMessageContractCatalog catalog = new MessageContractCatalogBuilder()
+            .Register<ConfigurationMessage>("vicione.tests.durable-serializer-content-type")
+            .Build();
+        var admission = new RecordingAdmission();
+        IDurableSender<IBus> sender = DurableSenderTestFactory.CreateTypedSender(bus, catalog, admission);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sender.SendAsync(destination, message, options, TestContext.Current.CancellationToken));
+
+        Assert.Contains("ContentType changed during serialization", failure.Message, StringComparison.Ordinal);
+        Assert.Equal("application/json", context.ContentType?.ToString());
+        Assert.Equal(0, admission.AdmissionCalls);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "throwing-serializer-restores-durable-content-type")]
+    public async Task ThrowingSerializerChangingContentType_PreservesFaultAndRestoresContextAsync(bool throwDuringBodyRead)
+    {
+        var destination = new Uri("loopback://durable-throwing-content-type/input");
+        var message = new ConfigurationMessage("original fault");
+        var options = new DurableSendOptions { IdempotencyKey = new DurableSendId(Guid.NewGuid()) };
+        var expectedFailure = new ExpectedSerializationException();
+        var context = new MessageSendContext<ConfigurationMessage>(message)
+        {
+            DestinationAddress = destination,
+            Serializer = new ThrowingContentTypeChangingSerializer(throwDuringBodyRead, expectedFailure),
+        };
+        ITransportSendEndpoint endpoint = DispatchProxy.Create<ITransportSendEndpoint, ContextEndpointProxy>();
+        ((ContextEndpointProxy)(object)endpoint).Context = context;
+        IBus bus = DispatchProxy.Create<IBus, EndpointBusProxy>();
+        ((EndpointBusProxy)(object)bus).Endpoint = endpoint;
+        IMessageContractCatalog catalog = new MessageContractCatalogBuilder()
+            .Register<ConfigurationMessage>("vicione.tests.durable-throwing-content-type")
+            .Build();
+        var admission = new RecordingAdmission();
+        IDurableSender<IBus> sender = DurableSenderTestFactory.CreateTypedSender(bus, catalog, admission);
+
+        ExpectedSerializationException actual = await Assert.ThrowsAsync<ExpectedSerializationException>(() =>
+            sender.SendAsync(destination, message, options, TestContext.Current.CancellationToken));
+
+        Assert.Same(expectedFailure, actual);
+        Assert.Equal("application/json", context.ContentType?.ToString());
+        Assert.Equal(0, admission.AdmissionCalls);
+    }
+
     public sealed record ConfigurationMessage(string Value);
 
     public class EndpointBusProxy : DispatchProxy
@@ -166,6 +231,61 @@ public sealed class TypedDurableSenderConfigurationTests
         {
             context.MessageId = replacementId;
             return new StringMessageBody("{}");
+        }
+    }
+
+    private sealed class ContentTypeChangingSerializer(bool mutateDuringBodyRead) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/json");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            if (!mutateDuringBodyRead)
+                context.ContentType = new ContentType("application/octet-stream");
+            return mutateDuringBodyRead
+                ? new DeferredContentTypeChangingBody(() => context.ContentType = new ContentType("application/octet-stream"))
+                : new StringMessageBody("{}");
+        }
+    }
+
+    private sealed class ThrowingContentTypeChangingSerializer(bool throwDuringBodyRead, Exception failure) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/json");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            if (!throwDuringBodyRead)
+            {
+                context.ContentType = new ContentType("application/octet-stream");
+                throw failure;
+            }
+
+            return new DeferredContentTypeChangingBody(() =>
+            {
+                context.ContentType = new ContentType("application/octet-stream");
+                throw failure;
+            });
+        }
+    }
+
+    private sealed class ExpectedSerializationException : Exception;
+
+    private sealed class DeferredContentTypeChangingBody(Action mutate) : MessageBody
+    {
+        public long Length => 2;
+
+        public byte[] ToArray()
+        {
+            mutate();
+            return "{}"u8.ToArray();
+        }
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
+
+        public bool TryGetTransportText([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? text)
+        {
+            text = "{}";
+            return true;
         }
     }
 
