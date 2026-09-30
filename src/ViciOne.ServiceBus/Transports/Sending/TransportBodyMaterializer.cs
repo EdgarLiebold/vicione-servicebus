@@ -31,26 +31,34 @@ internal static class TransportBodyMaterializer
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(readBody);
-        MetadataSnapshot metadata = CaptureExpectedMetadata(context);
+        return ReadWithExpectedMetadata(context, readBody, CaptureExpectedMetadata(context));
+    }
+
+    internal static TResult ReadWithExpectedMetadata<T, TResult>(
+        SendContext<T> context,
+        Func<MessageBody, TResult> readBody,
+        MetadataSnapshot metadata)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(readBody);
         MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
         ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
         object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
-        ThrowIfChanged(context, metadata, messageContext, nativeContext, nativeMetadata);
-        TResult result;
         try
         {
+            ThrowIfChanged(context, metadata, messageContext, nativeContext, nativeMetadata);
             MessageBody body = (context as TransportSendContext)?.Body
                 ?? throw new InvalidOperationException("A transport send context with a serialized body is required.");
-            result = readBody(body);
+            TResult result = readBody(body);
+            ThrowIfChanged(context, metadata, messageContext, nativeContext, nativeMetadata);
+            return result;
         }
         catch (Exception failure)
         {
             RestoreAfterFailure(context, metadata, messageContext, nativeContext, nativeMetadata, failure);
             throw;
         }
-
-        ThrowIfChanged(context, metadata, messageContext, nativeContext, nativeMetadata);
-        return result;
     }
 
     private static void ThrowIfChanged<T>(
@@ -61,6 +69,7 @@ internal static class TransportBodyMaterializer
         object? nativeMetadata)
         where T : class
     {
+        messageContext?.ThrowIfEnvelopeHeadersChanged();
         if (metadata.ChangedField(context) is { } staleField)
         {
             metadata.Restore(context);
@@ -76,7 +85,6 @@ internal static class TransportBodyMaterializer
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw CreateMutationFailure<T>(staleNativeField);
         }
-        messageContext?.ThrowIfEnvelopeHeadersChanged();
     }
 
     private static void RestoreAfterFailure<T>(
@@ -88,6 +96,7 @@ internal static class TransportBodyMaterializer
         Exception failure)
         where T : class
     {
+        messageContext?.RestoreEnvelopeHeadersAfterFailure(failure);
         if (metadata.ChangedField(context) is not null)
         {
             metadata.Restore(context);
@@ -103,7 +112,6 @@ internal static class TransportBodyMaterializer
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             MarkMutationFailure(failure);
         }
-        messageContext?.RestoreEnvelopeHeadersAfterFailure(failure);
     }
 
     private static TResult Materialize<T, TResult>(SendContext<T> context, Func<MessageBody, TResult> readBody)

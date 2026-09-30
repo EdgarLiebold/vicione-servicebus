@@ -8,6 +8,35 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal static class OutboxMessageFactory
 {
+    internal static OutboxMessage CreateAdmitted<T>(
+        SendContext<T> context,
+        IPayloadAdmissionRuntime runtime,
+        IObjectDeserializer deserializer,
+        TimeProvider timeProvider,
+        Guid? inboxMessageId = null,
+        Guid? inboxConsumerId = null,
+        Guid? outboxId = null)
+        where T : class
+    {
+        TransportBodyMaterializer.MetadataSnapshot expected = TransportBodyMaterializer.CaptureExpectedMetadata(context);
+        try
+        {
+            PayloadAdmissionTransportBoundary.Admit(runtime, context);
+            return TransportBodyMaterializer.ReadWithExpectedMetadata(context,
+                guardedBody => Create(context, deserializer, timeProvider, inboxMessageId, inboxConsumerId,
+                    outboxId, guardedBody), expected);
+        }
+        catch (Exception failure)
+        {
+            if (expected.ChangedField(context) is not null)
+            {
+                expected.Restore(context);
+                TransportBodyMaterializer.MarkMutationFailure(failure);
+            }
+            throw;
+        }
+    }
+
     public static OutboxMessage Create<T>(
         SendContext<T> context,
         IObjectDeserializer deserializer,

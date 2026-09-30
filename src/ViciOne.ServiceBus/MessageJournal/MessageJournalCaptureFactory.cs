@@ -20,14 +20,23 @@ internal static class MessageJournalCaptureFactory
 
         TransportBodyMaterializer.MetadataSnapshot metadataBeforeBody =
             TransportBodyMaterializer.CaptureExpectedMetadata(context);
+        MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
+        ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
+        object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
+        try
+        {
+            messageContext?.ThrowIfEnvelopeHeadersChanged();
+        }
+        catch (Exception failure)
+        {
+            RestoreAfterCaptureFailure(context, metadataBeforeBody, messageContext, nativeContext, nativeMetadata, failure);
+            throw;
+        }
         if (metadataBeforeBody.ChangedField(context) is not null)
         {
             metadataBeforeBody.Restore(context);
             throw new InvalidOperationException("The send context metadata changed before journal capture.");
         }
-        MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
-        ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
-        object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
         if (messageContext?.MessageTypesChanged == true)
         {
             messageContext.RestoreSerializedMessageTypes();
@@ -38,7 +47,6 @@ internal static class MessageJournalCaptureFactory
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw new InvalidOperationException("The send context native metadata changed before journal capture.");
         }
-        messageContext?.ThrowIfEnvelopeHeadersChanged();
         byte[] bodyBytes;
         try
         {
@@ -88,6 +96,7 @@ internal static class MessageJournalCaptureFactory
         object? nativeMetadata)
         where T : class
     {
+        messageContext?.ThrowIfEnvelopeHeadersChanged();
         if (metadata.ChangedField(context) is not null)
         {
             metadata.Restore(context);
@@ -103,7 +112,6 @@ internal static class MessageJournalCaptureFactory
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw CreateCaptureMutationFailure("native metadata");
         }
-        messageContext?.ThrowIfEnvelopeHeadersChanged();
     }
 
     private static void RestoreAfterCaptureFailure<T>(
@@ -115,6 +123,7 @@ internal static class MessageJournalCaptureFactory
         Exception failure)
         where T : class
     {
+        messageContext?.RestoreEnvelopeHeadersAfterFailure(failure);
         if (metadata.ChangedField(context) is not null)
         {
             metadata.Restore(context);
@@ -130,7 +139,6 @@ internal static class MessageJournalCaptureFactory
             nativeContext.RestoreNativeMetadata(nativeMetadata);
             TransportBodyMaterializer.MarkMutationFailure(failure);
         }
-        messageContext?.RestoreEnvelopeHeadersAfterFailure(failure);
     }
 
     private static InvalidOperationException CreateCaptureMutationFailure(string field)

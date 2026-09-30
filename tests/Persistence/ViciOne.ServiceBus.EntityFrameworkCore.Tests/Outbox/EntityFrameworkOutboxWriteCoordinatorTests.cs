@@ -22,6 +22,37 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
     private static readonly DateTimeOffset Now =
         new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "reliable-staging-rejects-header-metadata-drift")]
+    public async Task ReliableStaging_RejectsHeaderMetadataDriftBeforeTrackingAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> outbox = fixture.CreateBusContext();
+        MessageSendContext<OutboxProbe> outgoing = CreateSendContext(Guid.NewGuid(), 4);
+        Guid originalCorrelation = Guid.NewGuid();
+        int metadataReads = 0;
+        outgoing.CorrelationId = originalCorrelation;
+        outgoing.Headers.Set("metadata-value", new MetadataMutationHeader(() =>
+        {
+            if (outgoing.BodyLength.HasValue)
+            {
+                metadataReads++;
+                outgoing.CorrelationId = Guid.NewGuid();
+            }
+        }));
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(
+            () => outbox.AddSendAsync(outgoing, token));
+
+        Assert.Contains("CorrelationId", failure.Message, StringComparison.Ordinal);
+        Assert.True(metadataReads > 0);
+        Assert.Equal(originalCorrelation, outgoing.CorrelationId);
+        Assert.False(outbox.HasActiveSession);
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>());
+        Assert.Empty(await fixture.DbContext.Set<DurableSendRecord>().AsNoTracking().ToListAsync(token));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -948,6 +979,18 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         Serializer = ServiceBusMetadataJson.MessageSerializer,
         DestinationAddress = new Uri("loopback://transactional-outbox/probe"),
     };
+
+    private sealed class MetadataMutationHeader(Action onRead)
+    {
+        public string Value
+        {
+            get
+            {
+                onRead();
+                return "stable";
+            }
+        }
+    }
 
     private sealed class MessageIdChangingSerializer(Guid replacementId) : IBoundedMessageSerializer
     {

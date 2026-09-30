@@ -1,7 +1,7 @@
 using System;
-using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Internals.Outgoing;
 using ViciOne.ServiceBus.MessageData.Admission;
@@ -122,28 +122,28 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         MessageContractIdentity contractIdentity)
         where TMessage : class
     {
-        Guid? messageId = context.MessageId;
-        string? contentTypeBeforeBody = context.ContentType?.ToString();
-        byte[] body;
         try
         {
-            body = context.Body.ToArray();
+            return TransportBodyMaterializer.Read(context, messageBody =>
+                CreateSerializedSendFromBody(destinationAddress, context, options, scheduledOptions,
+                    contractIdentity, messageBody));
         }
         catch (MessageException failure) when (TransportBodyMaterializer.IsMutationFailure(failure))
         {
             throw new InvalidOperationException($"The durable send {failure.Message}", failure);
         }
-        catch
-        {
-            if (!string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))
-                context.ContentType = contentTypeBeforeBody is null ? null : new ContentType(contentTypeBeforeBody);
-            throw;
-        }
-        if (!string.Equals(context.ContentType?.ToString(), contentTypeBeforeBody, StringComparison.Ordinal))
-        {
-            context.ContentType = contentTypeBeforeBody is null ? null : new ContentType(contentTypeBeforeBody);
-            throw new InvalidOperationException("The durable send ContentType changed during serialization.");
-        }
+    }
+
+    SerializedDurableSend CreateSerializedSendFromBody<TMessage>(
+        Uri destinationAddress,
+        MessageSendContext<TMessage> context,
+        DurableSendOptions options,
+        OutgoingOptionsSnapshot? scheduledOptions,
+        MessageContractIdentity contractIdentity,
+        MessageBody messageBody)
+        where TMessage : class
+    {
+        byte[] body = messageBody.ToArray();
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));
@@ -164,8 +164,6 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
                 context,
                 options.DueAt ?? context.GetTimeProvider().GetUtcNow(),
                 durableProof);
-        if (context.MessageId != messageId)
-            throw new InvalidOperationException("The durable send MessageId changed during serialization.");
 
         return new SerializedDurableSend
         {
@@ -175,7 +173,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
             ContentType = contentType,
             Body = body,
             Metadata = metadata,
-            MessageId = messageId,
+            MessageId = context.MessageId,
             CorrelationId = context.CorrelationId,
             DueAt = options.DueAt,
         };

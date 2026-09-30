@@ -179,6 +179,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed durable sends and both EF outbox paths whose serializer or header
+  callbacks could change identity, destination, or other send metadata during
+  payload admission and later metadata capture. The expected metadata is bound
+  before admission and checked through body, proof, and persisted record
+  creation. Red-first regressions change `CorrelationId` from a header getter
+  and verify restoration with neither durable admission nor EF staging; a
+  serializer getter regression covers destination drift.
+
 - Fixed sends whose serialized JSON or MessagePack envelope retained one
   application header value while the mutable send context or journal exposed
   another. The send boundary now binds application headers through the active

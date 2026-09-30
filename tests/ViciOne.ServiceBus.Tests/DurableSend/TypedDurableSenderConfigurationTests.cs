@@ -169,6 +169,54 @@ public sealed class TypedDurableSenderConfigurationTests
         Assert.Equal(0, admission.AdmissionCalls);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "metadata-capture-cannot-change-durable-correlation")]
+    public async Task MetadataCaptureChangingCorrelationId_RejectsBeforeDurableAdmissionAsync()
+    {
+        var destination = new Uri("loopback://durable-metadata-correlation/input");
+        var message = new ConfigurationMessage("stable intent");
+        Guid originalCorrelation = Guid.NewGuid();
+        var options = new DurableSendOptions
+        {
+            IdempotencyKey = new DurableSendId(Guid.NewGuid()),
+            CorrelationId = originalCorrelation,
+        };
+        typeof(DurableSendOptions).GetProperty("ScheduledMessageOptions", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(options, new ScheduleOptions());
+        bool armMetadataMutation = false;
+        int metadataReads = 0;
+        var context = new MessageSendContext<ConfigurationMessage>(message)
+        {
+            DestinationAddress = destination,
+            Serializer = new ArmingBodySerializer(() => armMetadataMutation = true),
+        };
+        context.Headers.Set("metadata-value", new MetadataHeader(() =>
+        {
+            if (armMetadataMutation)
+            {
+                metadataReads++;
+                context.CorrelationId = Guid.NewGuid();
+            }
+        }));
+        ITransportSendEndpoint endpoint = DispatchProxy.Create<ITransportSendEndpoint, ContextEndpointProxy>();
+        ((ContextEndpointProxy)(object)endpoint).Context = context;
+        IBus bus = DispatchProxy.Create<IBus, EndpointBusProxy>();
+        ((EndpointBusProxy)(object)bus).Endpoint = endpoint;
+        IMessageContractCatalog catalog = new MessageContractCatalogBuilder()
+            .Register<ConfigurationMessage>("vicione.tests.durable-metadata-correlation")
+            .Build();
+        var admission = new RecordingAdmission();
+        IDurableSender<IBus> sender = DurableSenderTestFactory.CreateTypedSender(bus, catalog, admission);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sender.SendAsync(destination, message, options, TestContext.Current.CancellationToken));
+
+        Assert.Contains("CorrelationId", failure.Message, StringComparison.Ordinal);
+        Assert.True(metadataReads > 0);
+        Assert.Equal(originalCorrelation, context.CorrelationId);
+        Assert.Equal(0, admission.AdmissionCalls);
+    }
+
     public sealed record ConfigurationMessage(string Value);
 
     public class EndpointBusProxy : DispatchProxy
@@ -245,6 +293,26 @@ public sealed class TypedDurableSenderConfigurationTests
             return mutateDuringBodyRead
                 ? new DeferredContentTypeChangingBody(() => context.ContentType = new ContentType("application/octet-stream"))
                 : new StringMessageBody("{}");
+        }
+    }
+
+    private sealed class ArmingBodySerializer(Action arm) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/json");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+            => new DeferredContentTypeChangingBody(arm);
+    }
+
+    private sealed class MetadataHeader(Action onRead)
+    {
+        public string Value
+        {
+            get
+            {
+                onRead();
+                return "stable";
+            }
         }
     }
 

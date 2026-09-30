@@ -99,15 +99,12 @@ internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :
                         "Register payload admission for this bus before using the transactional outbox"));
             }
 
-            MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
-            if (context.MessageId != messageId)
-                throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
-            var message = OutboxMessageFactory.Create(
+            var message = OutboxMessageFactory.CreateAdmitted(
                 context,
+                admissionRuntime,
                 ServiceBusMetadataJson.ObjectDeserializer,
                 _timeProvider,
-                outboxId: _outboxId,
-                admittedBody: admittedBody);
+                outboxId: _outboxId);
             bool hadSession = _outboxState != null;
             try
             {

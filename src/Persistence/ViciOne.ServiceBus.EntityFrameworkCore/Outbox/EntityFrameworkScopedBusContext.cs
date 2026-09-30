@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.DependencyInjection;
@@ -161,6 +162,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             throw new MessageException(typeof(T), "The SendContext MessageId must be present and nonempty");
         Uri destination = context.DestinationAddress
             ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
+        TransportBodyMaterializer.MetadataSnapshot expected = TransportBodyMaterializer.CaptureExpectedMetadata(context);
         DateTimeOffset now = _timeProvider.GetUtcNow();
         PayloadAdmissionRuntime<TBus>? admissionRuntime = _provider.GetService<PayloadAdmissionRuntime<TBus>>();
         if (admissionRuntime is null)
@@ -173,7 +175,31 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
                     "Register payload admission for this bus before using the transactional outbox"));
         }
 
-        byte[] body = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context).ToArray();
+        try
+        {
+            PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
+            return TransportBodyMaterializer.ReadWithExpectedMetadata(context, admittedBody =>
+                CreateStagedRecordFromAdmittedBody(context, admittedBody, messageId, destination, now), expected);
+        }
+        catch (Exception failure)
+        {
+            if (expected.ChangedField(context) is not null)
+            {
+                expected.Restore(context);
+                TransportBodyMaterializer.MarkMutationFailure(failure);
+            }
+            throw;
+        }
+    }
+
+    DurableSendRecord CreateStagedRecordFromAdmittedBody<T>(
+        SendContext<T> context,
+        MessageBody admittedBody,
+        Guid messageId,
+        Uri destination,
+        DateTimeOffset now) where T : class
+    {
+        byte[] body = admittedBody.ToArray();
         string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
         if (!context.TryGetPayload(out PayloadAdmissionSerializationContext? admission)
             || !admission.TryCreateDurableProof(contentType, out DurablePayloadAdmissionProof proof)
@@ -181,8 +207,6 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             throw new InvalidOperationException("The transactional outbox has no complete payload admission proof for its serialized envelope.");
 
         byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof).ToArray();
-        if (context.MessageId != messageId)
-            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
         Guid id = messageId;
         if (_staged.ContainsKey(id)
             || _dbContext.ChangeTracker.Entries<DurableSendRecord>()

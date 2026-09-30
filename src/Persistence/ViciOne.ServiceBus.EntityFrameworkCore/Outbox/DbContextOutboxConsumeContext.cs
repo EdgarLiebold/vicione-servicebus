@@ -214,16 +214,13 @@ internal sealed class DbContextOutboxConsumeContext<TBus, TDbContext, TMessage> 
                     "Register payload admission for this bus before using the inbox outbox"));
         }
 
-        MessageBody admittedBody = PayloadAdmissionTransportBoundary.Admit(admissionRuntime, context);
-        if (context.MessageId != messageId)
-            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
-        OutboxMessage message = OutboxMessageFactory.Create(
+        OutboxMessage message = OutboxMessageFactory.CreateAdmitted(
             context,
+            admissionRuntime,
             SerializerContext,
             _timeProvider,
             MessageId,
-            ConsumerId,
-            admittedBody: admittedBody);
+            ConsumerId);
         await AwaitWithCancellationSourceAsync(_writeCoordinator.ExecuteAsync(() =>
         {
             _dbContext.Add(message);

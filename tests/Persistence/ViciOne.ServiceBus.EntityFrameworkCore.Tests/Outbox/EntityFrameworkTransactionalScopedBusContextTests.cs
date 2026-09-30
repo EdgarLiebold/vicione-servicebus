@@ -203,6 +203,131 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "metadata-capture-cannot-change-staged-correlation")]
+    public async Task AddSend_RejectsMetadataCaptureChangingCorrelationBeforeTrackingAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> outbox = fixture.CreateContext();
+        MessageSendContext<OutboxProbe> outgoing = CreateSendContext(Guid.NewGuid(), 2);
+        Guid originalCorrelation = Guid.NewGuid();
+        int metadataReads = 0;
+        outgoing.CorrelationId = originalCorrelation;
+        outgoing.Headers.Set("metadata-value", new MetadataMutationHeader(() =>
+        {
+            if (outgoing.BodyLength.HasValue)
+            {
+                metadataReads++;
+                outgoing.CorrelationId = Guid.NewGuid();
+            }
+        }));
+
+        try
+        {
+            Exception? observed = await Record.ExceptionAsync(() => outbox.AddSendAsync(outgoing, token));
+            Assert.True(metadataReads > 0);
+            Assert.Equal(originalCorrelation, outgoing.CorrelationId);
+            MessageException failure = Assert.IsType<MessageException>(observed);
+            Assert.Contains("CorrelationId", failure.Message, StringComparison.Ordinal);
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxMessage>());
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxState>());
+            Assert.False(outbox.HasActiveSession);
+            Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().AsNoTracking().ToListAsync(token));
+        }
+        finally
+        {
+            if (outbox.HasActiveSession)
+                await outbox.AbortAsync(token);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "inbox-outbox-rejects-header-metadata-drift")]
+    public async Task ReceiveOutbox_RejectsMetadataCaptureChangingCorrelationBeforeTrackingAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        Guid inboxId = Guid.NewGuid();
+        Guid consumerId = Guid.NewGuid();
+        var inboxState = new InboxState
+        {
+            MessageId = inboxId,
+            ConsumerId = consumerId,
+            LockId = Guid.NewGuid(),
+            Received = Now,
+            ReceiveCount = 1,
+        };
+        var options = new OutboxConsumeOptions
+        {
+            ConsumerId = consumerId,
+            ConsumerType = nameof(OutboxProbe),
+            MessageDeliveryLimit = 1,
+            MessageDeliveryTimeout = TimeSpan.FromMinutes(1),
+        };
+        ConsumeContext<OutboxProbe> input = InMemoryOutboxTestContextFactory.Create(
+            new OutboxProbe(0), token, messageId: inboxId);
+        await using var transaction = await fixture.DbContext.Database.BeginTransactionAsync(token);
+        using var outbox = new DbContextOutboxConsumeContext<IBus, ClassicOutboxDbContext, OutboxProbe>(
+            input, options, fixture.Services, fixture.DbContext, transaction, inboxState, fixture.TimeProvider);
+        MessageSendContext<OutboxProbe> outgoing = CreateSendContext(Guid.NewGuid(), 4);
+        Guid originalCorrelation = Guid.NewGuid();
+        int metadataReads = 0;
+        outgoing.CorrelationId = originalCorrelation;
+        outgoing.Headers.Set("metadata-value", new MetadataMutationHeader(() =>
+        {
+            if (outgoing.BodyLength.HasValue)
+            {
+                metadataReads++;
+                outgoing.CorrelationId = Guid.NewGuid();
+            }
+        }));
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(
+            () => outbox.AddSendAsync(outgoing, token));
+
+        Assert.Contains("CorrelationId", failure.Message, StringComparison.Ordinal);
+        Assert.True(metadataReads > 0);
+        Assert.Equal(originalCorrelation, outgoing.CorrelationId);
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxMessage>());
+        Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxState>());
+        await transaction.RollbackAsync(token);
+        Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().AsNoTracking().ToListAsync(token));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-METADATA", "serializer-content-type-cannot-change-staged-destination")]
+    public async Task AddSend_RejectsSerializerGetterChangingDestinationBeforeTrackingAsync()
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using ClassicOutboxFixture fixture = await ClassicOutboxFixture.CreateAsync();
+        using EntityFrameworkTransactionalScopedBusContext<IBus, ClassicOutboxDbContext> outbox = fixture.CreateContext();
+        MessageSendContext<OutboxProbe> outgoing = CreateSendContext(Guid.NewGuid(), 3);
+        Uri originalDestination = outgoing.DestinationAddress!;
+        Uri replacementDestination = new("loopback://classic-transactional-outbox/other");
+        var serializer = new DestinationChangingBoundedSerializer(() =>
+            outgoing.DestinationAddress = replacementDestination);
+        outgoing.Serializer = serializer;
+        serializer.Arm();
+
+        try
+        {
+            Exception? observed = await Record.ExceptionAsync(() => outbox.AddSendAsync(outgoing, token));
+            Assert.True(serializer.GetterCallsAfterArming > 0);
+            Assert.Equal(originalDestination, outgoing.DestinationAddress);
+            MessageException failure = Assert.IsType<MessageException>(observed);
+            Assert.Contains("DestinationAddress", failure.Message, StringComparison.Ordinal);
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxMessage>());
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<OutboxState>());
+            Assert.False(outbox.HasActiveSession);
+        }
+        finally
+        {
+            if (outbox.HasActiveSession)
+                await outbox.AbortAsync(token);
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "commit-without-intent-persists-business-only")]
     public async Task Commit_WithoutIntentPersistsBusinessChangesOnlyAsync()
     {
@@ -625,6 +750,69 @@ public sealed class EntityFrameworkTransactionalScopedBusContextTests
             where T : class
         {
             context.MessageId = replacementId;
+            int value = serializedBody.ReadByte();
+            if (value < 0)
+                throw new InvalidOperationException("The admitted application body was empty.");
+            writer.GetSpan(1)[0] = (byte)value;
+            writer.Advance(1);
+        }
+
+        public bool TryLocateSerializedBody(ReadOnlySpan<byte> serializedEnvelope, out int offset, out int length)
+        {
+            offset = 0;
+            length = serializedEnvelope.Length;
+            return length == 1;
+        }
+    }
+
+    private sealed class MetadataMutationHeader(Action onRead)
+    {
+        public string Value
+        {
+            get
+            {
+                onRead();
+                return "stable";
+            }
+        }
+    }
+
+    private sealed class DestinationChangingBoundedSerializer(Action changeDestination) : IBoundedMessageSerializer
+    {
+        private readonly ContentType _contentType = new("application/octet-stream");
+        private bool _armed;
+
+        public int GetterCallsAfterArming { get; private set; }
+
+        public ContentType ContentType
+        {
+            get
+            {
+                if (_armed)
+                {
+                    GetterCallsAfterArming++;
+                    changeDestination();
+                }
+                return _contentType;
+            }
+        }
+
+        public SerializedTransportTextFormat TransportTextFormat => SerializedTransportTextFormat.Base64;
+
+        public void Arm() => _armed = true;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            throw new NotSupportedException("The bounded serializer path must be used.");
+
+        public void WriteSerializedBody<T>(SendContext<T> context, IBufferWriter<byte> writer) where T : class
+        {
+            writer.GetSpan(1)[0] = 42;
+            writer.Advance(1);
+        }
+
+        public void WriteTransportEnvelope<T>(SendContext<T> context, Stream serializedBody, IBufferWriter<byte> writer)
+            where T : class
+        {
             int value = serializedBody.ReadByte();
             if (value < 0)
                 throw new InvalidOperationException("The admitted application body was empty.");

@@ -110,6 +110,7 @@ public class MessageSendContext<TMessage> :
                     _serializedMessageTypes = SupportedMessageTypes?.ToArray();
                     _messageTypesBound = true;
                 }
+                ThrowIfEnvelopeHeadersChanged();
                 if (beforeBody.ChangedField(this) is { } changedField)
                 {
                     beforeBody.Restore(this);
@@ -126,8 +127,6 @@ public class MessageSendContext<TMessage> :
                     RestoreSerializedMessageTypes();
                     throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(nameof(SupportedMessageTypes));
                 }
-                ThrowIfEnvelopeHeadersChanged();
-
                 _serializedMetadata ??= beforeBody;
                 _serializedNativeMetadata ??= nativeBeforeBody;
                 return body;
