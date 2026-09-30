@@ -30,6 +30,7 @@ public class MessageSendContext<TMessage> :
     IMessageSerializer? _serializer;
     ISerialization? _serialization;
     TransportBodyMaterializer.MetadataSnapshot? _serializedMetadata;
+    object? _serializedNativeMetadata;
     string[]? _serializedMessageTypes;
     bool _messageTypesBound;
     string[]? _authorizedForwardedMessageTypes;
@@ -70,11 +71,18 @@ public class MessageSendContext<TMessage> :
 
             TransportBodyMaterializer.MetadataSnapshot beforeBody =
                 _serializedMetadata ?? TransportBodyMaterializer.MetadataSnapshot.Capture(this);
+            ITransportSendMetadata? nativeContext = this as ITransportSendMetadata;
+            object? nativeBeforeBody = _serializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
             if (beforeBody.ChangedField(this) is { } staleField)
             {
                 beforeBody.Restore(this);
                 _serializedMetadata ??= beforeBody;
                 throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(staleField);
+            }
+            if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is { } staleNativeField)
+            {
+                nativeContext.RestoreNativeMetadata(nativeBeforeBody);
+                throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(staleNativeField);
             }
             if (MessageTypesChanged)
             {
@@ -105,6 +113,11 @@ public class MessageSendContext<TMessage> :
                     _serializedMetadata ??= beforeBody;
                     throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedField);
                 }
+                if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is { } changedNativeField)
+                {
+                    nativeContext.RestoreNativeMetadata(nativeBeforeBody);
+                    throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedNativeField);
+                }
                 if (MessageTypesChanged)
                 {
                     RestoreSerializedMessageTypes();
@@ -112,6 +125,7 @@ public class MessageSendContext<TMessage> :
                 }
 
                 _serializedMetadata ??= beforeBody;
+                _serializedNativeMetadata ??= nativeBeforeBody;
                 return body;
             }
             catch (Exception failure)
@@ -119,6 +133,11 @@ public class MessageSendContext<TMessage> :
                 if (beforeBody.ChangedField(this) is not null)
                 {
                     beforeBody.Restore(this);
+                    TransportBodyMaterializer.MarkMutationFailure(failure);
+                }
+                if (nativeBeforeBody is not null && nativeContext?.ChangedNativeField(nativeBeforeBody) is not null)
+                {
+                    nativeContext.RestoreNativeMetadata(nativeBeforeBody);
                     TransportBodyMaterializer.MarkMutationFailure(failure);
                 }
                 if (MessageTypesChanged)
@@ -151,6 +170,26 @@ public class MessageSendContext<TMessage> :
     }
 
     internal TransportBodyMaterializer.MetadataSnapshot? SerializedMetadata => _serializedMetadata;
+
+    internal object? SerializedNativeMetadata => _serializedNativeMetadata;
+
+    internal void AcceptProviderNativeMetadataUpdate(Action update)
+    {
+        ArgumentNullException.ThrowIfNull(update);
+        if (_metadataFailure is { } rejected)
+            throw rejected;
+        if (this is not ITransportSendMetadata nativeContext)
+            throw new InvalidOperationException("The send context has no provider-native metadata.");
+        if (_serializedNativeMetadata is { } bound && nativeContext.ChangedNativeField(bound) is { } changedField)
+        {
+            nativeContext.RestoreNativeMetadata(bound);
+            throw _metadataFailure = TransportBodyMaterializer.CreateMutationFailure<TMessage>(changedField);
+        }
+
+        update();
+        if (_serializedNativeMetadata is not null)
+            _serializedNativeMetadata = nativeContext.CaptureNativeMetadata();
+    }
 
     internal bool MessageTypesChanged => _messageTypesBound && !SameMessageTypes(_serializedMessageTypes, SupportedMessageTypes);
 

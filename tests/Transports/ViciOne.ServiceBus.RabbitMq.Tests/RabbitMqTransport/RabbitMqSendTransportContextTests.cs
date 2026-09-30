@@ -154,18 +154,69 @@ public sealed class RabbitMqSendTransportContextTests
         Assert.Empty(channel.Published);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "serializer-cannot-change-native-route-during-body-read")]
+    public async Task SendAsync_RejectsBodyCallbackThatChangesNativeRouteAsync(bool changeExchange)
+    {
+        var context = CreateMessageContext("orders", [1, 2, 3, 4]);
+        context.RoutingKey = "orders.created";
+        context.Serializer = new MutatingSerializer(_ =>
+        {
+            if (changeExchange)
+                context.ReadPropertiesFrom(new Dictionary<string, object>
+                {
+                    [RabbitMqTransportPropertyNames.Exchange] = "other-exchange",
+                    [RabbitMqTransportPropertyNames.RoutingKey] = "orders.created",
+                });
+            else
+                context.RoutingKey = "other.route";
+        });
+        var channel = new RecordingChannelContext();
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        Assert.Contains(changeExchange ? "Exchange" : "RoutingKey", failure.Message, StringComparison.Ordinal);
+        Assert.Equal("orders", context.Exchange);
+        Assert.Equal("orders.created", context.RoutingKey);
+        Assert.Empty(channel.Published);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "cached-body-cannot-be-published-through-a-changed-native-route")]
+    public async Task SendAsync_RejectsNativeRouteChangedAfterBodyWasCachedAsync()
+    {
+        var context = CreateMessageContext("orders", [1, 2, 3, 4]);
+        context.RoutingKey = "orders.created";
+        byte[] originalBody = context.Body.ToArray();
+        context.RoutingKey = "other.route";
+        var channel = new RecordingChannelContext();
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        Assert.Contains("RoutingKey", failure.Message, StringComparison.Ordinal);
+        Assert.Equal("orders.created", context.RoutingKey);
+        Assert.Equal([1, 2, 3, 4], originalBody);
+        Assert.Empty(channel.Published);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-SEND-CONTEXT", "distinct-publish-payload-enforces-mandatory-routing")]
     public async Task SendAsync_EnforcesMandatoryRoutingFromADistinctPublishPayloadAsync()
     {
         PublishContext publish = DispatchProxy.Create<PublishContext, MandatoryPublishPayloadProxy>();
         var context = new PublishPayloadMessageContext(publish);
+        byte[] cachedBody = context.Body.ToArray();
         var channel = new RecordingChannelContext();
 
         await CreateTransport(EmptyTopology()).SendAsync(channel, context, TestContext.Current.CancellationToken);
 
         Assert.True(context.Mandatory);
         Assert.True(Assert.Single(channel.Published).Mandatory);
+        Assert.Equal(cachedBody, context.Body.ToArray());
     }
 
     [Theory]
@@ -359,6 +410,65 @@ public sealed class RabbitMqSendTransportContextTests
 
         Assert.Contains("publish route or delivery properties differ", exception.Message, StringComparison.Ordinal);
         Assert.Equal(0, channel.ExchangeDeclarations);
+        Assert.Empty(channel.Published);
+    }
+
+    [Theory]
+    [InlineData(InvalidAcceptance.Delay)]
+    [InlineData(InvalidAcceptance.NonDurable)]
+    [InlineData(InvalidAcceptance.NonMandatory)]
+    [InlineData(InvalidAcceptance.NoAcknowledgement)]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-DURABLE-ACCEPTANCE", "body-callback-cannot-invalidate-proven-delivery")]
+    public async Task DurableAcceptance_RejectsBodyCallbackChangingDeliveryGuaranteeAsync(InvalidAcceptance invalid)
+    {
+        RabbitMqMessageSendContext<TestMessage> context = CreateAcceptedMessageContext();
+        var requirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: true);
+        context.GetOrAddPayload(() => requirement);
+        context.Serializer = new MutatingSerializer(_ => ApplyInvalidAcceptance(context, invalid));
+        var channel = new RecordingChannelContext();
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            CreateTransport(ExchangeTopology("orders"))
+                .SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        string field = invalid switch
+        {
+            InvalidAcceptance.Delay => nameof(context.Delay),
+            InvalidAcceptance.NonDurable => nameof(context.Durable),
+            InvalidAcceptance.NonMandatory => nameof(context.Mandatory),
+            _ => nameof(context.AwaitAck),
+        };
+        Assert.Contains(field, failure.Message, StringComparison.Ordinal);
+        Assert.True(context.Durable);
+        Assert.True(context.Mandatory);
+        Assert.True(context.AwaitAck);
+        Assert.Null(context.Delay);
+        Assert.False(requirement.Accepted);
+        Assert.Empty(channel.Published);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-DURABLE-ACCEPTANCE", "throwing-body-callback-restores-delivery-guarantee")]
+    public async Task DurableAcceptance_ThrowingBodyCallbackRestoresDeliveryGuaranteeAsync()
+    {
+        RabbitMqMessageSendContext<TestMessage> context = CreateAcceptedMessageContext();
+        var requirement = new RabbitMqTransportAcceptanceRequirement("orders", requiresExistingQueueProof: true);
+        context.GetOrAddPayload(() => requirement);
+        var serializationFailure = new InvalidOperationException("serialization failed");
+        context.Serializer = new MutatingSerializer(_ =>
+        {
+            context.AwaitAck = false;
+            throw serializationFailure;
+        });
+        var channel = new RecordingChannelContext();
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            CreateTransport(ExchangeTopology("orders"))
+                .SendAsync(channel, context, TestContext.Current.CancellationToken));
+
+        Assert.Same(serializationFailure, failure);
+        Assert.True(context.AwaitAck);
+        Assert.False(requirement.Accepted);
         Assert.Empty(channel.Published);
     }
 

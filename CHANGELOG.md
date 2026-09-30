@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed RabbitMQ and Event Hubs sends that could publish a body through a
+  different native route or with different delivery guarantees after a body
+  callback changed provider metadata. The shared body and journal guards now
+  bind and restore native metadata. RabbitMQ applies a distinct publish
+  payload's mandatory-routing requirement before binding, so a valid send
+  remains readable and journalable. Event Hubs initializes its conversation
+  identity before the first body read. Red-first provider tests cover route
+  drift, cached bodies, durable acceptance, throwing callbacks and the valid
+  mandatory-routing path.
+
 - Fixed send metadata drifting away from its serialized body or native route.
   Identity, response and fault addresses, expiration, content type, and contract
   types are now checked when the body is created and materialized; rejected

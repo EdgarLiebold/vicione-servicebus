@@ -10,7 +10,8 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// <typeparam name="T">The message contract.</typeparam>
 public class RabbitMqMessageSendContext<T> :
     MessageSendContext<T>,
-    RabbitMqSendContext<T>
+    RabbitMqSendContext<T>,
+    ITransportSendMetadata
     where T : class
 {
     /// <summary>Creates a send context that awaits acknowledgement and uses an empty routing key by default.</summary>
@@ -38,6 +39,40 @@ public class RabbitMqMessageSendContext<T> :
     public BasicProperties BasicProperties { get; }
     /// <summary>Gets or sets whether the caller awaits the RabbitMQ client publish outcome.</summary>
     public bool AwaitAck { get; set; }
+
+    object ITransportSendMetadata.CaptureNativeMetadata() =>
+        new NativeMetadata(Exchange, RoutingKey, Durable, Mandatory, AwaitAck, Delay);
+
+    string? ITransportSendMetadata.ChangedNativeField(object snapshot)
+    {
+        var expected = (NativeMetadata)snapshot;
+        if (!string.Equals(Exchange, expected.Exchange, StringComparison.Ordinal)) return nameof(Exchange);
+        if (!string.Equals(RoutingKey, expected.RoutingKey, StringComparison.Ordinal)) return nameof(RoutingKey);
+        if (Durable != expected.Durable) return nameof(Durable);
+        if (Mandatory != expected.Mandatory) return nameof(Mandatory);
+        if (AwaitAck != expected.AwaitAck) return nameof(AwaitAck);
+        if (Delay != expected.Delay) return nameof(Delay);
+        return null;
+    }
+
+    void ITransportSendMetadata.RestoreNativeMetadata(object snapshot)
+    {
+        var expected = (NativeMetadata)snapshot;
+        Exchange = expected.Exchange;
+        RoutingKey = expected.RoutingKey;
+        Durable = expected.Durable;
+        Mandatory = expected.Mandatory;
+        AwaitAck = expected.AwaitAck;
+        Delay = expected.Delay;
+    }
+
+    private readonly record struct NativeMetadata(
+        string Exchange,
+        string? RoutingKey,
+        bool Durable,
+        bool Mandatory,
+        bool AwaitAck,
+        TimeSpan? Delay);
 
     /// <summary>Restores RabbitMQ exchange, routing, and AMQP properties from persisted transport properties.</summary>
     /// <param name="properties">The persisted transport-property bag.</param>

@@ -26,10 +26,17 @@ internal static class MessageJournalCaptureFactory
             throw new InvalidOperationException("The send context metadata changed before journal capture.");
         }
         MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
+        ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
+        object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
         if (messageContext?.MessageTypesChanged == true)
         {
             messageContext.RestoreSerializedMessageTypes();
             throw new InvalidOperationException("The send context message types changed before journal capture.");
+        }
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
+        {
+            nativeContext.RestoreNativeMetadata(nativeMetadata);
+            throw new InvalidOperationException("The send context native metadata changed before journal capture.");
         }
         byte[] bodyBytes;
         try
@@ -44,6 +51,8 @@ internal static class MessageJournalCaptureFactory
             metadataBeforeBody.Restore(context);
             if (messageContext?.MessageTypesChanged == true)
                 messageContext.RestoreSerializedMessageTypes();
+            if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
+                nativeContext.RestoreNativeMetadata(nativeMetadata);
             throw;
         }
         if (metadataBeforeBody.ChangedField(context) is not null)
@@ -55,6 +64,11 @@ internal static class MessageJournalCaptureFactory
         {
             messageContext.RestoreSerializedMessageTypes();
             throw new InvalidOperationException("The send context message types changed during journal capture.");
+        }
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
+        {
+            nativeContext.RestoreNativeMetadata(nativeMetadata);
+            throw new InvalidOperationException("The send context native metadata changed during journal capture.");
         }
 
         var metadata = CreateSendMetadata(context, exception);

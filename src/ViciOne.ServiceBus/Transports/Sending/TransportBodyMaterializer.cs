@@ -33,6 +33,8 @@ internal static class TransportBodyMaterializer
         ArgumentNullException.ThrowIfNull(readBody);
         MetadataSnapshot metadata = CaptureExpectedMetadata(context);
         MessageSendContext<T>? messageContext = context as MessageSendContext<T>;
+        ITransportSendMetadata? nativeContext = context as ITransportSendMetadata;
+        object? nativeMetadata = messageContext?.SerializedNativeMetadata ?? nativeContext?.CaptureNativeMetadata();
         if (metadata.ChangedField(context) is { } staleField)
         {
             metadata.Restore(context);
@@ -42,6 +44,11 @@ internal static class TransportBodyMaterializer
         {
             messageContext.RestoreSerializedMessageTypes();
             throw CreateMutationFailure<T>(nameof(SendContext.SupportedMessageTypes));
+        }
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is { } staleNativeField)
+        {
+            nativeContext.RestoreNativeMetadata(nativeMetadata);
+            throw CreateMutationFailure<T>(staleNativeField);
         }
         TResult result;
         try
@@ -62,6 +69,11 @@ internal static class TransportBodyMaterializer
                 messageContext.RestoreSerializedMessageTypes();
                 MarkMutationFailure(failure);
             }
+            if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is not null)
+            {
+                nativeContext.RestoreNativeMetadata(nativeMetadata);
+                MarkMutationFailure(failure);
+            }
 
             throw;
         }
@@ -75,6 +87,11 @@ internal static class TransportBodyMaterializer
         {
             messageContext.RestoreSerializedMessageTypes();
             throw CreateMutationFailure<T>(nameof(SendContext.SupportedMessageTypes));
+        }
+        if (nativeMetadata is not null && nativeContext?.ChangedNativeField(nativeMetadata) is { } changedNativeField)
+        {
+            nativeContext.RestoreNativeMetadata(nativeMetadata);
+            throw CreateMutationFailure<T>(changedNativeField);
         }
 
         return result;

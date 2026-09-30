@@ -210,6 +210,58 @@ public sealed class EventHubProducerBatchSenderTests
         Assert.Empty(producer.SentBatchSizes);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "serializer-cannot-change-partition-route-during-body-read")]
+    public async Task BodyCallbackChangingPartitionRoute_RejectsBeforeCreatingAProviderBatchAsync(bool usePartitionId)
+    {
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage> context = usePartitionId
+            ? CreateContext(1, partitionId: "0", cancellationToken: TestContext.Current.CancellationToken)
+            : CreateContext(1, partitionKey: "original", cancellationToken: TestContext.Current.CancellationToken);
+        context.Serializer = new RouteMutatingSerializer(() =>
+        {
+            if (usePartitionId)
+                context.PartitionId = "1";
+            else
+                context.PartitionKey = "changed";
+        });
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            EventHubProducerBatchSender.SendAsync(producer, [context],
+                TestContext.Current.CancellationToken, producer.DisposeBatch));
+
+        Assert.Contains(usePartitionId ? "PartitionId" : "PartitionKey", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(usePartitionId ? "0" : null, context.PartitionId);
+        Assert.Equal(usePartitionId ? null : "original", context.PartitionKey);
+        Assert.Empty(producer.CreatedRoutes);
+        Assert.Empty(producer.SentBatchSizes);
+        Assert.False(context.IsProviderConfirmed);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "cached-body-cannot-be-batched-through-a-changed-partition-route")]
+    public async Task CachedBodyChangingPartitionRoute_RejectsBeforeCreatingAProviderBatchAsync()
+    {
+        var producer = new RecordingProducerContext();
+        EventHubMessageSendContext<TestMessage> context =
+            CreateContext(1, partitionKey: "original", cancellationToken: TestContext.Current.CancellationToken);
+        byte[] originalBody = context.Body.ToArray();
+        context.PartitionKey = "changed";
+
+        MessageException failure = await Assert.ThrowsAsync<MessageException>(() =>
+            EventHubProducerBatchSender.SendAsync(producer, [context],
+                TestContext.Current.CancellationToken, producer.DisposeBatch));
+
+        Assert.Contains("PartitionKey", failure.Message, StringComparison.Ordinal);
+        Assert.Equal("original", context.PartitionKey);
+        Assert.NotEmpty(originalBody);
+        Assert.Empty(producer.CreatedRoutes);
+        Assert.Empty(producer.SentBatchSizes);
+        Assert.False(context.IsProviderConfirmed);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EVENTHUB-BATCH-SEND", "provider-failure-disposes-current-batch")]
     public async Task ProviderFailure_DisposesTheCurrentBatchAsync()
@@ -363,6 +415,32 @@ public sealed class EventHubProducerBatchSenderTests
         public MessageBody GetMessageBody<T>(SendContext<T> context)
             where T : class =>
             throw new SerializationException("The Event Hubs message could not be serialized.");
+    }
+
+    private sealed class RouteMutatingSerializer(Action mutate) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/octet-stream");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class => new RouteMutatingBody(mutate);
+    }
+
+    private sealed class RouteMutatingBody(Action mutate) : MessageBody
+    {
+        public long Length => 1;
+
+        public byte[] ToArray()
+        {
+            mutate();
+            return [42];
+        }
+
+        public Stream OpenReadStream() => new MemoryStream(ToArray(), writable: false);
+
+        public bool TryGetTransportText([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? text)
+        {
+            text = null;
+            return false;
+        }
     }
 
     private sealed class RecordingProducerContext :

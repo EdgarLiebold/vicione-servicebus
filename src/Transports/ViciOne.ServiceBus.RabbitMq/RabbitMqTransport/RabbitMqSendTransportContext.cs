@@ -150,10 +150,10 @@ public class RabbitMqSendTransportContext :
 
         string exchange = context.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) ? "" : context.Exchange;
 
-        byte[] body = TransportBodyMaterializer.ToArray(context);
+        if (context.TryGetPayload(out PublishContext? publishContext) && publishContext.Mandatory && !context.Mandatory)
+            context.AcceptProviderNativeMetadataUpdate(() => context.Mandatory = true);
 
-        if (context.TryGetPayload(out PublishContext? publishContext))
-            context.Mandatory = context.Mandatory || publishContext.Mandatory;
+        byte[] body = TransportBodyMaterializer.ToArray(context);
 
         ApplyBasicProperties(context);
         exchange = await ConfigureDelayedExchangeAsync(transportContext, context, exchange).ConfigureAwait(false);
