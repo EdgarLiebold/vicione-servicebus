@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11174 |
+| Added | 11175 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -255,6 +255,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t155-azure-table-job-keys.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t156-signalr-timer-boundary.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t159-ef-transactional-empty-message-id.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t161-durable-message-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |

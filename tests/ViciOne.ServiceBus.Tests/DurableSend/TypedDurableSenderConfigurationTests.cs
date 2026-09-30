@@ -1,5 +1,7 @@
+using System.Net.Mime;
 using System.Reflection;
 using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
@@ -68,6 +70,40 @@ public sealed class TypedDurableSenderConfigurationTests
         Assert.Equal(0, admission.AdmissionCalls);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "serializer-cannot-change-durable-message-identity")]
+    public async Task SerializerChangingMessageId_RejectsBeforeDurableAdmissionAsync(bool clearId)
+    {
+        var destination = new Uri("loopback://durable-identity/input");
+        var message = new ConfigurationMessage("unchanged intent");
+        var options = new DurableSendOptions { IdempotencyKey = new DurableSendId(Guid.NewGuid()) };
+        Guid replacementId = clearId ? Guid.Empty : Guid.NewGuid();
+        var context = new MessageSendContext<ConfigurationMessage>(message)
+        {
+            DestinationAddress = destination,
+            Serializer = new MessageIdChangingSerializer(replacementId),
+        };
+        ITransportSendEndpoint endpoint = DispatchProxy.Create<ITransportSendEndpoint, ContextEndpointProxy>();
+        ((ContextEndpointProxy)(object)endpoint).Context = context;
+        IBus bus = DispatchProxy.Create<IBus, EndpointBusProxy>();
+        ((EndpointBusProxy)(object)bus).Endpoint = endpoint;
+        IMessageContractCatalog catalog = new MessageContractCatalogBuilder()
+            .Register<ConfigurationMessage>("vicione.tests.durable-serializer-identity")
+            .Build();
+        var admission = new RecordingAdmission();
+        IDurableSender<IBus> sender = DurableSenderTestFactory.CreateTypedSender(bus, catalog, admission);
+
+        InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sender.SendAsync(destination, message, options, TestContext.Current.CancellationToken));
+
+        Assert.Contains("MessageId changed during serialization", failure.Message, StringComparison.Ordinal);
+        Assert.Equal(replacementId, context.MessageId);
+        Assert.Equal(0, admission.AdmissionCalls);
+        Assert.Equal(options.IdempotencyKey.Value, context.ConversationId);
+    }
+
     public sealed record ConfigurationMessage(string Value);
 
     public class EndpointBusProxy : DispatchProxy
@@ -120,6 +156,17 @@ public sealed class TypedDurableSenderConfigurationTests
     {
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
             => throw new InvalidOperationException($"Unexpected send context operation '{targetMethod?.Name}'.");
+    }
+
+    private sealed class MessageIdChangingSerializer(Guid replacementId) : IMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/json");
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class
+        {
+            context.MessageId = replacementId;
+            return new StringMessageBody("{}");
+        }
     }
 
     private sealed class RecordingAdmission : IDurableSendAdmission<IBus>

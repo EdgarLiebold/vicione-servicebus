@@ -121,6 +121,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         MessageContractIdentity contractIdentity)
         where TMessage : class
     {
+        Guid? messageId = context.MessageId;
         byte[] body = context.Body.ToArray();
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
@@ -142,6 +143,9 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
                 context,
                 options.DueAt ?? context.GetTimeProvider().GetUtcNow(),
                 durableProof);
+        if (context.MessageId != messageId)
+            throw new InvalidOperationException("The durable send MessageId changed during serialization.");
+
         return new SerializedDurableSend
         {
             Id = options.IdempotencyKey,
@@ -150,7 +154,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
             ContentType = contentType,
             Body = body,
             Metadata = metadata,
-            MessageId = context.MessageId,
+            MessageId = messageId,
             CorrelationId = context.CorrelationId,
             DueAt = options.DueAt,
         };

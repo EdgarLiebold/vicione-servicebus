@@ -11,6 +11,16 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed two durable-send identity races with mutable serializer callbacks.
+  The EF transactional outbox now rejects a `MessageId` changed during
+  serialization before staging or reserving capacity. The typed durable sender
+  preserves the ID set after schedule options and rejects a later serializer
+  change before admission. This retains the supported case where a scheduled
+  message ID differs from its idempotency key. Red-first tests cover a different
+  GUID and `Guid.Empty`; the complete EF and Core suites pass 403/403 and
+  7,387/7,387 respectively. The adversarial review found no remaining P1/P2
+  issue in this change.
+
 - The corrected EF message-ID path passed a new exact-commit, 33-profile
   product-wide measurement: 14,139 passing executions, 92.40183% Line,
   85.14605% conservative Branch, and no method above CRAP 30. All twelve

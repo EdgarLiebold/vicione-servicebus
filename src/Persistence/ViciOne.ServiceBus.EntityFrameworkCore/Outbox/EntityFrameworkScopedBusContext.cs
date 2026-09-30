@@ -181,6 +181,8 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             throw new InvalidOperationException("The transactional outbox has no complete payload admission proof for its serialized envelope.");
 
         byte[] metadata = ReliableEnvelopeMetadataCodec.Capture(context, now, proof).ToArray();
+        if (context.MessageId != messageId)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
         Guid id = messageId;
         if (_staged.ContainsKey(id)
             || _dbContext.ChangeTracker.Entries<DurableSendRecord>()
@@ -196,7 +198,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             ContentType = contentType,
             Body = body,
             Metadata = metadata,
-            MessageId = context.MessageId,
+            MessageId = messageId,
             CorrelationId = context.CorrelationId,
             StorageSize = checked(body.LongLength + metadata.LongLength),
             Status = DurableSendStatus.Pending,

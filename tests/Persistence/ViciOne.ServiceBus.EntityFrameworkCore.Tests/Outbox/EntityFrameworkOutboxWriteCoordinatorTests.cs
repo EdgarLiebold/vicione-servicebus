@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Net.Mime;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
@@ -493,6 +496,50 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         Assert.Equal(stored.StorageSize, capacity.StoredBytes);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "serializer-cannot-change-staged-message-identity")]
+    public async Task SerializerChangingMessageId_RejectsWithoutStagingAndAllowsValidCommitAsync(bool clearId)
+    {
+        CancellationToken token = TestContext.Current.CancellationToken;
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        Guid initialId = Guid.NewGuid();
+        Guid replacementId = clearId ? Guid.Empty : Guid.NewGuid();
+        MessageSendContext<OutboxProbe> changed = CreateSendContext(initialId, 1);
+        changed.Serializer = new MessageIdChangingSerializer(replacementId);
+
+        try
+        {
+            MessageException failure = await Assert.ThrowsAsync<MessageException>(() => context.AddSendAsync(changed, token));
+            Assert.Contains("changed during serialization", failure.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(replacementId, changed.MessageId);
+            Assert.False(context.HasActiveSession);
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendRecord>());
+            Assert.Empty(fixture.DbContext.ChangeTracker.Entries<DurableSendCapacityState>());
+        }
+        finally
+        {
+            if (context.HasActiveSession)
+                await context.AbortAsync(token);
+        }
+
+        Guid validId = Guid.NewGuid();
+        await context.AddSendAsync(CreateSendContext(validId, 2), token);
+        await context.CommitAsync(token);
+
+        await using OutboxDbContext persisted = fixture.CreateFreshContext();
+        DurableSendRecord stored = await persisted.Set<DurableSendRecord>().AsNoTracking().SingleAsync(token);
+        DurableSendCapacityState capacity = await persisted.Set<DurableSendCapacityState>().AsNoTracking().SingleAsync(token);
+        Assert.Equal(validId, stored.Id);
+        Assert.Equal(validId, stored.MessageId);
+        Assert.NotEqual(initialId, stored.Id);
+        Assert.NotEqual(replacementId, stored.Id);
+        Assert.Equal(1, capacity.StoredCount);
+        Assert.Equal(stored.StorageSize, capacity.StoredBytes);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "t100-duplicate-message-id-does-not-reserve-capacity-twice")]
     public async Task DuplicateMessageId_RejectsSecondAdmissionWithoutInflatingCommittedCapacityAsync()
@@ -901,6 +948,40 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         Serializer = ServiceBusMetadataJson.MessageSerializer,
         DestinationAddress = new Uri("loopback://transactional-outbox/probe"),
     };
+
+    private sealed class MessageIdChangingSerializer(Guid replacementId) : IBoundedMessageSerializer
+    {
+        public ContentType ContentType { get; } = new("application/octet-stream");
+
+        public SerializedTransportTextFormat TransportTextFormat => SerializedTransportTextFormat.Base64;
+
+        public MessageBody GetMessageBody<T>(SendContext<T> context) where T : class =>
+            throw new NotSupportedException("The bounded serializer path must be used.");
+
+        public void WriteSerializedBody<T>(SendContext<T> context, IBufferWriter<byte> writer) where T : class
+        {
+            writer.GetSpan(1)[0] = 42;
+            writer.Advance(1);
+        }
+
+        public void WriteTransportEnvelope<T>(SendContext<T> context, Stream serializedBody, IBufferWriter<byte> writer)
+            where T : class
+        {
+            context.MessageId = replacementId;
+            int value = serializedBody.ReadByte();
+            if (value < 0)
+                throw new InvalidOperationException("The admitted application body was empty.");
+            writer.GetSpan(1)[0] = (byte)value;
+            writer.Advance(1);
+        }
+
+        public bool TryLocateSerializedBody(ReadOnlySpan<byte> serializedEnvelope, out int offset, out int length)
+        {
+            offset = 0;
+            length = serializedEnvelope.Length;
+            return length == 1;
+        }
+    }
 
     public sealed record OutboxProbe(int Sequence);
 
