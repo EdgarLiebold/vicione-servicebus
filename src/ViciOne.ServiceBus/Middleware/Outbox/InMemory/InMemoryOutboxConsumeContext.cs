@@ -140,16 +140,19 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
             ? cancellationToken
             : context.CancellationToken;
         operationCancellationToken.ThrowIfCancellationRequested();
-        if (context.MessageId.HasValue == false)
-            throw new MessageException(typeof(T), "The SendContext MessageId must be present");
+        if (context.MessageId is not { } messageId || messageId == Guid.Empty)
+            throw new MessageException(typeof(T), "The SendContext MessageId must be present and nonempty");
 
         var body = context.Serializer.GetMessageBody(context);
+        string transportBody = body.GetRequiredTransportText();
+        if (context.MessageId != messageId)
+            throw new MessageException(typeof(T), "The SendContext MessageId changed during serialization");
 
         var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
 
         var outboxMessage = new InMemoryOutboxMessage
         {
-            MessageId = context.MessageId.Value,
+            MessageId = messageId,
             ConversationId = context.ConversationId,
             CorrelationId = context.CorrelationId,
             InitiatorId = context.InitiatorId,
@@ -161,7 +164,7 @@ internal sealed class InMemoryOutboxConsumeContext<TMessage> :
             SentTime = context.SentTime ?? now,
             ContentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString(),
             MessageType = string.Join(";", context.SupportedMessageTypes),
-            Body = body.GetRequiredTransportText()
+            Body = transportBody
         };
 
         if (context.TimeToLive.HasValue)

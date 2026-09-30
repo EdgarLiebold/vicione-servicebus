@@ -12,7 +12,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 11176 |
+| Added | 11178 |
 | Modified | 843 |
 | Deleted | 4807 |
 | Renamed | 1 |
@@ -257,6 +257,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/coverage-a-plus-20260921/t159-ef-transactional-empty-message-id.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t161-durable-message-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t162-inbox-outbox-serializer-identity.md` | Added |  |
+| `.testagent/coverage-a-plus-20260921/t163-inmemory-receive-outbox-identity.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t30-cancellation-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t31-sqs-batch-followup.md` | Added |  |
 | `.testagent/coverage-a-plus-20260921/t32-optional-results-and-leases.md` | Added |  |
@@ -16453,6 +16454,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/OutboxSendEndpointBoundaryTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/PersistentOutboxCancellationHandoffTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxCancellationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxMessageIdentityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxConsumerIdentityTests.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs` | Added |  |

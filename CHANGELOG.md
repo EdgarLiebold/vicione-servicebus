@@ -11,6 +11,14 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Verification added during the source review
 
+- Fixed the classic in-memory receive outbox accepting a serializer-modified
+  outgoing `MessageId`, including `Guid.Empty`. It now snapshots a nonempty ID
+  before serialization and rejects changes after transport text is fully
+  materialized, before appending any message. Four red-first tests cover both
+  immediate and deferred serializer callbacks and prove that a following valid
+  send still appends exactly one record. The complete Core suite passes
+  7,393/7,393; adversarial review found no concrete P1/P2 in the fix.
+
 - Closed another serializer-driven message identity gap in the classic EF
   transactional and receive outboxes and the in-memory reliable inbox. Both EF
   callers now retain the original ID across payload admission; the EF message
