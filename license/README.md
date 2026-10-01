@@ -20,13 +20,21 @@ The overview recognizes Git's content-based renames and also pairs files by the
 known `MassTransit` to `ViciOne.ServiceBus` path change or a C# filename unique
 within the same top-level tree on both sides. It also recognizes one-to-one
 successor projects through the known package naming changes, then matches files
-by relative path or a C# filename unique within that project pair. Benchmark
-projects moved from the old test tree are handled the same way. These matches
+by relative path or a C# filename unique within that project pair. These matches
 express likely file continuity through the large rewrite, not unchanged content.
 Ambiguous files remain additions and removals. A file that has no matching current
 path remains removed even when its old project has a successor; the report groups
-that removal under the successor and shows the original project in the details.
+that removal under the successor within the same top-level tree and shows the
+original project in the details.
 Projects with no unambiguous successor remain under their old name.
+
+The `tests/` trees are a complete replacement. The script never pairs an original
+path under `tests/` with any current path, even when names or content look similar.
+All original test-tree files count as removed; all current test-tree files count
+as added. The Former project column can still show a project-name relationship,
+but it makes no claim that individual tests survived. Original benchmark files
+inside `tests/` likewise remain removals in the `tests` section; the current
+`benchmarks/` files are additions in the `benchmarks` section.
 
 Use `python3 license/repository_diff.py --files` for a tab-separated inventory
 on standard output when a machine-readable format is needed. The line counts
@@ -35,7 +43,9 @@ those are marked `binary` and counted in the project's Binary column. Temporary
 comparison trees are stored outside the repository and deleted after each run.
 
 Use `python3 license/repository_diff.py --patch` for the complete binary-safe Git
-patch. Git's patch format marks only its own similarity matches as renames.
+patch. Its `tests/` portion also shows removals and additions, without rename
+inference. Outside that tree, Git's patch format marks its own similarity matches
+as renames.
 
 [The changelog](../CHANGELOG.md) explains product behavior, removed capabilities,
 and defect corrections.

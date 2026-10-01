@@ -22,6 +22,10 @@ DETAILS_NAME = "REPOSITORY_DIFF_DETAILS.md"
 STATUSES = ("moved", "modified", "added", "removed", "unchanged")
 
 
+def in_test_tree(path: str) -> bool:
+    return path.startswith("tests/")
+
+
 def git(*args: str, input_bytes: bytes | None = None,
         env: dict[str, str] | None = None) -> bytes:
     return subprocess.run(
@@ -150,6 +154,8 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
     methods: Counter[str] = Counter()
 
     def pair(old: str, new: str, method: str) -> None:
+        if in_test_tree(old) or in_test_tree(new):
+            raise ValueError(f"Test trees must remain separate snapshots: {old} -> {new}")
         if old not in old_left or new not in new_left:
             raise ValueError(f"Conflicting file match: {old} -> {new}")
         old_left.remove(old)
@@ -160,17 +166,21 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
         methods[method] += 1
 
     for old, new in renames:
-        pair(old, new, "Git similarity")
+        if not in_test_tree(old) and not in_test_tree(new):
+            pair(old, new, "Git similarity")
     for path in sorted(old_left & new_left):
-        pair(path, path, "same path")
+        if not in_test_tree(path):
+            pair(path, path, "same path")
     for old in sorted(old_left):
         new = old.replace("MassTransit", "ViciOne.ServiceBus")
-        if old != new and new in new_left:
+        if old != new and new in new_left and not in_test_tree(old) and not in_test_tree(new):
             pair(old, new, "product path rename")
 
     # Project identity follows the package naming pattern even when the folder
     # moves into a new area. This does not turn unmatched old files into moves.
     for old_project, new_project in sorted(successors.items()):
+        if in_test_tree(old_project) or in_test_tree(new_project):
+            continue
         if old_project in old_left and new_project in new_left:
             pair(old_project, new_project, "project file rename")
         old_dir, new_dir = old_project.rsplit("/", 1)[0], new_project.rsplit("/", 1)[0]
@@ -194,10 +204,10 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
     old_by_name: dict[str, list[str]] = defaultdict(list)
     new_by_name: dict[str, list[str]] = defaultdict(list)
     for path in old_left:
-        if path.endswith(".cs"):
+        if path.endswith(".cs") and not in_test_tree(path):
             old_by_name[Path(path).name].append(path)
     for path in new_left:
-        if path.endswith(".cs"):
+        if path.endswith(".cs") and not in_test_tree(path):
             new_by_name[Path(path).name].append(path)
     for name in sorted(old_by_name):
         olds, news = old_by_name[name], new_by_name[name]
@@ -205,8 +215,7 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
             continue
         old, new = olds[0], news[0]
         old_root, new_root = old.split("/", 1)[0], new.split("/", 1)[0]
-        benchmark_move = old.startswith("tests/MassTransit.Benchmark") and new_root == "benchmarks"
-        if old_root == new_root or benchmark_move:
+        if old_root == new_root:
             pair(old, new, "unique C# filename")
 
     changes.extend(FileChange(None, path, "") for path in sorted(new_left))
@@ -234,9 +243,14 @@ def assign_projects(changes: list[FileChange], old_files: dict[str, Blob],
             change.old_project = project_for(change.old_path, old_projects)
         path = change.new_path or change.old_path
         assert path is not None
-        change.project = (project_for(change.new_path, new_projects) if change.new_path
-                          else successors.get(change.old_project, change.old_project))
-        change.group = change.project.split("/", 1)[0]
+        if change.new_path:
+            change.project = project_for(change.new_path, new_projects)
+        else:
+            successor = successors.get(change.old_project)
+            old_group = change.old_path.split("/", 1)[0]
+            change.project = (successor if successor and successor.startswith(old_group + "/")
+                              else change.old_project)
+        change.group = path.split("/", 1)[0]
         if change.group not in GROUPS:
             change.group = "other"
 
@@ -315,13 +329,16 @@ def summary(baseline: str, main_ref: str, main: str,
         f"Current main: `{main_ref}` (`{main}`).", "",
         "Every committed file is matched by its path, Git's 50% similarity rule, a known",
         "product path change, a recognized successor project, or a unique C# filename.",
+        "Exception: all paths under `tests/` are treated as a complete replacement: every",
+        "original test-tree file is removed and every current test-tree file is added.",
+        "A matching test project name describes project lineage, not a surviving test file.",
         "Path and filename matches infer continuity; they do not prove identical implementation.",
         "A former project is linked only when its normalized name identifies one current project.",
         "Unmatched old files are grouped under that successor but remain removals. Ambiguous files",
         "remain additions and removals. Changed lines use Git's diff engine on the paired blobs.",
         "Binary changes have no line counts and appear in the Binary column.",
         "Moved files belong to their current project. Removed files belong to a recognized",
-        "successor project, or to their old project if no successor exists.",
+        "successor project in the same top-level tree, or to their old project otherwise.",
         "Paths outside the four product trees appear under Other. The worktree and index are excluded.",
         f"Project successors: {len(successors)}. File matches: {methods['Git similarity']} Git, "
         f"{methods['product path rename']} product path, {methods['project file rename']} project file,",
@@ -329,7 +346,8 @@ def summary(baseline: str, main_ref: str, main: str,
         f"{methods['successor C# filename']} successor-local C# name, "
         f"{methods['unique C# filename']} globally unique C# name.",
         f"[Open the file-level report]({DETAILS_NAME}) for every old/new path and its line diff.",
-        "Use `--files` for TSV or `--patch` for the complete Git patch.", "",
+        "Use `--files` for TSV or `--patch` for the complete Git patch; the test portion",
+        "of that patch also uses delete/add records.", "",
     ]
     grouped = grouped_changes(changes)
     grand = Counter()
@@ -377,8 +395,11 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
         f"Current main: `{main_ref}` (`{main}`).", "",
         f"[Open the project summary]({SUMMARY_NAME}).", "",
         "Each file appears once. Moved files are listed under their current project. Removed",
-        "files are grouped under a recognized successor project, or their old project if none",
-        "exists; their status remains Removed. An old project is shown when it differs from",
+        "files are grouped under a recognized successor in the same top-level tree, or their old",
+        "project otherwise. All original `tests/` paths are Removed and all current `tests/`",
+        "paths are Added, even where project names or filenames are similar. A former test",
+        "project therefore describes package lineage rather than file continuity.",
+        "Removed status is preserved. An old project is shown when it differs from",
         "the current one. Git calculates added and removed lines from each matched blob pair.",
         "A binary change has no line count. Matches based on product paths or unique C# names",
         "infer file continuity and can be checked using the displayed old and current paths.", "",
@@ -447,7 +468,16 @@ def file_rows(changes: list[FileChange]) -> None:
 
 def patch() -> None:
     baseline, _, main = endpoints()
-    subprocess.run(["git", "-C", str(ROOT), *diff_args(baseline, main, "--binary")], check=True)
+    # Keep the patch consistent with the report's complete test-tree replacement.
+    subprocess.run(
+        ["git", "-C", str(ROOT), "-c", "diff.renameLimit=10000", "diff",
+         "--no-ext-diff", "--no-textconv", "--find-renames=50%", "--binary",
+         baseline, main, "--", ".", ":(exclude)tests"], check=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "--no-ext-diff", "--no-textconv",
+         "--no-renames", "--binary", baseline, main, "--", "tests"], check=True,
+    )
 
 
 if __name__ == "__main__":
