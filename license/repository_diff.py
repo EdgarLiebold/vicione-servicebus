@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Compare every committed file in ServiceBus main with upstream MassTransit."""
+"""Report the two committed ServiceBus endpoint trees against MassTransit.
+
+Project identities come only from project files in those two trees. The original
+and current test trees are independent snapshots, even when a path is identical.
+"""
 
 from __future__ import annotations
 
@@ -149,15 +153,22 @@ def git_renames(baseline: str, main: str) -> list[tuple[str, str]]:
 def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
                 renames: list[tuple[str, str]],
                 successors: dict[str, str]) -> tuple[list[FileChange], Counter[str]]:
+    """Pair plausible non-test files; model both test trees as independent snapshots."""
     old_left, new_left = set(old_files), set(new_files)
+    old_tests = {path for path in old_left if in_test_tree(path)}
+    new_tests = {path for path in new_left if in_test_tree(path)}
+    old_left.difference_update(old_tests)
+    new_left.difference_update(new_tests)
     changes: list[FileChange] = []
     methods: Counter[str] = Counter()
 
     def pair(old: str, new: str, method: str) -> None:
-        if in_test_tree(old) or in_test_tree(new):
-            raise ValueError(f"Test trees must remain separate snapshots: {old} -> {new}")
+        # A competing or cross-area match is uncertain. Unmatched paths later
+        # become explicit Added/Removed records in their respective areas.
         if old not in old_left or new not in new_left:
-            raise ValueError(f"Conflicting file match: {old} -> {new}")
+            return
+        if old.split("/", 1)[0] != new.split("/", 1)[0]:
+            return
         old_left.remove(old)
         new_left.remove(new)
         changes.append(FileChange(old, new, method,
@@ -166,21 +177,17 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
         methods[method] += 1
 
     for old, new in renames:
-        if not in_test_tree(old) and not in_test_tree(new):
-            pair(old, new, "Git similarity")
+        pair(old, new, "Git similarity")
     for path in sorted(old_left & new_left):
-        if not in_test_tree(path):
-            pair(path, path, "same path")
+        pair(path, path, "same path")
     for old in sorted(old_left):
         new = old.replace("MassTransit", "ViciOne.ServiceBus")
-        if old != new and new in new_left and not in_test_tree(old) and not in_test_tree(new):
+        if old != new and new in new_left:
             pair(old, new, "product path rename")
 
     # Project identity follows the package naming pattern even when the folder
     # moves into a new area. This does not turn unmatched old files into moves.
     for old_project, new_project in sorted(successors.items()):
-        if in_test_tree(old_project) or in_test_tree(new_project):
-            continue
         if old_project in old_left and new_project in new_left:
             pair(old_project, new_project, "project file rename")
         old_dir, new_dir = old_project.rsplit("/", 1)[0], new_project.rsplit("/", 1)[0]
@@ -204,10 +211,10 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
     old_by_name: dict[str, list[str]] = defaultdict(list)
     new_by_name: dict[str, list[str]] = defaultdict(list)
     for path in old_left:
-        if path.endswith(".cs") and not in_test_tree(path):
+        if path.endswith(".cs"):
             old_by_name[Path(path).name].append(path)
     for path in new_left:
-        if path.endswith(".cs") and not in_test_tree(path):
+        if path.endswith(".cs"):
             new_by_name[Path(path).name].append(path)
     for name in sorted(old_by_name):
         olds, news = old_by_name[name], new_by_name[name]
@@ -220,6 +227,10 @@ def match_files(old_files: dict[str, Blob], new_files: dict[str, Blob],
 
     changes.extend(FileChange(None, path, "") for path in sorted(new_left))
     changes.extend(FileChange(path, None, "") for path in sorted(old_left))
+    # Add every original test as Removed and every current test as Added,
+    # including identical paths and identical blobs in the two snapshots.
+    changes.extend(FileChange(None, path, "") for path in sorted(new_tests))
+    changes.extend(FileChange(path, None, "") for path in sorted(old_tests))
     return changes, methods
 
 
@@ -303,51 +314,18 @@ def collect() -> tuple[str, str, str, list[FileChange], Counter[str], dict[str, 
     successors = project_successors(old_files, new_files)
     changes, methods = match_files(old_files, new_files, git_renames(baseline, main), successors)
     assign_projects(changes, old_files, new_files, successors)
-    validate_test_replacement(changes, old_files, new_files)
-    validate_project_attribution(changes, old_files, new_files)
     count_lines(changes, old_files, new_files)
     return baseline, main_ref, main, changes, methods, successors
-
-
-def validate_test_replacement(changes: list[FileChange], old_files: dict[str, Blob],
-                              new_files: dict[str, Blob]) -> None:
-    original = [change for change in changes if change.group == "tests" and change.old_path]
-    current = [change for change in changes if change.group == "tests" and change.new_path]
-    original_paths = {path for path in old_files if in_test_tree(path)}
-    current_paths = {path for path in new_files if in_test_tree(path)}
-    if (len(original) != len(original_paths)
-            or {change.old_path for change in original} != original_paths
-            or len(current) != len(current_paths)
-            or {change.new_path for change in current} != current_paths
-            or any(change.old_project or test_snapshot(change) != "original"
-                   for change in original)
-            or any(change.old_project or test_snapshot(change) != "current"
-                   for change in current)):
-        raise ValueError("Every original test must be removed and every current test added without a former project")
-
-
-def validate_project_attribution(changes: list[FileChange], old_files: dict[str, Blob],
-                                 new_files: dict[str, Blob]) -> None:
-    project_suffixes = (".csproj", ".fsproj", ".vbproj")
-    for change in changes:
-        if change.project.endswith(project_suffixes):
-            exists_now = change.project in new_files
-            exists_before = change.new_path is None and change.project in old_files
-            if not (exists_now or exists_before):
-                raise ValueError(f"Reported project exists in neither relevant Git tree: {change.project}")
 
 
 def test_snapshot(change: FileChange) -> str:
     if change.group != "tests":
         return ""
-    if change.old_path and not change.new_path:
-        return "original"
-    if change.new_path and not change.old_path:
-        return "current"
-    raise ValueError(f"Test snapshots must not be paired: {change.old_path} -> {change.new_path}")
+    return "original" if change.old_path else "current"
 
 
 def grouped_changes(changes: list[FileChange]) -> dict[str, dict[tuple[str, str], list[FileChange]]]:
+    """Keep original and current test projects distinct, including shared paths."""
     grouped: dict[str, dict[tuple[str, str], list[FileChange]]] = defaultdict(lambda: defaultdict(list))
     for change in changes:
         grouped[change.group][(test_snapshot(change), change.project)].append(change)
@@ -362,6 +340,27 @@ def file_totals(changes: list[FileChange]) -> Counter[str]:
     return totals
 
 
+def project_states(changes: list[FileChange], successors: dict[str, str]) -> dict[str, str | None]:
+    """Classify project identities at the two endpoints, not individual file moves."""
+    suffixes = (".csproj", ".fsproj", ".vbproj")
+    original = {change.old_project for change in changes
+                if change.old_path and change.old_path.endswith(suffixes) and change.group != "tests"}
+    current = {change.project for change in changes
+               if change.new_path and change.new_path.endswith(suffixes) and change.group != "tests"}
+    predecessors = set(successors.values())
+    projects = {change.project for change in changes if change.group != "tests"}
+    states: dict[str, str | None] = {}
+    for project in projects:
+        if project in current:
+            states[project] = "Modified" if project in original or project in predecessors else "New"
+        elif project in original:
+            states[project] = "Removed"
+        else:
+            # Shared files are not project assemblies and get no project state.
+            states[project] = None
+    return states
+
+
 def summary(baseline: str, main_ref: str, main: str,
             changes: list[FileChange], methods: Counter[str],
             successors: dict[str, str]) -> str:
@@ -374,7 +373,10 @@ def summary(baseline: str, main_ref: str, main: str,
         "product path change, a recognized successor project, or a unique C# filename.",
         "Exception: all paths under `tests/` are treated as a complete replacement: every",
         "original test-tree file is removed and every current test-tree file is added.",
-        "The original test suite is counted separately; only current test projects have project rows.",
+        "Every original test project is listed as Removed; every current test project as New.",
+        "No test project or test file is linked to a predecessor.",
+        "Project State describes assembly identity: a New project may contain moved files.",
+        "Files crossing top-level areas count as Removed in the old area and Added in the new.",
         "Path and filename matches infer continuity; they do not prove identical implementation.",
         "A former project is linked only to a unique successor present in current main.",
         "Original projects without a current successor stay under their original name.",
@@ -394,6 +396,7 @@ def summary(baseline: str, main_ref: str, main: str,
         "of that patch also uses delete/add records.", "",
     ]
     grouped = grouped_changes(changes)
+    states = project_states(changes, successors)
     group_totals = {}
     for group in GROUPS:
         group_totals[group] = file_totals([change for change in changes if change.group == group])
@@ -413,28 +416,34 @@ def summary(baseline: str, main_ref: str, main: str,
     for group in GROUPS:
         lines.extend((f"## {group}", ""))
         if group == "tests":
-            original = [change for change in changes if change.group == group and change.old_path]
-            counts = file_totals(original)
-            lines.extend((f"Original test suite removed: **{counts['removed']:,} files**, "
-                          f"**{counts['minus']:,} lines**. Current test projects:", "",
-                          "| Current test project | Added files | + lines | Binary |",
-                          "|---|---:|---:|---:|"))
-            for (snapshot, project), files in sorted(grouped[group].items()):
-                if snapshot != "current":
-                    continue
-                counts = file_totals(files)
-                lines.append(f"| {markdown_cell(display_project(project))} | "
-                             f"{counts['added']} | {counts['plus']} | {counts['binary']} |")
-            lines.append("")
+            for snapshot, heading, state in (("original", "Original test projects", "Removed"),
+                                             ("current", "Current test projects", "New")):
+                lines.extend((f"### {heading}", "",
+                              "| Project / shared area | State | Added files | Removed files | + lines | - lines | Binary |",
+                              "|---|---|---:|---:|---:|---:|---:|"))
+                snapshot_total = Counter()
+                for (kind, project), files in sorted(grouped[group].items()):
+                    if kind != snapshot:
+                        continue
+                    counts = file_totals(files)
+                    snapshot_total.update(counts)
+                    row_state = state if project.endswith((".csproj", ".fsproj", ".vbproj")) else "—"
+                    lines.append(f"| {markdown_cell(display_project(project))} | {row_state} | "
+                                 f"{counts['added']} | {counts['removed']} | "
+                                 f"{counts['plus']} | {counts['minus']} | {counts['binary']} |")
+                lines.append(f"| **{heading} total** | **{state}** | **{snapshot_total['added']}** | "
+                             f"**{snapshot_total['removed']}** | **{snapshot_total['plus']}** | "
+                             f"**{snapshot_total['minus']}** | **{snapshot_total['binary']}** |")
+                lines.append("")
             continue
-        lines.extend(("| Project | State | Former project | Added files | Modified files | Removed files | Moved files | "
+        lines.extend(("| Project / shared area | State | Former project | Added files | Modified files | Removed files | Moved files | "
                       "Unchanged files | + lines | - lines | Binary |",
                       "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"))
         group_total = Counter()
         for (_, project), files in sorted(grouped[group].items()):
             counts = file_totals(files)
             group_total.update(counts)
-            state = "Removed" if all(change.new_path is None for change in files) else "Current"
+            state = states[project] or "—"
             lines.append(f"| {markdown_cell(display_project(project))} | {state} | "
                          f"{markdown_cell(display_project(predecessors[project])) if project in predecessors else '—'} | "
                          f"{counts['added']} | {counts['modified']} | "

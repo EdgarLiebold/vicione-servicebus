@@ -7,8 +7,12 @@ commit and writes two current reports to the ignored `artifacts/policy` director
 - `REPOSITORY_DIFF.md` starts with repository totals, then summarizes file status
   and added/removed lines by project in separate `src`, `tests`, `samples`,
   `benchmarks`, and other sections. Project rows show directories without a
-  `.csproj` suffix. Outside `tests/`, the State column distinguishes current
-  from removed packages, and Former project identifies a recorded predecessor.
+  `.csproj` suffix. Project State is `New` for a project present only in `main`,
+  `Modified` for a project with an unambiguous original predecessor, and
+  `Removed` for a project present only in the original tree. Shared-file rows
+  are not projects and have no project State. Former project appears only for
+  unambiguous current project successors outside `tests/`. State describes
+  project identity, so a New project can contain files moved from old modules.
 - `REPOSITORY_DIFF_DETAILS.md` lists every file under its area, project, and status.
   Outside `tests/`, each row shows the old and current path, any old project,
   added/removed lines, and how the paths were matched. Test rows show one path
@@ -35,16 +39,24 @@ Current `ViciOne.ServiceBus` projects must exist in `main`. An original project
 without a current successor remains under its original MassTransit name and is
 marked Removed. Historical interim names are not endpoints of this comparison.
 
-The `tests/` trees are a complete replacement. The script never pairs an original
-path under `tests/` with any current path, even when names or content look similar.
+The `tests/` trees are a complete replacement. The script removes both test
+trees from file matching and always emits independent records for their paths,
+even when names or content look similar.
 All original test-tree files count as removed; all current test-tree files count
-as added. No test file has a Former project. The summary counts the original
-suite separately and lists only current test projects. The file-level report
-separates original and current tests and has no predecessor column for them.
+as added. No test file has a Former project. The summary lists every original
+test project as `Removed` and every current test project as `New`, in separate
+tables with separate totals. The file-level report likewise separates both
+snapshots and has no predecessor column for tests.
 The `--files` inventory marks each test row as `original` or `current` and leaves
 its `old_project` field empty. Original benchmark files
 inside `tests/` likewise remain removals in the `tests` section; the current
 `benchmarks/` files are additions in the `benchmarks` section.
+
+A file moving between `src`, `tests`, `samples`, `benchmarks`, or the remaining
+repository area counts as removed from its old area and added to its new area.
+A rejected pairing may still be selected by a later, unambiguous rule; paths
+left unmatched by all rules are shown separately. Neither case stops report
+generation.
 
 Use `python3 license/repository_diff.py --files` for a tab-separated inventory
 on standard output when a machine-readable format is needed. The line counts
