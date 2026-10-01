@@ -7,12 +7,13 @@ commit and writes two current reports to the ignored `artifacts/policy` director
 - `REPOSITORY_DIFF.md` starts with repository totals, then summarizes file status
   and added/removed lines by project in separate `src`, `tests`, `samples`,
   `benchmarks`, and other sections. Project rows show directories without a
-  `.csproj` suffix. The State column distinguishes current from removed packages.
-  The Former project column identifies the original MassTransit project where
-  a unique relationship is recorded.
+  `.csproj` suffix. Outside `tests/`, the State column distinguishes current
+  from removed packages, and Former project identifies a recorded predecessor.
 - `REPOSITORY_DIFF_DETAILS.md` lists every file under its area, project, and status.
-  Each row shows the old and current path, any old project, added/removed lines,
-  and how the paths were matched. The reports link to each other.
+  Outside `tests/`, each row shows the old and current path, any old project,
+  added/removed lines, and how the paths were matched. Test rows show one path
+  and its added or removed lines in separate original and current sections.
+  The reports link to each other.
 
 Use `--output-dir PATH` to write both reports elsewhere. A relative path is
 resolved from the repository root. Existing reports with these names are replaced
@@ -39,9 +40,11 @@ old name.
 The `tests/` trees are a complete replacement. The script never pairs an original
 path under `tests/` with any current path, even when names or content look similar.
 All original test-tree files count as removed; all current test-tree files count
-as added. The summary groups the original tests in one removed suite row and
-lists only current test projects individually. The file-level report preserves
-the original test project paths in a separate historical subsection. Original benchmark files
+as added. No test file has a Former project. The summary counts the original
+suite separately and lists only current test projects. The file-level report
+separates original and current tests and has no predecessor column for them.
+The `--files` inventory marks each test row as `original` or `current` and leaves
+its `old_project` field empty. Original benchmark files
 inside `tests/` likewise remain removals in the `tests` section; the current
 `benchmarks/` files are additions in the `benchmarks` section.
 

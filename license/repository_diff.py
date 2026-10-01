@@ -256,17 +256,20 @@ def assign_projects(changes: list[FileChange], old_files: dict[str, Blob],
     new_projects = sorted(((p.rsplit("/", 1)[0], p) for p in new_files if p.endswith(suffixes)),
                           key=lambda item: len(item[0]), reverse=True)
     for change in changes:
-        if change.old_path:
+        if change.old_path and not in_test_tree(change.old_path):
             change.old_project = project_for(change.old_path, old_projects)
         path = change.new_path or change.old_path
         assert path is not None
         if change.new_path:
             change.project = project_for(change.new_path, new_projects)
         else:
-            successor = successors.get(change.old_project) or retired.get(change.old_project)
             old_group = change.old_path.split("/", 1)[0]
-            change.project = (successor if successor and successor.startswith(old_group + "/")
-                              else change.old_project)
+            if old_group == "tests":
+                change.project = project_for(change.old_path, old_projects)
+            else:
+                successor = successors.get(change.old_project) or retired.get(change.old_project)
+                change.project = (successor if successor and successor.startswith(old_group + "/")
+                                  else change.old_project)
         change.group = path.split("/", 1)[0]
         if change.group not in GROUPS:
             change.group = "other"
@@ -318,14 +321,42 @@ def collect() -> tuple[str, str, str, list[FileChange], Counter[str], dict[str, 
     retired = retired_project_paths(main, old_files, new_files, successors)
     changes, methods = match_files(old_files, new_files, git_renames(baseline, main), successors)
     assign_projects(changes, old_files, new_files, successors, retired)
+    validate_test_replacement(changes, old_files, new_files)
     count_lines(changes, old_files, new_files)
     return baseline, main_ref, main, changes, methods, successors, retired
 
 
-def grouped_changes(changes: list[FileChange]) -> dict[str, dict[str, list[FileChange]]]:
-    grouped: dict[str, dict[str, list[FileChange]]] = defaultdict(lambda: defaultdict(list))
+def validate_test_replacement(changes: list[FileChange], old_files: dict[str, Blob],
+                              new_files: dict[str, Blob]) -> None:
+    original = [change for change in changes if change.group == "tests" and change.old_path]
+    current = [change for change in changes if change.group == "tests" and change.new_path]
+    original_paths = {path for path in old_files if in_test_tree(path)}
+    current_paths = {path for path in new_files if in_test_tree(path)}
+    if (len(original) != len(original_paths)
+            or {change.old_path for change in original} != original_paths
+            or len(current) != len(current_paths)
+            or {change.new_path for change in current} != current_paths
+            or any(change.old_project or test_snapshot(change) != "original"
+                   for change in original)
+            or any(change.old_project or test_snapshot(change) != "current"
+                   for change in current)):
+        raise ValueError("Every original test must be removed and every current test added without a former project")
+
+
+def test_snapshot(change: FileChange) -> str:
+    if change.group != "tests":
+        return ""
+    if change.old_path and not change.new_path:
+        return "original"
+    if change.new_path and not change.old_path:
+        return "current"
+    raise ValueError(f"Test snapshots must not be paired: {change.old_path} -> {change.new_path}")
+
+
+def grouped_changes(changes: list[FileChange]) -> dict[str, dict[tuple[str, str], list[FileChange]]]:
+    grouped: dict[str, dict[tuple[str, str], list[FileChange]]] = defaultdict(lambda: defaultdict(list))
     for change in changes:
-        grouped[change.group][change.project].append(change)
+        grouped[change.group][(test_snapshot(change), change.project)].append(change)
     return grouped
 
 
@@ -349,7 +380,7 @@ def summary(baseline: str, main_ref: str, main: str,
         "product path change, a recognized successor project, or a unique C# filename.",
         "Exception: all paths under `tests/` are treated as a complete replacement: every",
         "original test-tree file is removed and every current test-tree file is added.",
-        "The original test suite is shown as one removed row; current test projects are additions.",
+        "The original test suite is counted separately; only current test projects have project rows.",
         "Path and filename matches infer continuity; they do not prove identical implementation.",
         "A former project is linked to a unique current successor or a retired interim project",
         "recorded on main. An interim project is explicitly marked Removed.",
@@ -387,25 +418,27 @@ def summary(baseline: str, main_ref: str, main: str,
                  f"**{grand['plus']:,}** | **{grand['minus']:,}** | **{grand['binary']:,}** |")
     lines.append("")
     for group in GROUPS:
-        lines.extend((f"## {group}", "",
-                      "| Project | State | Former project | Added files | Modified files | Removed files | Moved files | "
+        lines.extend((f"## {group}", ""))
+        if group == "tests":
+            original = [change for change in changes if change.group == group and change.old_path]
+            counts = file_totals(original)
+            lines.extend((f"Original test suite removed: **{counts['removed']:,} files**, "
+                          f"**{counts['minus']:,} lines**. Current test projects:", "",
+                          "| Current test project | Added files | + lines | Binary |",
+                          "|---|---:|---:|---:|"))
+            for (snapshot, project), files in sorted(grouped[group].items()):
+                if snapshot != "current":
+                    continue
+                counts = file_totals(files)
+                lines.append(f"| {markdown_cell(display_project(project))} | "
+                             f"{counts['added']} | {counts['plus']} | {counts['binary']} |")
+            lines.append("")
+            continue
+        lines.extend(("| Project | State | Former project | Added files | Modified files | Removed files | Moved files | "
                       "Unchanged files | + lines | - lines | Binary |",
                       "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"))
         group_total = Counter()
-        projects = grouped[group]
-        if group == "tests":
-            removed_tests = [change for files in projects.values() for change in files
-                             if change.old_path is not None]
-            projects = {project: [change for change in files if change.new_path is not None]
-                        for project, files in projects.items()}
-            projects = {project: files for project, files in projects.items() if files}
-            counts = file_totals(removed_tests)
-            group_total.update(counts)
-            lines.append(f"| Original MassTransit test suite | Removed | — | "
-                         f"{counts['added']} | {counts['modified']} | {counts['removed']} | "
-                         f"{counts['moved']} | {counts['unchanged']} | "
-                         f"{counts['plus']} | {counts['minus']} | {counts['binary']} |")
-        for project, files in sorted(projects.items()):
+        for (_, project), files in sorted(grouped[group].items()):
             counts = file_totals(files)
             group_total.update(counts)
             state = "Removed" if all(change.new_path is None for change in files) else "Current"
@@ -441,13 +474,15 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
         f"Original source: `{BASELINE_TAG}` (`{baseline}`).",
         f"Current main: `{main_ref}` (`{main}`).", "",
         f"[Open the project summary]({SUMMARY_NAME}).", "",
-        "Each file appears once. Moved files are listed under their current project. Removed",
+        "Each comparison record appears once. Moved files are listed under their current project. Removed",
         "files are grouped under a recognized successor in the same top-level tree, or their old",
         "project otherwise. All original `tests/` paths are Removed and all current `tests/`",
         "paths are Added, even where project names or filenames are similar. Original",
-        "test projects and current test projects appear in separate subsections.",
-        "Removed status is preserved. An old project is shown when it differs from",
-        "the current one. Git calculates added and removed lines from each matched blob pair.",
+        "test projects and current test projects appear in separate subsections without",
+        "a predecessor relationship. A path present in both test snapshots appears once in",
+        "each subsection. Removed status is preserved. Outside `tests/`, an old",
+        "project is shown when it differs from the current one. Git calculates added and",
+        "removed lines from each matched blob pair.",
         "A binary change has no line count. Matches based on product paths or unique C# names",
         "infer file continuity and can be checked using the displayed old and current paths.", "",
         "Groups: " + " · ".join(f"[{group}](#{group})" for group in GROUPS) + ".", "",
@@ -459,26 +494,22 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
         lines.extend((f"## {group}", "",
                       f"{len(group_files)} files; +{group_total['plus']} / -{group_total['minus']} "
                       f"lines; {group_total['binary']} binary changes.", ""))
-        project_items = sorted(grouped[group].items())
-        if group == "tests":
-            originals = [(project, [change for change in files if change.old_path is not None])
-                         for project, files in project_items]
-            current = [(project, [change for change in files if change.new_path is not None])
-                       for project, files in project_items]
-            project_items = [(project, files) for project, files in originals + current if files]
+        project_items = sorted(grouped[group].items(),
+                               key=lambda item: ({"original": 0, "current": 1}.get(item[0][0], 0), item[0][1]))
         previous_test_section = None
-        for project, files in project_items:
+        for (snapshot, project), files in project_items:
             if group == "tests":
-                test_section = "Current test projects" if any(change.new_path for change in files) else "Original test projects (removed)"
+                test_section = ("Original test projects (removed)" if snapshot == "original"
+                                else "Current test projects (added)")
                 if test_section != previous_test_section:
                     lines.extend((f"### {test_section}", ""))
                     previous_test_section = test_section
             totals = file_totals(files)
             lines.extend((f"#### {markdown_cell(display_project(project))}" if group == "tests"
                           else f"### {markdown_cell(display_project(project))}", ""))
-            if project in predecessors:
-                lines.extend((f"Former project: {markdown_cell(predecessors[project])}.", ""))
-            if project in retired.values():
+            if group != "tests" and project in predecessors:
+                lines.extend((f"Former project: {markdown_cell(display_project(predecessors[project]))}.", ""))
+            if group != "tests" and project in retired.values():
                 lines.extend(("Retired interim project on main; this path is absent from current main.", ""))
             lines.extend((f"{len(files)} files; +{totals['plus']} / -{totals['minus']} lines; "
                           f"{totals['binary']} binary changes.", ""))
@@ -488,18 +519,26 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
                 if not members:
                     continue
                 level = "#####" if group == "tests" else "####"
-                lines.extend((f"{level} {status.title()} ({len(members)})", "",
-                              "| Old path | Current path | Old project if different | + lines | - lines | Match |",
-                              "|---|---|---|---:|---:|---|"))
+                lines.extend((f"{level} {status.title()} ({len(members)})", ""))
+                if group == "tests":
+                    lines.extend(("| File path | + lines | - lines |",
+                                  "|---|---:|---:|"))
+                else:
+                    lines.extend(("| Old path | Current path | Old project if different | + lines | - lines | Match |",
+                                  "|---|---|---|---:|---:|---|"))
                 for change in members:
-                    old_project = (change.old_project if change.old_project != change.project
-                                   else None)
                     plus = change.added_lines if change.added_lines is not None else "binary"
                     minus = change.deleted_lines if change.deleted_lines is not None else "binary"
-                    lines.append(f"| {markdown_cell(change.old_path)} | "
-                                 f"{markdown_cell(change.new_path)} | "
-                                 f"{markdown_cell(old_project)} | {plus} | {minus} | "
-                                 f"{markdown_cell(change.match)} |")
+                    if group == "tests":
+                        path = change.old_path if snapshot == "original" else change.new_path
+                        lines.append(f"| {markdown_cell(path)} | {plus} | {minus} |")
+                    else:
+                        old_project = (change.old_project if change.old_project != change.project
+                                       else None)
+                        lines.append(f"| {markdown_cell(change.old_path)} | "
+                                     f"{markdown_cell(change.new_path)} | "
+                                     f"{markdown_cell(old_project)} | {plus} | {minus} | "
+                                     f"{markdown_cell(change.match)} |")
                 lines.append("")
     return "\n".join(lines)
 
@@ -519,11 +558,12 @@ def write_reports(output_dir: Path, summary_text: str, details_text: str) -> tup
 
 def file_rows(changes: list[FileChange]) -> None:
     writer = csv.writer(sys.stdout, dialect="excel-tab", lineterminator="\n")
-    writer.writerow(("group", "project", "status", "old_project", "old_path", "new_path",
+    writer.writerow(("group", "snapshot", "project", "status", "old_project", "old_path", "new_path",
                      "added_lines", "deleted_lines", "match"))
     for change in sorted(changes, key=lambda c: (GROUPS.index(c.group), c.project,
                                                   c.new_path or c.old_path or "")):
-        writer.writerow((change.group, change.project, change.status, change.old_project,
+        writer.writerow((change.group, test_snapshot(change), change.project, change.status,
+                         change.old_project,
                          change.old_path or "", change.new_path or "",
                          change.added_lines if change.added_lines is not None else "binary",
                          change.deleted_lines if change.deleted_lines is not None else "binary",
