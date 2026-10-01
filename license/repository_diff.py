@@ -103,8 +103,8 @@ def tree_files(ref: str) -> dict[str, Blob]:
 def project_successors(old_files: dict[str, Blob], new_files: dict[str, Blob]) -> dict[str, str]:
     """Match project identities only when the known naming change is unambiguous."""
     suffixes = (".csproj", ".fsproj", ".vbproj")
-    old_projects = (path for path in old_files if path.endswith(suffixes))
-    new_projects = (path for path in new_files if path.endswith(suffixes))
+    old_projects = (path for path in old_files if path.endswith(suffixes) and not in_test_tree(path))
+    new_projects = (path for path in new_files if path.endswith(suffixes) and not in_test_tree(path))
     by_current_name: dict[str, list[str]] = defaultdict(list)
     by_old_name: dict[str, list[str]] = defaultdict(list)
     for path in new_projects:
@@ -127,6 +127,22 @@ def project_successors(old_files: dict[str, Blob], new_files: dict[str, Blob]) -
         if len(old_paths) == len(new_paths) == 1 and old_paths[0] != new_paths[0]:
             successors[old_paths[0]] = new_paths[0]
     return successors
+
+
+def retired_project_paths(main: str, old_files: dict[str, Blob],
+                          new_files: dict[str, Blob],
+                          successors: dict[str, str]) -> dict[str, str]:
+    """Find interim project names on main for packages removed before HEAD."""
+    history = set(decoded(git("log", main, "--name-only", "--format=", "--",
+                              ":(glob)**/*.csproj")).splitlines())
+    retired = {}
+    for old in old_files:
+        if not old.startswith("src/") or not old.endswith(".csproj") or old in successors:
+            continue
+        interim = old.replace("MassTransit", "ViciOne.ServiceBus")
+        if interim != old and interim in history and interim not in new_files:
+            retired[old] = interim
+    return retired
 
 
 def git_renames(baseline: str, main: str) -> list[tuple[str, str]]:
@@ -232,7 +248,8 @@ def project_for(path: str, projects: list[tuple[str, str]]) -> str:
 
 
 def assign_projects(changes: list[FileChange], old_files: dict[str, Blob],
-                    new_files: dict[str, Blob], successors: dict[str, str]) -> None:
+                    new_files: dict[str, Blob], successors: dict[str, str],
+                    retired: dict[str, str]) -> None:
     suffixes = (".csproj", ".fsproj", ".vbproj")
     old_projects = sorted(((p.rsplit("/", 1)[0], p) for p in old_files if p.endswith(suffixes)),
                           key=lambda item: len(item[0]), reverse=True)
@@ -246,7 +263,7 @@ def assign_projects(changes: list[FileChange], old_files: dict[str, Blob],
         if change.new_path:
             change.project = project_for(change.new_path, new_projects)
         else:
-            successor = successors.get(change.old_project)
+            successor = successors.get(change.old_project) or retired.get(change.old_project)
             old_group = change.old_path.split("/", 1)[0]
             change.project = (successor if successor and successor.startswith(old_group + "/")
                               else change.old_project)
@@ -294,14 +311,15 @@ def count_lines(changes: list[FileChange], old_files: dict[str, Blob],
         change.deleted_lines = int(deleted) if deleted != b"-" else None
 
 
-def collect() -> tuple[str, str, str, list[FileChange], Counter[str], dict[str, str]]:
+def collect() -> tuple[str, str, str, list[FileChange], Counter[str], dict[str, str], dict[str, str]]:
     baseline, main_ref, main = endpoints()
     old_files, new_files = tree_files(baseline), tree_files(main)
     successors = project_successors(old_files, new_files)
+    retired = retired_project_paths(main, old_files, new_files, successors)
     changes, methods = match_files(old_files, new_files, git_renames(baseline, main), successors)
-    assign_projects(changes, old_files, new_files, successors)
+    assign_projects(changes, old_files, new_files, successors, retired)
     count_lines(changes, old_files, new_files)
-    return baseline, main_ref, main, changes, methods, successors
+    return baseline, main_ref, main, changes, methods, successors, retired
 
 
 def grouped_changes(changes: list[FileChange]) -> dict[str, dict[str, list[FileChange]]]:
@@ -321,8 +339,8 @@ def file_totals(changes: list[FileChange]) -> Counter[str]:
 
 def summary(baseline: str, main_ref: str, main: str,
             changes: list[FileChange], methods: Counter[str],
-            successors: dict[str, str]) -> str:
-    predecessors = {current: old for old, current in successors.items()}
+            successors: dict[str, str], retired: dict[str, str]) -> str:
+    predecessors = {current: old for old, current in (successors | retired).items()}
     lines = [
         "# Current repository change overview", "",
         f"Original source: `{BASELINE_TAG}` (`{baseline}`).",
@@ -331,16 +349,18 @@ def summary(baseline: str, main_ref: str, main: str,
         "product path change, a recognized successor project, or a unique C# filename.",
         "Exception: all paths under `tests/` are treated as a complete replacement: every",
         "original test-tree file is removed and every current test-tree file is added.",
-        "A matching test project name describes project lineage, not a surviving test file.",
+        "The original test suite is shown as one removed row; current test projects are additions.",
         "Path and filename matches infer continuity; they do not prove identical implementation.",
-        "A former project is linked only when its normalized name identifies one current project.",
+        "A former project is linked to a unique current successor or a retired interim project",
+        "recorded on main. An interim project is explicitly marked Removed.",
         "Unmatched old files are grouped under that successor but remain removals. Ambiguous files",
         "remain additions and removals. Changed lines use Git's diff engine on the paired blobs.",
         "Binary changes have no line counts and appear in the Binary column.",
         "Moved files belong to their current project. Removed files belong to a recognized",
         "successor project in the same top-level tree, or to their old project otherwise.",
         "Paths outside the four product trees appear under Other. The worktree and index are excluded.",
-        f"Project successors: {len(successors)}. File matches: {methods['Git similarity']} Git, "
+        f"Current project successors: {len(successors)}; retired interim projects: {len(retired)}. "
+        f"File matches: {methods['Git similarity']} Git, "
         f"{methods['product path rename']} product path, {methods['project file rename']} project file,",
         f"{methods['successor relative path']} successor-relative path, "
         f"{methods['successor C# filename']} successor-local C# name, "
@@ -350,34 +370,61 @@ def summary(baseline: str, main_ref: str, main: str,
         "of that patch also uses delete/add records.", "",
     ]
     grouped = grouped_changes(changes)
-    grand = Counter()
+    group_totals = {}
+    for group in GROUPS:
+        group_totals[group] = file_totals([change for change in changes if change.group == group])
+    grand = file_totals(changes)
+    lines.extend(("## Repository totals", "",
+                  "| Area | Added | Modified | Removed | Moved | Unchanged | + lines | - lines | Binary |",
+                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|"))
+    for group in GROUPS:
+        counts = group_totals[group]
+        lines.append(f"| {group} | {counts['added']:,} | {counts['modified']:,} | "
+                     f"{counts['removed']:,} | {counts['moved']:,} | {counts['unchanged']:,} | "
+                     f"{counts['plus']:,} | {counts['minus']:,} | {counts['binary']:,} |")
+    lines.append(f"| **Repository total** | **{grand['added']:,}** | **{grand['modified']:,}** | "
+                 f"**{grand['removed']:,}** | **{grand['moved']:,}** | **{grand['unchanged']:,}** | "
+                 f"**{grand['plus']:,}** | **{grand['minus']:,}** | **{grand['binary']:,}** |")
+    lines.append("")
     for group in GROUPS:
         lines.extend((f"## {group}", "",
-                      "| Project | Former project | Added files | Modified files | Removed files | Moved files | "
+                      "| Project | State | Former project | Added files | Modified files | Removed files | Moved files | "
                       "Unchanged files | + lines | - lines | Binary |",
-                      "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"))
+                      "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"))
         group_total = Counter()
-        for project, files in sorted(grouped[group].items()):
+        projects = grouped[group]
+        if group == "tests":
+            removed_tests = [change for files in projects.values() for change in files
+                             if change.old_path is not None]
+            projects = {project: [change for change in files if change.new_path is not None]
+                        for project, files in projects.items()}
+            projects = {project: files for project, files in projects.items() if files}
+            counts = file_totals(removed_tests)
+            group_total.update(counts)
+            lines.append(f"| Original MassTransit test suite | Removed | — | "
+                         f"{counts['added']} | {counts['modified']} | {counts['removed']} | "
+                         f"{counts['moved']} | {counts['unchanged']} | "
+                         f"{counts['plus']} | {counts['minus']} | {counts['binary']} |")
+        for project, files in sorted(projects.items()):
             counts = file_totals(files)
             group_total.update(counts)
-            lines.append(f"| {markdown_cell(project)} | "
-                         f"{markdown_cell(predecessors.get(project))} | "
+            state = "Removed" if all(change.new_path is None for change in files) else "Current"
+            lines.append(f"| {markdown_cell(display_project(project))} | {state} | "
+                         f"{markdown_cell(display_project(predecessors[project])) if project in predecessors else '—'} | "
                          f"{counts['added']} | {counts['modified']} | "
                          f"{counts['removed']} | {counts['moved']} | {counts['unchanged']} | "
                          f"{counts['plus']} | {counts['minus']} | {counts['binary']} |")
-        grand.update(group_total)
-        lines.append(f"| **{group} total** | — | **{group_total['added']}** | "
+        lines.append(f"| **{group} total** | — | — | **{group_total['added']}** | "
                      f"**{group_total['modified']}** | **{group_total['removed']}** | "
                      f"**{group_total['moved']}** | **{group_total['unchanged']}** | "
                      f"**{group_total['plus']}** | **{group_total['minus']}** | "
                      f"**{group_total['binary']}** |")
         lines.append("")
-    lines.append(f"**Repository total:** {grand['added']} added, {grand['modified']} modified, "
-                 f"{grand['removed']} removed, {grand['moved']} moved, "
-                 f"{grand['unchanged']} unchanged files; +{grand['plus']} / -{grand['minus']} lines; "
-                 f"{grand['binary']} binary changes.")
-    lines.append("")
     return "\n".join(lines)
+
+
+def display_project(project: str) -> str:
+    return str(Path(project).parent) if project.endswith((".csproj", ".fsproj", ".vbproj")) else project
 
 
 def markdown_cell(value: str | None) -> str:
@@ -387,8 +434,8 @@ def markdown_cell(value: str | None) -> str:
 
 
 def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
-            successors: dict[str, str]) -> str:
-    predecessors = {current: old for old, current in successors.items()}
+            successors: dict[str, str], retired: dict[str, str]) -> str:
+    predecessors = {current: old for old, current in (successors | retired).items()}
     lines = [
         "# Repository change details", "",
         f"Original source: `{BASELINE_TAG}` (`{baseline}`).",
@@ -397,8 +444,8 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
         "Each file appears once. Moved files are listed under their current project. Removed",
         "files are grouped under a recognized successor in the same top-level tree, or their old",
         "project otherwise. All original `tests/` paths are Removed and all current `tests/`",
-        "paths are Added, even where project names or filenames are similar. A former test",
-        "project therefore describes package lineage rather than file continuity.",
+        "paths are Added, even where project names or filenames are similar. Original",
+        "test projects and current test projects appear in separate subsections.",
         "Removed status is preserved. An old project is shown when it differs from",
         "the current one. Git calculates added and removed lines from each matched blob pair.",
         "A binary change has no line count. Matches based on product paths or unique C# names",
@@ -412,11 +459,27 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
         lines.extend((f"## {group}", "",
                       f"{len(group_files)} files; +{group_total['plus']} / -{group_total['minus']} "
                       f"lines; {group_total['binary']} binary changes.", ""))
-        for project, files in sorted(grouped[group].items()):
+        project_items = sorted(grouped[group].items())
+        if group == "tests":
+            originals = [(project, [change for change in files if change.old_path is not None])
+                         for project, files in project_items]
+            current = [(project, [change for change in files if change.new_path is not None])
+                       for project, files in project_items]
+            project_items = [(project, files) for project, files in originals + current if files]
+        previous_test_section = None
+        for project, files in project_items:
+            if group == "tests":
+                test_section = "Current test projects" if any(change.new_path for change in files) else "Original test projects (removed)"
+                if test_section != previous_test_section:
+                    lines.extend((f"### {test_section}", ""))
+                    previous_test_section = test_section
             totals = file_totals(files)
-            lines.extend((f"### {markdown_cell(project)}", ""))
+            lines.extend((f"#### {markdown_cell(display_project(project))}" if group == "tests"
+                          else f"### {markdown_cell(display_project(project))}", ""))
             if project in predecessors:
                 lines.extend((f"Former project: {markdown_cell(predecessors[project])}.", ""))
+            if project in retired.values():
+                lines.extend(("Retired interim project on main; this path is absent from current main.", ""))
             lines.extend((f"{len(files)} files; +{totals['plus']} / -{totals['minus']} lines; "
                           f"{totals['binary']} binary changes.", ""))
             for status in STATUSES:
@@ -424,7 +487,8 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
                                  key=lambda change: change.new_path or change.old_path or "")
                 if not members:
                     continue
-                lines.extend((f"#### {status.title()} ({len(members)})", "",
+                level = "#####" if group == "tests" else "####"
+                lines.extend((f"{level} {status.title()} ({len(members)})", "",
                               "| Old path | Current path | Old project if different | + lines | - lines | Match |",
                               "|---|---|---|---:|---:|---|"))
                 for change in members:
@@ -492,14 +556,14 @@ if __name__ == "__main__":
         if args.patch:
             patch()
         else:
-            baseline, main_ref, main, changes, methods, successors = collect()
+            baseline, main_ref, main, changes, methods, successors, retired = collect()
             if args.files:
                 file_rows(changes)
             else:
                 output_dir = args.output_dir if args.output_dir.is_absolute() else ROOT / args.output_dir
                 paths = write_reports(output_dir,
-                                      summary(baseline, main_ref, main, changes, methods, successors),
-                                      details(baseline, main_ref, main, changes, successors))
+                                      summary(baseline, main_ref, main, changes, methods, successors, retired),
+                                      details(baseline, main_ref, main, changes, successors, retired))
                 for path in paths:
                     print(path)
     except (OSError, subprocess.CalledProcessError, ValueError) as error:

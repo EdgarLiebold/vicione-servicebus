@@ -4,9 +4,12 @@ Run `python3 license/repository_diff.py` from anywhere. It compares the committe
 MassTransit `MassTransit/v8.5.10` tag with the latest locally available `main`
 commit and writes two current reports to the ignored `artifacts/policy` directory:
 
-- `REPOSITORY_DIFF.md` summarizes file status and added/removed lines by project,
-  with separate sections for `src`, `tests`, `samples`, `benchmarks`, and other files.
-  Its Former project column joins project names changed during the takeover.
+- `REPOSITORY_DIFF.md` starts with repository totals, then summarizes file status
+  and added/removed lines by project in separate `src`, `tests`, `samples`,
+  `benchmarks`, and other sections. Project rows show directories without a
+  `.csproj` suffix. The State column distinguishes current from removed packages.
+  The Former project column identifies the original MassTransit project where
+  a unique relationship is recorded.
 - `REPOSITORY_DIFF_DETAILS.md` lists every file under its area, project, and status.
   Each row shows the old and current path, any old project, added/removed lines,
   and how the paths were matched. The reports link to each other.
@@ -26,13 +29,19 @@ Ambiguous files remain additions and removals. A file that has no matching curre
 path remains removed even when its old project has a successor; the report groups
 that removal under the successor within the same top-level tree and shows the
 original project in the details.
-Projects with no unambiguous successor remain under their old name.
+For a removed source project, the script searches the history of `main` for its
+interim `ViciOne.ServiceBus` project path. When found, it shows that directory
+with State `Removed` and the original MassTransit directory as Former project.
+The displayed interim path is historical and absent from current `main`. Projects
+with neither a current successor nor a recorded interim path remain under their
+old name.
 
 The `tests/` trees are a complete replacement. The script never pairs an original
 path under `tests/` with any current path, even when names or content look similar.
 All original test-tree files count as removed; all current test-tree files count
-as added. The Former project column can still show a project-name relationship,
-but it makes no claim that individual tests survived. Original benchmark files
+as added. The summary groups the original tests in one removed suite row and
+lists only current test projects individually. The file-level report preserves
+the original test project paths in a separate historical subsection. Original benchmark files
 inside `tests/` likewise remain removals in the `tests` section; the current
 `benchmarks/` files are additions in the `benchmarks` section.
 
