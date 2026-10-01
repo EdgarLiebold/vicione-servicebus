@@ -6,6 +6,7 @@ commit and writes two current reports to the ignored `artifacts/policy` director
 
 - `REPOSITORY_DIFF.md` summarizes file status and added/removed lines by project,
   with separate sections for `src`, `tests`, `samples`, `benchmarks`, and other files.
+  Its Former project column joins project names changed during the takeover.
 - `REPOSITORY_DIFF_DETAILS.md` lists every file under its area, project, and status.
   Each row shows the old and current path, any old project, added/removed lines,
   and how the paths were matched. The reports link to each other.
@@ -17,11 +18,15 @@ the result. Fetch `main` and the tag first if the local refs are stale.
 
 The overview recognizes Git's content-based renames and also pairs files by the
 known `MassTransit` to `ViciOne.ServiceBus` path change or a C# filename unique
-within the same top-level tree on both sides. Benchmark files moved from the old test tree
-are also paired. These latter matches express likely file continuity through the
-large rewrite, not unchanged content. Ambiguous files remain additions and
-removals. The report gives counts for each matching method. A moved file's line
-diff belongs to its current project; a removed file belongs to its old project.
+within the same top-level tree on both sides. It also recognizes one-to-one
+successor projects through the known package naming changes, then matches files
+by relative path or a C# filename unique within that project pair. Benchmark
+projects moved from the old test tree are handled the same way. These matches
+express likely file continuity through the large rewrite, not unchanged content.
+Ambiguous files remain additions and removals. A file that has no matching current
+path remains removed even when its old project has a successor; the report groups
+that removal under the successor and shows the original project in the details.
+Projects with no unambiguous successor remain under their old name.
 
 Use `python3 license/repository_diff.py --files` for a tab-separated inventory
 on standard output when a machine-readable format is needed. The line counts
