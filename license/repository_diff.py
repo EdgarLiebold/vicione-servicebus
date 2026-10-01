@@ -17,6 +17,9 @@ BASELINE_TAG = "MassTransit/v8.5.10"
 UPSTREAM_COMMIT = "62ab339afa3bac2e9b3fe1769d0d35d7e44778e9"
 ROOT = Path(__file__).resolve().parents[1]
 GROUPS = ("src", "tests", "samples", "benchmarks", "other")
+SUMMARY_NAME = "REPOSITORY_DIFF.md"
+DETAILS_NAME = "REPOSITORY_DIFF_DETAILS.md"
+STATUSES = ("moved", "modified", "added", "removed", "unchanged")
 
 
 def git(*args: str, input_bytes: bytes | None = None,
@@ -233,6 +236,21 @@ def collect() -> tuple[str, str, str, list[FileChange], Counter[str]]:
     return baseline, main_ref, main, changes, methods
 
 
+def grouped_changes(changes: list[FileChange]) -> dict[str, dict[str, list[FileChange]]]:
+    grouped: dict[str, dict[str, list[FileChange]]] = defaultdict(lambda: defaultdict(list))
+    for change in changes:
+        grouped[change.group][change.project].append(change)
+    return grouped
+
+
+def file_totals(changes: list[FileChange]) -> Counter[str]:
+    totals = Counter(change.status for change in changes)
+    totals["plus"] = sum(change.added_lines or 0 for change in changes)
+    totals["minus"] = sum(change.deleted_lines or 0 for change in changes)
+    totals["binary"] = sum(change.added_lines is None for change in changes)
+    return totals
+
+
 def summary(baseline: str, main_ref: str, main: str,
             changes: list[FileChange], methods: Counter[str]) -> str:
     lines = [
@@ -248,12 +266,10 @@ def summary(baseline: str, main_ref: str, main: str,
         "Paths outside the four product trees appear under Other. The worktree and index are excluded.",
         f"Matches: {methods['Git similarity']} Git, {methods['product path rename']} product path, "
         f"{methods['unique C# filename']} unique C# filename.",
-        "Run `python3 license/repository_diff.py --files` for every old/new file path and its",
-        "added/deleted lines; use `--patch` for the complete Git patch.", "",
+        f"[Open the file-level report]({DETAILS_NAME}) for every old/new path and its line diff.",
+        "Use `--files` for TSV or `--patch` for the complete Git patch.", "",
     ]
-    grouped: dict[str, dict[str, list[FileChange]]] = defaultdict(lambda: defaultdict(list))
-    for change in changes:
-        grouped[change.group][change.project].append(change)
+    grouped = grouped_changes(changes)
     grand = Counter()
     for group in GROUPS:
         lines.extend((f"## {group}", "",
@@ -262,10 +278,7 @@ def summary(baseline: str, main_ref: str, main: str,
                       "|---|---:|---:|---:|---:|---:|---:|---:|---:|"))
         group_total = Counter()
         for project, files in sorted(grouped[group].items()):
-            counts = Counter(c.status for c in files)
-            counts["plus"] = sum(c.added_lines or 0 for c in files)
-            counts["minus"] = sum(c.deleted_lines or 0 for c in files)
-            counts["binary"] = sum(c.added_lines is None for c in files)
+            counts = file_totals(files)
             group_total.update(counts)
             lines.append(f"| `{project}` | {counts['added']} | {counts['modified']} | "
                          f"{counts['removed']} | {counts['moved']} | {counts['unchanged']} | "
@@ -283,6 +296,71 @@ def summary(baseline: str, main_ref: str, main: str,
                  f"{grand['binary']} binary changes.")
     lines.append("")
     return "\n".join(lines)
+
+
+def markdown_cell(value: str | None) -> str:
+    if not value:
+        return "—"
+    return "`" + value.replace("|", "\\|").replace("`", "\\`") + "`"
+
+
+def details(baseline: str, main_ref: str, main: str, changes: list[FileChange]) -> str:
+    lines = [
+        "# Repository change details", "",
+        f"Original source: `{BASELINE_TAG}` (`{baseline}`).",
+        f"Current main: `{main_ref}` (`{main}`).", "",
+        f"[Open the project summary]({SUMMARY_NAME}).", "",
+        "Each file appears once. Moved files are listed under their current project; removed",
+        "files are listed under their old project. An old project is shown when it differs from",
+        "the current one. Git calculates the added and removed lines from each matched blob pair.",
+        "A binary change has no line count. Matches based on product paths or unique C# names",
+        "infer file continuity and can be checked using the displayed old and current paths.", "",
+        "Groups: " + " · ".join(f"[{group}](#{group})" for group in GROUPS) + ".", "",
+    ]
+    grouped = grouped_changes(changes)
+    for group in GROUPS:
+        group_files = [change for files in grouped[group].values() for change in files]
+        group_total = file_totals(group_files)
+        lines.extend((f"## {group}", "",
+                      f"{len(group_files)} files; +{group_total['plus']} / -{group_total['minus']} "
+                      f"lines; {group_total['binary']} binary changes.", ""))
+        for project, files in sorted(grouped[group].items()):
+            totals = file_totals(files)
+            lines.extend((f"### {markdown_cell(project)}", "",
+                          f"{len(files)} files; +{totals['plus']} / -{totals['minus']} lines; "
+                          f"{totals['binary']} binary changes.", ""))
+            for status in STATUSES:
+                members = sorted((change for change in files if change.status == status),
+                                 key=lambda change: change.new_path or change.old_path or "")
+                if not members:
+                    continue
+                lines.extend((f"#### {status.title()} ({len(members)})", "",
+                              "| Old path | Current path | Old project if different | + lines | - lines | Match |",
+                              "|---|---|---|---:|---:|---|"))
+                for change in members:
+                    old_project = (change.old_project if change.old_project != change.project
+                                   else None)
+                    plus = change.added_lines if change.added_lines is not None else "binary"
+                    minus = change.deleted_lines if change.deleted_lines is not None else "binary"
+                    lines.append(f"| {markdown_cell(change.old_path)} | "
+                                 f"{markdown_cell(change.new_path)} | "
+                                 f"{markdown_cell(old_project)} | {plus} | {minus} | "
+                                 f"{markdown_cell(change.match)} |")
+                lines.append("")
+    return "\n".join(lines)
+
+
+def write_reports(output_dir: Path, summary_text: str, details_text: str) -> tuple[Path, Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = (output_dir / SUMMARY_NAME, output_dir / DETAILS_NAME)
+    # Both complete reports are prepared before either published file changes.
+    with tempfile.TemporaryDirectory(prefix="servicebus-reports-", dir=output_dir) as directory:
+        temporary = (Path(directory) / SUMMARY_NAME, Path(directory) / DETAILS_NAME)
+        for path, content in zip(temporary, (summary_text, details_text)):
+            path.write_text(content, encoding="utf-8")
+        for source, destination in zip(temporary, paths):
+            os.replace(source, destination)
+    return paths
 
 
 def file_rows(changes: list[FileChange]) -> None:
@@ -305,6 +383,8 @@ def patch() -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=Path("artifacts/policy"),
+                        help="report directory, relative to the repository root by default")
     choice = parser.add_mutually_exclusive_group()
     choice.add_argument("--files", action="store_true", help="print a tab-separated file inventory")
     choice.add_argument("--patch", action="store_true", help="print the complete committed Git diff")
@@ -317,7 +397,12 @@ if __name__ == "__main__":
             if args.files:
                 file_rows(changes)
             else:
-                sys.stdout.write(summary(baseline, main_ref, main, changes, methods))
+                output_dir = args.output_dir if args.output_dir.is_absolute() else ROOT / args.output_dir
+                paths = write_reports(output_dir,
+                                      summary(baseline, main_ref, main, changes, methods),
+                                      details(baseline, main_ref, main, changes))
+                for path in paths:
+                    print(path)
     except (OSError, subprocess.CalledProcessError, ValueError) as error:
         print(f"Cannot compare repository changes: {error}", file=sys.stderr)
         raise SystemExit(1) from error

@@ -24,7 +24,8 @@ and `TextTable` retains inspiration attribution to
 
 The [changelog](CHANGELOG.md) indexes source changes, removed capabilities and corrected defects.
 For a current Git comparison of the entire repository, including tests, run
-`python3 license/repository_diff.py`. Git retains the exact file history.
+`python3 license/repository_diff.py`. It writes a project summary and a grouped
+file-level report under `artifacts/policy`. Git retains the exact file history.
 Report security findings through the private channel described in [SECURITY.md](SECURITY.md).
 
 ## Install and configure
