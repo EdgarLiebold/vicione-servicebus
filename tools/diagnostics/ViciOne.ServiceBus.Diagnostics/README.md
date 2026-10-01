@@ -92,7 +92,7 @@ ledger's exact, missing, duplicate, stranger, late duplicate, timeout and cancel
 observation boundary - standstill before the snapshot, and no exactness without one - the sink a result
 is written to on both the success and the failure path, and the command line's refusals.
 
-They gate the tool: the required `diagnostics` category of the engineering job runs this project
-through `tools/ci/run_test_category.py`, like every other required category, with a measured floor of
-executed cases. Saying that they gated the tool while no required job ever started them was a claim
-about a run that did not exist. The measurements themselves stay on demand and gate nothing.
+The test project is part of `ViciOne.ServiceBus.Tests.Unit.slnx`. The required
+`unit-architecture` CI job runs that solution without a test filter and enforces
+the solution's minimum executed-test count. The measurement scenarios remain on
+demand and gate nothing.

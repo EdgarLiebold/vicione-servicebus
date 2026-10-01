@@ -13,8 +13,9 @@ The optional `ViciOne.ServiceBus.AmazonS3` adapter stores message payloads in a 
 
 AWS documents the permissions for [reading lifecycle configuration](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLifecycleConfiguration.html), [reading versioning](https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketVersioning.html), and [uploading an object with tags](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html). AWS also explains why [expiration leaves noncurrent versions behind](https://docs.aws.amazon.com/AmazonS3/latest/userguide/DeletingObjectVersions.html). LocalStack tests verify request behavior; real AWS IAM and lifecycle deletion still need an external provider run.
 
-## Existing buckets with the old rule
+## Bucket readiness
 
-An earlier version installed a product-owned rule with ID `vicione-servicebus-message-data-expiration` for all objects. Those objects were uploaded without a retention tag. This version refuses to start while that rule exists and leaves it unchanged, because silently replacing it would stop expiration of existing objects.
-
-Before startup, stop writers and inventory all existing objects and the bucket's lifecycle rules. Decide which objects should continue to expire. Add `vicione-servicebus-message-data-expiration=enabled` to those objects while preserving their other tags, verify the complete inventory, then replace only the product-owned rule with a filter on that tag and the intended number of days. Preserve all foreign rules. Restart after confirming the new rule and tags. The old rule expired both explicit-TTL and null-TTL uploads; their original caller intent cannot be recovered from S3 tags alone, so use external records to decide whether an older object should remain unbounded. Resolve tag-count limits before switching. If the bucket has ever had versioning enabled, use a new unversioned bucket and a separately reviewed data migration: suspended versioning cannot be reset to the never-enabled state.
+Startup rejects an existing product-owned expiration rule unless its filter selects only objects
+with the required expiration tag. Select a bucket without a conflicting rule for a new deployment.
+The repository does not provide an automatic object migration or silently replace a rule that could
+affect existing objects.

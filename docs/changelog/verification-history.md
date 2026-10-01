@@ -7,6 +7,13 @@ This is a chronological record: statements that a task was pending describe
 the point in time of that entry. The [current review status](../quality-status.md)
 records the latest complete measurement and open findings.
 
+The historical test-reconstruction maps and identity snapshots belong to the
+Git commit `42a028a7fa8ed6facf941da3d72064cbf438f196`, not to the current
+release verdict. Their 59 unresolved external-provider obligations are listed
+by ID and provider in [`TODO.md`](../../TODO.md). Current validation is owned
+by the native tests, CI workflow, and dated quality receipts. Five architecture
+tests that inspected transition-era maps were removed from the current suite.
+
 ### Verification added during the source review
 
 - The complete 33-profile T176 checkpoint on `42a028a7f` recorded 14,235

@@ -38,7 +38,7 @@ from fixtures import broker_logs, compose_fixture, outage_protocol, run_scope  #
 
 # A collected broker log is raw run output, not repository structure: it is large, it repeats between
 # runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,
-# under artifacts/, which .gitignore covers; raw run output does not belong under evidence/.
+# under artifacts/, which .gitignore covers.
 RAW_RUN_OUTPUT_DIR = REPO_ROOT / "artifacts" / "run-output"
 
 

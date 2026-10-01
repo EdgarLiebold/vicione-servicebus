@@ -170,7 +170,7 @@ jobs:
           --max-parallel-test-modules 1
 
   package-and-policy:
-    name: "Required: Package, Security, Identity and Licence"
+    name: "Required: Package, Security and Licence"
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     needs:
@@ -201,10 +201,6 @@ jobs:
         run: sha256sum artifacts/packages/*.nupkg > artifacts/packages/SHA256SUMS
       - name: Inventory vulnerable dependency paths
         run: python3 tools/ci/vulnerability_inventory.py --solution ViciOne.ServiceBus.slnx --out artifacts/policy/VULNERABILITY_INVENTORY.json
-      - name: Verify current source identity and legal files
-        run: python3 tools/identity/identity_gate.py current --root . --output artifacts/policy/SOURCE_IDENTITY_GATE.json
-      - name: Verify package and binary identity closure
-        run: python3 tools/identity/artifact_gate.py --root . --output artifacts/policy/ARTIFACT_GATE.json
       - name: Generate current repository change overview
         run: python3 license/repository_diff.py > artifacts/policy/REPOSITORY_DIFF.md
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

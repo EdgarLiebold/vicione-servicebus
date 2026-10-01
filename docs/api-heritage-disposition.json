@@ -65,13 +65,13 @@
     {
       "id": "legacy-test-framework",
       "disposition": "REMOVE_COMPATIBILITY_ONLY",
-      "evidence": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestFrameworkCapabilityDispositionTests.cs",
+      "evidence": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs",
       "rationale": "Historical test-framework carriers were retired only after their obligations were mapped to native executing tests."
     },
     {
       "id": "legacy-verification-paths",
       "disposition": "REMOVE_COMPATIBILITY_ONLY",
-      "evidence": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs",
+      "evidence": ".github/workflows/native-tests.yml",
       "rationale": "Compatibility-only verification paths were retired after capability-by-capability replacement, leaving one native release verdict."
     }
   ]

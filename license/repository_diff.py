@@ -16,7 +16,7 @@ AREAS = (
     "Tests",
     "Build, CI, and tooling",
     "Samples and benchmarks",
-    "Documentation and notices",
+    "Documentation and licensing",
     "Historical work evidence",
     "Other repository files",
 )
@@ -45,7 +45,7 @@ def area(path: str) -> str:
     if top in {"docs", "license"} or path.endswith((".md", ".txt")) or top in {
         "NOTICE", "COPYRIGHT"
     }:
-        return "Documentation and notices"
+        return "Documentation and licensing"
     return "Other repository files"
 
 

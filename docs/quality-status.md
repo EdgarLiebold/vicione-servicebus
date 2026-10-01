@@ -27,9 +27,13 @@ test tree IDs, commands' output hashes, binary hashes, and profile outcomes.
 Raw logs, binaries and coverage XML remain local generated artifacts and are
 not included in this repository. The recorded result can be independently
 checked by rerunning the profiles at the named commit; the compact records
-alone do not reproduce the calculation from raw coverage files. Later
-documentation and architecture-test changes do not change the measured
-product-source tree, but this measurement is not an exact-current-HEAD run.
+alone do not reproduce the calculation from raw coverage files. The product
+source tree still matches the measured tree. Since this checkpoint, the
+unused legacy-outbox import scripts and their three unit tests and one local
+integration test have been removed. Five transition-only architecture tests
+were also removed. The recorded test count and coverage therefore describe
+the dated run, not the current test tree. A fresh run is
+needed before using these figures as a current-HEAD release result.
 
 ## Open reliability finding
 
@@ -46,9 +50,10 @@ count and the subscription, topic and message state for a missing ID.
 
 ## API inventory
 
-The [30 September Roslyn inventory](api/roslyn-all-repos-api-2026-09-30.md)
+The [1 October Roslyn inventory](api/roslyn-all-repos-api-2026-10-01.md)
 is a dated cross-repository triage snapshot. Its presence-of-XML results do
-not establish the semantic quality of every API comment. Nineteen of its
-69 projects were flagged by compiler or workspace diagnostics; ServiceBus's
-CodeFixes project had a workspace diagnostic. These items remain open for
+not establish the semantic quality of every API comment. Sixteen of its
+69 projects were flagged by compiler or workspace diagnostics. ServiceBus's
+CodeFixes project had a workspace diagnostic, and its packaging-only analyzer
+project lacked resolved reference assemblies. These items remain open for
 the respective repository owners before any cross-repository A+ API claim.

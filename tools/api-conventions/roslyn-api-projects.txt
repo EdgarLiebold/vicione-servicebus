@@ -1,4 +1,4 @@
-# Expected source projects in the ten sibling repositories (29 September 2026)
+# Expected source projects in the ten sibling repositories (1 October 2026)
 vicione-blazor-components/src/ViciOne.Ui.Blazor.Components.Resources/ViciOne.Ui.Blazor.Components.Resources.csproj
 vicione-blazor-components/src/ViciOne.Ui.Blazor.Components.TestingHelpers/ViciOne.Ui.Blazor.Components.TestingHelpers.csproj
 vicione-blazor-components/src/ViciOne.Ui.Blazor.Components/ViciOne.Ui.Blazor.Components.csproj

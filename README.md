@@ -13,13 +13,19 @@ namespaces and packages.
 This repository was created from a complete, pinned fork of **MassTransit 8.5.10**, upstream commit
 `62ab339afa3bac2e9b3fe1769d0d35d7e44778e9`, from the
 [MassTransit](https://github.com/MassTransit/MassTransit) project, and carries the deliberately
-retained and modernised ViciOne capability scope today. The retained and modified code is licensed
-under the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
-[COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md).
+retained and modernised ViciOne capability scope today. The retained and modified code is still
+licensed under the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt) and [COPYRIGHT](COPYRIGHT).
+
+MassTransit copyright 2007–2024 Chris Patterson. ViciOne modifications copyright 2026 Edgar Liebold.
+The retained `ZBase32Formatter` uses the
+[z-base-32 alphabet](https://philzimmermann.com/docs/human-oriented-base-32-encoding.txt),
+and `TextTable` retains inspiration attribution to
+[ConsoleTables](https://github.com/khalidabuhakmeh/ConsoleTables).
 
 The [changelog](CHANGELOG.md) indexes source changes, removed capabilities and corrected defects.
 For a current Git comparison of the entire repository, including tests, run
 `python3 license/repository_diff.py`. Git retains the exact file history.
+Report security findings through the private channel described in [SECURITY.md](SECURITY.md).
 
 ## Install and configure
 
@@ -44,9 +50,10 @@ services.AddViciOneServiceBus(bus =>
 
 Every bus must declare message limits and exactly one transport. Optional capabilities such as
 reliable messaging, a message journal, sagas, jobs, or Quartz scheduling are enabled explicitly.
-Invalid or incomplete composition fails during host startup with an actionable configuration error.
+The core composition checks fail during host startup for missing limits or transport selection.
+Validation of every provider and optional capability is still an [open engineering task](TODO.md).
 
-The eighteen files in [samples/DeveloperJourneys](samples/DeveloperJourneys) are compile-tested
+The eighteen journeys in [samples/DeveloperJourneys](samples/DeveloperJourneys) are compile-tested
 against freshly packed NuGet packages. [samples/SuiteComposition](samples/SuiteComposition) is an
 executable composition using the core, RabbitMQ, and Entity Framework Core packages.
 
@@ -91,7 +98,9 @@ transport combinations fail during startup.
 Deploy the application together with the exact package graph restored from its lock files. Apply
 the selected reliable-messaging database schema before starting writers, provide the chosen broker
 and credentials through the host configuration, and let startup validation reject incomplete
-composition. Export OpenTelemetry signals and expose the registered health checks from the host.
+core composition. Export OpenTelemetry signals and expose the registered health checks from the host.
 
-RabbitMQ and the in-memory transport provide verified durable-send acceptance boundaries. Other
-transport combinations are fail-closed as listed in `docs/provider-capabilities.json`.
+RabbitMQ provides a broker-backed durable-send acceptance boundary; the in-memory transport has a
+separate process-local acceptance contract for deterministic tests. Other transport combinations
+fail during startup when durable send is selected, as listed in
+[provider capabilities](docs/provider-capabilities.json).

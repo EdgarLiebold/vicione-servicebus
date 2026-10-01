@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "TEST_INFRASTRUCTURE_IMAGE_LOCK",
   "workPackageId": "WP-F2-SERVICEBUS-CI-BASELINE-03",
-  "description": "Single source of truth for every pinned test fixture input. Local compose runs and GitHub Actions both build from these values. No moving tag is permitted anywhere.",
+  "description": "Inventory of pinned test fixture images. Keep these references aligned with compose.yaml and the fixture Dockerfiles. Local and GitHub Actions runs use the same Compose definition; moving tags are not used.",
   "baseImages": {
     "activemq": {
       "repository": "apache/activemq-classic",
@@ -88,6 +88,6 @@
   },
   "publication": {
     "registryPush": false,
-    "rationale": "This slice publishes no image. Both fixtures are built from the pinned bases during the run, identically for local compose and CI."
+    "rationale": "No fixture image is pushed to a registry. Local and CI runs use the same Compose definition, which builds the ActiveMQ Classic and RabbitMQ fixtures from pinned base images."
   }
 }

@@ -42,7 +42,8 @@ dotnet format --verify-no-changes ViciOne.ServiceBus.Tests.Unit.slnx
 ## Hermetic unit profile
 
 The process exit code is the verdict. The checked-in MTP configuration makes warnings and skipped
-tests fail.
+tests fail. `--minimum-expected-tests` is a lower discovery guard, not the exact expected test
+count or a coverage target.
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
@@ -95,10 +96,10 @@ the centrally managed `Grpc.Tools` version changes.
 
 ## Provider-backed profiles
 
-Docker must be running, the pinned images in `build/test-infrastructure` must be available, and the
-selected ports must be free. Each command starts isolated resources, runs the named MTP profile,
-captures provider logs, and removes its resources. An unavailable provider is a failed or unexecuted
-profile, never a successful fallback.
+Docker must be running, and the pinned images in `build/test-infrastructure` must be available.
+Compose assigns free loopback host ports for each run. Each command starts isolated resources,
+runs the named MTP profile, captures provider logs, and removes its resources. An unavailable
+provider is a failed or unexecuted profile, never a successful fallback.
 
 ```bash
 VICIONE_TESTS__Profile=LocalIntegration \

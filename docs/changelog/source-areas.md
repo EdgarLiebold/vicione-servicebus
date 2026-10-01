@@ -8,12 +8,17 @@ Unreleased entries preserve the finer chronological record of defects, tests
 and corrections. The [live repository diff](../../license/repository_diff.py) gives compact Git
 counts; the exact patch and file history are available from the baseline
 commit in Git.
+An early repository-guidance commit, `1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc`
+(tree `2b09d4e2b2e14289f06ba112ce1ae52e326a0307`), followed the first
+source import; the live diff still uses the first import as its baseline.
 
 ### Identity, assemblies and application API
 
-- Renamed the repository, assemblies, NuGet packages, namespaces, diagnostics,
-  headers and transport identity from MassTransit to ViciOne.ServiceBus. The
-  upstream attribution, Apache-2.0 license text and provenance remain.
+- The identity change (`WP-F2-SERVICEBUS-IDENTITY`) begun on 7 August 2026 renamed repository paths,
+  projects, assemblies, NuGet packages, namespaces, source identifiers,
+  configuration, wire formats, topology, diagnostics, tests, documentation
+  and automation from MassTransit to ViciOne.ServiceBus. The upstream
+  attribution remains recorded.
 - Kept `ViciOne.ServiceBus.Abstractions` as the mandatory contract base and
   `ViciOne.ServiceBus` as the core implementation. Application, configuration,
   advanced extension, provider, operations and testing APIs now have distinct
@@ -35,24 +40,26 @@ The following imported projects no longer ship as ViciOne.ServiceBus modules.
 Removal of a project does not imply removal of every general messaging concept
 it once used: retained capabilities are identified separately below.
 
-| Imported module | Disposition |
-|---|---|
-| `MassTransit.Azure.Cosmos` | Cosmos-specific persistence integration removed; Azure Table remains a separate provider. |
-| `MassTransit.DapperIntegration` | Independent Dapper persistence package removed. |
-| `MassTransit.EntityFrameworkIntegration` | Older Entity Framework integration removed; EF Core remains. |
-| `MassTransit.MartenIntegration` | Marten persistence package removed. |
-| `MassTransit.MongoDbIntegration` | MongoDB persistence package removed. |
-| `MassTransit.NHibernateIntegration` | NHibernate persistence package removed. |
-| `MassTransit.RedisIntegration` | Redis persistence package removed. |
-| `MassTransit.HangfireIntegration` | Hangfire scheduling package removed; Quartz and other explicitly selected scheduling paths remain. |
-| `MassTransit.KafkaIntegration` | Kafka transport package removed. |
-| `MassTransit.WebJobs.EventHubsIntegration` | Azure WebJobs-specific Event Hubs adapter removed; the Event Hubs transport remains. |
-| `MassTransit.WebJobs.ServiceBusIntegration` | Azure WebJobs-specific Service Bus adapter removed; the Azure Service Bus transport remains. |
-| `MassTransit.Interop.NServiceBus` | NServiceBus interop package removed. |
-| `MassTransit.Newtonsoft` | Inherited Newtonsoft wire-serializer package removed; JSON uses the retained System.Text.Json path. |
+| Imported module                             | Disposition                                                                                         |
+|---------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `MassTransit.Azure.Cosmos`                  | Cosmos-specific persistence integration removed; Azure Table remains a separate provider.           |
+| `MassTransit.DapperIntegration`             | Independent Dapper persistence package removed.                                                     |
+| `MassTransit.EntityFrameworkIntegration`    | Older Entity Framework integration removed; EF Core remains.                                        |
+| `MassTransit.MartenIntegration`             | Marten persistence package removed.                                                                 |
+| `MassTransit.MongoDbIntegration`            | MongoDB persistence package removed.                                                                |
+| `MassTransit.NHibernateIntegration`         | NHibernate persistence package removed.                                                             |
+| `MassTransit.RedisIntegration`              | Redis persistence package removed.                                                                  |
+| `MassTransit.HangfireIntegration`           | Hangfire scheduling package removed; Quartz and other explicitly selected scheduling paths remain.  |
+| `MassTransit.KafkaIntegration`              | Kafka transport package removed.                                                                    |
+| `MassTransit.WebJobs.EventHubsIntegration`  | Azure WebJobs-specific Event Hubs adapter removed; the Event Hubs transport remains.                |
+| `MassTransit.WebJobs.ServiceBusIntegration` | Azure WebJobs-specific Service Bus adapter removed; the Azure Service Bus transport remains.        |
+| `MassTransit.Interop.NServiceBus`           | NServiceBus interop package removed.                                                                |
+| `MassTransit.Newtonsoft`                    | Inherited Newtonsoft wire-serializer package removed; JSON uses the retained System.Text.Json path. |
 
 The inherited foreign-license check and its default-on usage telemetry were
-also removed from core registration and runtime behavior. The inherited
+also removed from core registration, public API and runtime behavior. The
+telemetry had sent host, bus, rider and endpoint data to a hard-wired third-party
+address on every bus start. The inherited
 message-audit contracts and their provider implementations were replaced by
 the incompatible, explicitly configured `MessageJournal`. The unused package
 logo, obsolete target-framework paths and retired test harnesses were removed
@@ -93,6 +100,10 @@ these removed modules.
   Core and in-memory implementations preserve the same public contract; the
   EF Core saga package is separate from EF Core reliable messaging and journal
   storage.
+- Removed the unused legacy-outbox-to-reliable-store SQL conversion scripts for
+  SQLite, PostgreSQL and SQL Server. A new application creates its schema from
+  `AddViciOneReliableMessaging()` through its own EF Core migration; no
+  MassTransit database import is part of deployment.
 - Kept Quartz in its own scheduling assembly and added explicit scheduler
   capability contracts. Saga request timeouts, replacement and cancellation
   now distinguish caller-owned tokens from broker-assigned tokens and
@@ -151,18 +162,21 @@ these removed modules.
 
 ### Build, test and review structure
 
+- The A+ public API and repository-convention program began on 5 September
+  2026. The application, provider and testing changes are described in their
+  respective source areas above.
 - Moved the build to .NET 10 and canonical `.slnx` graphs with locked package
   resolution, centralized outputs, warnings as errors and explicit provider
   fixtures. Split analyzers and code fixes into separate assemblies while
   retaining their package contract.
 - Replaced inherited shallow or obsolete tests with source-owner behavior
   tests for success, failure, boundary, cancellation, restart and recovery
-  paths. Architecture tests bind package, API, requirement and identity rules.
+  paths. Architecture tests bind package, API, requirement and repository boundaries.
   The chronological entries below record red-first defects and focused
   adversarial reviews. The [current review status](../quality-status.md)
   names the latest product-wide Coverage/CRAP measurement, its source commit
   and the still-open SQL Server reliability finding.
-- The Roslyn [API and XML-comment inventory](../api/roslyn-all-repos-api-2026-09-30.md)
+- The Roslyn [API and XML-comment inventory](../api/roslyn-all-repos-api-2026-10-01.md)
   records public and protected symbols across the ViciOne repositories. It is
   a triage inventory, not a certificate that every comment is semantically
   correct or that every repository passes compilation.

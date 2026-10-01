@@ -4,7 +4,7 @@
 
        MSBuild imports only the FIRST Directory.Build.props it finds walking up from a project, and
        for everything under tests/ that is this file rather than the repository root one. The root
-       contract - locked restore, the single artifacts output root, the packaging notice and the
+       contract - locked restore, the single artifacts output root, the package readme and the
        target framework fence - would therefore silently not apply. The import below is what makes
        it apply, and it carries no Exists() guard on purpose: this is a required import, not an
        optional developer override, so a missing parent must fail the build rather than be skipped.

@@ -9,10 +9,21 @@ ViciOne.ServiceBus provides a developer-focused, modern platform for creating di
 The repository README and CONTRIBUTING describe how to build, test and pack this product. There is
 no separate documentation site yet, and none is claimed here.
 
+## Origin and acknowledgements
+
+This repository builds on MassTransit 8.5.10, copyright 2007–2024 Chris
+Patterson. ViciOne modifications copyright 2026
+Edgar Liebold. The retained z-base-32 formatter uses the
+[z-base-32 alphabet](https://philzimmermann.com/docs/human-oriented-base-32-encoding.txt),
+and the diagnostic text table retains inspiration attribution to
+[ConsoleTables](https://github.com/khalidabuhakmeh/ConsoleTables). The packages
+use the Apache License 2.0; the repository changelog and the current
+`license/repository_diff.py` describe ViciOne's changes.
+
 ## ViciOne.ServiceBus NuGet packages
 
 These are the packages this repository builds, one entry per packable project. Capabilities
-that the fork removed by an explicit product decision are recorded in MODIFICATIONS.md and
+that the fork removed by an explicit product decision are recorded in the repository changelog and
 are deliberately absent here rather than listed as if they still shipped.
 
 ### Core

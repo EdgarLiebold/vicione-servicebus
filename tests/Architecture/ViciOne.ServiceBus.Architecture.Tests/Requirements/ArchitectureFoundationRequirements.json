@@ -112,41 +112,6 @@
     "testMethod": "ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape"
   },
   {
-    "requirementId": "REQ-TEST-205",
-    "variantKey": "azure-service-bus-obligations-are-terminal-and-carrier-bound",
-    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
-    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.AzureServiceBusObligationProjectionTests",
-    "testMethod": "AzureServiceBusObligations_AreExactTerminalAndBoundToRealCarriers"
-  },
-  {
-    "requirementId": "REQ-TEST-205",
-    "variantKey": "rabbitmq-obligations-are-terminal-and-carrier-bound",
-    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
-    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.RabbitMqObligationProjectionTests",
-    "testMethod": "RabbitMqObligations_AreExactTerminalAndBoundToRealCarriers"
-  },
-  {
-    "requirementId": "REQ-TEST-205",
-    "variantKey": "benchmark-obligations-are-terminal-and-carrier-bound",
-    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
-    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.BenchmarkObligationProjectionTests",
-    "testMethod": "BenchmarkObligations_AreExactTerminalAndBoundToNativeCarriers"
-  },
-  {
-    "requirementId": "REQ-TEST-205",
-    "variantKey": "test-framework-capabilities-are-terminal-before-retirement",
-    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
-    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.TestFrameworkCapabilityDispositionTests",
-    "testMethod": "TestFrameworkCapabilities_ArePathCompleteTerminalAndRetiredFromTheBuildGraph"
-  },
-  {
-    "requirementId": "REQ-TEST-205",
-    "variantKey": "legacy-verification-capabilities-are-terminal-and-one-native-verdict-remains",
-    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
-    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.VerificationCapabilityDispositionTests",
-    "testMethod": "LegacyVerificationCapabilities_ArePathCompleteTerminalAndLeaveOneNativeVerdict"
-  },
-  {
     "requirementId": "REQ-TEST-203",
     "variantKey": "provider-runner-preserves-native-mtp-exit-code-and-cleans-fixture",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",

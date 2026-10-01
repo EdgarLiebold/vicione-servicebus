@@ -1,2 +1,0 @@
-obligationId	disposition	profile	targetProject	targetMethod
-OBL-R0-BRK-0004	EXTERNAL_PENDING	External	TODO.md#complete-rabbitmq-validation-against-amazon-mq	Connecting_to_RabbitMQ_via_Amazon.Should_connect

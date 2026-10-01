@@ -4,14 +4,45 @@ This file contains bounded work that was deliberately kept out of the active imp
 It is not a second feature catalog, architecture, changelog, or license record. An item is removed
 only after its acceptance evidence is committed.
 
+## Verify startup validation across retained capabilities
+
+The historical V5 API review identified delayed validation of correctness-critical options
+(`API-005`). Its specific payload-admission example is fixed in the current source, and the
+RabbitMQ, Azure Service Bus and Amazon SQS registrations now call `ValidateOnStart()`.
+Those examples do not establish that every retained provider, persistence, scheduler and
+consumer registration fails at host startup for invalid configuration.
+
+Inventory the current options registrations and their validation paths, including named
+multi-bus options. For each correctness-critical option, prove that an invalid selected
+configuration fails before a receive endpoint starts, with a useful bus and feature name
+in the error. Include negative tests for missing, malformed and conflicting settings and
+verify that an unselected optional capability does not fail startup. Use the current source
+and public API as the authority; the V5 counts and proposed API shapes in the historical
+review are not current requirements. The original review is preserved in Git branch
+`archive/review-v5-handover-20261001`.
+
 ## Complete Azure Service Bus validation against the real cloud service
 
 The local Azure Service Bus emulator executes queue, topic, subscription, rule, forwarding,
 session-state, scheduling, duplicate-detection and dead-letter contracts. It does not provide a
 truthful substitute for Azure-owned identity, tier, availability, partition, transport and clock
-semantics. Keep the corresponding rows in
-`evidence/native-tests/obligation-maps/azure-servicebus-external-native-obligation-map.tsv` visibly `EXTERNAL_PENDING` until a
-short-lived real namespace runs them.
+semantics. The 46 open obligation IDs are:
+
+`OBL-R0-CLOUD-0005`, `OBL-R0-CLOUD-0019`, `OBL-R0-CLOUD-0020`, `OBL-R0-CLOUD-0021`,
+`OBL-R0-CLOUD-0025`, `OBL-R0-CLOUD-0026`, `OBL-R0-CLOUD-0027`, `OBL-R0-CLOUD-0028`,
+`OBL-R0-CLOUD-0044`, `OBL-R0-CLOUD-0057`, `OBL-R0-CLOUD-0058`, `OBL-R0-CLOUD-0059`,
+`OBL-R0-CLOUD-0066`, `OBL-R0-CLOUD-0067`, `OBL-R0-CLOUD-0068`, `OBL-R0-CLOUD-0069`,
+`OBL-R0-CLOUD-0072`, `OBL-R0-CLOUD-0079`, `OBL-R0-CLOUD-0080`, `OBL-R0-CLOUD-0086`,
+`OBL-R0-CLOUD-0088`, `OBL-R0-CLOUD-0089`, `OBL-R0-CLOUD-0095`, `OBL-R0-CLOUD-0096`,
+`OBL-R0-CLOUD-0098`, `OBL-R0-CLOUD-0099`, `OBL-R0-CLOUD-0105`, `OBL-R0-CLOUD-0108`,
+`OBL-R0-CLOUD-0109`, `OBL-R0-CLOUD-0117`, `OBL-R0-CLOUD-0122`, `OBL-R0-CLOUD-0124`,
+`OBL-R0-CLOUD-0125`, `OBL-R0-CLOUD-0130`, `OBL-R0-CLOUD-0131`, `OBL-R0-CLOUD-0132`,
+`OBL-R0-CLOUD-0137`, `OBL-R0-CLOUD-0138`, `OBL-R0-CLOUD-0247`, `OBL-R0-CLOUD-0248`,
+`OBL-R0-CLOUD-0250`, `OBL-R0-CLOUD-0251`, `OBL-R0-CLOUD-0254`, `OBL-R0-CLOUD-0255`,
+`OBL-R0-CLOUD-0256`, `OBL-R0-CLOUD-0257`.
+
+Keep them open until a short-lived real namespace runs them. Their historical
+transition mapping is available in Git commit `42a028a7fa8ed6facf941da3d72064cbf438f196`.
 
 The external profile must use run-scoped entities and credentials, bind the exact Azure resource and
 SDK versions, and prove both positive and negative outcomes for Entra/RBAC and SAS validity,
@@ -28,61 +59,6 @@ send-context enqueue, raw-JSON response correlation, prefetched-message shutdown
 publishing, complete broker-assigned message context values, and the combined Azure Blob Storage plus
 Service Bus message-data matrix. These rows stay pending until the real service produces the named
 positive and negative outcomes; their retired inherited tests are not reported as executing evidence.
-
-## Normalize product source paths
-
-Run this as a dedicated mechanical slice after the completed native test reconstruction.
-
-The following product directories repeat a segment without introducing a corresponding namespace or
-architectural boundary:
-
-- `src/ViciOne.ServiceBus/Configuration/Configuration`;
-- `src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection`;
-- `src/ViciOne.ServiceBus/Futures/Futures`;
-- `src/ViciOne.ServiceBus/InMemoryTransport/InMemoryTransport`;
-- `src/ViciOne.ServiceBus/JobService/JobService`;
-- `src/ViciOne.ServiceBus/SagaStateMachine/SagaStateMachine`;
-- `src/ViciOne.ServiceBus/Topology/Topology`.
-
-Before moving anything, inventory path-sensitive build inputs, generated files, `CallerFilePath`
-usage, SourceLink, packaging, documentation, and tooling. Then move only redundant directories while
-preserving namespaces, public API, capabilities, assembly names, package IDs, and project boundaries.
-
-Acceptance requires:
-
-- locked restore and zero-warning Release builds;
-- all applicable unfiltered native test profiles;
-- public-API and package-content comparison against the pre-move commit;
-- explicit disposition of every non-byte-identical assembly, PDB, SourceLink, or package entry;
-- no stale reference to an old source path;
-- source and test folders following the same project and namespace mapping.
-
-The repository groups `src/Persistence`, `src/Scheduling`, and `src/Transports` remain project-group
-boundaries. They are mirrored under `tests` but do not become C# namespace segments.
-
-## Normalize reflection-property metadata ownership and visibility
-
-The completed type-relationship cohort found a separate inherited policy ambiguity across
-`ReadOnlyPropertyCache<T>`, `ReadWritePropertyCache<T>`, `WritePropertyCache<T>`, message-property
-discovery and the public helpers currently placed under `ViciOne.ServiceBus.Internals`.
-`ReadWritePropertyCache<T>(bool includeNonPublic)` in particular combines `CanWrite`, a later
-`SetMethod` check and the flag in a way that may leave the flag ineffective. This is not safe to
-change from one call site or to encode as a test assumption.
-
-Run one path-complete product slice that:
-
-- inventories every initializer, serializer, message-data, text-table, dependency-injection proxy,
-  topology and metadata consumer;
-- defines explicit public/non-public getter and setter policy for each owned operation;
-- replaces or repairs `includeNonPublic` so its observable contract is truthful;
-- gives the public API an architectural owner and namespace rather than exposing an ambiguous
-  `Internals` surface;
-- preserves every useful capability without a backward-compatibility alias; and
-- proves exact property discovery, hiding, indexers, proxy generation and serialization behavior
-  with source-owner tests and one-cause mutations.
-
-Acceptance requires an explicit public-API disposition, complete consumer and package comparison,
-locked restore, zero-warning Release builds, and every applicable unfiltered native profile.
 
 ## Separate cache index projection from external observation
 
@@ -141,24 +117,6 @@ understood. Acceptance requires deterministic boundary tests, RabbitMQ and every
 adapter, public-API/package comparison, and targeted one-cause time mutations. It also replays the
 completed envelope and forwarding contracts without redefining them.
 
-## Normalize receive-transport reconnection
-
-`src/ViciOne.ServiceBus/Transports/ReceiveTransport.cs` still owns a separate inherited retry loop,
-uses process-clock `Task.Delay`, swallows delay cancellation and adds a fixed one-second breather
-after every loop in addition to the configured receive-transport policy. It is not the host send
-retry path and must not be changed from host-retry evidence alone.
-
-Analyze the complete receive supervisor, ready/completed/fault notification, stop and adapter
-lifecycle before choosing the A+ execution shape. The result must have one retry executor, one
-configured delay owner, explicit `TimeProvider`, exact stop/caller cancellation semantics, no
-swallowed cancellation, no tight reconnect loop, and unchanged useful readiness/fault behavior for
-every retained transport.
-
-Acceptance requires hermetic deterministic lifecycle tests, real RabbitMQ coverage, all affected
-retained adapter tests, exact observer and supervisor-state assertions, one-cause cancellation and
-delay mutations, public-API/package comparison, zero-warning Release builds and every applicable
-unfiltered native profile.
-
 ## Complete external benchmark scenarios
 
 The transport- and SQL-Server-backed benchmark scenarios remain tracked in
@@ -182,21 +140,6 @@ listener failures must not be converted into retries, faults or delivery failure
 Acceptance requires deterministic tests with throwing activity listeners at every distinct
 emission owner, one-cause mutations that remove the isolation, exact OpenTelemetry schema checks,
 all affected unfiltered native profiles, and zero behavior or public-API loss.
-
-## Normalize the job-service cron year horizon
-
-`src/ViciOne.ServiceBus/JobService/JobService/Scheduling/Defaults.cs` still derives the maximum
-accepted cron year once from the process clock. This is a parser-policy boundary, not a message,
-job-lifecycle or persistence timestamp, and must not be folded into metadata clock normalization by
-silently choosing an arbitrary fixed year.
-
-Define one stable, documented year-range contract for the job-service cron grammar after reading
-the complete parser, range expansion and next-fire calculation paths. The result must not vary with
-process start time, must preserve or deliberately expand the currently useful scheduling horizon,
-must remain bounded for memory and search complexity, and must handle the upper date boundary
-without overflow. Acceptance requires exact lower/upper/out-of-range parsing tests, wildcard and
-explicit-year performance checks, next-fire behavior at both bounds, public API documentation and
-one-cause boundary mutations.
 
 ## Complete MessageJournal external provider validation
 

@@ -1,19 +1,36 @@
 ### Changed
 
+- Consolidated the modification record into the topic changelogs. The root
+  `CHANGELOG.md` retains exact mappings for the changed solution and signing
+  key files. Current origin and retained third-party acknowledgements are in
+  the repository and packaged READMEs; the obsolete standalone `NOTICE` and
+  duplicate `MODIFICATIONS.md` are removed. Git retains both historical files.
+
+- Retired the historical identity verification gate and its binary artifact
+  companion from the required workflow. The upstream baseline, licence,
+  provenance notices, current repository diff generator, package consumer
+  checks, vulnerability inventory, and native product tests remain in the
+  repository. Removed one-time API source-rewrite scripts from the current
+  `tools` tree; their original versions and the final uncommitted
+  evidence-path adjustment are preserved in Git history and branch
+  `archive/servicebus-tools-pre-cleanup-20261001`. The current Roslyn API and
+  comment inventory remains available for review.
+
 - Updated the external-review documentation to distinguish the latest
   measured quality checkpoint from older work notes. A compact aggregate and
   33 profile receipts now document the T176 result and its unresolved SQL
   Server parallel-publish timeout. The dated Roslyn inventory uses relative
   paths; older snapshots and migration journals remain available in Git.
-  Current obligation maps stay in the tree with their historical limits
-  explained under `evidence/`.
+  The transition-era obligation maps were later removed from the current tree;
+  the open external checks are listed in `TODO.md`, and Git retains the maps.
 
 - Prepared the repository for external review: archived historical raw proof and agent work
-  records in Git tag `archive/servicebus-pre-review-cleanup-20260930`, retained the obligation
+  records in Git commit `42a028a7fa8ed6facf941da3d72064cbf438f196`, initially retained the obligation
   maps used by architecture tests, split this changelog into topic documents, and replaced the
   static source-only change list with a live whole-repository Git comparison under `license/`.
-  CI now checks current source identity without rescanning archived binary evidence. The obsolete
-  historical `scan` and `evidence` CLI modes and their path policy are retired with that archive.
+  CI then checked current source identity without rescanning archived binary evidence. The obsolete
+  historical `scan` and `evidence` CLI modes and their path policy were retired. The remaining
+  transition maps and the current identity gate were removed in the later cleanup above.
 
 - Message-limit tests now exercise inclusive body and envelope boundaries,
   independently optional warning and offload thresholds, and exact failure
@@ -243,7 +260,8 @@
   rather than its constructor default. The complete inherited address fixture is replaced by a
   source-mirrored native xUnit/MTP cohort with a one-to-one disposition of all 46 inherited
   obligations.
-- `MessageJournal` is an optional, default-off diagnostic capability for terminal send, publish and
+- The greenfield circuit-breaker and `MessageJournal` work began on 25 August
+  2026. `MessageJournal` is an optional, default-off diagnostic capability for terminal send, publish and
   consume outcomes. A mandatory caller policy selects and sanitizes the serialized envelope before
   an immutable entry reaches EF Core or Azure Table. Both stores enforce finite size, count and age
   on each append; failures are deadline-bounded and isolated from message flow. The feature has no
@@ -282,7 +300,8 @@
   boundary or referencing its native xUnit/MTP entry package.
 - The inherited verification inventory was consolidated during takeover. Its remaining runners are
   migration evidence only and are replaced cohort by cohort by the native xUnit/MTP test estate.
-- The ActiveMQ publish topology is deployed to the broker. Resolving a destination name is a client
+- The 18 August 2026 ActiveMQ recovery (`WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03`)
+  made publish topology deploy to the broker. Resolving a destination name is a client
   side act and left the broker without the topic; `SessionContext.EnsureTopicExists` makes the broker
   hold it.
 - Cron expressions tolerate repeated spaces and tabs between fields without shifting subsequent

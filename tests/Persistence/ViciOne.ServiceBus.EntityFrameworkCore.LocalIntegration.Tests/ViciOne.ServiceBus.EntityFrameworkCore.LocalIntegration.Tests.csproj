@@ -36,10 +36,6 @@
     <EmbeddedResource
       Include="Requirements/EntityFrameworkLocalIntegrationRequirements.json"
       LogicalName="ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.Requirements.EntityFrameworkLocalIntegrationRequirements.json" />
-    <EmbeddedResource
-      Include="../../../docs/migrations/reliable-messaging-postgresql.sql"
-      Link="MigrationScripts/reliable-messaging-postgresql.sql"
-      LogicalName="ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.MigrationScripts.reliable-messaging-postgresql.sql" />
   </ItemGroup>
 
 </Project>

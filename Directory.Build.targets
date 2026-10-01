@@ -72,19 +72,16 @@
            Condition=" !Exists('$(MSBuildProjectDirectory)/packages.lock.json') " />
   </Target>
 
-  <!-- 2. A packable project carries the licence evidence Apache 2.0 section 4(b) asks for.
-
-       The readme is added centrally in src/Directory.Build.props. A project that unsets PackageId or
-       drops the readme would still pack, and the package would ship without the file the notice
-       promises is in it. -->
-  <Target Name="AssertPackagedProjectsCarryTheirNotice"
+  <!-- 2. A packable project carries licence metadata and the package readme with upstream
+       attribution. The readme is added centrally in src/Directory.Build.props. -->
+  <Target Name="AssertPackagedProjectsCarryLicenseAndReadme"
           BeforeTargets="GenerateNuspec"
           Condition=" '$(IsPackable)' == 'true' ">
     <Error Code="VOSB0002"
            Text="$(MSBuildProjectName) is packable but declares no PackageLicenseExpression, so the package would ship without the licence it is distributed under."
            Condition=" '$(PackageLicenseExpression)' == '' AND '$(PackageLicenseFile)' == '' " />
     <Error Code="VOSB0003"
-           Text="$(MSBuildProjectName) is packable but names no PackageReadmeFile, so the package would ship without the notice this fork is required to carry."
+           Text="$(MSBuildProjectName) is packable but names no PackageReadmeFile, so the package would ship without its origin and attribution information."
            Condition=" '$(PackageReadmeFile)' == '' " />
   </Target>
 

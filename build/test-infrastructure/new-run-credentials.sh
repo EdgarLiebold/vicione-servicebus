@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
 # Generates a fresh broker account for exactly one run and exports it.
-# Nothing is written to disk and nothing is echoed, so no credential can reach a log.
-# Under GitHub Actions the values are registered as masked secrets and appended to the
-# job environment; locally the script is sourced.
+# Locally, secrets stay in the sourced shell's environment and are not printed.
+# Under GitHub Actions they are masked in logs and written to the runner-managed
+# GITHUB_ENV file so subsequent steps receive them.
 #
 #   source ./new-run-credentials.sh
 #
@@ -12,7 +12,7 @@
 #
 # The account NAME is fixed because ActiveMQ authorises the web console by role and the role
 # binding lives in a config file. A name grants nothing on its own; the SECRET is regenerated
-# on every run and never written to disk or a log.
+# on every run. The GitHub Actions runner stores it in GITHUB_ENV for the job.
 set -euo pipefail
 
 # Sourcing detection differs per shell, so probe it without assuming bash-only variables.

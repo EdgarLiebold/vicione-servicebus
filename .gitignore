@@ -23,6 +23,7 @@ _ReSharper*
 # Generated output. The benchmark console writes its reports to artifacts/BenchmarkDotNet, which the
 # rule above does not match, so three generated reports were tracked once by accident.
 /artifacts/
+/TestResults/
 
 # Local run evidence: the category runners write their TRX and counter records here. A regeneration of
 # CHANGELIST.md walked it once and offered to record 887 additions of test results into the section
@@ -57,4 +58,3 @@ sw.*
 # run and is written below ignored artifacts/. These patterns are repository hygiene, not a second
 # test verdict or a substitute for review of staged files.
 *.trx
-evidence/**/*.log
