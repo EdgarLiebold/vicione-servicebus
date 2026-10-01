@@ -524,8 +524,8 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
                     lines.extend(("| File path | + lines | - lines |",
                                   "|---|---:|---:|"))
                 else:
-                    lines.extend(("| Old path | Current path | Old project if different | + lines | - lines | Match |",
-                                  "|---|---|---|---:|---:|---|"))
+                    lines.extend(("| Old path | Current path | Old project if different | + lines | - lines |",
+                                  "|---|---|---|---:|---:|"))
                 for change in members:
                     plus = change.added_lines if change.added_lines is not None else "binary"
                     minus = change.deleted_lines if change.deleted_lines is not None else "binary"
@@ -537,8 +537,7 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
                                        else None)
                         lines.append(f"| {markdown_cell(change.old_path)} | "
                                      f"{markdown_cell(change.new_path)} | "
-                                     f"{markdown_cell(old_project)} | {plus} | {minus} | "
-                                     f"{markdown_cell(change.match)} |")
+                                     f"{markdown_cell(old_project)} | {plus} | {minus} |")
                 lines.append("")
     return "\n".join(lines)
 

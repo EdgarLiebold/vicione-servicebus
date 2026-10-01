@@ -15,7 +15,7 @@ commit and writes two current reports to the ignored `artifacts/policy` director
   project identity, so a New project can contain files moved from old modules.
 - `REPOSITORY_DIFF_DETAILS.md` lists every file under its area, project, and status.
   Outside `tests/`, each row shows the old and current path, any old project,
-  added/removed lines, and how the paths were matched. Test rows show one path
+  and added/removed lines. Test rows show one path
   and its added or removed lines in separate original and current sections.
   The reports link to each other.
 
