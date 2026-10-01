@@ -340,6 +340,14 @@ def file_totals(changes: list[FileChange]) -> Counter[str]:
     return totals
 
 
+def describe_file_totals(files: list[FileChange]) -> str:
+    totals = file_totals(files)
+    file_word = "file" if len(files) == 1 else "files"
+    binary_word = "change" if totals["binary"] == 1 else "changes"
+    return (f"{len(files)} {file_word}; +{totals['plus']} / -{totals['minus']} "
+            f"lines; {totals['binary']} binary {binary_word}.")
+
+
 def project_states(changes: list[FileChange], successors: dict[str, str]) -> dict[str, str | None]:
     """Classify project identities at the two endpoints, not individual file moves."""
     suffixes = (".csproj", ".fsproj", ".vbproj")
@@ -490,10 +498,8 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
     grouped = grouped_changes(changes)
     for group in GROUPS:
         group_files = [change for files in grouped[group].values() for change in files]
-        group_total = file_totals(group_files)
         lines.extend((f"## {group}", "",
-                      f"{len(group_files)} files; +{group_total['plus']} / -{group_total['minus']} "
-                      f"lines; {group_total['binary']} binary changes.", ""))
+                      describe_file_totals(group_files), ""))
         project_items = sorted(grouped[group].items(),
                                key=lambda item: ({"original": 0, "current": 1}.get(item[0][0], 0), item[0][1]))
         previous_test_section = None
@@ -504,13 +510,11 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
                 if test_section != previous_test_section:
                     lines.extend((f"### {test_section}", ""))
                     previous_test_section = test_section
-            totals = file_totals(files)
             lines.extend((f"#### {markdown_cell(display_project(project))}" if group == "tests"
                           else f"### {markdown_cell(display_project(project))}", ""))
             if group != "tests" and project in predecessors:
                 lines.extend((f"Former project: {markdown_cell(display_project(predecessors[project]))}.", ""))
-            lines.extend((f"{len(files)} files; +{totals['plus']} / -{totals['minus']} lines; "
-                          f"{totals['binary']} binary changes.", ""))
+            lines.extend((describe_file_totals(files), ""))
             for status in STATUSES:
                 members = sorted((change for change in files if change.status == status),
                                  key=lambda change: change.new_path or change.old_path or "")
