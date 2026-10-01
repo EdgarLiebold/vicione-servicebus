@@ -30,12 +30,10 @@ Ambiguous files remain additions and removals. A file that has no matching curre
 path remains removed even when its old project has a successor; the report groups
 that removal under the successor within the same top-level tree and shows the
 original project in the details.
-For a removed source project, the script searches the history of `main` for its
-interim `ViciOne.ServiceBus` project path. When found, it shows that directory
-with State `Removed` and the original MassTransit directory as Former project.
-The displayed interim path is historical and absent from current `main`. Projects
-with neither a current successor nor a recorded interim path remain under their
-old name.
+Only project files in the two compared Git trees can name report projects.
+Current `ViciOne.ServiceBus` projects must exist in `main`. An original project
+without a current successor remains under its original MassTransit name and is
+marked Removed. Historical interim names are not endpoints of this comparison.
 
 The `tests/` trees are a complete replacement. The script never pairs an original
 path under `tests/` with any current path, even when names or content look similar.
