@@ -59,7 +59,8 @@ left unmatched by all rules are shown separately. Neither case stops report
 generation.
 
 Use `python3 license/repository_diff.py --files` for a tab-separated inventory
-on standard output when a machine-readable format is needed. The line counts
+on standard output when a machine-readable format is needed. Neither detail
+format includes a match-method column. The line counts
 come from Git's diff engine. Git reports no line counts for binary changes, so
 those are marked `binary` and counted in the project's Binary column. Temporary
 comparison trees are stored outside the repository and deleted after each run.

@@ -484,9 +484,7 @@ def details(baseline: str, main_ref: str, main: str, changes: list[FileChange],
         "a predecessor relationship. A path present in both test snapshots appears once in",
         "each subsection. Removed status is preserved. Outside `tests/`, an old",
         "project is shown when it differs from the current one. Git calculates added and",
-        "removed lines from each matched blob pair.",
-        "A binary change has no line count. Matches based on product paths or unique C# names",
-        "infer file continuity and can be checked using the displayed old and current paths.", "",
+        "removed lines for each file comparison. A binary change has no line count.", "",
         "Groups: " + " · ".join(f"[{group}](#{group})" for group in GROUPS) + ".", "",
     ]
     grouped = grouped_changes(changes)
@@ -558,15 +556,14 @@ def write_reports(output_dir: Path, summary_text: str, details_text: str) -> tup
 def file_rows(changes: list[FileChange]) -> None:
     writer = csv.writer(sys.stdout, dialect="excel-tab", lineterminator="\n")
     writer.writerow(("group", "snapshot", "project", "status", "old_project", "old_path", "new_path",
-                     "added_lines", "deleted_lines", "match"))
+                     "added_lines", "deleted_lines"))
     for change in sorted(changes, key=lambda c: (GROUPS.index(c.group), c.project,
                                                   c.new_path or c.old_path or "")):
         writer.writerow((change.group, test_snapshot(change), change.project, change.status,
                          change.old_project,
                          change.old_path or "", change.new_path or "",
                          change.added_lines if change.added_lines is not None else "binary",
-                         change.deleted_lines if change.deleted_lines is not None else "binary",
-                         change.match))
+                         change.deleted_lines if change.deleted_lines is not None else "binary"))
 
 
 def patch() -> None:
