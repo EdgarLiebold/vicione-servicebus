@@ -7,10 +7,10 @@ This section explains the net source changes by responsibility. The subsequent
 Unreleased entries preserve the finer chronological record of defects, tests
 and corrections. The [live repository diff](../../license/repository_diff.py) gives compact Git
 counts; the exact patch and file history are available from the baseline
-commit in Git.
+tag `MassTransit/v8.5.10` in Git.
 An early repository-guidance commit, `1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc`
 (tree `2b09d4e2b2e14289f06ba112ce1ae52e326a0307`), followed the first
-source import; the live diff still uses the first import as its baseline.
+source import; its tree matches the upstream tag used by the live diff.
 
 ### Identity, assemblies and application API
 

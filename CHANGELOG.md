@@ -3,7 +3,8 @@
 ViciOne.ServiceBus is an unreleased fork of MassTransit 8.5.10. These records describe the source redesign,
 removed capabilities, corrected defects, and changes needed by applications migrating from
 MassTransit. The [live repository diff](license/repository_diff.py) compares all tracked source,
-tests, and other files with the first import commit.
+tests, and other files between the upstream `MassTransit/v8.5.10` tag and the
+latest `main` commit.
 
 ## By topic
 

@@ -202,7 +202,11 @@ jobs:
       - name: Inventory vulnerable dependency paths
         run: python3 tools/ci/vulnerability_inventory.py --solution ViciOne.ServiceBus.slnx --out artifacts/policy/VULNERABILITY_INVENTORY.json
       - name: Generate current repository change overview
-        run: python3 license/repository_diff.py > artifacts/policy/REPOSITORY_DIFF.md
+        run: |
+          git fetch --no-tags origin \
+            refs/heads/main:refs/remotes/origin/main \
+            refs/tags/MassTransit/v8.5.10:refs/tags/MassTransit/v8.5.10
+          python3 license/repository_diff.py > artifacts/policy/REPOSITORY_DIFF.md
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
